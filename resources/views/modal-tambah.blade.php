@@ -1,5 +1,5 @@
 <div class="modal fade" id="TambahModal" tabindex="-1" role="dialog" aria-labelledby="TambahModal">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-warning">
                     <h4 class="modal-title" id="TambahModal">Tambah Bukutamu</h4>
