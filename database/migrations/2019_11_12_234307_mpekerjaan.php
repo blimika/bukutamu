@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class JenisLayanan extends Migration
+class Mpekerjaan extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class JenisLayanan extends Migration
      */
     public function up()
     {
-        Schema::create('layanan', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('nama',100);
-            $table->boolean('flag')->unsigned();
-            $table->timestamps();
+        Schema::create('mpekerjaan', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('nama',50);
+            $table->tinyInteger('flag')->default(1);
         });
     }
 
@@ -28,6 +27,6 @@ class JenisLayanan extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('layanan');
+        Schema::dropIfExists('mpekerjaan');
     }
 }

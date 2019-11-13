@@ -17,7 +17,7 @@
                                 </ul>
                             </li>
                             <li class="nav-small-cap">--- PERSONAL</li>
-                            <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Depan <span class="badge badge-pill badge-cyan ml-auto">4</span></span></a>
+                            <li> <a class="waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
                                
                             </li>
                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-layout-grid2"></i><span class="hide-menu">Apps</span></a>
@@ -43,6 +43,9 @@
                                     <li><a href="javascript:void(0)">Laporan Pengunjung</a></li>
                                     <li><a href="javascript:void(0)">Laporan Tingkat Kepuasan</a></li>
                                 </ul>
+                            </li>
+                            <li> 
+                                <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#TambahModal" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Bukutamu</span></a>
                             </li>
                         </ul>
                     </nav>
