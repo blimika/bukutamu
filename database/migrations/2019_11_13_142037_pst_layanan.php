@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Kunjungan extends Migration
+class PstLayanan extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class Kunjungan extends Migration
      */
     public function up()
     {
-        Schema::create('kunjungan', function (Blueprint $table) {
+        Schema::create('pst_layanan', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('tamu_id')->unsigned();
-            $table->text('keperluan');
-            $table->boolean('is_pst')->default(0);
+            $table->bigInteger('kunjungan_id')->unsigned();
+            $table->tinyInteger('layanan_id')->unsigned();
+            $table->string('layanan_nama',100);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class Kunjungan extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kunjungan');
+        Schema::dropIfExists('pst_layanan');
     }
 }

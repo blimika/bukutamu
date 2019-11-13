@@ -1,18 +1,19 @@
 @section('css')
-    <!-- page css -->
-    <link href="{{asset('dist/css/pages/floating-label.css')}}" rel="stylesheet">
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #pst_terpilih {
-            display: none;
-        } 
-        #pst_layanan, #pst_manfaat {
+        #PSTlayanan, #PSTmanfaat {
             display: none;
         }
     </style>
 @stop
 @section('js')
+<script>
+$('#pstcheck').change(function(){
+        $('#PSTlayanan').toggle();
+        $('#PSTmanfaat').toggle();
+    }); 
+</script>
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -22,8 +23,8 @@
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <!--<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>-->
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
@@ -42,11 +43,7 @@ $('#dTabel').DataTable({
         buttons: [
             'copy', 'csv', 'excel', 'print'
         ]
-    });
-    $("#pstcheck").change(function () {
-        $("#pst_layanan").toggle();
-        $("#pst_manfaat").toggle();
-})
+    });  
     </script>
 @stop
 @extends('layouts.utama')
@@ -83,7 +80,7 @@ $('#dTabel').DataTable({
                     @endif
                     </div>
                     <div class="table-responsive m-t-40">
-                        <table id="dTabel" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -91,7 +88,10 @@ $('#dTabel').DataTable({
                                     <th>No Identitas</th>
                                     <th>JK</th>
                                     <th>Alamat</th>
+                                    <th>Keperluan/Data dicari</th>
                                     <th>Umur</th>
+                                    <th>Tamu PST?</th>
+                                    <th>Waktu Kunjungan</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -101,7 +101,10 @@ $('#dTabel').DataTable({
                                     <th>No Identitas</th>
                                     <th>JK</th>
                                     <th>Alamat</th>
+                                    <th>Keperluan/Data dicari</th>
                                     <th>Umur</th>
+                                    <th>Tamu PST?</th>
+                                    <th>Waktu Kunjungan</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -115,14 +118,24 @@ $('#dTabel').DataTable({
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{$item->tamu->nama_lengkap}}</td>
                                             <td>{{$item->tamu->nomor_identitas}}</td>
-                                            <td>{{$item->tamu->jk->inisial}}</td>
-                                            <td>{{$item->tamu->alamat}} 
-                                                @if ($item->ispst==1)
-                                                    
-                                                    
+                                            <td>
+                                                @if ($item->tamu->jk->inisial=='L')
+                                                <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
+                                                @else 
+                                                <span class="badge badge-danger badge-pill">{{$item->tamu->jk->inisial}}</span>
                                                 @endif
                                             </td>
-                                            <td>{{$item->tamu->tgl_lahir}}</td>
+                                            <td>{{$item->tamu->alamat}} </td>
+                                            <td>{{$item->keperluan}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</td>
+                                            <td>
+                                                    @if ($item->is_pst=='0')
+                                                    <span class="badge badge-info badge-pill">Tidak</span>
+                                                    @else 
+                                                    <span class="badge badge-success badge-pill">Ya</span>
+                                                    @endif                                            
+                                            </td>
+                                            <td>{{ $item->created_at->diffForHumans()}}</td>
                                         </tr>
                                     @endforeach
                                 @endif

@@ -8,10 +8,6 @@ class Kunjungan extends Model
 {
     //
     protected $table = 'kunjungan';
-    protected $casts = [
-        'pst_layanan' => 'array',
-        'pst_manfaat' => 'array'
-    ];
     /*
     public function tamu()
     {
@@ -21,5 +17,11 @@ class Kunjungan extends Model
     public function tamu()
     {
         return $this->belongsTo('App\Mtamu', 'tamu_id', 'id');
+    }
+    public function pLayanan(){
+    	return $this->hasMany('App\Pstlayanan', 'kunjungan_id', 'id');
+    }
+    public function pManfaat(){
+    	return $this->hasMany('App\PstManfaat', 'kunjungan_id', 'id');
     }
 }

@@ -15,6 +15,8 @@ use App\Mwarga;
 use App\Mpekerjaan;
 use App\Mtamu;
 use App\Kunjungan;
+use App\Pstlayanan;
+use App\Pstmanfaat;
 class BukutamuController extends Controller
 {
     //
@@ -35,13 +37,16 @@ class BukutamuController extends Controller
 
     public function simpan(Request $request)
     {
+        //$layanan= $request->pst_layanan;
+        //$pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
         //$test = $request->pst_layanan;
         //dd($request->all());
+        //dd($pst_layanan);
         
         $data = new Mtamu();
         $data -> id_midentitas = $request->jenis_identitas;
-        $data -> nomor_identitas = $request->nomor_identitas;
-        $data -> nama_lengkap = $request->nama_lengkap;
+        $data -> nomor_identitas = trim($request->nomor_identitas);
+        $data -> nama_lengkap = trim($request->nama_lengkap);
         $data -> tgl_lahir = $request->tgl_lahir;
         $data -> id_jk = $request->jk;
         $data -> id_mkerja = $request->id_kerja;
@@ -50,7 +55,7 @@ class BukutamuController extends Controller
         $data -> id_mdidik = $request->id_mdidik;
         $data -> id_mwarga = $request->mwarga;
         $data -> email = $request->email;
-        $data -> telepon = $request->telepon;
+        $data -> telepon = trim($request->telepon);
         $data -> alamat = $request->alamat;
         $data -> save();
 
@@ -60,16 +65,39 @@ class BukutamuController extends Controller
         $dataKunjungan = new Kunjungan();
         $dataKunjungan -> tamu_id = $id_tamu;
         $dataKunjungan -> keperluan = $request->keperluan;
-        if ($request->pst==NULL) { $ispst=0;}
-        else { $ispst=$request->pst; }
-        $dataKunjungan -> ispst = $ispst;
-        $dataKunjungan -> pst_layanan = $request->pst_layanan;
-        $dataKunjungan -> pst_manfaat = $request->pst_manfaat;         
+        if ($request->pst==NULL) { $is_pst=0;}
+        else { $is_pst=$request->pst; }
+        $dataKunjungan -> is_pst = $is_pst;
         $dataKunjungan -> save();
 
-        Session::flash('message', 'Data tamu berhasil di tambahkan');
+        if ($is_pst>0) {
+            //isi tabel pst_layanan dan pst_manfaat
+            $pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
+            $pst_manfaat = MKunjungan::whereIn('id',$request->pst_manfaat)->get();
+            $kunjungan_id = $dataKunjungan->id;
+            foreach ($pst_layanan as $l) 
+            {
+                $dataLayanan = new Pstlayanan();
+                $dataLayanan -> kunjungan_id = $kunjungan_id;
+                $dataLayanan -> layanan_id = $l->id;
+                $dataLayanan -> layanan_nama = $l->nama;
+                $dataLayanan -> save();
+            }
+            foreach ($pst_manfaat as $m) 
+            {
+                $dataManfaat = new Pstmanfaat();
+                $dataManfaat -> kunjungan_id = $kunjungan_id;
+                $dataManfaat -> manfaat_id = $m->id;
+                $dataManfaat -> manfaat_nama = $m->nama;
+                $dataManfaat -> save();
+            }
+            
+        }
+
+        Session::flash('message', 'Data pengunjung berhasil di tambahkan');
         Session::flash('message_type', 'success');
         return redirect()->route('depan');
+        
     }
     public function editdata($id)
     {}
