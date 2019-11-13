@@ -15,19 +15,19 @@ class Mtamu extends Migration
     {
         Schema::create('mtamu', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('no_identitas',20);
-            $table->string('jenis_identitas',20);
+            $table->boolean('id_midentitas',2);
+            $table->string('nomor_identitas',20);
             $table->string('nama_lengkap',250);
             $table->date('tgl_lahir');
-            $table->string('jk',1);
-            $table->string('pekerjaan',50);
-            $table->string('pekerjaan_detil',254)->nullable();
+            $table->tinyInteger('id_jk');
+            $table->tinyInteger('id_mkerja');
+            $table->tinyInteger('id_mkat_kerja');
+            $table->string('kerja_detil',254)->nullable();
+            $table->tinyInteger('id_mdidik');
+            $table->tinyInteger('id_mwarga');
             $table->string('email',254)->nullable();
             $table->string('telepon',20)->nullable();
-            $table->string('pendidikan',20);
-            $table->string('kewarganegaraan',20);
-            $table->string('layanan',20);
-            $table->string('keperluan',20);
+            $table->text('alamat')->nullable();
             $table->timestamps();
         });
     }

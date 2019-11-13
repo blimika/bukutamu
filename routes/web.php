@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('depan');
 });
+*/
 
 Auth::routes();
 
@@ -22,3 +23,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/', 'BukutamuController@depan')->name('depan');
+Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
+Route::get('/edit/{id}', 'BukutamuController@editdata')->name('edit');
+Route::post('/hapus', 'BukutamuController@hapus')->name('hapus');
