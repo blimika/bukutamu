@@ -121,7 +121,7 @@
                 </div>                
 </div>
 <div class="row">
-        <div class="form-group col-md-6" id="pst_layanan">
+        <div class="form-group col-md-6" id="PSTlayanan">
                 <h5>Layanan yang ingin diakses : <span class="text-danger">*</span></h5>
                 @foreach ($Mlayanan as $item_layanan)
                         <div class="custom-control custom-checkbox">
@@ -131,7 +131,7 @@
                 @endforeach
                 
         </div>
-        <div class="form-group col-md-6" id="pst_manfaat">
+        <div class="form-group col-md-6" id="PSTmanfaat">
                         <h5>Pemanfaatan hasil kunjungan : <span class="text-danger">*</span></h5>
                         @foreach ($MKunjungan as $item_kunjungan)
                                 <div class="custom-control custom-checkbox">
