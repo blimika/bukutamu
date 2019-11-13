@@ -92,8 +92,23 @@
                         
         </div>
         <div class="form-group col-md-6">
+                <label for="mwarga">Kewarganegaraan</label>
+                <select class="form-control" id="mwarga" name="mwarga" required>
+                        <option disabled selected></option>
+                        @foreach ($Mwarga as $id_warga)
+                                <option value="{{$id_warga->id}}">{{$id_warga->nama}}</option>
+                        @endforeach
+                </select>
+        </div>
+</div>
+<div class="row">
+        <div class="form-group col-md-6">
                 <label for="alamat">Alamat</label>
-                <textarea class="form-control" rows="4" name="alamat"></textarea>           
+                <textarea class="form-control" rows="4" name="alamat" id="alamat"></textarea>           
+        </div>
+        <div class="form-group col-md-6" id="pst_perlu">
+                <label for="keperluan">Keperluan/Data yang dicari</label>
+                <textarea class="form-control" rows="4" id="keperluan" name="keperluan"></textarea> 
         </div>
 </div>
 <div class="row">
@@ -103,19 +118,14 @@
                                 <input type="checkbox" class="custom-control-input" name="pst" value="1" id="pstcheck">
                                 <label class="custom-control-label" for="pstcheck">Ke Pelayanan Statistik Terpadu?</label>
                         </div>            
-                </div>
-        <div class="form-group col-md-6" id="pst_perlu">
-                        <label for="keperluan">Keperluan</label>
-                        <input type="text" class="form-control" id="keperluan" name="keperluan"> 
-        </div>
-                
+                </div>                
 </div>
 <div class="row">
         <div class="form-group col-md-6" id="pst_layanan">
                 <h5>Layanan yang ingin diakses : <span class="text-danger">*</span></h5>
                 @foreach ($Mlayanan as $item_layanan)
                         <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="layanan[]" value="{{$item_layanan->nama}}" id="layanan_{{$item_layanan->id}}">
+                                <input type="checkbox" class="custom-control-input" name="pst_layanan[]" value="{{$item_layanan->id}}" id="layanan_{{$item_layanan->id}}">
                                 <label class="custom-control-label" for="layanan_{{$item_layanan->id}}">{{$item_layanan->nama}}</label>
                         </div> 
                 @endforeach
@@ -125,7 +135,7 @@
                         <h5>Pemanfaatan hasil kunjungan : <span class="text-danger">*</span></h5>
                         @foreach ($MKunjungan as $item_kunjungan)
                                 <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" name="kunjungan[]" value="{{$item_kunjungan->nama}}" id="kunjungan_{{$item_kunjungan->id}}">
+                                        <input type="checkbox" class="custom-control-input" name="pst_manfaat[]" value="{{$item_kunjungan->id}}" id="kunjungan_{{$item_kunjungan->id}}">
                                         <label class="custom-control-label" for="kunjungan_{{$item_kunjungan->id}}">{{$item_kunjungan->nama}}</label>
                                 </div> 
                         @endforeach

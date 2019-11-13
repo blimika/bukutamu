@@ -19,7 +19,7 @@ class Mtamu extends Migration
             $table->string('nomor_identitas',20);
             $table->string('nama_lengkap',250);
             $table->date('tgl_lahir');
-            $table->tinyInteger('jk');
+            $table->tinyInteger('id_jk');
             $table->tinyInteger('id_mkerja');
             $table->tinyInteger('id_mkat_kerja');
             $table->string('kerja_detil',254)->nullable();
