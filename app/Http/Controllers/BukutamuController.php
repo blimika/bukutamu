@@ -30,7 +30,7 @@ class BukutamuController extends Controller
         $Mwarga = Mwarga::orderBy('id','asc')->get();
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
-        $Kunjungan = Kunjungan::with('tamu')->orderBy('id','desc')->get();
+        $Kunjungan = Kunjungan::with('tamu')->whereDate('created_at', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         return view('depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan]);
     }
@@ -105,4 +105,13 @@ class BukutamuController extends Controller
     {}
     public function hapus(Request $request)
     {}
+    public function cek_id(Request $request)
+    {
+        $dataCek = Mtamu::where([['id_midentitas','=',$request->jenis_identitas],['nomor_identitas','=',$request->nomor_identitas]])->first();
+        $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
+        if ($dataCek) {
+            //nomor identitas ada / tamu sudah pernah datang
+        }
+        return Response()->json($arr);
+    }
 }
