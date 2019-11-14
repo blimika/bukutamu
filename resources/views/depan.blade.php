@@ -14,6 +14,7 @@ $('#pstcheck').change(function(){
         $('#PSTmanfaat').toggle();
     }); 
 </script>
+@include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -73,7 +74,7 @@ $('#dTabel').DataTable({
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
-                    <h6 class="card-subtitle">Hari {{\Carbon\Carbon::now()->format('l, d F Y H:i')}}</h6>
+                    <h6 class="card-subtitle">Hari {{\Carbon\Carbon::now()->format('l, d F Y')}}</h6>
                     <div class="m-t-10 m-b-10">
                     @if (Session::has('message'))
                     <div class="alert alert-{{ Session::get('message_type') }}" id="waktu2" style="margin-top:10px;">{{ Session::get('message') }}</div>
@@ -110,7 +111,7 @@ $('#dTabel').DataTable({
                             <tbody>
                                 @if ($Kunjungan->isEmpty())
                                     <tr>
-                                        <td colspan="6">Data pengunjung tidak tersedia</td>
+                                        <td colspan="9" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
                                     </tr>
                                 @else
                                     @foreach ($Kunjungan as $item)
