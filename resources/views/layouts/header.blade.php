@@ -3,19 +3,16 @@
 <!-- ============================================================== -->
 <div class="navbar-header">
     <a class="navbar-brand" href="{{url('')}}">
-        <!-- Logo icon --><b>
+        <!-- Logo icon -->
+        <b>
             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
             <!-- Dark Logo icon -->
-            <img src="{{asset('assets/images/logo-icon.png')}}" alt="homepage" class="dark-logo" />
+            <!--<img src="{{asset('assets/images/logo-icon.png')}}" alt="homepage" class="dark-logo" />-->
             <!-- Light Logo icon -->
-            <img src="{{asset('assets/images/logo-light-icon.png')}}" alt="homepage" class="light-logo" />
+            <img src="{{asset('assets/images/logo-bukutamu.png')}}" alt="homepage" class="light-logo" />
         </b>
         <!--End Logo icon -->
-        <!-- Logo text --><span>
-            <!-- dark Logo text -->
-            <img src="{{asset('assets/images/logo-text.png')}}" alt="homepage" class="dark-logo" />
-            <!-- Light Logo text -->    
-            <img src="{{asset('assets/images/logo-light-text.png')}}" class="light-logo" alt="homepage" /></span> </a>
+        <!-- Logo text --></a>
 </div>
 <!-- ============================================================== -->
 <!-- End Logo -->
@@ -40,24 +37,16 @@
         <!-- User Profile -->
         <!-- ============================================================== -->
         <li class="nav-item dropdown u-pro">
-            <a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset('assets/images/users/1.jpg')}}" alt="user" class=""> <span class="hidden-md-down">Mark &nbsp;<i class="fa fa-angle-down"></i></span> </a>
+            <!--<a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset('assets/images/users/1.jpg')}}" alt="user" class=""> <span class="hidden-md-down">Mark &nbsp;<i class="fa fa-angle-down"></i></span> </a>
             <div class="dropdown-menu dropdown-menu-right animated flipInY">
-                <!-- text-->
                 <a href="javascript:void(0)" class="dropdown-item"><i class="ti-user"></i> My Profile</a>
-                <!-- text-->
                 <a href="javascript:void(0)" class="dropdown-item"><i class="ti-wallet"></i> My Balance</a>
-                <!-- text-->
                 <a href="javascript:void(0)" class="dropdown-item"><i class="ti-email"></i> Inbox</a>
-                <!-- text-->
                 <div class="dropdown-divider"></div>
-                <!-- text-->
                 <a href="javascript:void(0)" class="dropdown-item"><i class="ti-settings"></i> Account Setting</a>
-                <!-- text-->
                 <div class="dropdown-divider"></div>
-                <!-- text-->
                 <a href="login.html" class="dropdown-item"><i class="fa fa-power-off"></i> Logout</a>
-                <!-- text-->
-            </div>
+            </div>-->
         </li>
         <!-- ============================================================== -->
         <!-- End User Profile -->
