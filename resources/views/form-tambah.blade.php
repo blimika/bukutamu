@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-2">
                         <label for="cek_id">&nbsp;</label>
-                    <button type="button" name="cek_id" class="btn btn-info">CEK</button>
+                    <button type="button" name="cek_id" id="cek_id" class="btn btn-info">CEK</button>
             </div>
         </div>
 </div>
@@ -26,11 +26,11 @@
 <div class="row">
         <div class="form-group col-md-6">
                 <label for="nama_lengkap">Nama lengkap</label>
-                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>                
+                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required readonly>                
         </div>
         <div class="form-group col-md-6 m-b-40">
-                <label for="jk">Jenis Kelamin</label>
-                <select class="form-control" id="jk" name="jk" required>
+                <label for="id_jk">Jenis Kelamin</label>
+                <select class="form-control" id="id_jk" name="id_jk" required disabled>
                 <option disabled selected></option>
                 @foreach ($Mjk as $item_jk)
                         <option value="{{$item_jk->id}}">{{$item_jk->nama}}</option>
@@ -41,11 +41,11 @@
 <div class="row">
         <div class="form-group col-md-6">
                 <label for="tgl_lahir">Tanggal lahir</label>
-                <input type="text" class="form-control" id="tgl_lahir" name="tgl_lahir" autocomplete="off" required>
+                <input type="text" class="form-control" id="tgl_lahir" name="tgl_lahir" autocomplete="off" required readonly>
         </div>
         <div class="form-group col-md-6">
                 <label for="id_mdidik">Pendidikan terakhir</label>
-                <select class="form-control" id="id_mdidik" name="id_mdidik" required>
+                <select class="form-control" id="id_mdidik" name="id_mdidik" required disabled>
                         <option disabled selected></option>
                         @foreach ($Mpendidikan as $item_didik)
                                 <option value="{{$item_didik->id}}">{{$item_didik->nama}}</option>
@@ -57,7 +57,7 @@
 <div class="row">
         <div class="form-group col-md-6">
                 <label for="id_kerja">Pekerjaan</label>
-                <select class="form-control" id="id_kerja" name="id_kerja" required>
+                <select class="form-control" id="id_kerja" name="id_kerja" required disabled>
                         <option disabled selected></option>
                         @foreach ($Mpekerjaan as $i_pekerjaan)
                                 <option value="{{$i_pekerjaan->id}}">{{$i_pekerjaan->nama}}</option>
@@ -67,13 +67,13 @@
         </div>
         <div class="form-group col-md-6">
                 <label for="telepon">Telepon</label>
-                <input type="text" class="form-control" id="telepon" name="telepon" required>      
+                <input type="text" class="form-control" id="telepon" name="telepon" required readonly>      
         </div>
 </div>
 <div class="row">
         <div class="form-group col-md-6">
                 <label for="kat_kerja">Kategori Pekerjaan</label>
-                <select class="form-control" id="kat_kerja" name="kat_kerja" required>
+                <select class="form-control" id="kat_kerja" name="kat_kerja" required disabled>
                         <option disabled selected></option>
                         @foreach ($Mkatpekerjaan as $id_katkerja)
                                 <option value="{{$id_katkerja->id}}">{{$id_katkerja->nama}}</option>
@@ -82,18 +82,18 @@
         </div>
         <div class="form-group col-md-6">
                 <label for="email">E-mail</label>
-                <input type="text" class="form-control" id="email" name="email"> 
+                <input type="text" class="form-control" id="email" name="email" readonly> 
         </div>
 </div>
 <div class="row">
         <div class="form-group col-md-6">
                         <label for="pekerjaan_detil">Sekolah/Univ/Instansi/Detil Pekerjaan</label>
-                        <input type="text" class="form-control" id="pekerjaan_detil" name="pekerjaan_detil" required> 
+                        <input type="text" class="form-control" id="pekerjaan_detil" name="pekerjaan_detil" required readonly> 
                         
         </div>
         <div class="form-group col-md-6">
                 <label for="mwarga">Kewarganegaraan</label>
-                <select class="form-control" id="mwarga" name="mwarga" required>
+                <select class="form-control" id="mwarga" name="mwarga" required disabled>
                         <option disabled selected></option>
                         @foreach ($Mwarga as $id_warga)
                                 <option value="{{$id_warga->id}}">{{$id_warga->nama}}</option>
@@ -104,7 +104,7 @@
 <div class="row">
         <div class="form-group col-md-6">
                 <label for="alamat">Alamat</label>
-                <textarea class="form-control" rows="4" name="alamat" id="alamat"></textarea>           
+                <textarea class="form-control" rows="4" name="alamat" id="alamat" readonly></textarea>           
         </div>
         <div class="form-group col-md-6" id="pst_perlu">
                 <label for="keperluan">Keperluan/Data yang dicari</label>

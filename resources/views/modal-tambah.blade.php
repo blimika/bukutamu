@@ -8,6 +8,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST">
                      @csrf
+                     <input type="hidden" name="tamu_id" id="tamu_id" value="" />
                        @include('form-tambah')
                     
                 </div>

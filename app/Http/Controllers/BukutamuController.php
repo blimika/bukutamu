@@ -48,7 +48,7 @@ class BukutamuController extends Controller
         $data -> nomor_identitas = trim($request->nomor_identitas);
         $data -> nama_lengkap = trim($request->nama_lengkap);
         $data -> tgl_lahir = $request->tgl_lahir;
-        $data -> id_jk = $request->jk;
+        $data -> id_jk = $request->id_jk;
         $data -> id_mkerja = $request->id_kerja;
         $data -> id_mkat_kerja = $request->kat_kerja;
         $data -> kerja_detil = $request->pekerjaan_detil;
@@ -105,12 +105,29 @@ class BukutamuController extends Controller
     {}
     public function hapus(Request $request)
     {}
-    public function cek_id(Request $request)
+    public function cekID($jenis_identitas,$nomor_identitas)
     {
-        $dataCek = Mtamu::where([['id_midentitas','=',$request->jenis_identitas],['nomor_identitas','=',$request->nomor_identitas]])->first();
+        $dataCek = Mtamu::where([['id_midentitas','=',$jenis_identitas],['nomor_identitas','=',$nomor_identitas]])->first();
         $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
         if ($dataCek) {
             //nomor identitas ada / tamu sudah pernah datang
+            $arr = array(
+                'hasil' => array(
+                    'tamu_id'=>$dataCek->id,
+                    'nama_lengkap'=>$dataCek->nama_lengkap,
+                    'tgl_lahir'=>$dataCek->tgl_lahir,
+                    'id_jk'=>$dataCek->id_jk,
+                    'id_kerja'=>$dataCek->id_mkerja,
+                    'kat_kerja'=>$dataCek->id_mkat_kerja,
+                    'pekerjaan_detil'=>$dataCek->kerja_detil,
+                    'id_mdidik'=>$dataCek->id_mdidik ,
+                    'mwarga'=>$dataCek->id_mwarga,
+                    'email'=>$dataCek->email,
+                    'telepon'=>$dataCek->telepon ,
+                    'alamat'=>$dataCek->alamat
+                ), 
+                'status' => true
+            );
         }
         return Response()->json($arr);
     }
