@@ -4,13 +4,12 @@
 <div class="navbar-header">
     <a class="navbar-brand" href="{{url('')}}">
         <!-- Logo icon -->
-        <b>
+        
             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
             <!-- Dark Logo icon -->
             <!--<img src="{{asset('assets/images/logo-icon.png')}}" alt="homepage" class="dark-logo" />-->
             <!-- Light Logo icon -->
-            <img src="{{asset('assets/images/logo-bukutamu.png')}}" alt="homepage" class="light-logo" />
-        </b>
+            <img src="{{asset('assets/images/logo-bukutamu-new.png')}}" alt="homepage" class="light-logo" />
         <!--End Logo icon -->
         <!-- Logo text --></a>
 </div>

@@ -105,4 +105,13 @@ class BukutamuController extends Controller
     {}
     public function hapus(Request $request)
     {}
+    public function cek_id(Request $request)
+    {
+        $dataCek = Mtamu::where([['id_midentitas','=',$request->jenis_identitas],['nomor_identitas','=',$request->nomor_identitas]])->first();
+        $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
+        if ($dataCek) {
+            //nomor identitas ada / tamu sudah pernah datang
+        }
+        return Response()->json($arr);
+    }
 }
