@@ -43,24 +43,30 @@ class BukutamuController extends Controller
         //dd($request->all());
         //dd($pst_layanan);
         
-        $data = new Mtamu();
-        $data -> id_midentitas = $request->jenis_identitas;
-        $data -> nomor_identitas = trim($request->nomor_identitas);
-        $data -> nama_lengkap = trim($request->nama_lengkap);
-        $data -> tgl_lahir = $request->tgl_lahir;
-        $data -> id_jk = $request->id_jk;
-        $data -> id_mkerja = $request->id_kerja;
-        $data -> id_mkat_kerja = $request->kat_kerja;
-        $data -> kerja_detil = $request->pekerjaan_detil;
-        $data -> id_mdidik = $request->id_mdidik;
-        $data -> id_mwarga = $request->mwarga;
-        $data -> email = $request->email;
-        $data -> telepon = trim($request->telepon);
-        $data -> alamat = $request->alamat;
-        $data -> save();
-
+        if ($request->tamu_id==NULL) {
+            $data = new Mtamu();
+            $data -> id_midentitas = $request->jenis_identitas;
+            $data -> nomor_identitas = trim($request->nomor_identitas);
+            $data -> nama_lengkap = trim($request->nama_lengkap);
+            $data -> tgl_lahir = $request->tgl_lahir;
+            $data -> id_jk = $request->id_jk;
+            $data -> id_mkerja = $request->id_kerja;
+            $data -> id_mkat_kerja = $request->kat_kerja;
+            $data -> kerja_detil = $request->pekerjaan_detil;
+            $data -> id_mdidik = $request->id_mdidik;
+            $data -> id_mwarga = $request->mwarga;
+            $data -> email = $request->email;
+            $data -> telepon = trim($request->telepon);
+            $data -> alamat = $request->alamat;
+            $data -> created_at = \Carbon\Carbon::now();
+            $data -> save();
+            $id_tamu = $data->id;
+        }
+        else {
+            $id_tamu = $request->tamu_id;
+        }
         //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
-        $id_tamu = $data->id;
+        
 
         $dataKunjungan = new Kunjungan();
         $dataKunjungan -> tamu_id = $id_tamu;

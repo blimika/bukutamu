@@ -56,7 +56,6 @@
                 //data di isikan di inputan
                 $('#tamu_id').val(data.hasil.tamu_id);
                 $('#nama_lengkap').val(data.hasil.nama_lengkap);
-                $('#id_jk').val(data.hasil.id_jk);
                 $('#tgl_lahir').val(data.hasil.tgl_lahir);
                 $('#id_kerja').val(data.hasil.id_kerja);
                 $('#kat_kerja').val(data.hasil.kat_kerja);
@@ -66,6 +65,7 @@
                 $('#email').val(data.hasil.email);
                 $('#telepon').val(data.hasil.telepon);
                 $('#alamat').val(data.hasil.alamat);
+                $('#id_jk').val(data.hasil.id_jk);
 
             }
         },

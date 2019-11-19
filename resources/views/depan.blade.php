@@ -74,7 +74,7 @@ $('#dTabel').DataTable({
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
-                    <h6 class="card-subtitle">Hari {{\Carbon\Carbon::now()->format('l, d F Y')}}</h6>
+                    <h6 class="card-subtitle">Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}}</h6>
                     <div class="m-t-10 m-b-10">
                     @if (Session::has('message'))
                     <div class="alert alert-{{ Session::get('message_type') }}" id="waktu2" style="margin-top:10px;">{{ Session::get('message') }}</div>
