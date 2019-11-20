@@ -30,9 +30,24 @@ class BukutamuController extends Controller
         $Mwarga = Mwarga::orderBy('id','asc')->get();
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
-        $Kunjungan = Kunjungan::with('tamu')->whereDate('created_at', Carbon::today())->orderBy('id','desc')->get();
+        $Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         return view('depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan]);
+    }
+
+    public function lama()
+    {
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mlayanan = Mlayanan::orderBy('id','asc')->get();
+        $Kunjungan = Kunjungan::with('tamu')->orderBy('tanggal','asc')->get();
+        $Mtamu = Mtamu::orderBy('id','asc')->get();
+        return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan]);
     }
 
     public function simpan(Request $request)
@@ -70,6 +85,7 @@ class BukutamuController extends Controller
 
         $dataKunjungan = new Kunjungan();
         $dataKunjungan -> tamu_id = $id_tamu;
+        $dataKunjungan -> tanggal = Carbon::today()->format('Y-m-d');
         $dataKunjungan -> keperluan = $request->keperluan;
         if ($request->pst==NULL) { $is_pst=0;}
         else { $is_pst=$request->pst; }
@@ -103,7 +119,77 @@ class BukutamuController extends Controller
         Session::flash('message', 'Data pengunjung berhasil di tambahkan');
         Session::flash('message_type', 'success');
         return redirect()->route('depan');
+    }
+
+    public function SimpanLama(Request $request)
+    {
+        //$layanan= $request->pst_layanan;
+        //$pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
+        //$test = $request->pst_layanan;
+        //dd($request->all());
+        //dd($pst_layanan);
         
+        if ($request->tamu_id_lama==NULL) {
+            $data = new Mtamu();
+            $data -> id_midentitas = $request->jenis_identitas_lama;
+            $data -> nomor_identitas = trim($request->nomor_identitas_lama);
+            $data -> nama_lengkap = trim($request->nama_lengkap_lama);
+            $data -> tgl_lahir = $request->tgl_lahir_lama;
+            $data -> id_jk = $request->id_jk_lama;
+            $data -> id_mkerja = $request->id_kerja_lama;
+            $data -> id_mkat_kerja = $request->kat_kerja_lama;
+            $data -> kerja_detil = $request->pekerjaan_detil_lama;
+            $data -> id_mdidik = $request->id_mdidik_lama;
+            $data -> id_mwarga = $request->mwarga_lama;
+            $data -> email = $request->email_lama;
+            $data -> telepon = trim($request->telepon_lama);
+            $data -> alamat = $request->alamat_lama;
+            $data -> created_at = \Carbon\Carbon::now();
+            $data -> save();
+            $id_tamu = $data->id;
+        }
+        else {
+            $id_tamu = $request->tamu_id_lama;
+        }
+        //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
+        
+
+        $dataKunjungan = new Kunjungan();
+        $dataKunjungan -> tamu_id = $id_tamu;
+        $dataKunjungan -> tanggal = $request->tgl_kunjungan;
+        $dataKunjungan -> keperluan = $request->keperluan_lama;
+        if ($request->pst_lama==NULL) { $is_pst_lama=0;}
+        else { $is_pst_lama=$request->pst_lama; }
+        $dataKunjungan -> is_pst = $is_pst_lama;
+        $dataKunjungan -> save();
+
+        if ($is_pst_lama>0) {
+            //isi tabel pst_layanan dan pst_manfaat
+            $pst_layanan_lama = Mlayanan::whereIn('id',$request->pst_layanan_lama)->get();
+            $pst_manfaat_lama = MKunjungan::whereIn('id',$request->pst_manfaat_lama)->get();
+            $kunjungan_id = $dataKunjungan->id;
+            foreach ($pst_layanan_lama as $l) 
+            {
+                $dataLayanan = new Pstlayanan();
+                $dataLayanan -> kunjungan_id = $kunjungan_id;
+                $dataLayanan -> layanan_id = $l->id;
+                $dataLayanan -> layanan_nama = $l->nama;
+                $dataLayanan -> save();
+            }
+            foreach ($pst_manfaat_lama as $m) 
+            {
+                $dataManfaat = new Pstmanfaat();
+                $dataManfaat -> kunjungan_id = $kunjungan_id;
+                $dataManfaat -> manfaat_id = $m->id;
+                $dataManfaat -> manfaat_nama = $m->nama;
+                $dataManfaat -> save();
+            }
+            
+        }
+
+        Session::flash('message', 'Data pengunjung lama berhasil di tambahkan');
+        Session::flash('message_type', 'info');
+        return redirect()->route('lama');
     }
     public function editdata($id)
     {}
@@ -136,5 +222,5 @@ class BukutamuController extends Controller
             );
         }
         return Response()->json($arr);
-    }
+      }
 }
