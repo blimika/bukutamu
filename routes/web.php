@@ -28,11 +28,7 @@ Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/edit/{id}', 'BukutamuController@editdata')->name('edit');
 Route::get('/cekid/{jenis_identitas}/{nomor_identitas}', 'BukutamuController@cekID')->name('cekid');
+
 Route::post('/hapus', 'BukutamuController@hapus')->name('hapus');
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/simpanlama', 'BukutamuController@SimpanLama')->name('simpan.lama');
+Route::get('/lama', 'BukutamuController@lama')->name('lama');

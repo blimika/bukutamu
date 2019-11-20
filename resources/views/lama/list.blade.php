@@ -96,7 +96,7 @@ $('#dTabel').DataTable({
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
-                    <h6 class="card-subtitle">Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}}</h6>
+                    
                     <div class="m-t-10 m-b-10">
                     @if (Session::has('message'))
                     <div class="alert alert-{{ Session::get('message_type') }}" id="waktu2" style="margin-top:10px;">{{ Session::get('message') }}</div>
@@ -107,6 +107,7 @@ $('#dTabel').DataTable({
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Tanggal</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
@@ -120,6 +121,7 @@ $('#dTabel').DataTable({
                             <tfoot>
                                 <tr>
                                     <th>No</th>
+                                    <th>Tanggal</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
@@ -139,6 +141,7 @@ $('#dTabel').DataTable({
                                     @foreach ($Kunjungan as $item)
                                     <tr>
                                             <td>{{$loop->iteration}}</td>
+                                            <td>{{$item->tanggal}}</td>
                                             <td>{{$item->tamu->nama_lengkap}}</td>
                                             <td>{{$item->tamu->nomor_identitas}}</td>
                                             <td>

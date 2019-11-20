@@ -47,6 +47,9 @@
                             <li> 
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#TambahModal" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Bukutamu</span></a>
                             </li>
+                            <li> 
+                                <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#InputDataLamaModal" aria-expanded="false"><i class="ti-layers"></i><span class="hide-menu">Input Data Lama</span></a>
+                            </li>
                         </ul>
                     </nav>
                     <!-- End Sidebar navigation -->

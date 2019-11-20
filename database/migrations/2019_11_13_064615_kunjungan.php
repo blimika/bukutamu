@@ -16,6 +16,7 @@ class Kunjungan extends Migration
         Schema::create('kunjungan', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('tamu_id')->unsigned();
+            $table->date('tanggal');
             $table->text('keperluan');
             $table->boolean('is_pst')->default(0);
             $table->timestamps();
