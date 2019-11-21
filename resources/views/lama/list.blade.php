@@ -135,7 +135,7 @@ $('#dTabel').DataTable({
                             <tbody>
                                 @if ($Kunjungan->isEmpty())
                                     <tr>
-                                        <td colspan="9" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
+                                        <td colspan="10" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
                                     </tr>
                                 @else
                                     @foreach ($Kunjungan as $item)
