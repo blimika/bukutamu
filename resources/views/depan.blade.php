@@ -2,7 +2,7 @@
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama  {
+        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama {
             display: none;
         }
     </style>

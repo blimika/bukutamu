@@ -18,7 +18,7 @@
                                 </ul>-->
                             </li>
                             <li class="nav-small-cap">--- PERSONAL</li>
-                            <li> <a class="waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
+                            <li> <a class="waves-effect waves-dark" href="{{url('')}}" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
                                
                             </li>
                             <!--<li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-layout-grid2"></i><span class="hide-menu">Apps</span></a>
@@ -49,6 +49,9 @@
                             </li>
                             <li> 
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#InputDataLamaModal" aria-expanded="false"><i class="ti-layers"></i><span class="hide-menu">Input Data Lama</span></a>
+                            </li>
+                            <li> 
+                                    <a class="waves-effect waves-dark ml-auto" href="{{route('lama')}}"><i class="ti-eye"></i><span class="hide-menu">Semua Data</span></a>
                             </li>
                         </ul>
                     </nav>

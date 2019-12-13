@@ -9,6 +9,7 @@
                     <form class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST">
                      @csrf
                      <input type="hidden" name="tamu_id" id="tamu_id" value="" />
+                     <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
                        @include('form-tambah')
                     
                 </div>
@@ -33,6 +34,7 @@
                 <form class="form-horizontal m-t-20" name="data_lama" action="{{route('simpan.lama')}}" method="POST">
                  @csrf
                  <input type="hidden" name="tamu_id_lama" id="tamu_id_lama" value="" />
+                 <input type="hidden" name="edit_tamu_lama" id="edit_tamu_lama" value="0" />
                    @include('form-datalama')
                 
             </div>

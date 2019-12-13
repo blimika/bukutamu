@@ -45,7 +45,7 @@ class BukutamuController extends Controller
         $Mwarga = Mwarga::orderBy('id','asc')->get();
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
-        $Kunjungan = Kunjungan::with('tamu')->orderBy('tanggal','asc')->get();
+        $Kunjungan = Kunjungan::with('tamu')->orderBy('tanggal','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan]);
     }
@@ -76,8 +76,36 @@ class BukutamuController extends Controller
             $data -> created_at = \Carbon\Carbon::now();
             $data -> save();
             $id_tamu = $data->id;
+            $pesan_error = 'Data pengunjung berhasil ditambahkan';
+            $warna_error = 'info';
         }
         else {
+            //cek apakah di update apa tidak edit_tamu = 1 (edit)
+            if ($request->edit_tamu==1) {
+                //edit data tamu
+                $data = Mtamu::where('id','=',$request->tamu_id)->first();
+                $data -> id_midentitas = $request->jenis_identitas;
+                $data -> nomor_identitas = trim($request->nomor_identitas);
+                $data -> nama_lengkap = trim($request->nama_lengkap);
+                $data -> tgl_lahir = $request->tgl_lahir;
+                $data -> id_jk = $request->id_jk;
+                $data -> id_mkerja = $request->id_kerja;
+                $data -> id_mkat_kerja = $request->kat_kerja;
+                $data -> kerja_detil = $request->pekerjaan_detil;
+                $data -> id_mdidik = $request->id_mdidik;
+                $data -> id_mwarga = $request->mwarga;
+                $data -> email = trim($request->email);
+                $data -> telepon = trim($request->telepon);
+                $data -> alamat = $request->alamat;
+                $data -> update();
+                $pesan_error = 'Data pengunjung berhasil ditambahkan dan Diperbarui';
+                $warna_error = 'success';
+            }
+            else {
+                //data tamu tidak Diperbarui
+                $pesan_error = 'Data pengunjung berhasil ditambahkan';
+                $warna_error = 'info';
+            }
             $id_tamu = $request->tamu_id;
         }
         //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
@@ -116,8 +144,8 @@ class BukutamuController extends Controller
             
         }
 
-        Session::flash('message', 'Data pengunjung berhasil di tambahkan');
-        Session::flash('message_type', 'success');
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
         return redirect()->route('depan');
     }
 
@@ -147,8 +175,36 @@ class BukutamuController extends Controller
             $data -> created_at = \Carbon\Carbon::now();
             $data -> save();
             $id_tamu = $data->id;
+            $pesan_error = 'Data pengunjung lama berhasil ditambahkan';
+            $warna_error = 'info';
         }
         else {
+            //cek apakah di update apa tidak edit_tamu_lama = 1 (edit)
+            if ($request->edit_tamu_lama==1)
+            {
+                $data = Mtamu::where('id','=',$request->tamu_id_lama)->first();
+                $data -> id_midentitas = $request->jenis_identitas_lama;
+                $data -> nomor_identitas = trim($request->nomor_identitas_lama);
+                $data -> nama_lengkap = trim($request->nama_lengkap_lama);
+                $data -> tgl_lahir = $request->tgl_lahir_lama;
+                $data -> id_jk = $request->id_jk_lama;
+                $data -> id_mkerja = $request->id_kerja_lama;
+                $data -> id_mkat_kerja = $request->kat_kerja_lama;
+                $data -> kerja_detil = $request->pekerjaan_detil_lama;
+                $data -> id_mdidik = $request->id_mdidik_lama;
+                $data -> id_mwarga = $request->mwarga_lama;
+                $data -> email = $request->email_lama;
+                $data -> telepon = trim($request->telepon_lama);
+                $data -> alamat = $request->alamat_lama;
+                $data -> update();
+                $pesan_error = 'Data pengunjung lama berhasil ditambahkan dan Diperbarui';
+                $warna_error = 'success';
+            }
+            else {
+                //data tamu tidak Diperbarui
+                $pesan_error = 'Data pengunjung lama berhasil ditambahkan';
+                $warna_error = 'info';
+            }
             $id_tamu = $request->tamu_id_lama;
         }
         //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
@@ -187,8 +243,8 @@ class BukutamuController extends Controller
             
         }
 
-        Session::flash('message', 'Data pengunjung lama berhasil di tambahkan');
-        Session::flash('message_type', 'info');
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
         return redirect()->route('lama');
     }
     public function editdata($id)
@@ -222,5 +278,5 @@ class BukutamuController extends Controller
             );
         }
         return Response()->json($arr);
-      }
+    }
 }

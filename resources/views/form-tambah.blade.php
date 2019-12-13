@@ -1,7 +1,7 @@
 <h4 class="box-title"><strong>Biodata Pengunjung</strong></h4>
 <hr class="m-t-0 m-b-20">
 <div class="row">
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-4">
         <label for="jenis_identitas">Jenis Identitas</label>
             <select class="form-control" id="jenis_identitas" name="jenis_identitas" required>
                 <option disabled selected></option>
@@ -11,14 +11,20 @@
         </select>
             
     </div>
-    <div class="form-group col-md-6 row">
-            <div class="col-md-10">
-                    <label for="nomor_identitas">Nomor identitas</label>
-                    <input type="text" class="form-control" id="nomor_identitas" name="nomor_identitas" required>                    
-            </div>
-            <div class="col-md-2">
-                        <label for="cek_id">&nbsp;</label>
-                    <button type="button" name="cek_id" id="cek_id" class="btn btn-info">CEK</button>
+    <div class="form-group col-md-8">
+            <div class="row">
+                <div class="col-md-8">
+                        <label for="nomor_identitas">Nomor identitas</label>
+                        <input type="text" class="form-control" id="nomor_identitas" name="nomor_identitas" required>                    
+                </div>
+                <div class="col-md-2">
+                        <label for="cek_id">&NonBreakingSpace;</label>
+                        <button type="button" name="cek_id" id="cek_id" class="btn btn-info">CEK ID</button>
+                </div>
+                <div class="col-md-2">
+                        <label for="edit_id">&NonBreakingSpace;</label>
+                        <button type="button" name="edit_id" id="edit_id" class="btn btn-success" disabled><i class="fa fa-pencil"></i> Edit</button>
+                </div>
             </div>
         </div>
 </div>
@@ -108,7 +114,7 @@
         </div>
         <div class="form-group col-md-6" id="pst_perlu">
                 <label for="keperluan">Keperluan/Data yang dicari</label>
-                <textarea class="form-control" rows="4" id="keperluan" name="keperluan"></textarea> 
+                <textarea class="form-control" rows="4" id="keperluan" name="keperluan" required></textarea> 
         </div>
 </div>
 <div class="row">
