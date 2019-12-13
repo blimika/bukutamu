@@ -50,6 +50,9 @@
                             <li> 
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#InputDataLamaModal" aria-expanded="false"><i class="ti-layers"></i><span class="hide-menu">Input Data Lama</span></a>
                             </li>
+                            <li> 
+                                    <a class="waves-effect waves-dark ml-auto" href="{{route('lama')}}"><i class="ti-eye"></i><span class="hide-menu">Semua Data</span></a>
+                            </li>
                         </ul>
                     </nav>
                     <!-- End Sidebar navigation -->

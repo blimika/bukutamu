@@ -9,7 +9,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-4">
         <label for="jenis_identitas_lama">Jenis Identitas</label>
             <select class="form-control" id="jenis_identitas_lama" name="jenis_identitas_lama" required>
                 <option disabled selected></option>
@@ -19,16 +19,22 @@
         </select>
             
     </div>
-    <div class="form-group col-md-6 row">
-            <div class="col-md-10">
-                    <label for="nomor_identitas_lama">Nomor identitas</label>
-                    <input type="text" class="form-control" id="nomor_identitas_lama" name="nomor_identitas_lama" required>                    
+    <div class="form-group col-md-8">
+            <div class="row">
+                <div class="col-md-8">
+                        <label for="nomor_identitas_lama">Nomor identitas</label>
+                        <input type="text" class="form-control" id="nomor_identitas_lama" name="nomor_identitas_lama" required>                    
+                </div>
+                <div class="col-md-2">
+                        <label for="cekid_lama">&NonBreakingSpace;</label>
+                        <button type="button" name="cekid_lama" id="cekid_lama" class="btn btn-success">CEK ID</button>
+                </div>
+                <div class="col-md-2">
+                        <label for="editid_lama">&NonBreakingSpace;</label>
+                        <button type="button" name="editid_lama" id="editid_lama" class="btn btn-info" disabled><i class="fa fa-pencil"></i> Edit</button>
+                </div>
             </div>
-            <div class="col-md-2">
-                        <label for="cekid_lama">&nbsp;</label>
-                    <button type="button" name="cekid_lama" id="cekid_lama" class="btn btn-success">CEK</button>
-            </div>
-        </div>
+     </div>
 </div>
 
 <div class="row">

@@ -23,6 +23,7 @@
                 $('#email').prop('readonly', false);
                 $('#telepon').prop('readonly', false);
                 $('#alamat').prop('readonly', false);
+                $('#edit_id').prop('disabled', true);
 
                 //kosongan isian
                 $('#tamu_id').val("");
@@ -37,6 +38,7 @@
                 $('#email').val("");
                 $('#telepon').val("");
                 $('#alamat').val("");
+                $('#edit_tamu').val(0);
             }
             else {
                 //success / ada tamu_id
@@ -52,6 +54,7 @@
                 $('#email').prop('readonly', true);
                 $('#telepon').prop('readonly', true);
                 $('#alamat').prop('readonly', true);
+                $('#edit_id').prop('disabled', false);
 
                 //data di isikan di inputan
                 $('#tamu_id').val(data.hasil.tamu_id);
@@ -66,6 +69,7 @@
                 $('#telepon').val(data.hasil.telepon);
                 $('#alamat').val(data.hasil.alamat);
                 $('#id_jk').val(data.hasil.id_jk);
+                $('#edit_tamu').val(0);
 
             }
         },
@@ -101,6 +105,7 @@
                $('#email_lama').prop('readonly', false);
                $('#telepon_lama').prop('readonly', false);
                $('#alamat_lama').prop('readonly', false);
+               $('#editid_lama').prop('disabled', true);
 
                //kosongan isian
                $('#tamu_id_lama').val("");
@@ -115,6 +120,7 @@
                $('#email_lama').val("");
                $('#telepon_lama').val("");
                $('#alamat_lama').val("");
+               $('#edit_tamu_lama').val(0);
            }
            else {
                //success / ada tamu_id
@@ -130,6 +136,7 @@
                $('#email_lama').prop('readonly', true);
                $('#telepon_lama').prop('readonly', true);
                $('#alamat_lama').prop('readonly', true);
+               $('#editid_lama').prop('disabled', false);
 
                //data di isikan di inputan
                $('#tamu_id_lama').val(data.hasil.tamu_id);
@@ -144,6 +151,7 @@
                $('#telepon_lama').val(data.hasil.telepon);
                $('#alamat_lama').val(data.hasil.alamat);
                $('#id_jk_lama').val(data.hasil.id_jk);
+               $('#edit_tamu_lama').val(0);
 
            }
        },
@@ -153,4 +161,34 @@
 
    });
        }); 
+       $('#edit_id').click(function(){
+           //buka semua inputan
+            $('#nama_lengkap').prop('readonly', false);
+            $('#id_jk').prop('disabled', false);
+            $('#tgl_lahir').prop('readonly', false);
+            $('#id_kerja').prop('disabled', false);
+            $('#kat_kerja').prop('disabled', false);
+            $('#pekerjaan_detil').prop('readonly', false);
+            $('#id_mdidik').prop('disabled', false);
+            $('#mwarga').prop('disabled', false);
+            $('#email').prop('readonly', false);
+            $('#telepon').prop('readonly', false);
+            $('#alamat').prop('readonly', false);
+            $('#edit_tamu').val(1);
+       });
+       $('#editid_lama').click(function(){
+           //buka semua inputan
+            $('#nama_lengkap_lama').prop('readonly', false);
+            $('#id_jk_lama').prop('disabled', false);
+            $('#tgl_lahir_lama').prop('readonly', false);
+            $('#id_kerja_lama').prop('disabled', false);
+            $('#kat_kerja_lama').prop('disabled', false);
+            $('#pekerjaan_detil_lama').prop('readonly', false);
+            $('#id_mdidik_lama').prop('disabled', false);
+            $('#mwarga_lama').prop('disabled', false);
+            $('#email_lama').prop('readonly', false);
+            $('#telepon_lama').prop('readonly', false);
+            $('#alamat_lama').prop('readonly', false);
+            $('#edit_tamu_lama').val(1);
+       });
 </script>
