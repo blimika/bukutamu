@@ -229,6 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         //tambahan helper
         'Tanggal' => App\Helpers\Tanggal::class,
+        'Generate' => App\Helpers\Generate::class,
 
     ],
 

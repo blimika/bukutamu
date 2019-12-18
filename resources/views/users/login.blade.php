@@ -44,15 +44,28 @@
         <div class="login-register" style="background-image:url({{asset('assets/images/background/login-register.jpg')}});">
             <div class="login-box card">
                 <div class="card-body">
-                    <form class="form-horizontal form-material" id="loginform" action="index.html">
+                    <form class="form-horizontal form-material" id="loginform" method="post" action="{{ route('login') }}">
+                        @csrf
                         <h3 class="box-title m-b-20">Sign In</h3>
-                        <div class="form-group ">
+                        <div class="form-group m-t-40 {{ $errors->has('username') ? ' has-error' : '' }}">
                             <div class="col-xs-12">
-                                <input class="form-control" type="text" required="" placeholder="Username"> </div>
+                                    <input class="form-control" type="text" placeholder="Username" id="username" name="username" value="{{ old('username') }}" autofocus>
+                            </div>
+                            @if ($errors->has('username'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('username') }}</strong>
+                            </span>
+                            @endif
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                             <div class="col-xs-12">
-                                <input class="form-control" type="password" required="" placeholder="Password"> </div>
+                                <input class="form-control" type="password" required="" name="password" placeholder="Password"> 
+                            </div>
+                            @if ($errors->has('password'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                    @endif
                         </div>
                         <div class="form-group row">
                             <div class="col-md-12">

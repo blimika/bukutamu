@@ -41,3 +41,11 @@ class Tanggal {
 	    return $tanggal;
     }
 }
+class Generate {
+    public static function NoIdentitas($nomor)
+    {
+        //$no_id = substr($nomor, 0, strlen($nomor)-3).str_repeat('*', 3);
+        $no_id = str_repeat('*', (strlen($nomor)-4)).substr($nomor, -4);
+        return $no_id;
+    } 
+}
