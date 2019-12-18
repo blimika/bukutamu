@@ -116,6 +116,9 @@ $('#dTabel').DataTable({
                                     <th>Umur</th>
                                     <th>Tamu PST?</th>
                                     <th>Waktu Kunjungan</th>
+                                    @if(Auth()->user()->isAdmin())
+                                    <th>Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tfoot>
@@ -130,12 +133,15 @@ $('#dTabel').DataTable({
                                     <th>Umur</th>
                                     <th>Tamu PST?</th>
                                     <th>Waktu Kunjungan</th>
+                                    @if(Auth()->user()->isAdmin())
+                                    <th>Aksi</th>
+                                    @endif
                                 </tr>
                             </tfoot>
                             <tbody>
                                 @if ($Kunjungan->isEmpty())
                                     <tr>
-                                        <td colspan="10" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
+                                        <td colspan="11" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
                                     </tr>
                                 @else
                                     @foreach ($Kunjungan as $item)
@@ -143,7 +149,7 @@ $('#dTabel').DataTable({
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{$item->tanggal}}</td>
                                             <td>{{$item->tamu->nama_lengkap}}</td>
-                                            <td>{{$item->tamu->nomor_identitas}}</td>
+                                            <td>{{Generate::NoIdentitas($item->tamu->nomor_identitas)}}</td>
                                             <td>
                                                 @if ($item->tamu->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
@@ -162,6 +168,9 @@ $('#dTabel').DataTable({
                                                     @endif                                            
                                             </td>
                                             <td>{{ $item->created_at->diffForHumans()}}</td>
+                                            @if(Auth()->user()->isAdmin())
+                                                <td><button type="button" name="editid_lama" id="editid_lama" class="btn btn-info">EDIT</button></td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @endif
