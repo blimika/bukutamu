@@ -28,7 +28,10 @@ Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/edit/{id}', 'BukutamuController@editdata')->name('edit');
 Route::get('/cekid/{jenis_identitas}/{nomor_identitas}', 'BukutamuController@cekID')->name('cekid');
+Route::get('/getdatakunjungan/{id}', 'BukutamuController@getDataKunjungan')->name('getdatakunjungan');
 
 Route::post('/hapus', 'BukutamuController@hapus')->name('hapus');
 Route::post('/simpanlama', 'BukutamuController@SimpanLama')->name('simpan.lama');
 Route::get('/lama', 'BukutamuController@lama')->name('lama');
+
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

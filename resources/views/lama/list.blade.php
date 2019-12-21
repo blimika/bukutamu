@@ -68,6 +68,7 @@ $('#dTabel').DataTable({
         ]
     });  
     </script>
+@include('lama.js')
 @stop
 @extends('layouts.utama')
 @section('konten')
@@ -116,9 +117,7 @@ $('#dTabel').DataTable({
                                     <th>Umur</th>
                                     <th>Tamu PST?</th>
                                     <th>Waktu Kunjungan</th>
-                                    @if(Auth()->user()->isAdmin())
-                                    <th>Aksi</th>
-                                    @endif
+                                    <th width="100px">Aksi</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -133,9 +132,7 @@ $('#dTabel').DataTable({
                                     <th>Umur</th>
                                     <th>Tamu PST?</th>
                                     <th>Waktu Kunjungan</th>
-                                    @if(Auth()->user()->isAdmin())
-                                    <th>Aksi</th>
-                                    @endif
+                                    <th width="100px">Aksi</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -168,9 +165,10 @@ $('#dTabel').DataTable({
                                                     @endif                                            
                                             </td>
                                             <td>{{ $item->created_at->diffForHumans()}}</td>
-                                            @if(Auth()->user()->isAdmin())
-                                                <td><button type="button" name="editid_lama" id="editid_lama" class="btn btn-info">EDIT</button></td>
-                                            @endif
+                                            <td>
+                                                <button type="button" name="edit_data" id="edit_data" class="btn btn-info btn-sm btn-circle"><span data-toggle="tooltip" title="Edit data pengunjung"><i class="fa fa-pencil"></i></span></button>
+                                                <button type="button" name="hapus_data" id="hapus_data" class="btn btn-danger btn-sm btn-circle" data-toggle="modal" data-target="#HapusDataModal" data-kid="{{$item->id}}"><span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Hapus data pengunjung"><i class="ti ti-trash"></i></span></button>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @endif
@@ -184,4 +182,5 @@ $('#dTabel').DataTable({
     </div>
 </div>
 @include('modal-tambah')
+@include('lama.modal')
 @endsection

@@ -253,6 +253,20 @@ class BukutamuController extends Controller
     {}
     public function hapus(Request $request)
     {}
+    public function getDataKunjungan($id)
+    {
+        $data = Kunjungan::with('tamu','pLayanan','pManfaat')->where('id','=',$id)->first();
+        $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
+        if ($data) {
+            $arr = array(
+                 'hasil'=> $data,
+                 'status'=> true
+            );
+        }
+        return Response()->json($arr);
+        //dd($data);
+        //$arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
+    }
     public function cekID($jenis_identitas,$nomor_identitas)
     {
         $dataCek = Mtamu::where([['id_midentitas','=',$jenis_identitas],['nomor_identitas','=',$nomor_identitas]])->first();
