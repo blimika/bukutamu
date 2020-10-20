@@ -85,3 +85,14 @@ Table- Footable
     }
 }
 
+#demo-foo-accordion{  
+    .open>.dropdown-menu {
+        display: block;
+    }
+}
+
+#demo-foo-accordion2{  
+    .open>.dropdown-menu {
+        display: block;
+    }
+}

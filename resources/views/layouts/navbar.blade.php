@@ -8,14 +8,21 @@
                     <nav class="sidebar-nav">
                         <ul id="sidebarnav">
                             <li class="user-pro"> 
-                                <!--<a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><img src="{{asset('assets/images/users/1.jpg')}}" alt="user-img" class="img-circle"><span class="hide-menu">Mark Jeckson</span></a>
+                                <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">
+                                    @if (Auth::user())
+                                    {{Auth::user()->name}} 
+                                    @else 
+                                    MASUK 
+                                    @endif 
+                                </span></a>
                                 <ul aria-expanded="false" class="collapse">
-                                    <li><a href="javascript:void(0)"><i class="ti-user"></i> My Profile</a></li>
-                                    <li><a href="javascript:void(0)"><i class="ti-wallet"></i> My Balance</a></li>
-                                    <li><a href="javascript:void(0)"><i class="ti-email"></i> Inbox</a></li>
-                                    <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>
-                                    <li><a href="javascript:void(0)"><i class="fa fa-power-off"></i> Logout</a></li>
-                                </ul>-->
+                                    @if (Auth::user())
+                                    <li><a href="javascript:void(0)"><i class="ti-settings"></i> Ganti Password</a></li>
+                                    <li><a href="{{route('logout')}}"><i class="fa fa-power-off"></i> Logout</a></li>
+                                    @else 
+                                    <li><a href="{{route('login')}}"><i class="fa fa-power-off"></i> Login</a></li>
+                                    @endif
+                                </ul>
                             </li>
                             <li class="nav-small-cap">--- PERSONAL</li>
                             <li> <a class="waves-effect waves-dark" href="{{url('')}}" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
@@ -38,12 +45,7 @@
                                     </li>
                                 </ul>
                             </li>-->
-                            <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Laporan</span></a>
-                                <ul aria-expanded="false" class="collapse">
-                                    <li><a href="javascript:void(0)">Laporan Pengunjung</a></li>
-                                    <li><a href="javascript:void(0)">Laporan Tingkat Kepuasan</a></li>
-                                </ul>
-                            </li>
+                            
                             <li> 
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#TambahModal" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Bukutamu</span></a>
                             </li>
@@ -52,6 +54,12 @@
                             </li>
                             <li> 
                                     <a class="waves-effect waves-dark ml-auto" href="{{route('lama')}}"><i class="ti-eye"></i><span class="hide-menu">Semua Data</span></a>
+                            </li>
+                            <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Laporan</span></a>
+                                <ul aria-expanded="false" class="collapse">
+                                    <li><a href="javascript:void(0)">Laporan Pengunjung</a></li>
+                                    <li><a href="javascript:void(0)">Laporan Tingkat Kepuasan</a></li>
+                                </ul>
                             </li>
                         </ul>
                     </nav>

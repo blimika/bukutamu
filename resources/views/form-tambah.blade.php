@@ -17,14 +17,12 @@
                         <label for="nomor_identitas">Nomor identitas</label>
                         <input type="text" class="form-control" id="nomor_identitas" name="nomor_identitas" required>                    
                 </div>
-                <div class="col-md-2">
-                        <label for="cek_id">&NonBreakingSpace;</label>
+                <div class="col-md-4">
+                        <br />
                         <button type="button" name="cek_id" id="cek_id" class="btn btn-info">CEK ID</button>
+                        <button type="button" name="edit_id" id="edit_id" class="btn btn-success" disabled>EDIT</button>
                 </div>
-                <div class="col-md-2">
-                        <label for="edit_id">&NonBreakingSpace;</label>
-                        <button type="button" name="edit_id" id="edit_id" class="btn btn-success" disabled><i class="fa fa-pencil"></i> Edit</button>
-                </div>
+                
             </div>
         </div>
 </div>

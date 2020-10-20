@@ -12,7 +12,7 @@
 .page-wrapper {
     background: $body-bg;
     position: relative;
-     
+    
 }
 
 .container-fluid {
@@ -22,10 +22,11 @@
 /*******************
  Breadcrumb and page title
 *******************/
-
+ 
 .page-titles {
     background: $white;
     padding: 14px 10px;
+    box-shadow: $shadow;
     margin: 0 -25px 25px -25px;
     h4 {
         margin-bottom: 0px;

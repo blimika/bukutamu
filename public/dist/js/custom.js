@@ -6,18 +6,20 @@ $(function () {
     jQuery(document).on('click', '.mega-dropdown', function (e) {
         e.stopPropagation()
     });
-    // ============================================================== 
+    // ==============================================================
     // This is for the top header part and sidebar part
-    // ==============================================================  
+    // ==============================================================
     var set = function () {
         var width = (window.innerWidth > 0) ? window.innerWidth : this.screen.width;
         var topOffset = 190;
         if (width < 1170) {
             $("body").addClass("mini-sidebar");
+            $('.navbar-brand span').hide();
             $(".sidebartoggler i").addClass("ti-menu");
         }
         else {
             $("body").removeClass("mini-sidebar");
+            $('.navbar-brand span').show();
        }
          var height = ((window.innerHeight > 0) ? window.innerHeight : this.screen.height) - 1;
         height = height - topOffset;
@@ -28,9 +30,9 @@ $(function () {
     };
     $(window).ready(set);
     $(window).on("resize", set);
-    // ============================================================== 
+    // ==============================================================
     // Theme options
-    // ==============================================================     
+    // ==============================================================
     $(".sidebartoggler").on('click', function () {
         if ($("body").hasClass("mini-sidebar")) {
             $("body").trigger("resize");
@@ -52,48 +54,50 @@ $(function () {
     $(".search-box a, .search-box .app-search .srh-btn").on('click', function () {
         $(".app-search").toggle(200);
     });
-    // ============================================================== 
+    // ==============================================================
     // Right sidebar options
-    // ============================================================== 
+    // ==============================================================
     $(".right-side-toggle").click(function () {
         $(".right-sidebar").slideDown(50);
         $(".right-sidebar").toggleClass("shw-rside");
     });
-    // ============================================================== 
+    // ==============================================================
     // This is for the floating labels
-    // ============================================================== 
+    // ==============================================================
     $('.floating-labels .form-control').on('focus blur', function (e) {
         $(this).parents('.form-group').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
     }).trigger('blur');
-    
-    // ============================================================== 
+
+    // ==============================================================
     //tooltip
-    // ============================================================== 
+    // ==============================================================
     $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
-    // ============================================================== 
+    // ==============================================================
     //Popover
-    // ============================================================== 
+    // ==============================================================
     $(function () {
          $('[data-toggle="popover"]').popover()
     })
-       
-    // ============================================================== 
+
+    // ==============================================================
     // Perfact scrollbar
-    // ============================================================== 
+    // ==============================================================
     $('.right-side-panel, .message-center, .right-sidebar').perfectScrollbar();
-    // ============================================================== 
+	$('#chat, #msg, #comment, #todo').perfectScrollbar(); 
+
+    // ==============================================================
     // Resize all elements
     // ============================================================== 
     $("body").trigger("resize");
-    // ============================================================== 
+    // ==============================================================
     // To do list
-    // ============================================================== 
+    // ==============================================================
     $(".list-task li label").click(function () {
         $(this).toggleClass("task-done");
     });
-    // ============================================================== 
+    // ==============================================================
     // Collapsable cards
     // ==============================================================
     $('a[data-action="collapse"]').on('click', function (e) {
@@ -111,14 +115,14 @@ $(function () {
     $('a[data-action="close"]').on('click', function () {
         $(this).closest('.card').removeClass().slideUp('fast');
     });
-    // ============================================================== 
+    // ==============================================================
     // fixed navigattion while scrolll
     // ==============================================================
     function collapseNavbar() {
         if ($(window).scrollTop() > 80) {
             $("body").addClass("fixed-sidebar");
             $(".left-sidebar").addClass("animated slideInDown");
-             
+
         } else {
             $("body").removeClass("fixed-sidebar");
             $(".left-sidebar").removeClass("animated slideInDown");
@@ -126,10 +130,10 @@ $(function () {
     }
     $(window).scroll(collapseNavbar);
     collapseNavbar()
-    // ============================================================== 
+    // ==============================================================
     // Color variation
     // ==============================================================
-    
+
     var mySkins = [
         "skin-default",
         "skin-green",
@@ -173,7 +177,7 @@ $(function () {
             window.alert('Please use a modern browser to properly view this template!')
         }
     }
-    
+
     /**
      * Replaces the old skin with the new skin
      * @param String cls the new skin class
@@ -200,7 +204,14 @@ $(function () {
     }
     setup()
     $("#themecolors").on("click", "a", function () {
-        $("#themecolors li a").removeClass("working"), 
+        $("#themecolors li a").removeClass("working"),
         $(this).addClass("working")
+    })
+    // For Custom File Input
+    $('.custom-file-input').on('change',function(){
+        //get the file name
+        var fileName = $(this).val();
+        //replace the "Choose a file" label
+        $(this).next('.custom-file-label').html(fileName);
     })
 });

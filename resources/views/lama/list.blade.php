@@ -1,75 +1,3 @@
-@section('css')
-    <!-- Date picker plugins css -->
-    <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
-    <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama  {
-            display: none;
-        }
-    </style>
-@stop
-@section('js')
-<script>
-$('#pstcheck').change(function(){
-        $('#PSTlayanan').toggle();
-        $('#PSTmanfaat').toggle();
-    }); 
-    $('#pstcheck_lama').change(function(){
-        $('#PSTlayanan_lama').toggle();
-        $('#PSTmanfaat_lama').toggle();
-    }); 
-</script>
-@include('js')
-    <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
-    <!-- Date Picker Plugin JavaScript -->
-    <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
-    <!-- This is data table -->
-    <script src="{{asset('assets/node_modules/datatables/jquery.dataTables.min.js')}}"></script>
-    <!-- start - This is for export functionality only -->
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script src="https://rawcdn.githack.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script src="https://rawcdn.githack.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-    <!-- end - This is for export functionality only -->
-    <script>
-   $('#tgl_lahir').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$('#tgl_lahir_lama').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$("#tgl_kunjungan").datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$('#dTabel').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'print'
-        ]
-    });  
-    </script>
-@include('lama.js')
-@stop
 @extends('layouts.utama')
 @section('konten')
 <div class="row page-titles">
@@ -117,7 +45,10 @@ $('#dTabel').DataTable({
                                     <th>Umur</th>
                                     <th>Tamu PST?</th>
                                     <th>Waktu Kunjungan</th>
-                                    <th width="100px">Aksi</th>
+                                    @if (Auth::user())
+                                    <th>Aksi</th>
+                                    @endif
+                                    
                                 </tr>
                             </thead>
                             <tfoot>
@@ -132,7 +63,9 @@ $('#dTabel').DataTable({
                                     <th>Umur</th>
                                     <th>Tamu PST?</th>
                                     <th>Waktu Kunjungan</th>
-                                    <th width="100px">Aksi</th>
+                                    @if (Auth::user())
+                                    <th>Aksi</th>
+                                    @endif
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -146,7 +79,7 @@ $('#dTabel').DataTable({
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{$item->tanggal}}</td>
                                             <td>{{$item->tamu->nama_lengkap}}</td>
-                                            <td>{{Generate::NoIdentitas($item->tamu->nomor_identitas)}}</td>
+                                            <td>{{$item->tamu->nomor_identitas}}</td>
                                             <td>
                                                 @if ($item->tamu->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
@@ -164,11 +97,10 @@ $('#dTabel').DataTable({
                                                     <span class="badge badge-success badge-pill">Ya</span>
                                                     @endif                                            
                                             </td>
-                                            <td>{{ $item->created_at->diffForHumans()}}</td>
-                                            <td>
-                                                <button type="button" name="edit_data" id="edit_data" class="btn btn-info btn-sm btn-circle"><span data-toggle="tooltip" title="Edit data pengunjung"><i class="fa fa-pencil"></i></span></button>
-                                                <button type="button" name="hapus_data" id="hapus_data" class="btn btn-danger btn-sm btn-circle" data-toggle="modal" data-target="#HapusDataModal" data-kid="{{$item->id}}"><span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Hapus data pengunjung"><i class="ti ti-trash"></i></span></button>
-                                            </td>
+                                            <td>{{ $item->created_at->isoFormat('dddd, D MMMM Y H:m')}}</td>
+                                            @if (Auth::user())
+                                            <td> <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button></td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @endif
@@ -184,3 +116,94 @@ $('#dTabel').DataTable({
 @include('modal-tambah')
 @include('lama.modal')
 @endsection
+
+@section('css')
+    <!-- Date picker plugins css -->
+    <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama  {
+            display: none;
+        }
+    </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!--alerts CSS -->
+    <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
+@stop
+@section('js')
+<script>
+$('#pstcheck').change(function(){
+        $('#PSTlayanan').toggle();
+        $('#PSTmanfaat').toggle();
+    }); 
+    $('#pstcheck_lama').change(function(){
+        $('#PSTlayanan_lama').toggle();
+        $('#PSTmanfaat_lama').toggle();
+    }); 
+</script>
+@include('js')
+    <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
+    <!-- Date Picker Plugin JavaScript -->
+    <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
+    <!-- This is data table -->
+    <script src="{{asset('assets/node_modules/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('assets/node_modules/datatables.net-bs4/js/dataTables.responsive.min.js')}}"></script>
+    <!-- Sweet-Alert  -->
+    <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
+    <!-- start - This is for export functionality only -->
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <!-- end - This is for export functionality only -->
+    <script>
+        $(function () {
+            $('#dTabel').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy','excel','print'
+                ],
+                responsive: true,
+                "displayLength": 30,
+                
+            });
+            $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
+        });
+
+    </script>
+    <script>
+   $('#tgl_lahir').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    toggleActive: true,
+    todayHighlight: true
+}).on('show.bs.modal', function(event) {
+    // prevent datepicker from firing bootstrap modal "show.bs.modal"
+    event.stopPropagation();
+});
+$('#tgl_lahir_lama').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    toggleActive: true,
+    todayHighlight: true
+}).on('show.bs.modal', function(event) {
+    // prevent datepicker from firing bootstrap modal "show.bs.modal"
+    event.stopPropagation();
+});
+$("#tgl_kunjungan").datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    toggleActive: true,
+    todayHighlight: true
+}).on('show.bs.modal', function(event) {
+    // prevent datepicker from firing bootstrap modal "show.bs.modal"
+    event.stopPropagation();
+});
+
+    </script>
+@include('lama.js')
+@stop

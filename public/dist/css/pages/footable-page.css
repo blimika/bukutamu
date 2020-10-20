@@ -90,3 +90,9 @@ Table- Footable
   margin-left: 0;
   border-bottom-left-radius: .25rem;
   border-top-left-radius: .25rem; }
+
+#demo-foo-accordion .open > .dropdown-menu {
+  display: block; }
+
+#demo-foo-accordion2 .open > .dropdown-menu {
+  display: block; }

@@ -25,14 +25,12 @@
                         <label for="nomor_identitas_lama">Nomor identitas</label>
                         <input type="text" class="form-control" id="nomor_identitas_lama" name="nomor_identitas_lama" required>                    
                 </div>
-                <div class="col-md-2">
-                        <label for="cekid_lama">&NonBreakingSpace;</label>
+                <div class="col-md-4">
+                        <br />
                         <button type="button" name="cekid_lama" id="cekid_lama" class="btn btn-success">CEK ID</button>
+                        <button type="button" name="editid_lama" id="editid_lama" class="btn btn-info" disabled><i class="fas fa-pencil-alt"></i> Edit</button>
                 </div>
-                <div class="col-md-2">
-                        <label for="editid_lama">&NonBreakingSpace;</label>
-                        <button type="button" name="editid_lama" id="editid_lama" class="btn btn-info" disabled><i class="fa fa-pencil"></i> Edit</button>
-                </div>
+                
             </div>
      </div>
 </div>

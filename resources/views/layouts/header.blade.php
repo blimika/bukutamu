@@ -39,20 +39,26 @@
         <!-- User Profile -->
         <!-- ============================================================== -->
         <li class="nav-item dropdown u-pro">
-            <!--<a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset('assets/images/users/1.jpg')}}" alt="user" class=""> <span class="hidden-md-down">Mark &nbsp;<i class="fa fa-angle-down"></i></span> </a>
+            <a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="hidden-md-down">
+                @if (Auth::user())
+            {{Auth::user()->name}} 
+            @else 
+            MASUK 
+            @endif
+            &nbsp;<i class="fa fa-angle-down"></i></span> </a>
             <div class="dropdown-menu dropdown-menu-right animated flipInY">
-                <a href="javascript:void(0)" class="dropdown-item"><i class="ti-user"></i> My Profile</a>
-                <a href="javascript:void(0)" class="dropdown-item"><i class="ti-wallet"></i> My Balance</a>
-                <a href="javascript:void(0)" class="dropdown-item"><i class="ti-email"></i> Inbox</a>
+                @if (Auth::user())
+                <a href="javascript:void(0)" class="dropdown-item"><i class="ti-user"></i> Ganti Password</a>
                 <div class="dropdown-divider"></div>
-                <a href="javascript:void(0)" class="dropdown-item"><i class="ti-settings"></i> Account Setting</a>
-                <div class="dropdown-divider"></div>
-                <a href="login.html" class="dropdown-item"><i class="fa fa-power-off"></i> Logout</a>
-            </div>-->
+                <a href="{{route('logout')}}" class="dropdown-item"><i class="fa fa-power-off"></i> Logout</a>
+                @else
+                <!-- text-->
+                <a href="{{route('login')}}" class="dropdown-item"><i class="ti-user"></i> Login</a>
+                @endif
+            </div>
         </li>
         <!-- ============================================================== -->
         <!-- End User Profile -->
         <!-- ============================================================== -->
-        <li class="nav-item right-side-toggle"> <a class="nav-link  waves-effect waves-light" href="javascript:void(0)"><i class="ti-settings"></i></a></li>
     </ul>
 </div>

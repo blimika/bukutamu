@@ -241,10 +241,6 @@ Table-Layout
 Table-Data Table
 ******************/
 
-.dataTables_wrapper {
-    padding-top: 10px
-}
-
 .dt-buttons {
     display: inline-block;
     padding-top: 5px;
@@ -312,87 +308,61 @@ Table-Data Table
     }
 }
 
-table.dataTable thead .sorting,
-table.dataTable thead .sorting_asc,
-table.dataTable thead .sorting_desc,
-table.dataTable thead .sorting_asc_disabled,
-table.dataTable thead .sorting_desc_disabled {
-    background: transparent;
-}
+#editable-datatable_wrapper{
+    .dataTables_paginate {
+        float: right;
+        text-align: right;
+        padding-top: 0.25em
+    }
 
-table.dataTable thead .sorting_asc:after {
-    content: "\f0de";
-    margin-left: 10px;
-    font-family: fontawesome;
-    cursor: pointer;
-}
+    .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        *cursor: hand;
+        color: $body-color;
+        border: 1px solid #ddd;
+    }
 
-table.dataTable thead .sorting_desc:after {
-    content: "\f0dd";
-    margin-left: 10px;
-    font-family: fontawesome;
-    cursor: pointer;
-}
+    .dataTables_paginate .paginate_button.current,
+    .dataTables_paginate .paginate_button.current:hover {
+        color: $white !important;
+        border: 1px solid $themecolor;
+        background-color: $themecolor;
+    }
 
-table.dataTable thead .sorting:after {
-    content: "\f0dc";
-    margin-left: 10px;
-    font-family: fontawesome !important;
-    cursor: pointer;
-    color: rgba(50, 50, 50, .5);
-}
+    .dataTables_paginate .paginate_button.disabled,
+    .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_paginate .paginate_button.disabled:active {
+        cursor: default;
+        color: $body-color;
+        border: 1px solid $border-color;
+        background: transparent;
+        box-shadow: none
+    }
 
-.dataTables_wrapper .dataTables_paginate {
-    float: right;
-    text-align: right;
-    padding-top: 0.25em
-}
+    .dataTables_paginate .paginate_button:hover {
+        border: 1px solid $themecolor;
+        background-color: $themecolor;
+        a{
+            color: $white;
+        }
+    }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    box-sizing: border-box;
-    display: inline-block;
-    min-width: 1.5em;
-    padding: 0.5em 1em;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    *cursor: hand;
-    color: $body-color;
-    border: 1px solid #ddd;
-}
+    .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: $body-color;
+    }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button.current,
-.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-    color: $white !important;
-    border: 1px solid $themecolor;
-    background-color: $themecolor;
-}
+    .dataTables_paginate .ellipsis {
+        padding: 0 1em
+    }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
-    cursor: default;
-    color: $body-color;
-    border: 1px solid $border-color;
-    background: transparent;
-    box-shadow: none
 }
-
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    color: white;
-    border: 1px solid $themecolor;
-    background-color: $themecolor;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button:active {
-    outline: none;
-    background-color: $body-color;
-}
-
-.dataTables_wrapper .dataTables_paginate .ellipsis {
-    padding: 0 1em
-}
-
 /*******************
 Table- responsive
 ******************/
@@ -407,27 +377,6 @@ Table- editable table
 
 .dt-bootstrap {
     display: block;
-}
-
-.paging_simple_numbers {
-    .pagination {
-        .paginate_button {
-            padding: 0px;
-            background: $white;
-            &:hover {
-                background: $white;
-            }
-            a {
-                padding: 3px 10px;
-                border: 0px;
-            }
-            &.active a,
-            &:hover a {
-                background: $info;
-                color: $white;
-            }
-        }
-    }
 }
 .stylish-table {
     tbody tr{
@@ -475,4 +424,8 @@ Table-Jsgrid table
 
 .jsgrid-pager-page.jsgrid-pager-current-page {
     padding: 0.5em 1em !important;
+}
+
+#footable-addrow .open > .dropdown-menu {
+    display: block;
 }

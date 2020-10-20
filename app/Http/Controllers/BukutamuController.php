@@ -252,7 +252,32 @@ class BukutamuController extends Controller
     public function updatedata(Request $request)
     {}
     public function hapus(Request $request)
-    {}
+    {
+        //get dulu datanya
+        //apabila is_pst = 1 
+        // hapus di tabel pst_layanan dan pst_manfaat
+        $count = Kunjungan::where('id',$request->id)->count();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data kunjungan tidak tersedia'
+        );
+        if ($count>0)
+        {
+            $data = Kunjungan::where('id',$request->id)->first();
+            if ($data->is_pst == 1)
+            {
+                Pstlayanan::where('kunjungan_id',$request->id)->delete();
+                Pstmanfaat::where('kunjungan_id',$request->id)->delete();
+            }
+            $nama = $data->tamu->nama_lengkap;
+            $data->delete();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data kunjungan an. '.$nama.' berhasil dihapus'
+            );
+        }
+        return Response()->json($arr);
+    }
     public function getDataKunjungan($id)
     {
         $data = Kunjungan::with('tamu','pLayanan','pManfaat')->where('id','=',$id)->first();
