@@ -61,6 +61,12 @@
                                     <li><a href="javascript:void(0)">Laporan Tingkat Kepuasan</a></li>
                                 </ul>
                             </li>
+                            <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
+                                <ul aria-expanded="false" class="collapse">
+                                    <li><a href="javascript:void(0)">Pengunjung</a></li>
+                                    <li><a href="javascript:void(0)">Pendidikan</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </nav>
                     <!-- End Sidebar navigation -->

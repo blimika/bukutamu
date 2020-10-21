@@ -144,4 +144,16 @@
                                 </div> 
                         @endforeach
         </div>
+        
+</div>
+<div class="row">
+        <div class="form-group col-md-6" id="PSTFasilitas">
+                <h5>Fasilitas Utama : <span class="text-danger">*</span></h5>
+                <select name="fasilitas_utama" class="form-control">
+                    <option value="">Pilih Fasilitas</option>
+                    @foreach ($Mfasilitas as $item_fasilitas)
+                        <option value="{{$item_fasilitas->id}}">{{$item_fasilitas->nama}}</option>
+                    @endforeach
+                </select>
+        </div>
 </div>

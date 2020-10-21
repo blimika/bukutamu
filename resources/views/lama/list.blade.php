@@ -121,7 +121,7 @@
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama  {
+        #PSTlayanan, #PSTmanfaat, #PSTFasilitas, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas_lama  {
             display: none;
         }
     </style>
@@ -136,10 +136,12 @@
 $('#pstcheck').change(function(){
         $('#PSTlayanan').toggle();
         $('#PSTmanfaat').toggle();
+        $('#PSTFasilitas').toggle();
     }); 
     $('#pstcheck_lama').change(function(){
         $('#PSTlayanan_lama').toggle();
         $('#PSTmanfaat_lama').toggle();
+        $('#PSTFasilitas_lama').toggle();
     }); 
 </script>
 @include('js')

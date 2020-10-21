@@ -21,10 +21,10 @@ class DatabaseSeeder extends Seeder
         DB::table('mlayanan')->insert([
             ['id' => 1, 'nama' => 'Pustaka Tercetak', 'flag' => 1],
             ['id' => 2, 'nama' => 'Pustaka Digital', 'flag' => 1],
-            ['id' => 4, 'nama' => 'Layanan Data Mikro', 'flag' => 1],
-            ['id' => 8, 'nama' => 'Pembelian Publikasi', 'flag' => 1],
-            ['id' => 16, 'nama' => 'Konsultasi Data', 'flag' => 1],
-            ['id' => 32, 'nama' => 'Rekomendasi survei', 'flag' => 1],
+            ['id' => 4, 'nama' => 'Penjualan Publikasi', 'flag' => 1],
+            ['id' => 8, 'nama' => 'Data Mikro', 'flag' => 1],
+            ['id' => 16, 'nama' => 'Konsultasi Statistik', 'flag' => 1],
+            ['id' => 32, 'nama' => 'Rekomendasi Kegiatan Statistik', 'flag' => 1],
         ]);
         
         //jenis kelamin
@@ -38,21 +38,19 @@ class DatabaseSeeder extends Seeder
             ['id' => 1, 'nama' => '<= SLTA', 'flag' => 1],
             ['id' => 2, 'nama' => 'D1/D2/D3', 'flag' => 1],
             ['id' => 3, 'nama' => 'D4/S1', 'flag' => 1],
-            ['id' => 4, 'nama' => 'S2/S3', 'flag' => 1],
+            ['id' => 4, 'nama' => 'S2', 'flag' => 1],
+            ['id' => 5, 'nama' => 'S3', 'flag' => 1],
         ]);
 
         //Insert Pekerjaan
         DB::table('mpekerjaan')->insert([
-            ['id' => 1, 'nama' => 'Pelajar', 'flag' => 1],
-            ['id' => 2, 'nama' => 'Mahasiswa', 'flag' => 1],
-            ['id' => 3, 'nama' => 'Mahasiswa Poltek STIS', 'flag' => 1],
-            ['id' => 4, 'nama' => 'Pegawai BPS', 'flag' => 1],
-            ['id' => 5, 'nama' => 'Pegawai Tugas Belajar BPS', 'flag' => 1],
-            ['id' => 6, 'nama' => 'PNS/TNI/POLRI', 'flag' => 1],
-            ['id' => 7, 'nama' => 'Instansi Swasta', 'flag' => 1],
-            ['id' => 8, 'nama' => 'Lembaga Pendidikan', 'flag' => 1],
-            ['id' => 9, 'nama' => 'Lembaga Internasional', 'flag' => 1],
-            ['id' => 99, 'nama' => 'Lainnya', 'flag' => 1],
+            ['id' => 1, 'nama' => 'Pelajar/Mahasiswa', 'flag' => 1],
+            ['id' => 2, 'nama' => 'Peneliti/Dosen', 'flag' => 1],
+            ['id' => 3, 'nama' => 'PNS/TNI/POLRI', 'flag' => 1],
+            ['id' => 4, 'nama' => 'Pegawai BUMN/D', 'flag' => 1],
+            ['id' => 5, 'nama' => 'Pegawai Swasta', 'flag' => 1],
+            ['id' => 6, 'nama' => 'Wiraswasta', 'flag' => 1],
+            ['id' => 7, 'nama' => 'Lainnya', 'flag' => 1],
         ]);
 
         //Insert Kategori Pekerjaan
@@ -66,7 +64,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 7, 'nama' => 'Perbankan', 'flag' => 1],
             ['id' => 8, 'nama' => 'BUMN/BUMD', 'flag' => 1],
             ['id' => 9, 'nama' => 'Swasta Lainnya', 'flag' => 1],
-            ['id' => 99, 'nama' => 'Lainnya', 'flag' => 1],
+            ['id' => 10, 'nama' => 'Lainnya', 'flag' => 1],
         ]);
 
         //Insert Kewarganegaraan
@@ -97,6 +95,18 @@ class DatabaseSeeder extends Seeder
             ['id' => 3, 'nama' => 'SIM', 'flag' => 1],
             ['id' => 4, 'nama' => 'Paspor', 'flag' => 1],
             ['id' => 99, 'nama' => 'Lainnya', 'flag' => 1],
+        ]);
+        //Insert Master Fasilitas Utama
+        DB::table('mfasilitas')->insert([
+            ['id' => 1, 'nama' => 'Website BPS', 'flag' => 1],
+            ['id' => 2, 'nama' => 'Allstats BPS (aplikasi android dan iOS)', 'flag' => 1],
+            ['id' => 3, 'nama' => 'Silastik (silastik.bps.go.id)', 'flag' => 1],
+            ['id' => 4, 'nama' => 'Sirusa (sirusa.bps.go.id)', 'flag' => 1],
+            ['id' => 5, 'nama' => 'Romantik Online (romantik.bps.go.id)', 'flag' => 1],
+            ['id' => 6, 'nama' => 'Telepon/Faksimile', 'flag' => 1],
+            ['id' => 7, 'nama' => 'E-mail/Surat', 'flag' => 1],
+            ['id' => 8, 'nama' => 'Data langsung ke PST', 'flag' => 1],
+            ['id' => 9, 'nama' => 'Lainnya', 'flag' => 1],
         ]);
     }
 }

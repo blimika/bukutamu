@@ -19,6 +19,7 @@ class Kunjungan extends Migration
             $table->date('tanggal');
             $table->text('keperluan');
             $table->boolean('is_pst')->default(0);
+            $table->tinyInteger('f_id')->default(0);
             $table->timestamps();
         });
     }

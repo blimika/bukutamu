@@ -17,6 +17,7 @@ use App\Mtamu;
 use App\Kunjungan;
 use App\Pstlayanan;
 use App\Pstmanfaat;
+use App\Mfasilitas;
 class BukutamuController extends Controller
 {
     //
@@ -30,9 +31,10 @@ class BukutamuController extends Controller
         $Mwarga = Mwarga::orderBy('id','asc')->get();
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
-        return view('depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan]);
+        return view('depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas]);
     }
 
     public function lama()
@@ -47,7 +49,8 @@ class BukutamuController extends Controller
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')->orderBy('tanggal','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
-        return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan]);
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas]);
     }
 
     public function simpan(Request $request)
@@ -56,7 +59,7 @@ class BukutamuController extends Controller
         //$pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
         //$test = $request->pst_layanan;
         //dd($request->all());
-        //dd($pst_layanan);
+        //dd($request->all());
         
         if ($request->tamu_id==NULL) {
             $data = new Mtamu();
@@ -115,9 +118,16 @@ class BukutamuController extends Controller
         $dataKunjungan -> tamu_id = $id_tamu;
         $dataKunjungan -> tanggal = Carbon::today()->format('Y-m-d');
         $dataKunjungan -> keperluan = $request->keperluan;
-        if ($request->pst==NULL) { $is_pst=0;}
-        else { $is_pst=$request->pst; }
-        $dataKunjungan -> is_pst = $is_pst;
+        if ($request->pst==NULL) { 
+            $is_pst=0;
+            $f_id = 0;
+        }
+        else { 
+            $is_pst=$request->pst;
+            $f_id = $request->fasilitas_utama;
+        }
+        $dataKunjungan->is_pst = $is_pst;
+        $dataKunjungan->f_id = $f_id;
         $dataKunjungan -> save();
 
         if ($is_pst>0) {
@@ -214,10 +224,19 @@ class BukutamuController extends Controller
         $dataKunjungan -> tamu_id = $id_tamu;
         $dataKunjungan -> tanggal = $request->tgl_kunjungan;
         $dataKunjungan -> keperluan = $request->keperluan_lama;
-        if ($request->pst_lama==NULL) { $is_pst_lama=0;}
-        else { $is_pst_lama=$request->pst_lama; }
-        $dataKunjungan -> is_pst = $is_pst_lama;
-        $dataKunjungan -> save();
+        if ($request->pst_lama==NULL) 
+        { 
+            $is_pst_lama=0;
+            $f_id_lama = 0;
+        }
+        else 
+        { 
+            $is_pst_lama=$request->pst_lama;
+            $f_id_lama = $request->fasilitas_utama_lama; 
+        }
+        $dataKunjungan->is_pst = $is_pst_lama;
+        $dataKunjungan->f_id = $f_id_lama;
+        $dataKunjungan->save();
 
         if ($is_pst_lama>0) {
             //isi tabel pst_layanan dan pst_manfaat

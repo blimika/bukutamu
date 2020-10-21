@@ -24,4 +24,8 @@ class Kunjungan extends Model
     public function pManfaat(){
     	return $this->hasMany('App\PstManfaat', 'kunjungan_id', 'id');
     }
+    public function Fasilitas()
+    {
+        return $this->belongsTo('App\Mfasilitas', 'f_id', 'id');
+    }
 }
