@@ -28,24 +28,6 @@
                             <li> <a class="waves-effect waves-dark" href="{{url('')}}" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
                                
                             </li>
-                            <!--<li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-layout-grid2"></i><span class="hide-menu">Apps</span></a>
-                                <ul aria-expanded="false" class="collapse">
-                                    <li><a href="app-calendar.html">Calendar</a></li>
-                                    <li><a href="app-chat.html">Chat app</a></li>
-                                    <li><a href="app-ticket.html">Support Ticket</a></li>
-                                    <li><a href="app-contact.html">Contact / Employee</a></li>
-                                    <li><a href="app-contact2.html">Contact Grid</a></li>
-                                    <li><a href="app-contact-detail.html">Contact Detail</a></li>
-                                    <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">Inbox</span></a>
-                                        <ul aria-expanded="false" class="collapse">
-                                            <li><a href="app-email.html">Mailbox</a></li>
-                                            <li><a href="app-email-detail.html">Mailbox Detail</a></li>
-                                            <li><a href="app-compose.html">Compose Mail</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>-->
-                            
                             <li> 
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#TambahModal" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Bukutamu</span></a>
                             </li>
@@ -55,6 +37,7 @@
                             <li> 
                                     <a class="waves-effect waves-dark ml-auto" href="{{route('lama')}}"><i class="ti-eye"></i><span class="hide-menu">Semua Data</span></a>
                             </li>
+                            @if (Auth::user())
                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Laporan</span></a>
                                 <ul aria-expanded="false" class="collapse">
                                     <li><a href="javascript:void(0)">Laporan Pengunjung</a></li>
@@ -63,10 +46,11 @@
                             </li>
                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
                                 <ul aria-expanded="false" class="collapse">
-                                    <li><a href="javascript:void(0)">Pengunjung</a></li>
+                                    <li><a href="{{route('pengunjung.list')}}">Pengunjung</a></li>
                                     <li><a href="javascript:void(0)">Pendidikan</a></li>
                                 </ul>
                             </li>
+                            @endif
                         </ul>
                     </nav>
                     <!-- End Sidebar navigation -->

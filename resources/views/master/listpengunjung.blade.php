@@ -8,9 +8,9 @@
         <div class="d-flex justify-content-end align-items-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
-                <li class="breadcrumb-item active">Bukutamu</li>
+                <li class="breadcrumb-item active">Master Pengunjung</li>
             </ol>
-            <button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#InputDataLamaModal"><i class="fa fa-plus-circle"></i> Tambah</button>
+            <button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#TambahModal"><i class="fa fa-plus-circle"></i> Tambah</button>
         </div>
     </div>
 </div>
@@ -32,6 +32,7 @@
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
+                    
                     <div class="table-responsive m-t-40">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
@@ -40,15 +41,12 @@
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
-                                    <th>Alamat</th>
-                                    <th>Keperluan/Data dicari</th>
-                                    <th>Umur</th>
-                                    <th>Tamu PST?</th>
-                                    <th>Waktu Kunjungan</th>
+                                    <th>Tgl Lahir</th>
+                                    <th>Email</th>
+                                    <th>Pekerjaan</th>
                                     @if (Auth::user())
                                     <th>Aksi</th>
                                     @endif
-                                    
                                 </tr>
                             </thead>
                             <tfoot>
@@ -57,53 +55,42 @@
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
-                                    <th>Alamat</th>
-                                    <th>Keperluan/Data dicari</th>
-                                    <th>Umur</th>
-                                    <th>Tamu PST?</th>
-                                    <th>Waktu Kunjungan</th>
+                                    <th>Tgl Lahir</th>
+                                    <th>Email</th>
+                                    <th>Pekerjaan</th>
                                     @if (Auth::user())
                                     <th>Aksi</th>
                                     @endif
                                 </tr>
                             </tfoot>
                             <tbody>
-                                @if ($Kunjungan->isEmpty())
+                                @if ($dataTamu->isEmpty())
                                     <tr>
-                                        <td colspan="11" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
+                                        <td colspan="8" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
                                     </tr>
                                 @else
-                                    @foreach ($Kunjungan as $item)
-                                    <tr>
+                                    @foreach ($dataTamu as $item)
+                                        <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$item->tamu->nama_lengkap}}</td>
-                                            <td>{{$item->tamu->nomor_identitas}}</td>
+                                            <td>{{$item->nama_lengkap}}</td>
+                                            <td>{{$item->nomor_identitas}}</td>
                                             <td>
-                                                @if ($item->tamu->jk->inisial=='L')
-                                                <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
+                                                @if ($item->jk->inisial=='L')
+                                                <span class="badge badge-info badge-pill">{{$item->jk->inisial}}</span>
                                                 @else 
-                                                <span class="badge badge-danger badge-pill">{{$item->tamu->jk->inisial}}</span>
+                                                <span class="badge badge-danger badge-pill">{{$item->jk->inisial}}</span>
                                                 @endif
                                             </td>
-                                            <td>{{$item->tamu->alamat}} </td>
-                                            <td>{{$item->keperluan}}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->isoFormat('D MMMM Y')}}</td>
+                                            <td>{{$item->email}}</td>
+                                            <td>{{$item->pekerjaan->nama}}</td>
                                             <td>
-                                                    @if ($item->is_pst=='0')
-                                                    <span class="badge badge-info badge-pill">Tidak</span>
-                                                    @else 
-                                                    <span class="badge badge-success badge-pill">Ya</span>
-                                                    @endif                                            
+                                                <button class="btn btn-sm btn-info" data-id="{{$item->id}}" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
+                                                <button class="btn btn-sm btn-danger hapuspengunjung" data-id="{{$item->id}}" data-nama="{{$item->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung {{$item->nama_lengkap}}"></i></button>
                                             </td>
-                                            <td>{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('dddd, D MMMM Y')}}</td>
-                                            @if (Auth::user())
-                                            <td> <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button></td>
-                                            @endif
                                         </tr>
                                     @endforeach
                                 @endif
-                               
-                                
                             </tbody>
                         </table>
                     </div>
@@ -111,15 +98,14 @@
         </div>
     </div>
 </div>
-@include('modal-tambah')
-@include('lama.modal')
+@include('master.modal')
 @endsection
 
 @section('css')
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTFasilitas, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas_lama  {
+        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama {
             display: none;
         }
     </style>
@@ -149,8 +135,6 @@ $('#pstcheck').change(function(){
     <!-- This is data table -->
     <script src="{{asset('assets/node_modules/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/datatables.net-bs4/js/dataTables.responsive.min.js')}}"></script>
-    <!-- Sweet-Alert  -->
-    <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
     <!-- start - This is for export functionality only -->
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
@@ -175,6 +159,8 @@ $('#pstcheck').change(function(){
         });
 
     </script>
+    <!-- Sweet-Alert  -->
+    <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
     <script>
    $('#tgl_lahir').datepicker({
     autoclose: true,
@@ -203,7 +189,6 @@ $("#tgl_kunjungan").datepicker({
     // prevent datepicker from firing bootstrap modal "show.bs.modal"
     event.stopPropagation();
 });
-
     </script>
-@include('lama.js')
+    @include('master.js')
 @stop

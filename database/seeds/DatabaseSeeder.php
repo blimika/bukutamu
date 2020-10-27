@@ -105,7 +105,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 5, 'nama' => 'Romantik Online (romantik.bps.go.id)', 'flag' => 1],
             ['id' => 6, 'nama' => 'Telepon/Faksimile', 'flag' => 1],
             ['id' => 7, 'nama' => 'E-mail/Surat', 'flag' => 1],
-            ['id' => 8, 'nama' => 'Data langsung ke PST', 'flag' => 1],
+            ['id' => 8, 'nama' => 'Datang langsung ke PST', 'flag' => 1],
             ['id' => 9, 'nama' => 'Lainnya', 'flag' => 1],
         ]);
     }
