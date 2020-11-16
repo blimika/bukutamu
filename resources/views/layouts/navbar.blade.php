@@ -40,7 +40,7 @@
                             @if (Auth::user())
                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Laporan</span></a>
                                 <ul aria-expanded="false" class="collapse">
-                                    <li><a href="javascript:void(0)">Laporan Pengunjung</a></li>
+                                    <li><a href="{{route('laporan.pengunjung')}}">Laporan Pengunjung</a></li>
                                     <li><a href="javascript:void(0)">Laporan Tingkat Kepuasan</a></li>
                                 </ul>
                             </li>
