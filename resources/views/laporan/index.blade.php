@@ -32,17 +32,17 @@
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Laporan pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
-                    <h6 class="card-subtitle">Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}}</h6>
+                    
                     <div class="table-responsive m-t-40">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
-                                <tr>
+                                <tr class="bg-info">
                                     <th rowspan="2" class="text-center">No</th>
                                     <th rowspan="2" class="text-center">Bulan</th>
                                     <th colspan="3" class="text-center">PST</th>
                                     <th colspan="3" class="text-center">Kantor</th>
                                 </tr>
-                                <tr>
+                                <tr class="bg-info">
                                     <th class="text-center">Laki-Laki</th>
                                     <th class="text-center">Perempuan</th>
                                     <th class="text-center">Total</th>
@@ -69,7 +69,44 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                                
+                                @php
+                                 $laki =0;
+                                 $wanita =0;
+                                 $total =0; 
+                                 $kntrlaki =0;
+                                 $kntrwanita =0;
+                                 $kntrtotal =0;  
+                                @endphp
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <tr>
+                                        <td>{{$i}}</td>
+                                        <td>{{$dataBulan[$i]}}</td>
+                                        <td>{{$dataKunjungan[$i]['pst_laki']}}</td>
+                                        <td>{{$dataKunjungan[$i]['pst_perempuan']}}</td>
+                                        <td>{{$dataKunjungan[$i]['pst_total']}}</td>
+                                        <td>{{$dataKunjungan[$i]['kntr_laki']}}</td>
+                                        <td>{{$dataKunjungan[$i]['kntr_perempuan']}}</td>
+                                        <td>{{$dataKunjungan[$i]['kntr_total']}}</td>
+                                    </tr>
+                                    @php
+                                        $laki = $laki + $dataKunjungan[$i]['pst_laki'];
+                                        $wanita = $wanita + $dataKunjungan[$i]['pst_perempuan'];
+                                        $total = $total + $dataKunjungan[$i]['pst_total'];
+                                        $kntrlaki = $kntrlaki + $dataKunjungan[$i]['kntr_laki'];
+                                        $kntrwanita = $kntrwanita + $dataKunjungan[$i]['kntr_perempuan'];
+                                        $kntrtotal = $kntrtotal + $dataKunjungan[$i]['kntr_total'];
+                                    @endphp
+                                @endfor
+                                <tr>
+                                   
+                                    <td colspan="2">Total</td>
+                                    <td>{{$laki}}</td>
+                                    <td>{{$wanita}}</td>
+                                    <td>{{$total}}</td>
+                                    <td>{{$kntrlaki}}</td>
+                                    <td>{{$kntrwanita}}</td>
+                                    <td>{{$kntrtotal}}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

@@ -18,14 +18,6 @@ class Kunjungan extends Model
     {
         return $this->belongsTo('App\Mtamu', 'tamu_id', 'id');
     }
-    public function TamuPst()
-    {
-        return $this->belongsTo('App\Mtamu', 'tamu_id', 'id')->where('is_pst','1');
-    }
-    public function TamuKantor()
-    {
-        return $this->belongsTo('App\Mtamu', 'tamu_id', 'id')->where('is_pst','0');
-    }
     public function pLayanan(){
     	return $this->hasMany('App\Pstlayanan', 'kunjungan_id', 'id');
     }
