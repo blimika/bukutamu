@@ -4,24 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Kunjungan extends Migration
+class CreateFeedbackTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    //f_feedback value 1=belum, 2=sudah
     public function up()
     {
-        Schema::create('kunjungan', function (Blueprint $table) {
+        Schema::create('feedback', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('kunjungan_id')->unsigned();
             $table->bigInteger('tamu_id')->unsigned();
-            $table->date('tanggal');
-            $table->text('keperluan');
-            $table->boolean('is_pst')->default(0);
-            $table->tinyInteger('f_id')->default(0);
-            $table->tinyInteger('f_feedback')->default(1);
+            $table->date('feedback_tanggal');
+            $table->tinyInteger('feedback_nilai')->default(6);
+            $table->text('feedback_komentar')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ class Kunjungan extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kunjungan');
+        Schema::dropIfExists('feedback');
     }
 }

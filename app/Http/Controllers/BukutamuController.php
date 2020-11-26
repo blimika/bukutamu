@@ -18,6 +18,8 @@ use App\Kunjungan;
 use App\Pstlayanan;
 use App\Pstmanfaat;
 use App\Mfasilitas;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 class BukutamuController extends Controller
 {
     //
@@ -39,6 +41,53 @@ class BukutamuController extends Controller
 
     public function lama()
     {
+        $data_bulan = array(
+            1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'
+        );
+        $data_tahun = DB::table('kunjungan')
+                    ->selectRaw('year(tanggal) as tahun')
+                    ->groupBy('tahun')
+                    ->orderBy('tahun','asc')
+                      ->get();
+        //dd($data_tahun);
+        //filter
+        if (request('tamu_pst')==NULL)
+        {
+            $tamu_filter = 9;
+        }
+        elseif (request('tamu_pst')==0)
+        {
+            $tamu_filter = 0;
+        }
+        else
+        {
+            $tamu_filter = request('tamu_pst');
+        }
+        if (request('tahun')==NULL)
+        {
+            $tahun_filter=date('Y');
+        }
+        elseif (request('tahun')==0)
+        {
+            $tahun_filter=date('Y');
+        }
+        else
+        {
+            $tahun_filter = request('tahun');
+        }
+        if (request('bulan')==NULL)
+        {
+            $bulan_filter= (int) date('m');
+        }
+        elseif (request('bulan')==0)
+        {
+            $bulan_filter = NULL;
+        }
+        else
+        {
+            $bulan_filter = request('bulan');
+        }
+        //batas filter
         $Midentitas = Midentitas::orderBy('id','asc')->get();
         $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
         $Mjk = Mjk::orderBy('id','asc')->get();
@@ -47,10 +96,19 @@ class BukutamuController extends Controller
         $Mwarga = Mwarga::orderBy('id','asc')->get();
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
-        $Kunjungan = Kunjungan::with('tamu')->orderBy('tanggal','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
-        return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas]);
+        $Kunjungan = Kunjungan::with('tamu')
+                        ->when($tamu_filter < 9,function ($query) use ($tamu_filter){
+                            return $query->where('is_pst','=',$tamu_filter);
+                        })
+                        ->when($bulan_filter,function ($query) use ($bulan_filter){
+                            return $query->whereMonth('tanggal','=',$bulan_filter);
+                        })
+                        ->whereYear('tanggal','=',$tahun_filter)
+                        ->orderBy('tanggal','desc')->get();
+        //dd($tamu_filter);
+        return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter]);
     }
 
     public function simpan(Request $request)
@@ -60,7 +118,7 @@ class BukutamuController extends Controller
         //$test = $request->pst_layanan;
         //dd($request->all());
         //dd($request->all());
-        
+
         if ($request->tamu_id==NULL) {
             $data = new Mtamu();
             $data->id_midentitas = $request->jenis_identitas;
@@ -112,13 +170,13 @@ class BukutamuController extends Controller
             $id_tamu = $request->tamu_id;
         }
         //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
-        
 
-        if ($request->pst==NULL) { 
+
+        if ($request->pst==NULL) {
             $is_pst=0;
             $f_id = 0;
         }
-        else { 
+        else {
             $is_pst=$request->pst;
             $f_id = $request->fasilitas_utama;
         }
@@ -132,7 +190,7 @@ class BukutamuController extends Controller
             $pesan_error = 'Data pengunjung '.$data->nama_lengkap.' sudah pernah mengisi bukutamu hari tanggal '.Carbon::today()->isoFormat('dddd, D MMMM Y');
             $warna_error = 'danger';
         }
-        else 
+        else
         {
             $dataKunjungan = new Kunjungan();
             $dataKunjungan->tamu_id = $id_tamu;
@@ -146,7 +204,7 @@ class BukutamuController extends Controller
                 $pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
                 $pst_manfaat = MKunjungan::whereIn('id',$request->pst_manfaat)->get();
                 $kunjungan_id = $dataKunjungan->id;
-                foreach ($pst_layanan as $l) 
+                foreach ($pst_layanan as $l)
                 {
                     $dataLayanan = new Pstlayanan();
                     $dataLayanan->kunjungan_id = $kunjungan_id;
@@ -154,7 +212,7 @@ class BukutamuController extends Controller
                     $dataLayanan->layanan_nama = $l->nama;
                     $dataLayanan->save();
                 }
-                foreach ($pst_manfaat as $m) 
+                foreach ($pst_manfaat as $m)
                 {
                     $dataManfaat = new Pstmanfaat();
                     $dataManfaat->kunjungan_id = $kunjungan_id;
@@ -162,7 +220,7 @@ class BukutamuController extends Controller
                     $dataManfaat->manfaat_nama = $m->nama;
                     $dataManfaat->save();
                 }
-                
+
             }
         }
         Session::flash('message', $pesan_error);
@@ -177,7 +235,7 @@ class BukutamuController extends Controller
         //$test = $request->pst_layanan;
         //dd($request->all());
         //dd($pst_layanan);
-        
+
         if ($request->tamu_id_lama==NULL) {
             $data = new Mtamu();
             $data->id_midentitas = $request->jenis_identitas_lama;
@@ -229,15 +287,15 @@ class BukutamuController extends Controller
             $id_tamu = $request->tamu_id_lama;
         }
         //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
-        if ($request->pst_lama==NULL) 
-        { 
+        if ($request->pst_lama==NULL)
+        {
             $is_pst_lama=0;
             $f_id_lama = 0;
         }
-        else 
-        { 
+        else
+        {
             $is_pst_lama = $request->pst_lama;
-            $f_id_lama = $request->fasilitas_utama_lama; 
+            $f_id_lama = $request->fasilitas_utama_lama;
         }
         $data = Mtamu::where('id','=',$id_tamu)->first();
         $cek_kunjungan = Kunjungan::where([['tamu_id',$id_tamu],['tanggal',Carbon::parse($request->tgl_kunjungan)->format('Y-m-d')],['is_pst',$is_pst_lama]])->count();
@@ -247,7 +305,7 @@ class BukutamuController extends Controller
             $pesan_error = 'Data pengunjung '.$data->nama_lengkap.' sudah pernah mengisi bukutamu hari tanggal '.Carbon::parse($request->tgl_kunjungan)->isoFormat('dddd, D MMMM Y');
             $warna_error = 'danger';
         }
-        else 
+        else
         {
             $dataKunjungan = new Kunjungan();
             $dataKunjungan->tamu_id = $id_tamu;
@@ -262,7 +320,7 @@ class BukutamuController extends Controller
                 $pst_layanan_lama = Mlayanan::whereIn('id',$request->pst_layanan_lama)->get();
                 $pst_manfaat_lama = MKunjungan::whereIn('id',$request->pst_manfaat_lama)->get();
                 $kunjungan_id = $dataKunjungan->id;
-                foreach ($pst_layanan_lama as $l) 
+                foreach ($pst_layanan_lama as $l)
                 {
                     $dataLayanan = new Pstlayanan();
                     $dataLayanan->kunjungan_id = $kunjungan_id;
@@ -270,7 +328,7 @@ class BukutamuController extends Controller
                     $dataLayanan->layanan_nama = $l->nama;
                     $dataLayanan->save();
                 }
-                foreach ($pst_manfaat_lama as $m) 
+                foreach ($pst_manfaat_lama as $m)
                 {
                     $dataManfaat = new Pstmanfaat();
                     $dataManfaat->kunjungan_id = $kunjungan_id;
@@ -278,7 +336,7 @@ class BukutamuController extends Controller
                     $dataManfaat->manfaat_nama = $m->nama;
                     $dataManfaat->save();
                 }
-                
+
             }
         }
         Session::flash('message', $pesan_error);
@@ -292,7 +350,7 @@ class BukutamuController extends Controller
     public function hapus(Request $request)
     {
         //get dulu datanya
-        //apabila is_pst = 1 
+        //apabila is_pst = 1
         // hapus di tabel pst_layanan dan pst_manfaat
         $count = Kunjungan::where('id',$request->id)->count();
         $arr = array(
@@ -350,7 +408,7 @@ class BukutamuController extends Controller
                     'email'=>$dataCek->email,
                     'telepon'=>$dataCek->telepon ,
                     'alamat'=>$dataCek->alamat
-                ), 
+                ),
                 'status' => true
             );
         }

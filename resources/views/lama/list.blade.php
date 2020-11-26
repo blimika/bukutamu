@@ -23,7 +23,12 @@
 <div class="row">
     <div class="col-lg-12 col-sm-12">
         @if (Session::has('message'))
-        <div class="alert alert-{{ Session::get('message_type') }}" id="waktu2" style="margin-top:10px;">{{ Session::get('message') }}</div>
+        <div class="alert alert-{{ Session::get('message_type') }}" id="waktu2" style="margin-top:10px;">
+            @if (Session::has('message_header'))
+            <h4 class="alert-heading">{!! Session::get('message_header') !!}</h4>
+            @endif
+            {!! Session::get('message') !!}
+        </div>
         @endif
     </div>
 </div>
@@ -31,6 +36,12 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                            @include('lama.filter')
+                        </div>
+                    </div>
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
                     <div class="table-responsive m-t-40">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
@@ -43,12 +54,13 @@
                                     <th>Alamat</th>
                                     <th>Keperluan/Data dicari</th>
                                     <th>Umur</th>
-                                    <th>Tamu PST?</th>
+                                    <th>Tamu</th>
+                                    <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
                                     @if (Auth::user())
                                     <th>Aksi</th>
                                     @endif
-                                    
+
                                 </tr>
                             </thead>
                             <tfoot>
@@ -60,7 +72,8 @@
                                     <th>Alamat</th>
                                     <th>Keperluan/Data dicari</th>
                                     <th>Umur</th>
-                                    <th>Tamu PST?</th>
+                                    <th>Tamu</th>
+                                    <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
                                     @if (Auth::user())
                                     <th>Aksi</th>
@@ -76,24 +89,31 @@
                                     @foreach ($Kunjungan as $item)
                                     <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$item->tamu->nama_lengkap}}</td>
+                                            <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a></td>
                                             <td>{{$item->tamu->nomor_identitas}}</td>
                                             <td>
                                                 @if ($item->tamu->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
-                                                @else 
+                                                @else
                                                 <span class="badge badge-danger badge-pill">{{$item->tamu->jk->inisial}}</span>
                                                 @endif
                                             </td>
                                             <td>{{$item->tamu->alamat}} </td>
                                             <td>{{$item->keperluan}}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</td>
-                                            <td>
+                                            <td class="text-center">
                                                     @if ($item->is_pst=='0')
-                                                    <span class="badge badge-info badge-pill">Tidak</span>
-                                                    @else 
-                                                    <span class="badge badge-success badge-pill">Ya</span>
-                                                    @endif                                            
+                                                    <span class="badge badge-danger badge-pill">Kantor</span>
+                                                    @else
+                                                    <span class="badge badge-success badge-pill">PST</span>
+                                                    @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($item->f_feedback==1)
+                                                <button type="button" class="btn waves-effect waves-light btn-rounded btn-sm btn-danger" data-tamuid="{{$item->tamu_id}}" data-toggle="modal" data-target="#FeedbackModal" data-kunjunganid="{{$item->id}}" >Feedback</button>
+                                                @else
+                                                <button type="button" class="btn btn-circle btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} sudah memberikan feedback"><i class="fas fa-check"></i></button>
+                                                @endif
                                             </td>
                                             <td>{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('dddd, D MMMM Y')}}</td>
                                             @if (Auth::user())
@@ -102,8 +122,8 @@
                                         </tr>
                                     @endforeach
                                 @endif
-                               
-                                
+
+
                             </tbody>
                         </table>
                     </div>
@@ -122,6 +142,23 @@
         #PSTlayanan, #PSTmanfaat, #PSTFasilitas, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas_lama  {
             display: none;
         }
+        .starrating > input {display: none;}  /* Remove radio buttons */
+        .starrating > label:before {
+        content: "\f005"; /* Star */
+        margin: 2px;
+        font-size: 4em;
+        font-family: FontAwesome;
+        display: inline-block;
+        }
+        .starrating > label
+        {
+        color: #222222; /* Start color when not clicked */
+        }
+
+        .starrating > input:checked ~ label
+        { color: #ffca08 ; } /* Set yellow color when star checked */
+        .starrating > input:hover ~ label
+        { color: #ffca08 ;  } /* Set yellow color when star hover */
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
@@ -135,12 +172,12 @@ $('#pstcheck').change(function(){
         $('#PSTlayanan').toggle();
         $('#PSTmanfaat').toggle();
         $('#PSTFasilitas').toggle();
-    }); 
+    });
     $('#pstcheck_lama').change(function(){
         $('#PSTlayanan_lama').toggle();
         $('#PSTmanfaat_lama').toggle();
         $('#PSTFasilitas_lama').toggle();
-    }); 
+    });
 </script>
 @include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
@@ -169,7 +206,7 @@ $('#pstcheck').change(function(){
                 ],
                 responsive: true,
                 "displayLength": 30,
-                
+
             });
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
         });

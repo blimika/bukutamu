@@ -31,11 +31,13 @@ Route::get('/getdatakunjungan/{id}', 'BukutamuController@getDataKunjungan')->nam
 
 Route::post('/simpanlama', 'BukutamuController@SimpanLama')->name('simpan.lama');
 Route::get('/lama', 'BukutamuController@lama')->name('lama');
+Route::get('/feedback', 'FeedbackController@list')->name('feedback.list');
+Route::post('/feedback/simpan', 'FeedbackController@Simpan')->name('feedback.simpan');
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/hapuskunjungan', 'BukutamuController@hapus')->name('hapus.kunjungan');
     Route::get('/master/pengunjung', 'MasterController@ListPengunjung')->name('pengunjung.list');
-    Route::get('/master/getdatatamu/{id}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
     Route::post('/hapuspengunjung', 'MasterController@HapusPengunjung')->name('pengunjung.hapus');
     Route::get('/laporan/pengunjung', 'LaporanController@list')->name('laporan.pengunjung');
 });
+Route::get('/master/getdatatamu/{id}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

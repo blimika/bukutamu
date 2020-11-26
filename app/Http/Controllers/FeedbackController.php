@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Midentitas;
+use Session;
+use Carbon\Carbon;
+use App\Mjk;
+use App\Mkatpekerjaan;
+use App\Mlayanan;
+use App\Mpendidikan;
+use App\MKunjungan;
+use App\Mwarga;
+use App\Mpekerjaan;
+use App\Mtamu;
+use App\Kunjungan;
+use App\Pstlayanan;
+use App\Pstmanfaat;
+use App\Mfasilitas;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Feedback;
+
+class FeedbackController extends Controller
+{
+    //
+    public function list()
+    {
+
+    }
+    public function Simpan(Request $request)
+    {
+        //dd($request->all());
+        /*
+        1. cek dulu kunjungan dan tamunya ada tidak
+        2. cek dulu di tabel feedback apakah sudah pernah ngisi
+        "_token" => "AH0NET0e3dn2ErzEXHPlUaJ9xzvsQmzVG7eVsHRE"
+        "kunjungan_id" => "93"
+        "tamu_id" => "2"
+        "feedback_nilai" => "5"
+        "feedback_komentar" => null
+        */
+        $cek_kunjungan = Kunjungan::where('id',$request->kunjungan_id)->count();
+        if ($cek_kunjungan > 0)
+        {
+            $data = new Feedback();
+            $data->kunjungan_id = $request->kunjungan_id;
+            $data->tamu_id = $request->tamu_id;
+            $data->feedback_tanggal = Carbon::today()->format('Y-m-d');
+            $data->feedback_nilai = $request->feedback_nilai;
+            $data->feedback_komentar = $request->feedback_komentar;
+            $data->save();
+
+            $dKunjungan = Kunjungan::where('id',$request->kunjungan_id)->first();
+            $dKunjungan->f_feedback = '2';
+            $dKunjungan->update();
+            Session::flash('message_header', "<strong>Terimakasih</strong>");
+            $pesan_error="Sudah memberikan <strong><i>Feedback</i></strong> untuk layanan kami";
+            $warna_error="success";
+        }
+        else
+        {
+            $pesan_error="Data kunjungan tidak tersedia";
+            $warna_error="danger";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->back();
+    }
+}
