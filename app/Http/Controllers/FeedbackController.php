@@ -27,7 +27,20 @@ class FeedbackController extends Controller
     //
     public function list()
     {
-
+        //menu tambah
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mlayanan = Mlayanan::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        //batas tambah
+        $feed = Feedback::orderBy('feedback_tanggal','desc')->get();
+        $nama_feed = Feedback::LeftJoin('kunjungan','kunjungan.id','=','feedback.kunjungan_id')->orderBy('tanggal','desc')->paginate(30);
+        return view('feedback.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mfasilitas'=>$Mfasilitas,'dataFeedback'=>$feed,'dataNamaFeedback'=>$nama_feed]);
     }
     public function Simpan(Request $request)
     {
@@ -44,17 +57,20 @@ class FeedbackController extends Controller
         $cek_kunjungan = Kunjungan::where('id',$request->kunjungan_id)->count();
         if ($cek_kunjungan > 0)
         {
+            $dKunjungan = Kunjungan::where('id',$request->kunjungan_id)->first();
+            $dKunjungan->f_feedback = '2';
+            $dKunjungan->update();
+
             $data = new Feedback();
             $data->kunjungan_id = $request->kunjungan_id;
             $data->tamu_id = $request->tamu_id;
-            $data->feedback_tanggal = Carbon::today()->format('Y-m-d');
+            //$data->feedback_tanggal = Carbon::today()->format('Y-m-d');
+            $data->feedback_tanggal = $dKunjungan->tanggal;
             $data->feedback_nilai = $request->feedback_nilai;
             $data->feedback_komentar = $request->feedback_komentar;
             $data->save();
 
-            $dKunjungan = Kunjungan::where('id',$request->kunjungan_id)->first();
-            $dKunjungan->f_feedback = '2';
-            $dKunjungan->update();
+
             Session::flash('message_header', "<strong>Terimakasih</strong>");
             $pesan_error="Sudah memberikan <strong><i>Feedback</i></strong> untuk layanan kami";
             $warna_error="success";

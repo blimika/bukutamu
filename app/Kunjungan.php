@@ -30,6 +30,6 @@ class Kunjungan extends Model
     }
     public function Feedback()
     {
-        return $this->belongsTo('App\Feedback', 'kunjungan_id', 'id');
+        return $this->belongsTo('App\Feedback', 'id', 'kunjungan_id');
     }
 }
