@@ -20,6 +20,7 @@ use App\Pstmanfaat;
 use App\Mfasilitas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Feedback;
 class BukutamuController extends Controller
 {
     //
@@ -364,6 +365,11 @@ class BukutamuController extends Controller
             {
                 Pstlayanan::where('kunjungan_id',$request->id)->delete();
                 Pstmanfaat::where('kunjungan_id',$request->id)->delete();
+            }
+            $cek_feedback = Feedback::where('kunjungan_id',$request->id)->count();
+            if ($cek_feedback > 0)
+            {
+                Feedback::where('kunjungan_id',$request->id)->delete();
             }
             $nama = $data->tamu->nama_lengkap;
             $data->delete();

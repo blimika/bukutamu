@@ -140,6 +140,7 @@
                         </div>
                     </div>
                 </div>
+                @if (Auth::user())
                 <div class="row">
                     <div class="col-lg-8 col-md-12">
                         @foreach ($dataNamaFeedback as $item)
@@ -164,6 +165,7 @@
                         {{$dataNamaFeedback->links()}}
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
