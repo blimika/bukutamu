@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/favicon.png')}}">
     <title>Bukutamu BPS Provinsi Nusa Tenggara Barat</title>
     <!-- Custom CSS -->
-    <link href="{{asset('dist/css/style.min.css')}}" rel="stylesheet">
+    <link href="{{asset('dist/css/style.css')}}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
