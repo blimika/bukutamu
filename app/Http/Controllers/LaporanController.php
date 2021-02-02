@@ -53,121 +53,117 @@ class LaporanController extends Controller
                         ->get();
         //dd($data_tahun);
         $dataKunjungan = array();
-        $pst_laki = DB::table('kunjungan')
+        for ($i=1; $i <=12 ; $i++) { 
+            $pst_laki = DB::table('kunjungan')
                       ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
                       ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
                       ->where('is_pst','1')
+                      ->whereMonth('tanggal',$i)
+                      ->whereYear('tanggal',$tahun_filter)
                       ->where('id_jk','1')
                       ->groupBy('bulan','tahun','id_jk')
-                      ->get();
-        $pst_perempuan = DB::table('kunjungan')
-                        ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
-                        ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
-                        ->where('is_pst','1')
-                        ->where('id_jk','2')
-                        ->groupBy('bulan','tahun','id_jk')
-                        ->get();
-        $pst_total = DB::table('kunjungan')
-                        ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
-                        ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, count(*) jumlah')
-                        ->where('is_pst','1')
-                        ->groupBy('bulan','tahun')
-                        ->get();
-        $kantor_laki = DB::table('kunjungan')
-                        ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
-                        ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
-                        ->where('is_pst','0')
-                        ->where('id_jk','1')
-                        ->groupBy('bulan','tahun','id_jk')
-                        ->get();
-        $kantor_perempuan = DB::table('kunjungan')
-                        ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
-                        ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
-                        ->where('is_pst','0')
-                        ->where('id_jk','2')
-                        ->groupBy('bulan','tahun','id_jk')
-                        ->get();
-        $kantor_total = DB::table('kunjungan')
-                        ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
-                        ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, count(*) jumlah')
-                        ->where('is_pst','0')
-                        ->groupBy('bulan','tahun')
-                        ->get();
-        for ($i=1; $i <= 12 ; $i++) { 
-            foreach ($pst_laki as $item) {
-                if ($i == $item->bulan)
-                {
-                    $jumlah_laki[$i]=$item->jumlah;
-                } 
-                else 
-                {
-                    $jumlah_laki[$i+1]=0;
-                }              
+                      ->first();
+            $pst_perempuan = DB::table('kunjungan')
+                            ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+                            ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
+                            ->whereMonth('tanggal',$i)
+                            ->whereYear('tanggal',$tahun_filter)
+                            ->where('is_pst','1')
+                            ->where('id_jk','2')
+                            ->groupBy('bulan','tahun','id_jk')
+                            ->first();
+            $pst_total = DB::table('kunjungan')
+                            ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+                            ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, count(*) jumlah')
+                            ->whereMonth('tanggal',$i)
+                            ->whereYear('tanggal',$tahun_filter)
+                            ->where('is_pst','1')
+                            ->groupBy('bulan','tahun')
+                            ->first();
+            $kantor_laki = DB::table('kunjungan')
+                            ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+                            ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
+                            ->whereMonth('tanggal',$i)
+                            ->whereYear('tanggal',$tahun_filter)
+                            ->where('is_pst','0')
+                            ->where('id_jk','1')
+                            ->groupBy('bulan','tahun','id_jk')
+                            ->first();
+            $kantor_perempuan = DB::table('kunjungan')
+                            ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+                            ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
+                            ->whereMonth('tanggal',$i)
+                            ->whereYear('tanggal',$tahun_filter)
+                            ->where('is_pst','0')
+                            ->where('id_jk','2')
+                            ->groupBy('bulan','tahun','id_jk')
+                            ->first();
+            $kantor_total = DB::table('kunjungan')
+                            ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+                            ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, count(*) jumlah')
+                            ->whereMonth('tanggal',$i)
+                            ->whereYear('tanggal',$tahun_filter)
+                            ->where('is_pst','0')
+                            ->groupBy('bulan','tahun')
+                            ->first();
+            if ($pst_laki)
+            {
+                $jumlah_laki = $pst_laki->jumlah;
             }
-            
-            foreach ($pst_perempuan as $wanita) {
-                if ($i == $wanita->bulan)
-                {
-                    $jumlah_perempuan[$i]=$wanita->jumlah;
-                } 
-                else 
-                {
-                    $jumlah_perempuan[$i+1]=0;
-                }              
+            else 
+            {
+                $jumlah_laki = 0;
             }
-            foreach ($pst_total as $total) {
-                if ($i == $total->bulan)
-                {
-                    $jumlah_total[$i]=$total->jumlah;
-                } 
-                else 
-                {
-                    $jumlah_total[$i+1]=0;
-                }              
+            if ($pst_perempuan)
+            {
+                $jumlah_perempuan = $pst_perempuan->jumlah;
             }
-
-            foreach ($kantor_laki as $kntrlaki) {
-                if ($i == $kntrlaki->bulan)
-                {
-                    $jumlah_kntr_laki[$i]=$kntrlaki->jumlah;
-                } 
-                else 
-                {
-                    $jumlah_kntr_laki[$i+1]=0;
-                }              
+            else 
+            {
+                $jumlah_perempuan = 0;
             }
-            foreach ($kantor_perempuan as $kntrwanita) {
-                if ($i == $kntrwanita->bulan)
-                {
-                    $jumlah_kntr_perempuan[$i]=$kntrwanita->jumlah;
-                } 
-                else 
-                {
-                    $jumlah_kntr_perempuan[$i+1]=0;
-                }              
+            if ($pst_total)
+            {
+                $jumlah_pst_total = $pst_total->jumlah;
             }
-            foreach ($kantor_total as $kntrtotal) {
-                if ($i == $kntrtotal->bulan)
-                {
-                    $jumlah_kntr_total[$i]=$kntrtotal->jumlah;
-                } 
-                else 
-                {
-                    $jumlah_kntr_total[$i+1]=0;
-                }              
+            else 
+            {
+                $jumlah_pst_total = 0;
+            }
+            if ($kantor_laki)
+            {
+                $jumlah_laki_kantor = $kantor_laki->jumlah;
+            }
+            else
+            {
+                $jumlah_laki_kantor = 0;
+            }
+            if ($kantor_perempuan)
+            {
+                $jumlah_perempuan_kantor = $kantor_perempuan->jumlah;
+            }
+            else
+            {
+                $jumlah_perempuan_kantor = 0;
+            }
+            if ($kantor_total)
+            {
+                $jumlah_total_kantor = $kantor_total->jumlah;
+            }
+            else 
+            {
+                $jumlah_total_kantor = 0;
             }
             $dataKunjungan[$i] = array(
                 'bulan' => $data_bulan[$i],
-                'pst_laki' => $jumlah_laki[$i],
-                'pst_perempuan'=> $jumlah_perempuan[$i],
-                'pst_total'=> $jumlah_total[$i],
-                'kntr_laki' => $jumlah_kntr_laki[$i],
-                'kntr_perempuan'=> $jumlah_kntr_perempuan[$i],
-                'kntr_total'=> $jumlah_kntr_total[$i] 
+                'pst_laki' => $jumlah_laki,
+                'pst_perempuan'=> $jumlah_perempuan,
+                'pst_total'=> $jumlah_pst_total,
+                'kntr_laki' => $jumlah_laki_kantor,
+                'kntr_perempuan'=> $jumlah_perempuan_kantor,
+                'kntr_total'=> $jumlah_total_kantor 
             );
         }
-        
-        //dd($pst_laki,$pst_perempuan,$pst_total,$jumlah_laki,$jumlah_perempuan,$jumlah_total,$dataKunjungan);
         return view('laporan.index',['dataKunjungan'=>$dataKunjungan,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tahun'=>$tahun_filter]);
     }
 }
