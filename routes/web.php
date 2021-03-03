@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/master/pengunjung', 'MasterController@ListPengunjung')->name('pengunjung.list');
     Route::post('/hapuspengunjung', 'MasterController@HapusPengunjung')->name('pengunjung.hapus');
     Route::get('/laporan/pengunjung', 'LaporanController@list')->name('laporan.pengunjung');
+    Route::post('/ubahkunjungan', 'BukutamuController@UbahKunjungan')->name('ubah.kunjungan');
 });
 Route::get('/master/getdatatamu/{id}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

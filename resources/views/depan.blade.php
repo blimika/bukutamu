@@ -112,7 +112,8 @@
                                             <td>{{ $item->created_at->diffForHumans()}}</td>
                                             @if (Auth::user())
                                             <td>
-                                                <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button>
+                                                <button class="btn btn-sm btn-info ubahpstkantor" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-ispst="{{$item->is_pst}}"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->is_pst == 0) PST @else Kantor @endif"></i></button>
+                                                <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button>
                                             </td>
                                             @endif
                                         </tr>

@@ -380,6 +380,59 @@ class BukutamuController extends Controller
         }
         return Response()->json($arr);
     }
+    public function UbahKunjungan(Request $request)
+    {
+        $count = Kunjungan::where('id',$request->id)->count();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data kunjungan tidak tersedia'
+        );
+        if ($count>0)
+        {
+            $data = Kunjungan::where('id',$request->id)->first();
+            if ($data->is_pst == 1)
+            {
+                $usulan_is_pst = 0;
+                $usulan_ispst_nama = 'Kantor';
+                //hapus yg ada di pstlayanan dan pstmanfaat
+                Pstlayanan::where('kunjungan_id',$request->id)->delete();
+                Pstmanfaat::where('kunjungan_id',$request->id)->delete();
+            }
+            else
+            {
+                $usulan_is_pst = 1;
+                $usulan_ispst_nama = 'PST';
+                //tambahkan ke pstlayanan  dan pstmanfaat
+                $pst_layanan = Mlayanan::whereIn('id',['1','2'])->get();
+                $pst_manfaat = MKunjungan::whereIn('id',['32'])->get();
+                $kunjungan_id = $request->id;
+                foreach ($pst_layanan as $l)
+                {
+                    $dataLayanan = new Pstlayanan();
+                    $dataLayanan->kunjungan_id = $kunjungan_id;
+                    $dataLayanan->layanan_id = $l->id;
+                    $dataLayanan->layanan_nama = $l->nama;
+                    $dataLayanan->save();
+                }
+                foreach ($pst_manfaat as $m)
+                {
+                    $dataManfaat = new Pstmanfaat();
+                    $dataManfaat->kunjungan_id = $kunjungan_id;
+                    $dataManfaat->manfaat_id = $m->id;
+                    $dataManfaat->manfaat_nama = $m->nama;
+                    $dataManfaat->save();
+                }
+            }
+            $data->is_pst = $usulan_is_pst;
+            $data->update();
+            $nama = $data->tamu->nama_lengkap;
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data kunjungan an. '.$nama.' berhasil diubah ke '.$usulan_ispst_nama
+            );
+        }
+        return Response()->json($arr);
+    }
     public function getDataKunjungan($id)
     {
         $data = Kunjungan::with('tamu','pLayanan','pManfaat')->where('id','=',$id)->first();
