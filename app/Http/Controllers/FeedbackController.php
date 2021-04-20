@@ -50,8 +50,10 @@ class FeedbackController extends Controller
         2. cek dulu di tabel feedback apakah sudah pernah ngisi
         "_token" => "AH0NET0e3dn2ErzEXHPlUaJ9xzvsQmzVG7eVsHRE"
         "kunjungan_id" => "93"
-        "tamu_id" => "2"
-        "feedback_nilai" => "5"
+         "tamu_id" => "2"
+        "feedback_nilai" => "6"
+        "imbalan_nilai" => "2"
+        "pungli_nilai" => "2"
         "feedback_komentar" => null
         */
         $cek_kunjungan = Kunjungan::where('id',$request->kunjungan_id)->count();
@@ -67,6 +69,8 @@ class FeedbackController extends Controller
             //$data->feedback_tanggal = Carbon::today()->format('Y-m-d');
             $data->feedback_tanggal = $dKunjungan->tanggal;
             $data->feedback_nilai = $request->feedback_nilai;
+            $data->imbalan_nilai = $request->imbalan_nilai;
+            $data->pungli_nilai = $request->pungli_nilai;
             $data->feedback_komentar = $request->feedback_komentar;
             $data->save();
 

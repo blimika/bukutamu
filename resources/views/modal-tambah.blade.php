@@ -109,27 +109,58 @@
                             @csrf
                             <input type="hidden" name="kunjungan_id" id="kunjungan_id" value="" />
                             <input type="hidden" name="tamu_id" id="tamu_id" value="" />
-                        <div class="row comment-form-rating">
-                                <div class="form-group col-md-12" id="feedback_nilai">
-                                    <label for="feedback_komentar">Penilaian Layanan Kami<span class="text-danger">*</span></label>
-                                    <p class="stars">
-                                        <div class="starrating risingstar d-flex justify-content-center flex-row-reverse">
-                                                <input type="radio" id="star6" name="feedback_nilai" value="6" required /><label for="star6" title="6 star"></label>
-                                                <input type="radio" id="star5" name="feedback_nilai" value="5" /><label for="star5" title="5 star"></label>
-                                                <input type="radio" id="star4" name="feedback_nilai" value="4" /><label for="star4" title="4 star"></label>
-                                                <input type="radio" id="star3" name="feedback_nilai" value="3" /><label for="star3" title="3 star"></label>
-                                                <input type="radio" id="star2" name="feedback_nilai" value="2" /><label for="star2" title="2 star"></label>
-                                                <input type="radio" id="star1" name="feedback_nilai" value="1" /><label for="star1" title="1 star"></label>
-                                            </div>
-                                    </p>
+                            <div class="row comment-form-rating">
+                                    <div class="form-group col-md-12" id="feedback_nilai">
+                                        <label for="feedback_komentar">Penilaian Layanan Kami<span class="text-danger">*</span></label>
+                                        <p class="stars">
+                                            <div class="starrating risingstar d-flex justify-content-center flex-row-reverse">
+                                                    <input type="radio" id="star6" name="feedback_nilai" value="6" required /><label for="star6" title="6 star"></label>
+                                                    <input type="radio" id="star5" name="feedback_nilai" value="5" /><label for="star5" title="5 star"></label>
+                                                    <input type="radio" id="star4" name="feedback_nilai" value="4" /><label for="star4" title="4 star"></label>
+                                                    <input type="radio" id="star3" name="feedback_nilai" value="3" /><label for="star3" title="3 star"></label>
+                                                    <input type="radio" id="star2" name="feedback_nilai" value="2" /><label for="star2" title="2 star"></label>
+                                                    <input type="radio" id="star1" name="feedback_nilai" value="1" /><label for="star1" title="1 star"></label>
+                                                </div>
+                                        </p>
+                                    </div>
+                            </div>
+                            <div class="row" style="border:1px solid black;">
+                                <div class="form-group col-md-12" id="feedback_gratifikasi">
+                                    <label for="feedback_gratifikasi">Menurut Bapak/Ibu, Apakah terdapat petugas yang menerima pemberian imbalan uang/barang/fasilitas <i>diluar ketentuan yang berlaku</i> ? </label>
+                                    <div class="float-right">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="imbalan1" name="imbalan_nilai" value="1" class="custom-control-input" />
+                                            <label for="imbalan1" title="Ya" class="custom-control-label">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="imbalan2" name="imbalan_nilai" value="2" required class="custom-control-input"/>
+                                            <label for="imbalan2" title="Tidak" class="custom-control-label"><b>Tidak</b></label>
+                                        </div>
+
+                                    </div>
                                 </div>
-                        </div>
-                        <div class="row">
-                                <div class="form-group col-md-12" id="feedback_text">
-                                        <label for="feedback_komentar">Saran/Kritik Anda</label>
-                                        <textarea class="form-control" style="border:1px solid black;" rows="4" id="feedback_komentar" name="feedback_komentar"></textarea>
+                            </div>
+                            <div class="row m-t-10" style="border:1px solid black;">
+                                <div class="form-group col-md-12" id="feedback_gratifikasi">
+                                    <label for="feedback_gratifikasi">Menurut Bapak/Ibu, Apakah terdapat petugas yang melakukan praktik pungutan liar (pungli)?</label>
+                                    <div class="float-right">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="pungli1" name="pungli_nilai" value="1" class="custom-control-input" />
+                                            <label for="pungli1" title="Ya" class="custom-control-label">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="pungli2" name="pungli_nilai" value="2" class="custom-control-input" required/>
+                                            <label for="pungli2" title="Tidak" class="custom-control-label"><b>Tidak</b></label>
+                                        </div>
+                                    </div>
                                 </div>
-                        </div>
+                            </div>
+                            <div class="row m-t-20">
+                                    <div class="form-group col-md-12" id="feedback_text">
+                                            <label for="feedback_komentar">Saran/Kritik Anda</label>
+                                            <textarea class="form-control" style="border:1px solid black;" rows="4" id="feedback_komentar" name="feedback_komentar"></textarea>
+                                    </div>
+                            </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">TUTUP</button>

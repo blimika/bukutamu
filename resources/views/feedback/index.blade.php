@@ -155,7 +155,18 @@
                                 @endfor
                                 <span class="text-muted"><i>{{\Carbon\Carbon::parse($item->feedback_tanggal)->isoFormat('D MMMM Y')}}</i></span>
                                 <div class="m-t-10">
-                                    {{$item->feedback_komentar}}
+                                    @if ($item->imbalan_nilai == 2)
+                                        <i><b class="text-success">Tidak ada</b> pemberian imbalan</i>
+                                    @else
+                                    <i><b class="text-danger">Ada</b> pemberian imbalan</i>
+                                    @endif
+                                    <br />
+                                    @if ($item->pungli_nilai == 2)
+                                        <i><b class="text-success">Tidak ada</b> pungli</i>
+                                    @else
+                                    <i><b class="text-danger">Ada</b> pungli</i>
+                                    @endif
+                                    <br />{{$item->feedback_komentar}}
                                 </div>
                             </div>
                             <hr>
