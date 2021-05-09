@@ -126,7 +126,7 @@
                             </div>
                             <div class="row" style="border:1px solid black;">
                                 <div class="form-group col-md-12" id="feedback_gratifikasi">
-                                    <label for="feedback_gratifikasi">Menurut Bapak/Ibu, Apakah terdapat petugas yang menerima pemberian imbalan uang/barang/fasilitas <i>diluar ketentuan yang berlaku</i> ? </label>
+                                    <label for="feedback_gratifikasi">Menurut Bapak/Ibu, Apakah terdapat petugas yang menerima pemberian imbalan uang/barang/fasilitas <i>di luar ketentuan yang berlaku</i> ? </label>
                                     <div class="float-right">
                                         <div class="custom-control custom-radio">
                                             <input type="radio" id="imbalan1" name="imbalan_nilai" value="1" class="custom-control-input" />
