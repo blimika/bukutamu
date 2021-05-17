@@ -473,4 +473,74 @@ class BukutamuController extends Controller
         }
         return Response()->json($arr);
     }
+    public function CLSpi()
+    {
+        $data_bulan = array(
+            1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'
+        );
+        $data_tahun = DB::table('kunjungan')
+                    ->selectRaw('year(tanggal) as tahun')
+                    ->groupBy('tahun')
+                    ->orderBy('tahun','asc')
+                      ->get();
+        //dd($data_tahun);
+        //filter
+        if (request('tamu_pst')==NULL)
+        {
+            $tamu_filter = 9;
+        }
+        elseif (request('tamu_pst')==0)
+        {
+            $tamu_filter = 0;
+        }
+        else
+        {
+            $tamu_filter = request('tamu_pst');
+        }
+        if (request('tahun')==NULL)
+        {
+            $tahun_filter=date('Y');
+        }
+        elseif (request('tahun')==0)
+        {
+            $tahun_filter=date('Y');
+        }
+        else
+        {
+            $tahun_filter = request('tahun');
+        }
+        if (request('bulan')==NULL)
+        {
+            $bulan_filter= (int) date('m');
+        }
+        elseif (request('bulan')==0)
+        {
+            $bulan_filter = NULL;
+        }
+        else
+        {
+            $bulan_filter = request('bulan');
+        }
+        //batas filter
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mlayanan = Mlayanan::orderBy('id','asc')->get();
+        $Mtamu = Mtamu::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $Kunjungan = Kunjungan::with('tamu')->with('pLayanan')
+                        ->when($bulan_filter,function ($query) use ($bulan_filter){
+                            return $query->whereMonth('tanggal','=',$bulan_filter);
+                        })
+                        ->whereYear('tanggal','=',$tahun_filter)
+                        ->where('is_pst','1')
+                        ->orderBy('tanggal','desc')
+                        ->get();
+        //dd($Kunjungan);
+        return view('spi.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter]);
+    }
 }
