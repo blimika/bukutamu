@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Bukutamu</li>
             </ol>
-            <button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#InputDataLamaModal"><i class="fa fa-plus-circle"></i> Tambah</button>
+            <!--<button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#InputDataLamaModal"><i class="fa fa-plus-circle"></i> Tambah</button>-->
         </div>
     </div>
 </div>
@@ -48,6 +48,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
@@ -66,6 +67,7 @@
                             <tfoot>
                                 <tr>
                                     <th>No</th>
+                                    <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
@@ -89,6 +91,13 @@
                                     @foreach ($Kunjungan as $item)
                                     <tr>
                                             <td>{{$loop->iteration}}</td>
+                                            <td>
+                                                @if ($item->file_foto != NULL)
+                                                    <a class="image-popup-vertical-fit" href="{{asset('storage/'.$item->file_foto)}}">
+                                                        <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
+                                                    </a>
+                                                @endif
+                                            </td>
                                             <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a></td>
                                             <td>{{$item->tamu->nomor_identitas}}</td>
                                             <td>
@@ -141,7 +150,7 @@
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTFasilitas, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas_lama  {
+        #PSTlayanan, #PSTmanfaat, #PSTFasilitas, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas_lama, #canvas  {
             display: none;
         }
         .starrating > input {display: none;}  /* Remove radio buttons */
@@ -165,6 +174,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
     <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
 @stop
@@ -199,6 +209,9 @@ $('#pstcheck').change(function(){
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
+    <!-- Magnific popup JavaScript -->
+    <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
+    <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
     <script>
         $(function () {
             $('#dTabel').DataTable({
@@ -242,7 +255,7 @@ $("#tgl_kunjungan").datepicker({
     // prevent datepicker from firing bootstrap modal "show.bs.modal"
     event.stopPropagation();
 });
-
+/
     </script>
 @include('lama.js')
 @stop

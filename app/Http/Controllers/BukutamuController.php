@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Midentitas;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Mjk;
 use App\Mkatpekerjaan;
@@ -21,6 +21,7 @@ use App\Mfasilitas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Feedback;
+use Illuminate\Support\Facades\Storage;
 class BukutamuController extends Controller
 {
     //
@@ -119,6 +120,20 @@ class BukutamuController extends Controller
         //$test = $request->pst_layanan;
         //dd($request->all());
         //dd($request->all());
+        //$foto = $request->foto;
+        // foto = tamu_id_tgl_detik;
+        $waktu_hari_ini = date('Ymd_His');
+        if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
+            $namafile = 'tamu_'.$request->tamu_id.'_'.$waktu_hari_ini.'.png';
+            $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
+            $data_foto = base64_decode($data_foto);
+            Storage::disk('public')->put($namafile, $data_foto);
+        }
+        else
+        {
+            $namafile=NULL;
+        }
+        //dd($waktu_hari_ini,$request->all());
 
         if ($request->tamu_id==NULL) {
             $data = new Mtamu();
@@ -135,6 +150,7 @@ class BukutamuController extends Controller
             $data->email = $request->email;
             $data->telepon = trim($request->telepon);
             $data->alamat = $request->alamat;
+            $data->tamu_foto = $namafile;
             $data->created_at = \Carbon\Carbon::now();
             $data->save();
             $id_tamu = $data->id;
@@ -159,6 +175,7 @@ class BukutamuController extends Controller
                 $data->email = trim($request->email);
                 $data->telepon = trim($request->telepon);
                 $data->alamat = $request->alamat;
+                $data->tamu_foto = $namafile;
                 $data->update();
                 $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap).' berhasil ditambahkan dan Diperbarui';
                 $warna_error = 'success';
@@ -199,6 +216,7 @@ class BukutamuController extends Controller
             $dataKunjungan->keperluan = $request->keperluan;
             $dataKunjungan->is_pst = $is_pst;
             $dataKunjungan->f_id = $f_id;
+            $dataKunjungan->file_foto = $namafile;
             $dataKunjungan->save();
             if ($is_pst>0) {
                 //isi tabel pst_layanan dan pst_manfaat

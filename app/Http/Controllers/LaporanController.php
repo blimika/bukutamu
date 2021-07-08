@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Midentitas;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Mjk;
 use App\Mkatpekerjaan;
@@ -53,7 +53,7 @@ class LaporanController extends Controller
                         ->get();
         //dd($data_tahun);
         $dataKunjungan = array();
-        for ($i=1; $i <=12 ; $i++) { 
+        for ($i=1; $i <=12 ; $i++) {
             $pst_laki = DB::table('kunjungan')
                       ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
                       ->selectRaw('year(tanggal) as tahun, month(tanggal) as bulan, id_jk, count(*) jumlah')
@@ -110,7 +110,7 @@ class LaporanController extends Controller
             {
                 $jumlah_laki = $pst_laki->jumlah;
             }
-            else 
+            else
             {
                 $jumlah_laki = 0;
             }
@@ -118,7 +118,7 @@ class LaporanController extends Controller
             {
                 $jumlah_perempuan = $pst_perempuan->jumlah;
             }
-            else 
+            else
             {
                 $jumlah_perempuan = 0;
             }
@@ -126,7 +126,7 @@ class LaporanController extends Controller
             {
                 $jumlah_pst_total = $pst_total->jumlah;
             }
-            else 
+            else
             {
                 $jumlah_pst_total = 0;
             }
@@ -150,7 +150,7 @@ class LaporanController extends Controller
             {
                 $jumlah_total_kantor = $kantor_total->jumlah;
             }
-            else 
+            else
             {
                 $jumlah_total_kantor = 0;
             }
@@ -161,7 +161,7 @@ class LaporanController extends Controller
                 'pst_total'=> $jumlah_pst_total,
                 'kntr_laki' => $jumlah_laki_kantor,
                 'kntr_perempuan'=> $jumlah_perempuan_kantor,
-                'kntr_total'=> $jumlah_total_kantor 
+                'kntr_total'=> $jumlah_total_kantor
             );
         }
         return view('laporan.index',['dataKunjungan'=>$dataKunjungan,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tahun'=>$tahun_filter]);

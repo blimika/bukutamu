@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Midentitas;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Mjk;
 use App\Mkatpekerjaan;

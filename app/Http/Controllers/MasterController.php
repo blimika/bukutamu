@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Midentitas;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Mjk;
 use App\Mkatpekerjaan;
@@ -61,7 +61,8 @@ class MasterController extends Controller
                     'created_at_nama'=>Carbon::parse($dataCek->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     'updated_at'=>$dataCek->updated_at,
                     'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
-                ), 
+                    'url_foto'=>$dataCek->tamu_foto,
+                ),
                 'status' => true
             );
         }

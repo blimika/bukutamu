@@ -191,6 +191,22 @@
             $('#alamat_lama').prop('readonly', false);
             $('#edit_tamu_lama').val(1);
        });
+//foto baru
+$('#reset_foto').click(function(){
+    $('#canvas').hide();
+    $('#video').toggle();
+    $('#reset_foto').prop('disabled', true);
+    $('#ambil_foto').prop('disabled', false);
+    $('#tambah_data').prop('disabled', true);
+});
+//tanpa webcam
+$('#tanpa_webcam').click(function(){
+    $('#canvas').hide();
+    $('#video').hide();
+    $('#reset_foto').prop('disabled', true);
+    $('#ambil_foto').prop('disabled', true);
+    $('#tambah_data').prop('disabled', false);
+});
 //hapus kunjungan depan
 $(".hapuskunjungan").click(function (e) {
     e.preventDefault();
@@ -281,6 +297,14 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             $('#ViewModal .modal-body #tamu_email').text(data.hasil.email)
             $('#ViewModal .modal-body #tamu_telepon').text(data.hasil.telepon)
             $('#ViewModal .modal-body #tamu_alamat').text(data.hasil.alamat)
+                if (data.hasil.url_foto != null)
+                {
+                    $('#ViewModal .modal-body #tamu_foto').attr("src",'{{asset("storage")}}/'+data.hasil.url_foto)
+                }
+                else
+                {
+                    $('#ViewModal .modal-body #tamu_foto').attr("src","https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo")
+                }
             }
             else
             {
@@ -401,4 +425,56 @@ $(".ubahpstkantor").click(function (e) {
             })
 });
 //batas hapus
+// Put event listeners into place
+'use strict';
+window.addEventListener("DOMContentLoaded", function() {
+			// Grab elements, create settings, etc.
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            var mediaConfig =  { video: true };
+            var errBack = function(e) {
+            	console.log('An error has occurred!', e)
+            };
+
+			// Put video listeners into place
+            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
+					//video.src = window.URL.createObjectURL(stream);
+					video.srcObject = stream;
+                    video.play();
+                });
+            }
+
+            /* Legacy code below! */
+            else if(navigator.getUserMedia) { // Standard
+				navigator.getUserMedia(mediaConfig, function(stream) {
+					video.src = stream;
+					video.play();
+				}, errBack);
+			} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+				navigator.webkitGetUserMedia(mediaConfig, function(stream){
+					video.src = window.webkitURL.createObjectURL(stream);
+					video.play();
+				}, errBack);
+			} else if(navigator.mozGetUserMedia) { // Mozilla-prefixed
+				navigator.mozGetUserMedia(mediaConfig, function(stream){
+					video.src = window.URL.createObjectURL(stream);
+					video.play();
+				}, errBack);
+			}
+
+			// Trigger photo take
+			document.getElementById('ambil_foto').addEventListener('click', function() {
+                $('#canvas').toggle();
+                $('#reset_foto').prop('disabled', false);
+                $('#ambil_foto').prop('disabled', true);
+                $('#tambah_data').prop('disabled', false);
+                var canvas = document.getElementById('canvas');
+				context.drawImage(video, 0, 0, 480, 360);
+                $('#video').hide();
+                var dataURL = canvas.toDataURL('image/png',0.90);
+                $('#TambahModal .modal-body #foto').val(dataURL);
+			});
+		}, false);
 </script>

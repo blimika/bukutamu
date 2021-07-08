@@ -6,15 +6,15 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST">
+                    <form class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
                      @csrf
                      <input type="hidden" name="tamu_id" id="tamu_id" value="" />
                      <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
-                       @include('form-tambah')
+                        @include('form-tambah')
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success waves-effect waves-light">Simpan</button>
+                    <button type="submit" id="tambah_data" class="btn btn-success waves-effect waves-light" disabled>Simpan</button>
                     <button type="reset" class="btn btn-danger waves-effect waves-light">Reset</button>
                 </div>
             </form>
@@ -30,7 +30,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal m-t-20" name="data_lama" action="{{route('simpan.lama')}}" method="POST">
+                <form class="form-horizontal m-t-20" name="data_lama" action="{{route('simpan.lama')}}" method="POST" enctype="multipart/form-data">
                  @csrf
                  <input type="hidden" name="tamu_id_lama" id="tamu_id_lama" value="" />
                  <input type="hidden" name="edit_tamu_lama" id="edit_tamu_lama" value="0" />
@@ -38,7 +38,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success waves-effect waves-light">Simpan</button>
+                <button type="submit" id="tambah_data_lama" class="btn btn-success waves-effect waves-light">Simpan</button>
                 <button type="reset" class="btn btn-danger waves-effect waves-light">Reset</button>
             </div>
         </form>
@@ -77,6 +77,8 @@
                     <dd class="col-sm-8"><span id="tamu_telepon"></span></dd>
                     <dt class="col-sm-4">Alamat</dt>
                     <dd class="col-sm-8"><span id="tamu_alamat"></span></dd>
+                    <dt class="col-sm-4">Foto</dt>
+                    <dd class="col-sm-8"><img src="" id="tamu_foto" class="col-sm-12"></dd>
                 </dl>
 
             </div>
