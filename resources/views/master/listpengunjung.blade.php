@@ -32,12 +32,13 @@
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
-                    
+
                     <div class="table-responsive m-t-40">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
@@ -52,6 +53,7 @@
                             <tfoot>
                                 <tr>
                                     <th>No</th>
+                                    <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
                                     <th>JK</th>
@@ -72,12 +74,16 @@
                                     @foreach ($dataTamu as $item)
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
+                                            <td> @if ($item->tamu_foto != NULL)
+                                                <a class="image-popup-vertical-fit" href="{{asset('storage/'.$item->tamu_foto)}}">
+                                                <img src="{{asset('storage/'.$item->tamu_foto)}}" class="img-circle" width="60" height="60" />
+                                                @endif</td>
                                             <td>{{$item->nama_lengkap}}</td>
                                             <td>{{$item->nomor_identitas}}</td>
                                             <td>
                                                 @if ($item->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->jk->inisial}}</span>
-                                                @else 
+                                                @else
                                                 <span class="badge badge-danger badge-pill">{{$item->jk->inisial}}</span>
                                                 @endif
                                             </td>
@@ -112,6 +118,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
     <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
 @stop
@@ -121,12 +128,12 @@ $('#pstcheck').change(function(){
         $('#PSTlayanan').toggle();
         $('#PSTmanfaat').toggle();
         $('#PSTFasilitas').toggle();
-    }); 
+    });
     $('#pstcheck_lama').change(function(){
         $('#PSTlayanan_lama').toggle();
         $('#PSTmanfaat_lama').toggle();
         $('#PSTFasilitas_lama').toggle();
-    }); 
+    });
 </script>
 @include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
@@ -153,7 +160,7 @@ $('#pstcheck').change(function(){
                 ],
                 responsive: true,
                 "displayLength": 30,
-                
+
             });
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
         });
@@ -161,6 +168,9 @@ $('#pstcheck').change(function(){
     </script>
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
+     <!-- Magnific popup JavaScript -->
+     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
+     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
     <script>
    $('#tgl_lahir').datepicker({
     autoclose: true,

@@ -29,8 +29,10 @@
                     <dd class="col-sm-8"><span id="tamu_telepon"></span></dd>
                     <dt class="col-sm-4">Alamat</dt>
                     <dd class="col-sm-8"><span id="tamu_alamat"></span></dd>
+                    <dt class="col-sm-4">Foto</dt>
+                    <dd class="col-sm-8"><img src="" id="tamu_foto" class="col-sm-12"></dd>
                 </dl>
-                
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">CLOSE</button>

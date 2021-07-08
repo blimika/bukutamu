@@ -122,17 +122,7 @@ class BukutamuController extends Controller
         //dd($request->all());
         //$foto = $request->foto;
         // foto = tamu_id_tgl_detik;
-        $waktu_hari_ini = date('Ymd_His');
-        if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
-            $namafile = 'tamu_'.$request->tamu_id.'_'.$waktu_hari_ini.'.png';
-            $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
-            $data_foto = base64_decode($data_foto);
-            Storage::disk('public')->put($namafile, $data_foto);
-        }
-        else
-        {
-            $namafile=NULL;
-        }
+
         //dd($waktu_hari_ini,$request->all());
 
         if ($request->tamu_id==NULL) {
@@ -150,14 +140,47 @@ class BukutamuController extends Controller
             $data->email = $request->email;
             $data->telepon = trim($request->telepon);
             $data->alamat = $request->alamat;
-            $data->tamu_foto = $namafile;
             $data->created_at = \Carbon\Carbon::now();
             $data->save();
             $id_tamu = $data->id;
+            $waktu_hari_ini = date('Ymd_His');
+            if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
+                $namafile_kunjungan = 'tamu_'.$id_tamu.'_'.$waktu_hari_ini.'.png';
+                $namafile_profil = 'tamu_profil_'.$id_tamu.'.png';
+                $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
+                $data_foto = base64_decode($data_foto);
+                Storage::disk('public')->put($namafile_kunjungan, $data_foto);
+                Storage::disk('public')->put($namafile_profil, $data_foto);
+                //update link foto
+                $data->tamu_foto = $namafile_profil;
+                $data->update();
+                //batas update
+            }
+            else
+            {
+                $namafile_kunjungan=NULL;
+                $namafile_profil=NULL;
+            }
             $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap).' berhasil ditambahkan';
             $warna_error = 'info';
         }
         else {
+            //ini kalo sudah ada datanya
+            //tanpa pegawai baru
+            $waktu_hari_ini = date('Ymd_His');
+            if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
+                $namafile_kunjungan = 'tamu_'.$request->tamu_id.'_'.$waktu_hari_ini.'.png';
+                $namafile_profil = 'tamu_profil_'.$request->tamu_id.'.png';
+                $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
+                $data_foto = base64_decode($data_foto);
+                Storage::disk('public')->put($namafile_kunjungan, $data_foto);
+                Storage::disk('public')->put($namafile_profil, $data_foto);
+            }
+            else
+            {
+                $namafile_kunjungan=NULL;
+                $namafile_profil=NULL;
+            }
             //cek apakah di update apa tidak edit_tamu = 1 (edit)
             if ($request->edit_tamu==1) {
                 //edit data tamu
@@ -175,13 +198,24 @@ class BukutamuController extends Controller
                 $data->email = trim($request->email);
                 $data->telepon = trim($request->telepon);
                 $data->alamat = $request->alamat;
-                $data->tamu_foto = $namafile;
+                if ($namafile_profil != NULL)
+                {
+                    $data->tamu_foto = $namafile_profil;
+                }
                 $data->update();
                 $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap).' berhasil ditambahkan dan Diperbarui';
                 $warna_error = 'success';
             }
             else {
                 //data tamu tidak Diperbarui
+                //perbarui foto profil dengan foto terbaru saja
+                $data = Mtamu::where('id','=',$request->tamu_id)->first();
+                if ($namafile_profil != NULL)
+                {
+                    $data->tamu_foto = $namafile_profil;
+                }
+                $data->update();
+                //batasannya
                 $pesan_error = 'Data pengunjung berhasil ditambahkan';
                 $warna_error = 'info';
             }
@@ -216,7 +250,7 @@ class BukutamuController extends Controller
             $dataKunjungan->keperluan = $request->keperluan;
             $dataKunjungan->is_pst = $is_pst;
             $dataKunjungan->f_id = $f_id;
-            $dataKunjungan->file_foto = $namafile;
+            $dataKunjungan->file_foto = $namafile_kunjungan;
             $dataKunjungan->save();
             if ($is_pst>0) {
                 //isi tabel pst_layanan dan pst_manfaat
@@ -390,7 +424,9 @@ class BukutamuController extends Controller
                 Feedback::where('kunjungan_id',$request->id)->delete();
             }
             $nama = $data->tamu->nama_lengkap;
+            $namafile_kunjungan = $data->file_foto;
             $data->delete();
+            Storage::disk('public')->delete($namafile_kunjungan);
             $arr = array(
                 'status'=>true,
                 'hasil'=>'Data kunjungan an. '.$nama.' berhasil dihapus'
