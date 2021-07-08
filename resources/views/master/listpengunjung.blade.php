@@ -75,9 +75,9 @@
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
                                             <td> @if ($item->tamu_foto != NULL)
-                                                <a class="image-popup-vertical-fit" href="{{asset('storage/'.$item->tamu_foto)}}">
-                                                <img src="{{asset('storage/'.$item->tamu_foto)}}" class="img-circle" width="60" height="60" />
-                                                @endif</td>
+                                                    <a class="image-popup" data-effect="mfp-3d-unfold" href="{{asset('storage/'.$item->tamu_foto)}}" title="Nama : {{$item->nama_lengkap}}">
+                                                        <img src="{{asset('storage/'.$item->tamu_foto)}}" class="img-circle" width="60" height="60" class="img-responsive" />
+                                                    @endif</td>
                                             <td>{{$item->nama_lengkap}}</td>
                                             <td>{{$item->nomor_identitas}}</td>
                                             <td>
@@ -152,19 +152,38 @@ $('#pstcheck').change(function(){
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
     <script>
-        $(function () {
-            $('#dTabel').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy','excel','print'
-                ],
-                responsive: true,
-                "displayLength": 30,
+        $(document).ready(function() {
+            var table = $('#dTabel').dataTable({
+            aLengthMenu: [
+                [1, 2],
+                [1, 2]
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy','excel','print'
+            ],
+            responsive: true,
+            iDisplayLength: 30,
+            "fnDrawCallback": function () {
+                $('.image-popup').magnificPopup({
+                type: 'image',
+                closeOnContentClick: true,
+                closeBtnInside: false,
+                fixedContentPos: true,
 
+                image: {
+                    verticalFit: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300 // don't foget to change the duration also in CSS
+                },
+
+                });
+                }
             });
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
-        });
-
+            });
     </script>
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>

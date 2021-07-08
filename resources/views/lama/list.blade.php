@@ -93,8 +93,8 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>
                                                 @if ($item->file_foto != NULL)
-                                                    <a class="image-popup-vertical-fit" href="{{asset('storage/'.$item->file_foto)}}">
-                                                        <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
+                                                    <a id="image-popups" href="{{asset('storage/'.$item->file_foto)}}">
+                                                        <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" class="img-responsive"  />
                                                     </a>
                                                 @endif
                                             </td>
@@ -213,19 +213,38 @@ $('#pstcheck').change(function(){
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
     <script>
-        $(function () {
-            $('#dTabel').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy','excel','print'
-                ],
-                responsive: true,
-                "displayLength": 30,
+         $(document).ready(function() {
+            var table = $('#dTabel').dataTable({
+            aLengthMenu: [
+                [1, 2],
+                [1, 2]
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy','excel','print'
+            ],
+            responsive: true,
+            iDisplayLength: 30,
+            "fnDrawCallback": function () {
+                $('.image-popup').magnificPopup({
+                type: 'image',
+                closeOnContentClick: true,
+                closeBtnInside: false,
+                fixedContentPos: true,
 
+                image: {
+                    verticalFit: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300 // don't foget to change the duration also in CSS
+                },
+
+                });
+                }
             });
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
-        });
-
+            });
     </script>
     <script>
    $('#tgl_lahir').datepicker({
