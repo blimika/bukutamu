@@ -74,10 +74,13 @@
                                     @foreach ($dataTamu as $item)
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td> @if ($item->tamu_foto != NULL)
-                                                    <a class="image-popup" data-effect="mfp-3d-unfold" href="{{asset('storage/'.$item->tamu_foto)}}" title="Nama : {{$item->nama_lengkap}}">
+                                            <td>
+                                                @if ($item->tamu_foto != NULL)
+                                                    <a class="image-popup" href="{{asset('storage/'.$item->tamu_foto)}}" title="Nama : {{$item->nama_lengkap}}">
                                                         <img src="{{asset('storage/'.$item->tamu_foto)}}" class="img-circle" width="60" height="60" class="img-responsive" />
-                                                    @endif</td>
+                                                    </a>
+                                                @endif
+                                            </td>
                                             <td>{{$item->nama_lengkap}}</td>
                                             <td>{{$item->nomor_identitas}}</td>
                                             <td>

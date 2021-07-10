@@ -93,9 +93,9 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>
                                                 @if ($item->file_foto != NULL)
-                                                    <a id="image-popups" href="{{asset('storage/'.$item->file_foto)}}">
-                                                        <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" class="img-responsive"  />
-                                                    </a>
+                                                <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}}">
+                                                    <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
+                                                </a>
                                                 @endif
                                             </td>
                                             <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a></td>
@@ -192,6 +192,40 @@ $('#pstcheck').change(function(){
     });
 </script>
 @include('js')
+<script>
+    $(document).ready(function() {
+      var table = $('#dTabel').dataTable({
+      aLengthMenu: [
+          [1, 2],
+          [1, 2]
+      ],
+      dom: 'Bfrtip',
+      buttons: [
+          'copy','excel','print'
+      ],
+      responsive: true,
+      iDisplayLength: 30,
+      "fnDrawCallback": function () {
+          $('.image-popup').magnificPopup({
+          type: 'image',
+          closeOnContentClick: true,
+          closeBtnInside: false,
+          fixedContentPos: true,
+
+          image: {
+              verticalFit: true
+          },
+          zoom: {
+              enabled: true,
+              duration: 300 // don't foget to change the duration also in CSS
+          },
+
+          });
+          }
+      });
+      $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
+      });
+</script>
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -212,40 +246,6 @@ $('#pstcheck').change(function(){
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
-    <script>
-         $(document).ready(function() {
-            var table = $('#dTabel').dataTable({
-            aLengthMenu: [
-                [1, 2],
-                [1, 2]
-            ],
-            dom: 'Bfrtip',
-            buttons: [
-                'copy','excel','print'
-            ],
-            responsive: true,
-            iDisplayLength: 30,
-            "fnDrawCallback": function () {
-                $('.image-popup').magnificPopup({
-                type: 'image',
-                closeOnContentClick: true,
-                closeBtnInside: false,
-                fixedContentPos: true,
-
-                image: {
-                    verticalFit: true
-                },
-                zoom: {
-                    enabled: true,
-                    duration: 300 // don't foget to change the duration also in CSS
-                },
-
-                });
-                }
-            });
-            $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
-            });
-    </script>
     <script>
    $('#tgl_lahir').datepicker({
     autoclose: true,

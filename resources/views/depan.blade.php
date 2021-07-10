@@ -87,10 +87,10 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>
                                                 @if ($item->file_foto != NULL)
-                                                <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}">
-                                                <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
+                                                <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}}">
+                                                    <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
+                                                </a>
                                                 @endif
-                                            </a>
                                             </td>
                                             <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a></td>
                                             <td>{{$item->tamu->nomor_identitas}}</td>
