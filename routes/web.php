@@ -32,6 +32,7 @@ Route::get('/getdatakunjungan/{id}', 'BukutamuController@getDataKunjungan')->nam
 Route::post('/simpanlama', 'BukutamuController@SimpanLama')->name('simpan.lama');
 Route::get('/lama', 'BukutamuController@lama')->name('lama');
 Route::get('/spi', 'BukutamuController@CLSpi')->name('spi');
+Route::get('/skd', 'BukutamuController@ListSkd')->name('skd');
 Route::get('/feedback', 'FeedbackController@list')->name('feedback.list');
 Route::post('/feedback/simpan', 'FeedbackController@Simpan')->name('feedback.simpan');
 Route::group(['middleware' => ['auth']], function () {
