@@ -115,6 +115,7 @@
                 <textarea class="form-control" rows="4" id="keperluan" name="keperluan" required></textarea>
         </div>
 </div>
+@if (ENV('APP_WEBCAM_MODE') == true)
 <div class="row">
     <div class="form-group col-md-12">
         <video id="video" width="480" height="360" autoplay aria-hidden="false"></video>
@@ -126,6 +127,14 @@
         <button type="button" id="tanpa_webcam" class="btn btn-warning">Tanpa Webcam</button>
     </div>
 </div>
+@else
+<div class="row">
+    <div class="form-group col-md-12">
+        <input type="hidden" name="foto" id="foto" />
+        <button type="button" id="tanpa_webcam" class="btn btn-danger">Klik ini Tanpa Webcam</button>
+    </div>
+</div>
+@endif
 <div class="row">
         <div class="form-group col-md-6">
                         <h5>Tujuan Kedatangan : <span class="text-danger">*</span></h5>
