@@ -29,6 +29,14 @@
 
                             </li>
                             <li>
+                                <a class="waves-effect waves-dark ml-auto" href="#" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Data</span></a>
+                                <ul aria-expanded="false" class="collapse">
+                                    <li><a href="{{route('kunjungan.baru')}}">Kunjungan Baru</a></li>
+                                    <li><a href="{{route('kunjungan.lama')}}">Kunjungan Lama</a></li>
+                                    <li><a href="{{route('kunjungan.scan')}}">SCAN QRCODE</a></li>
+                                </ul>
+                            </li>
+                            <li>
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#TambahModal" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Bukutamu</span></a>
                             </li>
                             <li>

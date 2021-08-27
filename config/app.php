@@ -176,7 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         //penambahan provider baru
         App\Providers\UmumProvider::class,
-
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
     ],
 
     /*
@@ -230,7 +230,7 @@ return [
         //tambahan helper
         'Tanggal' => App\Helpers\Tanggal::class,
         'Generate' => App\Helpers\Generate::class,
-
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
     ],
 
 ];

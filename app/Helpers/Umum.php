@@ -47,5 +47,14 @@ class Generate {
         //$no_id = substr($nomor, 0, strlen($nomor)-3).str_repeat('*', 3);
         $no_id = str_repeat('*', (strlen($nomor)-4)).substr($nomor, -4);
         return $no_id;
-    } 
+    }
+    public static function Kode($length) {
+        $kata='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $code_gen = '';
+        for ($i = 0; $i < $length; $i++) {
+            $pos = rand(0, strlen($kata)-1);
+            $code_gen .= $kata[$pos];
+            }
+        return $code_gen;
+    }
 }

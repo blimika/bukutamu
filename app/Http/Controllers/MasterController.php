@@ -18,6 +18,10 @@ use App\Kunjungan;
 use App\Pstlayanan;
 use App\Pstmanfaat;
 use App\Mfasilitas;
+use App\Helpers\Generate;
+use App\Feedback;
+use Illuminate\Support\Facades\Storage;
+use QrCode;
 
 class MasterController extends Controller
 {
@@ -33,6 +37,16 @@ class MasterController extends Controller
         $arr = array('hasil' => 'Data pengunjung tidak tersedia', 'status' => false);
         if ($dataCek) {
             //data tamu tersedia
+            //create qrcode simpan di public
+            //$qrcode = base64_encode(QrCode::format('png')->size(100)->margin(0)->generate($dataCek->kode_qr));
+            /*
+            $qrcode_foto = QrCode::format('png')
+                    ->size(200)->errorCorrection('H')
+                     ->generate($dataCek->kode_qr);
+            $output_file = '/img/qrcode/'.$dataCek->kode_qr.'-'.$dataCek->id.'.png';
+            //$data_foto = base64_decode($qrcode_foto);
+            Storage::disk('public')->put($output_file, $qrcode_foto);
+            */
             $arr = array(
                 'hasil' => array(
                     'tamu_id'=>$dataCek->id,
@@ -57,6 +71,7 @@ class MasterController extends Controller
                     'email'=>$dataCek->email,
                     'telepon'=>$dataCek->telepon ,
                     'alamat'=>$dataCek->alamat,
+                    'kode_qr'=>$dataCek->kode_qr,
                     'created_at'=>$dataCek->created_at,
                     'created_at_nama'=>Carbon::parse($dataCek->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     'updated_at'=>$dataCek->updated_at,
@@ -80,7 +95,13 @@ class MasterController extends Controller
         {
             $data = Mtamu::where('id',$request->id)->first();
             $nama = $data->nama_lengkap;
+            //$data->delete();
+            $namafile_photo = $data->tamu_foto;
             $data->delete();
+            if ($data->tamu_foto != NULL)
+            {
+                Storage::disk('public')->delete($namafile_photo);
+            }
             $cek_kunjungan = Kunjungan::where('tamu_id',$request->id)->count();
             if ($cek_kunjungan > 0)
             {
@@ -92,6 +113,13 @@ class MasterController extends Controller
                         Pstlayanan::where('kunjungan_id',$item->id)->delete();
                         Pstmanfaat::where('kunjungan_id',$item->id)->delete();
                     }
+                    $cek_feedback = Feedback::where('kunjungan_id',$item->id)->count();
+                    if ($cek_feedback > 0)
+                    {
+                        Feedback::where('kunjungan_id',$item->id)->delete();
+                    }
+                    $namafile_kunjungan = $item->file_foto;
+                    Storage::disk('public')->delete($namafile_kunjungan);
                 }
                 Kunjungan::where('tamu_id',$request->id)->delete();
             }
@@ -101,5 +129,43 @@ class MasterController extends Controller
             );
         }
         return Response()->json($arr);
+    }
+    public function SyncKodePengunjung()
+    {
+        $count = Mtamu::count();
+        if ($count > 0)
+        {
+            $data = Mtamu::get();
+            foreach ($data as $item)
+            {
+                if ($item->kode_qr == NULL)
+                {
+                    $qrcode_foto = '';
+                    $qrcode = Generate::Kode(6);
+                    $data_update = Mtamu::where('id',$item->id)->first();
+                    $data_update->kode_qr = $qrcode;
+                    $data_update->update();
+
+                    //buat qrcode img nya langsung
+                    $qrcode_foto = QrCode::format('png')
+                    ->size(200)->margin(1)->errorCorrection('H')
+                    ->generate($qrcode);
+                    $output_file = '/img/qrcode/'.$qrcode.'-'.$item->id.'.png';
+                    //$data_foto = base64_decode($qrcode_foto);
+                    Storage::disk('public')->put($output_file, $qrcode_foto);
+                }
+            }
+            $pesan_error = 'Data pengunjung berhasil sync';
+            $warna_error = 'success';
+        }
+        else
+        {
+            $pesan_error = 'Data pengunjung masih kosong';
+            $warna_error = 'danger';
+        }
+
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('pengunjung.list');
     }
 }

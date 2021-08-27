@@ -297,6 +297,7 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             $('#ViewModal .modal-body #tamu_email').text(data.hasil.email)
             $('#ViewModal .modal-body #tamu_telepon').text(data.hasil.telepon)
             $('#ViewModal .modal-body #tamu_alamat').text(data.hasil.alamat)
+            $('#ViewModal .modal-body #kodeqr').attr("src",'{{asset("storage")}}/img/qrcode/'+data.hasil.kode_qr+'-'+tamuid+'.png')
                 if (data.hasil.url_foto != null)
                 {
                     $('#ViewModal .modal-body #tamu_foto').attr("src",'{{asset("storage")}}/'+data.hasil.url_foto)
@@ -471,7 +472,7 @@ window.addEventListener("DOMContentLoaded", function() {
                 $('#ambil_foto').prop('disabled', true);
                 $('#tambah_data').prop('disabled', false);
                 var canvas = document.getElementById('canvas');
-				context.drawImage(video, 0, 0, 480, 360);
+				context.drawImage(video, 0, 0, 640, 480);
                 $('#video').hide();
                 var dataURL = canvas.toDataURL('image/png',0.90);
                 $('#TambahModal .modal-body #foto').val(dataURL);

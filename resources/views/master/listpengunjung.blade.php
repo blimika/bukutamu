@@ -10,7 +10,6 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Master Pengunjung</li>
             </ol>
-            <button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#TambahModal"><i class="fa fa-plus-circle"></i> Tambah</button>
         </div>
     </div>
 </div>
@@ -41,6 +40,7 @@
                                     <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
+                                    <th>Kode</th>
                                     <th>JK</th>
                                     <th>Tgl Lahir</th>
                                     <th>Email</th>
@@ -56,6 +56,7 @@
                                     <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
+                                    <th>Kode</th>
                                     <th>JK</th>
                                     <th>Tgl Lahir</th>
                                     <th>Email</th>
@@ -82,7 +83,8 @@
                                                 @endif
                                             </td>
                                             <td>{{$item->nama_lengkap}}</td>
-                                            <td>{{$item->nomor_identitas}}</td>
+                                            <td>{{$item->nomor_identitas}}  <br /> ({{$item->identitas->nama}})</td>
+                                            <td>{{$item->kode_qr}}</td>
                                             <td>
                                                 @if ($item->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->jk->inisial}}</span>
@@ -94,7 +96,7 @@
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->pekerjaan->nama}}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-info" data-id="{{$item->id}}" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
+                                                <button class="btn btn-sm btn-info" data-id="{{$item->id}}" data-kodeqr="{{$item->kode_qr}}" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
                                                 <button class="btn btn-sm btn-danger hapuspengunjung" data-id="{{$item->id}}" data-nama="{{$item->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung {{$item->nama_lengkap}}"></i></button>
                                             </td>
                                         </tr>

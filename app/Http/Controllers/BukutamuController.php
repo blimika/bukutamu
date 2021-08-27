@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Feedback;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\Generate;
+use QrCode;
+
 class BukutamuController extends Controller
 {
     //
@@ -126,6 +129,7 @@ class BukutamuController extends Controller
         //dd($waktu_hari_ini,$request->all());
 
         if ($request->tamu_id==NULL) {
+            $qrcode = Generate::Kode(6);
             $data = new Mtamu();
             $data->id_midentitas = $request->jenis_identitas;
             $data->nomor_identitas = trim($request->nomor_identitas);
@@ -141,12 +145,13 @@ class BukutamuController extends Controller
             $data->telepon = trim($request->telepon);
             $data->alamat = $request->alamat;
             $data->created_at = \Carbon\Carbon::now();
+            $data->kode_qr = $qrcode;
             $data->save();
             $id_tamu = $data->id;
             $waktu_hari_ini = date('Ymd_His');
             if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
-                $namafile_kunjungan = 'tamu_'.$id_tamu.'_'.$waktu_hari_ini.'.png';
-                $namafile_profil = 'tamu_profil_'.$id_tamu.'.png';
+                $namafile_kunjungan = '/img/kunjungan/tamu_'.$id_tamu.'_'.$waktu_hari_ini.'.png';
+                $namafile_profil = '/img/profil/tamu_profil_'.$id_tamu.'.png';
                 $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
                 $data_foto = base64_decode($data_foto);
                 Storage::disk('public')->put($namafile_kunjungan, $data_foto);
@@ -161,6 +166,13 @@ class BukutamuController extends Controller
                 $namafile_kunjungan=NULL;
                 $namafile_profil=NULL;
             }
+            //buat qrcode img nya langsung
+            $qrcode_foto = QrCode::format('png')
+            ->size(200)->margin(1)->errorCorrection('H')
+             ->generate($qrcode);
+            $output_file = '/img/qrcode/'.$qrcode.'-'.$data->id.'.png';
+            //$data_foto = base64_decode($qrcode_foto);
+            Storage::disk('public')->put($output_file, $qrcode_foto);
             $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap).' berhasil ditambahkan';
             $warna_error = 'info';
         }
@@ -305,6 +317,7 @@ class BukutamuController extends Controller
             $data->telepon = trim($request->telepon_lama);
             $data->alamat = $request->alamat_lama;
             $data->created_at = \Carbon\Carbon::now();
+            $data->kode_qr = Generate::Kode(6);
             $data->save();
             $id_tamu = $data->id;
             $pesan_error = 'Data pengunjung lama berhasil ditambahkan';
@@ -666,5 +679,18 @@ class BukutamuController extends Controller
                         ->get();
         //dd($Kunjungan);
         return view('skd.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter]);
+    }
+    public function KunjunganBaru()
+    {
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mlayanan = Mlayanan::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        return view('kunjungan.baru',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mfasilitas'=>$Mfasilitas]);
     }
 }

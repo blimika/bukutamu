@@ -3,7 +3,7 @@
 $(".hapuspengunjung").click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
-    var nama = $(this).data('nama');    
+    var nama = $(this).data('nama');
     Swal.fire({
                 title: 'Akan dihapus?',
                 text: "Data pengunjung "+nama+" akan dihapus permanen",
@@ -45,9 +45,9 @@ $(".hapuspengunjung").click(function (e) {
                                     'Error!',
                                     ''+data.hasil+'',
                                     'danger'
-                                ); 
+                                );
                             }
-                            
+
                         },
                         error: function(){
                             Swal.fire(
@@ -58,7 +58,7 @@ $(".hapuspengunjung").click(function (e) {
                         }
 
                     });
-                   
+
                 }
             })
 });
@@ -67,6 +67,7 @@ $(".hapuspengunjung").click(function (e) {
 $('#ViewModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var tamuid = button.data('id')
+    var kodeqr = button.data('kodeqr')
     //load dulu transaksinya
     $.ajax({
         url : '{{route("pengunjung.cari","")}}/'+tamuid,
@@ -86,14 +87,15 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             $('#ViewModal .modal-body #kat_kerja_nama').text(data.hasil.kat_kerja_nama)
             $('#ViewModal .modal-body #tamu_pendidikan').text(data.hasil.nama_mdidik)
             $('#ViewModal .modal-body #tamu_warga').text(data.hasil.nama_mwarga)
-            $('#ViewModal .modal-body #tamu_email').text(data.hasil.email)          
+            $('#ViewModal .modal-body #tamu_email').text(data.hasil.email)
             $('#ViewModal .modal-body #tamu_telepon').text(data.hasil.telepon)
             $('#ViewModal .modal-body #tamu_alamat').text(data.hasil.alamat)
+            $('#ViewModal .modal-body #kode_qr').text(data.hasil.kode_qr)
             }
-            else 
+            else
             {
                 alert(data.hasil);
-            } 
+            }
         },
         error: function(){
             alert("error load transaksi");

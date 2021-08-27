@@ -24,6 +24,9 @@ Auth::routes([
 
 Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
+Route::get('/tambahkunjunganbaru', 'BukutamuController@KunjunganBaru')->name('kunjungan.baru');
+Route::get('/tambahkunjunganlama', 'BukutamuController@KunjunganLama')->name('kunjungan.lama');
+Route::get('/scanqrcode', 'BukutamuController@ScanQrcode')->name('kunjungan.scan');
 Route::get('/edit/{id}', 'BukutamuController@editdata')->name('edit');
 Route::get('/cekid/{jenis_identitas}/{nomor_identitas}', 'BukutamuController@cekID')->name('cekid');
 Route::get('/getdatakunjungan/{id}', 'BukutamuController@getDataKunjungan')->name('getdatakunjungan');
@@ -38,6 +41,7 @@ Route::post('/feedback/simpan', 'FeedbackController@Simpan')->name('feedback.sim
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/hapuskunjungan', 'BukutamuController@hapus')->name('hapus.kunjungan');
     Route::get('/master/pengunjung', 'MasterController@ListPengunjung')->name('pengunjung.list');
+    Route::get('/master/pengunjungsync', 'MasterController@SyncKodePengunjung')->name('pengunjung.kode');
     Route::post('/hapuspengunjung', 'MasterController@HapusPengunjung')->name('pengunjung.hapus');
     Route::get('/laporan/pengunjung', 'LaporanController@list')->name('laporan.pengunjung');
     Route::post('/ubahkunjungan', 'BukutamuController@UbahKunjungan')->name('ubah.kunjungan');
