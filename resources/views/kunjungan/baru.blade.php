@@ -42,15 +42,16 @@
                             <h4 class="card-title">Biodata Pengunjung</h4>
                             <h6 class="card-subtitle">silakan input data sesuai identitas yang dimiliki </h6>
                             <hr>
-                            <form class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
+                            <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="tamu_id" id="tamu_id" value="" />
                             <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
+                            <input type="hidden" name="tamu_baru" id="tamu_baru" value="0" />
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="jenis_identitas">Jenis Identitas</label>
                                         <select class="form-control" id="jenis_identitas" name="jenis_identitas" required>
-                                            <option disabled selected></option>
+                                            <option value="">Pilih Jenis Identitas</option>
                                             @foreach ($Midentitas as $item_identitas)
                                                     <option value="{{$item_identitas->id}}">{{$item_identitas->nama}}</option>
                                             @endforeach
@@ -80,7 +81,7 @@
                                 <div class="form-group col-md-6 m-b-40">
                                         <label for="id_jk">Jenis Kelamin</label>
                                         <select class="form-control" id="id_jk" name="id_jk" required disabled>
-                                        <option disabled selected></option>
+                                        <option value=""></option>
                                         @foreach ($Mjk as $item_jk)
                                                 <option value="{{$item_jk->id}}">{{$item_jk->nama}}</option>
                                         @endforeach
@@ -95,7 +96,7 @@
                                 <div class="form-group col-md-6">
                                         <label for="id_mdidik">Pendidikan terakhir</label>
                                         <select class="form-control" id="id_mdidik" name="id_mdidik" required disabled>
-                                                <option disabled selected></option>
+                                                <option value=""></option>
                                                 @foreach ($Mpendidikan as $item_didik)
                                                         <option value="{{$item_didik->id}}">{{$item_didik->nama}}</option>
                                                 @endforeach
@@ -107,7 +108,7 @@
                                 <div class="form-group col-md-6">
                                         <label for="id_kerja">Pekerjaan</label>
                                         <select class="form-control" id="id_kerja" name="id_kerja" required disabled>
-                                                <option disabled selected></option>
+                                                <option value=""></option>
                                                 @foreach ($Mpekerjaan as $i_pekerjaan)
                                                         <option value="{{$i_pekerjaan->id}}">{{$i_pekerjaan->nama}}</option>
                                                 @endforeach
@@ -175,6 +176,7 @@
                                     <button type="button" id="reset_foto" class="btn btn-danger" disabled>Ulangi</button>
                                     <input type="hidden" name="foto" id="foto" />
                                     <button type="button" id="tanpa_webcam" class="btn btn-warning">Tanpa Webcam</button>
+                                    <button type="button" id="dengan_webcam" class="btn btn-success">Dengan Webcam</button>
                                 </div>
                             </div>
                             @else
@@ -187,19 +189,24 @@
                             @endif
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                                <h5>Tujuan Kedatangan : <span class="text-danger">*</span></h5>
-                                                <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" name="pst" value="1" id="pstcheck">
-                                                        <label class="custom-control-label" for="pstcheck">Ke Pelayanan Statistik Terpadu?</label>
-                                                </div>
-                                        </div>
+                                    <h5>Tujuan Kedatangan ke : <span class="text-danger">*</span></h5>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="kantorcheck" name="tujuan_kedatangan" value="0" class="custom-control-input" required checked="checked">
+                                        <label class="custom-control-label" for="kantorcheck">Kantor</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="pstcheck" name="tujuan_kedatangan" value="1" class="custom-control-input">
+                                        <label class="custom-control-label" for="pstcheck">Pelayanan Statistik Terpadu</label>
+                                    </div>           
+                                    
+                                </div>
                             </div>
                             <div class="row">
                                     <div class="form-group col-md-6" id="PSTlayanan">
                                             <h5>Layanan yang ingin diakses : <span class="text-danger">*</span></h5>
                                             @foreach ($Mlayanan as $item_layanan)
                                                     <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" name="pst_layanan[]" value="{{$item_layanan->id}}" id="layanan_{{$item_layanan->id}}">
+                                                            <input type="checkbox" class="custom-control-input pst_layanan" name="pst_layanan[]" value="{{$item_layanan->id}}" id="layanan_{{$item_layanan->id}}">
                                                             <label class="custom-control-label" for="layanan_{{$item_layanan->id}}">{{$item_layanan->nama}}</label>
                                                     </div>
                                             @endforeach
@@ -209,7 +216,7 @@
                                                     <h5>Pemanfaatan hasil kunjungan : <span class="text-danger">*</span></h5>
                                                     @foreach ($MKunjungan as $item_kunjungan)
                                                             <div class="custom-control custom-checkbox">
-                                                                    <input type="checkbox" class="custom-control-input" name="pst_manfaat[]" value="{{$item_kunjungan->id}}" id="kunjungan_{{$item_kunjungan->id}}">
+                                                                    <input type="checkbox" class="custom-control-input pst_manfaat" name="pst_manfaat[]" value="{{$item_kunjungan->id}}" id="kunjungan_{{$item_kunjungan->id}}">
                                                                     <label class="custom-control-label" for="kunjungan_{{$item_kunjungan->id}}">{{$item_kunjungan->nama}}</label>
                                                             </div>
                                                     @endforeach
@@ -219,7 +226,7 @@
                             <div class="row">
                                     <div class="form-group col-md-6" id="PSTFasilitas">
                                             <h5>Fasilitas Utama : <span class="text-danger">*</span></h5>
-                                            <select name="fasilitas_utama" class="form-control">
+                                            <select name="fasilitas_utama" class="form-control pst_fasilitas">
                                                 <option value="">Pilih Fasilitas</option>
                                                 @foreach ($Mfasilitas as $item_fasilitas)
                                                     <option value="{{$item_fasilitas->id}}">{{$item_fasilitas->nama}}</option>
@@ -249,7 +256,7 @@
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama, #canvas {
+        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama, #canvas, #dengan_webcam {
             display: none;
         }
 
@@ -257,6 +264,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
     <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
+    
     <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
@@ -264,15 +272,18 @@
 @section('js')
 <script>
 $('#pstcheck').change(function(){
-        $('#PSTlayanan').toggle();
-        $('#PSTmanfaat').toggle();
-        $('#PSTFasilitas').toggle();
-    });
-    $('#pstcheck_lama').change(function(){
-        $('#PSTlayanan_lama').toggle();
-        $('#PSTmanfaat_lama').toggle();
-        $('#PSTFasilitas_lama').toggle();
-    });
+        $('#PSTlayanan').show();
+        $('#PSTmanfaat').show();
+        $('#PSTFasilitas').show();
+        $('.pst_fasilitas').prop('required',true);
+});
+$('#kantorcheck').change(function(){
+        $('#PSTlayanan').hide();
+        $('#PSTmanfaat').hide();
+        $('#PSTFasilitas').hide();
+        $('.pst_fasilitas').prop('required',false);
+});
+
 </script>
 @include('kunjungan.jsbaru')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>

@@ -122,9 +122,25 @@ class BukutamuController extends Controller
         //$pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
         //$test = $request->pst_layanan;
         //dd($request->all());
-        //dd($request->all());
+        dd($request->all());
         //$foto = $request->foto;
         // foto = tamu_id_tgl_detik;
+        /*
+        "_token" => "153FTkKPokUhdO4VUfsThi5t53zn0tbM121ck801"
+        "tamu_id" => "2"
+        "edit_tamu" => "0"
+        "jenis_identitas" => "2"
+        "nomor_identitas" => "5272031903820005"
+        "nama_lengkap" => "I Putu Dyatmika"
+        "tgl_lahir" => "1982-03-19"
+        "telepon" => "081237802900"
+        "email" => "pdyatmika@gmail.com"
+        "pekerjaan_detil" => "BPS Provinsi NTB"
+        "alamat" => "Jl. Gunung Rinjani No. 2"
+        "keperluan" => "eradfda"
+        "tujuan_kedatangan" => "0"
+        "fasilitas_utama" => null
+        */
 
         //dd($waktu_hari_ini,$request->all());
 
@@ -181,8 +197,8 @@ class BukutamuController extends Controller
             //tanpa pegawai baru
             $waktu_hari_ini = date('Ymd_His');
             if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
-                $namafile_kunjungan = 'tamu_'.$request->tamu_id.'_'.$waktu_hari_ini.'.png';
-                $namafile_profil = 'tamu_profil_'.$request->tamu_id.'.png';
+                $namafile_kunjungan = '/img/kunjungan/tamu_'.$request->tamu_id.'_'.$waktu_hari_ini.'.png';
+                $namafile_profil = '/img/profil/tamu_profil_'.$request->tamu_id.'.png';
                 $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
                 $data_foto = base64_decode($data_foto);
                 Storage::disk('public')->put($namafile_kunjungan, $data_foto);
