@@ -8,7 +8,7 @@
         <div class="d-flex justify-content-end align-items-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
-                <li class="breadcrumb-item active">Tambah Kunjungan Baru</li>
+                <li class="breadcrumb-item active">Tambah Kunjungan Lama</li>
             </ol>
         </div>
     </div>
@@ -35,8 +35,8 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                    <h4 class="card-title text-right">Form Tambah Kunjungan</h4>
-                    <h6 class="card-subtitle text-right">Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}}</h6>
+                    <h4 class="card-title text-right">Form Tambah Kunjungan Lama</h4>
+
                     <div class="row"> <!---row atas awal--->
                         <div class="col-lg-6 col-sm-6"> <!---form sebelah kiri-->
                             <h4 class="card-title">Biodata Pengunjung</h4>

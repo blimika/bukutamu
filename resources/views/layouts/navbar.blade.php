@@ -36,12 +36,12 @@
                                     <li><a href="{{route('kunjungan.scan')}}">SCAN QRCODE</a></li>
                                 </ul>
                             </li>
-                            <li>
+                            <!--<li>
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#TambahModal" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Bukutamu</span></a>
                             </li>
                             <li>
                                 <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#InputDataLamaModal" aria-expanded="false"><i class="ti-layers"></i><span class="hide-menu">Input Data Lama</span></a>
-                            </li>
+                            </li>--->
                             <li>
                                 <a class="waves-effect waves-dark ml-auto" href="{{route('feedback.list')}}"><i class="ti-medall"></i><span class="hide-menu">Feedback</span></a>
                         </li>
@@ -59,6 +59,7 @@
                                 <ul aria-expanded="false" class="collapse">
                                     <li><a href="{{route('pengunjung.list')}}">Pengunjung</a></li>
                                     <li><a href="javascript:void(0)">Pendidikan</a></li>
+                                    <li><a href="{{route('pengunjung.kode')}}">Generate QRCode</a></li>
                                 </ul>
                             </li>
                             @endif

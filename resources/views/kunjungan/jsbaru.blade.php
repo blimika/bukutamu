@@ -1,9 +1,37 @@
 <script>
+function cekUmur(birthDateString) {
+    var today = new Date();
+    var birthDate = new Date(birthDateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
 //script cari identitas
 $('#cek_id').click(function(){
 
 var jenis = $("#jenis_identitas").val();
 var nomor = $('#nomor_identitas').val();
+if (jenis == "")
+{
+    Swal.fire({
+        type: 'error',
+        title: 'error',
+        text: 'Silakan pilih jenis identitas'
+        });
+    return false;
+}
+if (nomor == "")
+{
+    Swal.fire({
+        type: 'error',
+        title: 'error',
+        text: 'Masukkan nomor identitas'
+        });
+    return false;
+}
 $.ajax({
 url : '{{route('cekid',['',''])}}/'+jenis+'/'+nomor,
 method : 'get',
@@ -141,8 +169,134 @@ $('#tambah_data').on('click', function(e) {
     e.preventDefault();
     var jenis_identitas = $('#jenis_identitas').val();
     var nomor_identitas = $('#nomor_identitas').val();
-    var keperluan = $('#keperluan').val();
     var tamu_baru = $('#tamu_baru').val();
+    var keperluan = $('#keperluan').val();
+    //cek isian bila ada tamu baru / tamu di edit
+    if (tamu_baru == 1)
+    {
+        var nama_lengkap = $('#nama_lengkap').val();
+        var id_jk = $('#id_jk').val();
+        var tgl_lahir = $('#tgl_lahir').val();
+        var id_mdidik = $('#id_mdidik').val();
+        var id_kerja = $('#id_kerja').val();
+        var telepon = $('#telepon').val();
+        var kat_kerja = $('#kat_kerja').val();
+        var pekerjaan_detil = $('#pekerjaan_detil').val();
+        var mwarga = $('#mwarga').val();
+        var alamat = $('#alamat').val();
+        if (nama_lengkap == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Nama lengkap harus terisi'
+                });
+            return false;
+        }
+        if (id_jk == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Pilih salah satu jenis kelamin'
+                });
+            return false;
+        }
+        if (tgl_lahir == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Tanggal lahir harus terisi'
+                });
+            return false;
+        }
+        if (cekUmur(tgl_lahir) <= 13)
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'umur minimal 14 tahun'
+                });
+            return false;
+        }
+
+        if (id_mdidik == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Pilih salah satu pendidikan'
+                });
+            return false;
+        }
+        if (id_kerja == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Pilih salah satu pekerjaan'
+                });
+            return false;
+        }
+        if (telepon == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Silakan masukkan nomor telepon'
+                });
+            return false;
+        }
+
+        if (telepon.match(/[^\d+]/))
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Silakan masukkan nomor telepon hanya angka'
+                });
+            return false;
+        }
+        if (kat_kerja == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Pilih salah satu kategori pekerjaan'
+                });
+            return false;
+        }
+        if (pekerjaan_detil == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Silakan masukkan Sekolah/Univ/Instansi/Detil Pekerjaan'
+                });
+            return false;
+        }
+        if (mwarga == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Silakan pilih salah satu kewarganegaraan'
+                });
+            return false;
+        }
+        if (alamat == "")
+        {
+            Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Silakan masukkan alamat tempat tinggal'
+                });
+            return false;
+        }
+    }
+    //batasnya
+
     if (jenis_identitas == "")
     {
         Swal.fire({
@@ -162,17 +316,7 @@ $('#tambah_data').on('click', function(e) {
             });
         return false;
     }
-    //cek isian bila ada tamu baru / tamu di edit
-    if (tamu_baru == 1)
-    {
-        var nama_lengkap = $('#nama_lengkap').val();
-        var id_jk = $('#id_jk').val();
-        var tgl_lahir = $('#tgl_lahir').val();
-        var id_mdidik = $('#id_mdidik').val();
-        var id_kerja = $('#id_kerja').val();
 
-    }
-    //batasnya
     if (keperluan == "")
     {
         Swal.fire({
@@ -182,6 +326,7 @@ $('#tambah_data').on('click', function(e) {
             });
         return false;
     }
+
 
     var tujuan_kedatangan = $('input[name="tujuan_kedatangan"]:checked').val();;
     if (tujuan_kedatangan == 1)
@@ -196,7 +341,7 @@ $('#tambah_data').on('click', function(e) {
             title: 'error',
             text: 'Minimal pilih satu Layanan yang dipilih'
             });
-             return false;    
+             return false;
         }
         else if (count_manfaat <= 0)
         {
@@ -205,14 +350,14 @@ $('#tambah_data').on('click', function(e) {
             title: 'error',
             text: 'Minimal pilih satu Tujuan kedatangan yang dipilih'
             });
-             return false;    
+             return false;
         }
-        else 
+        else
         {
             $('#form_baru').submit();
         }
     }
-    else 
+    else
     {
         $('#form_baru').submit();
     }

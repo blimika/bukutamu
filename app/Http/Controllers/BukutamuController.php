@@ -122,7 +122,7 @@ class BukutamuController extends Controller
         //$pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
         //$test = $request->pst_layanan;
         //dd($request->all());
-        dd($request->all());
+        //dd($request->all());
         //$foto = $request->foto;
         // foto = tamu_id_tgl_detik;
         /*
@@ -138,7 +138,7 @@ class BukutamuController extends Controller
         "pekerjaan_detil" => "BPS Provinsi NTB"
         "alamat" => "Jl. Gunung Rinjani No. 2"
         "keperluan" => "eradfda"
-        "tujuan_kedatangan" => "0"
+        "tujuan_kedatangan" => "0" 0 = kantor, 1=pst
         "fasilitas_utama" => null
         */
 
@@ -252,12 +252,12 @@ class BukutamuController extends Controller
         //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
 
 
-        if ($request->pst==NULL) {
+        if ($request->tujuan_kedatangan==0) {
             $is_pst=0;
             $f_id = 0;
         }
         else {
-            $is_pst=$request->pst;
+            $is_pst=$request->tujuan_kedatangan;
             $f_id = $request->fasilitas_utama;
         }
         //cek dulu apakah hari ini juga sudah mengisi
@@ -708,5 +708,22 @@ class BukutamuController extends Controller
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
         return view('kunjungan.baru',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mfasilitas'=>$Mfasilitas]);
+    }
+    public function KunjunganLama()
+    {
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mlayanan = Mlayanan::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        return view('kunjungan.lama',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mfasilitas'=>$Mfasilitas]);
+    }
+    public function ScanQrcode()
+    {
+
     }
 }

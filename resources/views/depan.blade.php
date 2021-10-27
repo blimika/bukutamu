@@ -10,7 +10,8 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Bukutamu</li>
             </ol>
-            <button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#TambahModal"><i class="fa fa-plus-circle"></i> Tambah</button>
+            <!--<button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#TambahModal"><i class="fa fa-plus-circle"></i> Tambah</button>-->
+            <a href="{{route('kunjungan.baru')}}" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Kunjungan Baru</a>
         </div>
     </div>
 </div>
@@ -87,7 +88,7 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>
                                                 @if ($item->file_foto != NULL)
-                                                <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}}">
+                                                <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
                                                     <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
                                                 </a>
                                                 @endif
