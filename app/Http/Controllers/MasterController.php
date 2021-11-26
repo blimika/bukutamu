@@ -47,6 +47,36 @@ class MasterController extends Controller
             //$data_foto = base64_decode($qrcode_foto);
             Storage::disk('public')->put($output_file, $qrcode_foto);
             */
+            $cek_kunjungan = Kunjungan::where('tamu_id',$dataCek->id)->count();
+            $arr_kunjungan = array('hasil'=>'Data Kunjungan Kosong','status'=>false);
+            if ($cek_kunjungan > 0)
+            {
+                //ada kunjungan
+                $dataKunjungan = Kunjungan::with('tamu','pLayanan','pManfaat')->where('tamu_id',$dataCek->id)->get();
+                foreach ($dataKunjungan as $item)
+                {
+                    $dataItem[] = array(
+                            'id'=>$item->id,
+                            'tanggal'=>$item->tanggal,
+                            'tanggal_nama'=>Carbon::parse($item->tanggal)->isoFormat('D MMMM Y'),
+                            'keperluan'=>$item->keperluan,
+                            'is_pst'=>$item->is_pst,
+                            'f_id'=>$item->f_id,
+                            'f_feedback'=>$item->f_feedback,
+                            'file_foto'=>$item->file_foto,
+                            'created_at'=>$item->created_at,
+                            'created_at_nama'=>Carbon::parse($item->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                            'updated_at'=>$item->updated_at,
+                            'updated_at_nama'=>Carbon::parse($item->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    );  
+                }
+                $arr_kunjungan = array(
+                    'hasil' => $dataItem,
+                    'status'=>true,
+                    'jumlah'=>$cek_kunjungan
+                );
+            }
+           
             $arr = array(
                 'hasil' => array(
                     'tamu_id'=>$dataCek->id,
@@ -77,6 +107,7 @@ class MasterController extends Controller
                     'updated_at'=>$dataCek->updated_at,
                     'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     'url_foto'=>$dataCek->tamu_foto,
+                    'kunjungan'=>$arr_kunjungan
                 ),
                 'status' => true
             );
@@ -148,7 +179,7 @@ class MasterController extends Controller
 
                     //buat qrcode img nya langsung
                     $qrcode_foto = QrCode::format('png')
-                    ->size(200)->margin(1)->errorCorrection('H')
+                    ->size(400)->margin(1)->errorCorrection('H')
                     ->generate($qrcode);
                     $output_file = '/img/qrcode/'.$qrcode.'-'.$item->id.'.png';
                     //$data_foto = base64_decode($qrcode_foto);
@@ -163,6 +194,74 @@ class MasterController extends Controller
             $pesan_error = 'Data pengunjung masih kosong';
             $warna_error = 'danger';
         }
+
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('pengunjung.list');
+    }
+    public function SyncPhoto()
+    {
+        //ubah nama file di mtamu dan kunjungan
+        //kunjungan
+        $namafile_kunjungan = '/img/kunjungan/';
+        $namafile_profil = '/img/profil/';
+
+        //ambil data kunjungan
+        $countKunjungan = Kunjungan::count();
+        if ($countKunjungan > 0)
+        {
+            //proses nama
+            $dataKunjungan = Kunjungan::get();
+            foreach ($dataKunjungan as $item)
+            {
+                if ($item->file_foto != NULL)
+                {
+                    //cek dulu nama file sudah ada tanda / didepannya
+                    if (substr($item->file_foto, 0, 1) != '/')
+                    {
+                        //update isiannya
+                        $data_update = Kunjungan::where('id',$item->id)->first();
+                        $data_update->file_foto = '/img/kunjungan/'.$item->file_foto;
+                        $data_update->update();
+                    }
+                }
+            }
+            $pesan_error1 = 'Data photo kunjungan berhasil di sync';
+            $warna_error = 'success';
+        }
+        else 
+        {
+            $pesan_error1 = 'Data kunjungan masih kosong';
+            $warna_error = 'danger';
+        }
+        $countTamu = Mtamu::count();
+        if ($countTamu > 0)
+        {
+            //data tamu ada
+            $dataMtamu = Mtamu::get();
+            foreach ($dataMtamu as $item)
+            {
+                if ($item->tamu_foto != NULL)
+                {
+                    //cek dulu nama file sudah ada tanda / didepannya
+                    if (substr($item->tamu_foto, 0, 1) != '/')
+                    {
+                        //update isiannya
+                        $data_update = Mtamu::where('id',$item->id)->first();
+                        $data_update->tamu_foto = '/img/profil/'.$item->tamu_foto;
+                        $data_update->update();
+                    }
+                }
+            }
+            $pesan_error = $pesan_error1 .' dan Data photo kunjungan berhasil di sync';
+            $warna_error = 'success';
+        }
+        else 
+        {
+            $pesan_error = $pesan_error1 .' dan Data Tamu masih kosong';
+            $warna_error = 'danger';
+        }
+        
 
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
