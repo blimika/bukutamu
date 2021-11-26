@@ -303,6 +303,9 @@ class BukutamuController extends Controller
                 }
 
             }
+            Session::flash('message_header', "<strong>Terimakasih</strong>");
+            $pesan_error="Data Pengunjung <strong><i>".trim($request->nama_lengkap)."</i></strong> berhasil ditambahkan";
+            $warna_error="success";
         }
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
@@ -317,70 +320,81 @@ class BukutamuController extends Controller
         //dd($request->all());
         //dd($pst_layanan);
 
-        if ($request->tamu_id_lama==NULL) {
+        if ($request->tamu_id==NULL) {
+            $qrcode = Generate::Kode(6);
             $data = new Mtamu();
-            $data->id_midentitas = $request->jenis_identitas_lama;
-            $data->nomor_identitas = trim($request->nomor_identitas_lama);
-            $data->nama_lengkap = trim($request->nama_lengkap_lama);
-            $data->tgl_lahir = $request->tgl_lahir_lama;
-            $data->id_jk = $request->id_jk_lama;
-            $data->id_mkerja = $request->id_kerja_lama;
-            $data->id_mkat_kerja = $request->kat_kerja_lama;
-            $data->kerja_detil = $request->pekerjaan_detil_lama;
-            $data->id_mdidik = $request->id_mdidik_lama;
-            $data->id_mwarga = $request->mwarga_lama;
-            $data->email = $request->email_lama;
-            $data->telepon = trim($request->telepon_lama);
-            $data->alamat = $request->alamat_lama;
+            $data->id_midentitas = $request->jenis_identitas;
+            $data->nomor_identitas = trim($request->nomor_identitas);
+            $data->nama_lengkap = trim($request->nama_lengkap);
+            $data->tgl_lahir = $request->tgl_lahir;
+            $data->id_jk = $request->id_jk;
+            $data->id_mkerja = $request->id_kerja;
+            $data->id_mkat_kerja = $request->kat_kerja;
+            $data->kerja_detil = $request->pekerjaan_detil;
+            $data->id_mdidik = $request->id_mdidik;
+            $data->id_mwarga = $request->mwarga;
+            $data->email = $request->email;
+            $data->telepon = trim($request->telepon);
+            $data->alamat = $request->alamat;
             $data->created_at = \Carbon\Carbon::now();
-            $data->kode_qr = Generate::Kode(6);
+            $data->kode_qr = $qrcode;
             $data->save();
             $id_tamu = $data->id;
-            $pesan_error = 'Data pengunjung lama berhasil ditambahkan';
+            $namafile_kunjungan=NULL;
+            $namafile_profil=NULL;
+            //buat qrcode img nya langsung
+            $qrcode_foto = QrCode::format('png')
+            ->size(200)->margin(1)->errorCorrection('H')
+             ->generate($qrcode);
+            $output_file = '/img/qrcode/'.$qrcode.'-'.$data->id.'.png';
+            //$data_foto = base64_decode($qrcode_foto);
+            Storage::disk('public')->put($output_file, $qrcode_foto);
+            $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap).' berhasil ditambahkan';
             $warna_error = 'info';
         }
         else {
-            //cek apakah di update apa tidak edit_tamu_lama = 1 (edit)
-            if ($request->edit_tamu_lama==1)
-            {
-                $data = Mtamu::where('id','=',$request->tamu_id_lama)->first();
-                $data->id_midentitas = $request->jenis_identitas_lama;
-                $data->nomor_identitas = trim($request->nomor_identitas_lama);
-                $data->nama_lengkap = trim($request->nama_lengkap_lama);
-                $data->tgl_lahir = $request->tgl_lahir_lama;
-                $data->id_jk = $request->id_jk_lama;
-                $data->id_mkerja = $request->id_kerja_lama;
-                $data->id_mkat_kerja = $request->kat_kerja_lama;
-                $data->kerja_detil = $request->pekerjaan_detil_lama;
-                $data->id_mdidik = $request->id_mdidik_lama;
-                $data->id_mwarga = $request->mwarga_lama;
-                $data->email = $request->email_lama;
-                $data->telepon = trim($request->telepon_lama);
-                $data->alamat = $request->alamat_lama;
+            //ini kalo sudah ada datanya
+            //tanpa pegawai baru
+            $namafile_kunjungan=NULL;
+            $namafile_profil=NULL;
+            //cek apakah di update apa tidak edit_tamu = 1 (edit)
+            if ($request->edit_tamu==1) {
+                //edit data tamu
+                $data = Mtamu::where('id','=',$request->tamu_id)->first();
+                $data->id_midentitas = $request->jenis_identitas;
+                $data->nomor_identitas = trim($request->nomor_identitas);
+                $data->nama_lengkap = trim($request->nama_lengkap);
+                $data->tgl_lahir = $request->tgl_lahir;
+                $data->id_jk = $request->id_jk;
+                $data->id_mkerja = $request->id_kerja;
+                $data->id_mkat_kerja = $request->kat_kerja;
+                $data->kerja_detil = $request->pekerjaan_detil;
+                $data->id_mdidik = $request->id_mdidik;
+                $data->id_mwarga = $request->mwarga;
+                $data->email = trim($request->email);
+                $data->telepon = trim($request->telepon);
+                $data->alamat = $request->alamat;
                 $data->update();
-                $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap_lama).' berhasil ditambahkan dan Diperbarui';
+                $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap).' berhasil ditambahkan dan Diperbarui';
                 $warna_error = 'success';
             }
-            else {
-                //data tamu tidak Diperbarui
-                $pesan_error = 'Data pengunjung '.trim($request->nama_lengkap_lama).' berhasil ditambahkan';
-                $warna_error = 'info';
-            }
-            $id_tamu = $request->tamu_id_lama;
+            $id_tamu = $request->tamu_id;
         }
         //$dataTamu = Mtamu::where('nomor_identitas','=',$request->nomor_identitas)->first();
-        if ($request->pst_lama==NULL)
-        {
-            $is_pst_lama=0;
-            $f_id_lama = 0;
+
+
+        if ($request->tujuan_kedatangan==0) {
+            $is_pst=0;
+            $f_id = 0;
         }
-        else
-        {
-            $is_pst_lama = $request->pst_lama;
-            $f_id_lama = $request->fasilitas_utama_lama;
+        else {
+            $is_pst=$request->tujuan_kedatangan;
+            $f_id = $request->fasilitas_utama;
         }
+        //cek dulu apakah hari ini juga sudah mengisi
+        //kalo sudah ada tidak bisa mengisi dua kali bukutamu
         $data = Mtamu::where('id','=',$id_tamu)->first();
-        $cek_kunjungan = Kunjungan::where([['tamu_id',$id_tamu],['tanggal',Carbon::parse($request->tgl_kunjungan)->format('Y-m-d')],['is_pst',$is_pst_lama]])->count();
+        $cek_kunjungan = Kunjungan::where([['tamu_id',$id_tamu],['tanggal',Carbon::parse($request->tgl_kunjungan)->format('Y-m-d')],['is_pst',$is_pst]])->count();
         if ($cek_kunjungan > 0 )
         {
             //sudah ada kasih info kalo sudah mengisi
@@ -391,18 +405,17 @@ class BukutamuController extends Controller
         {
             $dataKunjungan = new Kunjungan();
             $dataKunjungan->tamu_id = $id_tamu;
-            $dataKunjungan->tanggal =  Carbon::parse($request->tgl_kunjungan)->format('Y-m-d');
-            $dataKunjungan->keperluan = $request->keperluan_lama;
-            $dataKunjungan->is_pst = $is_pst_lama;
-            $dataKunjungan->f_id = $f_id_lama;
+            $dataKunjungan->tanggal = Carbon::parse($request->tgl_kunjungan)->format('Y-m-d');
+            $dataKunjungan->keperluan = $request->keperluan;
+            $dataKunjungan->is_pst = $is_pst;
+            $dataKunjungan->f_id = $f_id;
             $dataKunjungan->save();
-
-            if ($is_pst_lama>0) {
+            if ($is_pst>0) {
                 //isi tabel pst_layanan dan pst_manfaat
-                $pst_layanan_lama = Mlayanan::whereIn('id',$request->pst_layanan_lama)->get();
-                $pst_manfaat_lama = MKunjungan::whereIn('id',$request->pst_manfaat_lama)->get();
+                $pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
+                $pst_manfaat = MKunjungan::whereIn('id',$request->pst_manfaat)->get();
                 $kunjungan_id = $dataKunjungan->id;
-                foreach ($pst_layanan_lama as $l)
+                foreach ($pst_layanan as $l)
                 {
                     $dataLayanan = new Pstlayanan();
                     $dataLayanan->kunjungan_id = $kunjungan_id;
@@ -410,7 +423,7 @@ class BukutamuController extends Controller
                     $dataLayanan->layanan_nama = $l->nama;
                     $dataLayanan->save();
                 }
-                foreach ($pst_manfaat_lama as $m)
+                foreach ($pst_manfaat as $m)
                 {
                     $dataManfaat = new Pstmanfaat();
                     $dataManfaat->kunjungan_id = $kunjungan_id;
@@ -420,6 +433,8 @@ class BukutamuController extends Controller
                 }
 
             }
+            $pesan_error = 'Data pengunjung <b>'.trim($request->nama_lengkap).'</b> tanggal kunjungan <b>'.$request->tgl_kunjungan.'</b> berhasil ditambahkan';
+            $warna_error = 'success';
         }
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
@@ -724,6 +739,6 @@ class BukutamuController extends Controller
     }
     public function ScanQrcode()
     {
-
+        return view('kunjungan.scanqr');
     }
 }

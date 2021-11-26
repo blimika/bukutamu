@@ -42,11 +42,12 @@
                             <h4 class="card-title">Biodata Pengunjung</h4>
                             <h6 class="card-subtitle">silakan input data sesuai identitas yang dimiliki </h6>
                             <hr>
-                            <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
+                            <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan.lama')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="tamu_id" id="tamu_id" value="" />
                             <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
                             <input type="hidden" name="tamu_baru" id="tamu_baru" value="0" />
+
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="jenis_identitas">Jenis Identitas</label>
@@ -163,30 +164,10 @@
                             </div>
                         </div> <!---batas form sebelah kiri--->
                         <div class="col-lg-6 col-sm-6"> <!---form sebelah kanan--->
-                            <h4 class="card-title">Photo Pengunjung</h4>
-                            <h6 class="card-subtitle">ambil posisi terlihat semua wajah</h6>
+                            <h4 class="card-title">Tujuan dan Tanggal Kunjungan</h4>
+                            <h6 class="card-subtitle">tanggal kunjungan dan tujuan kunjungan</h6>
                             <hr>
-                            @if (ENV('APP_WEBCAM_MODE') == true)
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <video id="video" width="640" height="480" autoplay aria-hidden="false"></video>
-                                    <canvas id="canvas" width="640" height="480" aria-hidden="true"></canvas>
-                                    <br />
-                                    <button type="button" id="ambil_foto" class="btn btn-success">Ambil Foto</button>
-                                    <button type="button" id="reset_foto" class="btn btn-danger" disabled>Ulangi</button>
-                                    <input type="hidden" name="foto" id="foto" />
-                                    <button type="button" id="tanpa_webcam" class="btn btn-warning">Tanpa Webcam</button>
-                                    <button type="button" id="dengan_webcam" class="btn btn-success">Dengan Webcam</button>
-                                </div>
-                            </div>
-                            @else
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <input type="hidden" name="foto" id="foto" />
-                                    <button type="button" id="tanpa_webcam" class="btn btn-danger">Klik ini Tanpa Webcam</button>
-                                </div>
-                            </div>
-                            @endif
+
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <h5>Tujuan Kedatangan ke : <span class="text-danger">*</span></h5>
@@ -234,16 +215,21 @@
                                             </select>
                                     </div>
                             </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                        <label for="tgl_kunjungan"><b>Tanggal Kunjungan</b></label>
+                                        <input type="text" class="form-control" id="tgl_kunjungan" name="tgl_kunjungan" autocomplete="off" required>
+                                </div>
+
+                            </div>
                         </div><!---form sebelah kanan--->
                     </div> <!---batas row atas awal--->
                     <div class="row">
                         <div class="col-lg-2 col-md-2 offset-lg-5 offset-md-3">
-                            <button type="submit" id="tambah_data" class="btn btn-success waves-effect waves-light" disabled>Simpan</button>
+                            <button type="submit" id="tambah_data" class="btn btn-success waves-effect waves-light">Simpan</button>
                             <button type="reset" class="btn btn-danger waves-effect waves-light">Reset</button>
                         </div>
-                        <div class="col-lg-4">
 
-                        </div>
                     </div>
                 </form>
             </div>
@@ -285,7 +271,7 @@ $('#kantorcheck').change(function(){
 });
 
 </script>
-@include('kunjungan.jsbaru')
+@include('kunjungan.jslama')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>

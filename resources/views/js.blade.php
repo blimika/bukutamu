@@ -300,7 +300,7 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             $('#ViewModal .modal-body #kodeqr').attr("src",'{{asset("storage")}}/img/qrcode/'+data.hasil.kode_qr+'-'+tamuid+'.png')
                 if (data.hasil.url_foto != null)
                 {
-                    $('#ViewModal .modal-body #tamu_foto').attr("src",'{{asset("storage")}}/'+data.hasil.url_foto)
+                    $('#ViewModal .modal-body #tamu_foto').attr("src",'{{asset("storage")}}'+data.hasil.url_foto)
                 }
                 else
                 {
