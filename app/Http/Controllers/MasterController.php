@@ -46,7 +46,6 @@ class MasterController extends Controller
             $output_file = '/img/qrcode/'.$dataCek->kode_qr.'-'.$dataCek->id.'.png';
             //$data_foto = base64_decode($qrcode_foto);
             Storage::disk('public')->put($output_file, $qrcode_foto);
-            */
             $cek_kunjungan = Kunjungan::where('tamu_id',$dataCek->id)->count();
             $arr_kunjungan = array('hasil'=>'Data Kunjungan Kosong','status'=>false);
             if ($cek_kunjungan > 0)
@@ -76,7 +75,7 @@ class MasterController extends Controller
                     'jumlah'=>$cek_kunjungan
                 );
             }
-           
+           */
             $arr = array(
                 'hasil' => array(
                     'tamu_id'=>$dataCek->id,
@@ -107,7 +106,6 @@ class MasterController extends Controller
                     'updated_at'=>$dataCek->updated_at,
                     'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     'url_foto'=>$dataCek->tamu_foto,
-                    'kunjungan'=>$arr_kunjungan
                 ),
                 'status' => true
             );
