@@ -1,6 +1,6 @@
 <script>
     //hapus tamu
-$(".hapuspengunjung").click(function (e) {
+$(".hapuspengunjungmaster").click(function (e) {
     e.preventDefault();
     var id = $(this).data('id');
     var nama = $(this).data('nama');
@@ -64,10 +64,10 @@ $(".hapuspengunjung").click(function (e) {
 });
 //batas hapus
 
-$('#ViewModal').on('show.bs.modal', function (event) {
+$('#ViewModalMaster').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
-    var tamuid = button.data('id')
-    var kodeqr = button.data('kodeqr')
+    var tamuid = button.data('tamuidmaster')
+    var kodeqr = button.data('kodeqrmaster')
     //load dulu transaksinya
     $.ajax({
         url : '{{route("pengunjung.cari","")}}/'+tamuid,
@@ -77,20 +77,43 @@ $('#ViewModal').on('show.bs.modal', function (event) {
         success: function(data){
             if (data.status == true)
             {
-            $('#ViewModal .modal-body #tamu_id').text(tamuid)
-            $('#ViewModal .modal-body #tamu_nama').text(data.hasil.nama_lengkap)
-            $('#ViewModal .modal-body #tamu_identitas').text(data.hasil.nomor_identitas+' ('+ data.hasil.id_identitas_nama +')')
-            $('#ViewModal .modal-body #tamu_jk').text(data.hasil.nama_jk)
-            $('#ViewModal .modal-body #tamu_lahir').text(data.hasil.tgl_lahir_nama)
-            $('#ViewModal .modal-body #tamu_kerja').text(data.hasil.nama_kerja)
-            $('#ViewModal .modal-body #kerja_detil').text(data.hasil.kerja_detil)
-            $('#ViewModal .modal-body #kat_kerja_nama').text(data.hasil.kat_kerja_nama)
-            $('#ViewModal .modal-body #tamu_pendidikan').text(data.hasil.nama_mdidik)
-            $('#ViewModal .modal-body #tamu_warga').text(data.hasil.nama_mwarga)
-            $('#ViewModal .modal-body #tamu_email').text(data.hasil.email)
-            $('#ViewModal .modal-body #tamu_telepon').text(data.hasil.telepon)
-            $('#ViewModal .modal-body #tamu_alamat').text(data.hasil.alamat)
-            $('#ViewModal .modal-body #kode_qr').text(data.hasil.kode_qr)
+                $('#ViewModalMaster .modal-body #tamu_id').text(tamuid)
+                $('#ViewModalMaster .modal-body #tamu_nama').text(data.hasil.nama_lengkap)
+                $('#ViewModalMaster .modal-body #tamu_identitas').text(data.hasil.nomor_identitas+' ('+ data.hasil.id_identitas_nama +')')
+                $('#ViewModalMaster .modal-body #tamu_jk').text(data.hasil.nama_jk)
+                $('#ViewModalMaster .modal-body #tamu_lahir').text(data.hasil.tgl_lahir_nama)
+                $('#ViewModalMaster .modal-body #tamu_kerja').text(data.hasil.nama_kerja)
+                $('#ViewModalMaster .modal-body #kerja_detil').text(data.hasil.kerja_detil)
+                $('#ViewModalMaster .modal-body #kat_kerja_nama').text(data.hasil.kat_kerja_nama)
+                $('#ViewModalMaster .modal-body #tamu_pendidikan').text(data.hasil.nama_mdidik)
+                $('#ViewModalMaster .modal-body #tamu_warga').text(data.hasil.nama_mwarga)
+                $('#ViewModalMaster .modal-body #tamu_email').text(data.hasil.email)
+                $('#ViewModalMaster .modal-body #tamu_telepon').text(data.hasil.telepon)
+                $('#ViewModalMaster .modal-body #tamu_alamat').text(data.hasil.alamat)
+                $('#ViewModalMaster .modal-body #kodeqr').attr("src",'{{asset("storage")}}/img/qrcode/'+data.hasil.kode_qr+'-'+tamuid+'.png')
+                if (data.hasil.url_foto != null)
+                {
+                    $('#ViewModalMaster .modal-body #tamu_foto').attr("src",'{{asset("storage")}}'+data.hasil.url_foto)
+                }
+                else
+                {
+                    $('#ViewModalMaster .modal-body #tamu_foto').attr("src","https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo")
+                }
+                if (data.hasil.kunjungan.status == true)
+                {
+                    var teks = "";
+                    var tmax = data.hasil.kunjungan.jumlah;
+                    var i;
+                    var kunjungan = data.hasil.kunjungan.hasil;
+                    for (i = 0; i < tmax; i++) {
+                        teks +=  "🟢 <strong>" + kunjungan[i].tanggal_nama + "</strong> ("+ kunjungan[i].keperluan +")<br />";
+                    }
+                    $('#ViewModalMaster .modal-body #kunjungan_terakhir').html(teks)
+                }
+                else
+                {
+                    $('#ViewModalMaster .modal-body #kunjungan_terakhir').text(data.hasil.kunjungan.hasil)
+                }
             }
             else
             {
@@ -98,7 +121,7 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             }
         },
         error: function(){
-            alert("error load transaksi");
+            alert("error load modal");
         }
 
     });

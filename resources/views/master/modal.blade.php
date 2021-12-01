@@ -1,8 +1,8 @@
-<div class="modal fade" id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="vcenter">
+<div class="modal fade" id="ViewModalMaster" tabindex="-1" role="dialog" aria-labelledby="vcenter">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-success">
-                <h4 class="modal-title" id="ViewModal">View Data Pengunjung</h4>
+                <h4 class="modal-title" id="ViewModalMaster">View Data Pengunjung</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
@@ -30,9 +30,11 @@
                     <dt class="col-sm-4">Alamat</dt>
                     <dd class="col-sm-8"><span id="tamu_alamat"></span></dd>
                     <dt class="col-sm-4">Kode QRcode</dt>
-                    <dd class="col-sm-8"><img src="" id="kodeqr" width="150px"></dd>
+                    <dd class="col-sm-8"><img src="" id="kodeqr" width="200px"></dd>
                     <dt class="col-sm-4">Foto</dt>
                     <dd class="col-sm-8"><img src="" id="tamu_foto" class="col-sm-12"></dd>
+                    <dt class="col-sm-4">Kunjungan</dt>
+                    <dd class="col-sm-8"><span id="kunjungan_terakhir"></span></dd>
                 </dl>
 
             </div>

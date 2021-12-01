@@ -306,6 +306,21 @@ $('#ViewModal').on('show.bs.modal', function (event) {
                 {
                     $('#ViewModal .modal-body #tamu_foto').attr("src","https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo")
                 }
+                if (data.hasil.kunjungan.status == true)
+                {
+                    var teks = "";
+                    var tmax = data.hasil.kunjungan.jumlah;
+                    var i;
+                    var kunjungan = data.hasil.kunjungan.hasil;
+                    for (i = 0; i < tmax; i++) {
+                        teks +=  "🟢 <strong>" + kunjungan[i].tanggal_nama + "</strong> ("+ kunjungan[i].keperluan +")<br />";
+                    }
+                    $('#ViewModal .modal-body #kunjungan_terakhir').html(teks)
+                }
+                else
+                {
+                    $('#ViewModal .modal-body #kunjungan_terakhir').text(data.hasil.kunjungan.hasil);
+                }
             }
             else
             {

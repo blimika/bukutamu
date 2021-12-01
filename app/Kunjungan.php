@@ -22,7 +22,7 @@ class Kunjungan extends Model
     	return $this->hasMany('App\Pstlayanan', 'kunjungan_id', 'id');
     }
     public function pManfaat(){
-    	return $this->hasMany('App\PstManfaat', 'kunjungan_id', 'id');
+    	return $this->hasMany('App\Pstmanfaat', 'kunjungan_id', 'id');
     }
     public function Fasilitas()
     {

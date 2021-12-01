@@ -96,8 +96,8 @@
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->pekerjaan->nama}}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-info" data-id="{{$item->id}}" data-kodeqr="{{$item->kode_qr}}" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
-                                                <button class="btn btn-sm btn-danger hapuspengunjung" data-id="{{$item->id}}" data-nama="{{$item->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung {{$item->nama_lengkap}}"></i></button>
+                                                <button class="btn btn-sm btn-info" data-tamuidmaster="{{$item->id}}" data-kodeqrmaster="{{$item->kode_qr}}" data-toggle="modal" data-target="#ViewModalMaster"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
+                                                <button class="btn btn-sm btn-danger hapuspengunjungmaster" data-id="{{$item->id}}" data-nama="{{$item->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung {{$item->nama_lengkap}}"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -140,7 +140,7 @@ $('#pstcheck').change(function(){
         $('#PSTFasilitas_lama').toggle();
     });
 </script>
-@include('js')
+@include('master.js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -224,5 +224,5 @@ $("#tgl_kunjungan").datepicker({
     event.stopPropagation();
 });
     </script>
-    @include('master.js')
+
 @stop

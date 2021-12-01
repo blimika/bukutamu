@@ -46,12 +46,13 @@ class MasterController extends Controller
             $output_file = '/img/qrcode/'.$dataCek->kode_qr.'-'.$dataCek->id.'.png';
             //$data_foto = base64_decode($qrcode_foto);
             Storage::disk('public')->put($output_file, $qrcode_foto);
+            */
             $cek_kunjungan = Kunjungan::where('tamu_id',$dataCek->id)->count();
             $arr_kunjungan = array('hasil'=>'Data Kunjungan Kosong','status'=>false);
             if ($cek_kunjungan > 0)
             {
                 //ada kunjungan
-                $dataKunjungan = Kunjungan::with('tamu','pLayanan','pManfaat')->where('tamu_id',$dataCek->id)->get();
+                $dataKunjungan = Kunjungan::with('tamu','pLayanan','pManfaat')->where('tamu_id',$dataCek->id)->orderBy('created_at','desc')->take(10)->get();
                 foreach ($dataKunjungan as $item)
                 {
                     $dataItem[] = array(
@@ -67,7 +68,7 @@ class MasterController extends Controller
                             'created_at_nama'=>Carbon::parse($item->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                             'updated_at'=>$item->updated_at,
                             'updated_at_nama'=>Carbon::parse($item->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
-                    );  
+                    );
                 }
                 $arr_kunjungan = array(
                     'hasil' => $dataItem,
@@ -75,7 +76,7 @@ class MasterController extends Controller
                     'jumlah'=>$cek_kunjungan
                 );
             }
-           */
+
             $arr = array(
                 'hasil' => array(
                     'tamu_id'=>$dataCek->id,
@@ -106,6 +107,7 @@ class MasterController extends Controller
                     'updated_at'=>$dataCek->updated_at,
                     'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     'url_foto'=>$dataCek->tamu_foto,
+                    'kunjungan'=>$arr_kunjungan
                 ),
                 'status' => true
             );
@@ -227,7 +229,7 @@ class MasterController extends Controller
             $pesan_error1 = 'Data photo kunjungan berhasil di sync';
             $warna_error = 'success';
         }
-        else 
+        else
         {
             $pesan_error1 = 'Data kunjungan masih kosong';
             $warna_error = 'danger';
@@ -254,12 +256,12 @@ class MasterController extends Controller
             $pesan_error = $pesan_error1 .' dan Data photo kunjungan berhasil di sync';
             $warna_error = 'success';
         }
-        else 
+        else
         {
             $pesan_error = $pesan_error1 .' dan Data Tamu masih kosong';
             $warna_error = 'danger';
         }
-        
+
 
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
