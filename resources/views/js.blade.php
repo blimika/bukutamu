@@ -296,6 +296,16 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             $('#ViewModal .modal-body #tamu_warga').text(data.hasil.nama_mwarga)
             $('#ViewModal .modal-body #tamu_email').text(data.hasil.email)
             $('#ViewModal .modal-body #tamu_telepon').text(data.hasil.telepon)
+            if (data.hasil.telepon != null)
+            {
+                var tamu_telpon = data.hasil.telepon.substr(1);
+                var tamu_wa = "http://wa.me/62"+tamu_telpon;
+            }
+            else
+            {
+                var tamu_wa = "#";
+            }
+            $('#ViewModal .modal-body #tamu_wa').attr("href",tamu_wa)
             $('#ViewModal .modal-body #tamu_alamat').text(data.hasil.alamat)
             $('#ViewModal .modal-body #kodeqr').attr("src",'{{asset("storage")}}/img/qrcode/'+data.hasil.kode_qr+'-'+tamuid+'.png')
                 if (data.hasil.url_foto != null)

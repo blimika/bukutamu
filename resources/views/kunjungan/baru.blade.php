@@ -169,21 +169,21 @@
                             @if (ENV('APP_WEBCAM_MODE') == true)
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <video id="video" width="640" height="480" autoplay aria-hidden="false"></video>
-                                    <canvas id="canvas" width="640" height="480" aria-hidden="true"></canvas>
+                                    <video id="video" width="100%" height="auto" autoplay aria-hidden="false"></video>
+                                    <canvas id="canvas" width="100%" height="auto" aria-hidden="true"></canvas>
                                     <br />
-                                    <button type="button" id="ambil_foto" class="btn btn-success">Ambil Foto</button>
-                                    <button type="button" id="reset_foto" class="btn btn-danger" disabled>Ulangi</button>
+                                    <button type="button" id="ambil_foto" class="btn btn-success"><i class="fas fa-camera"></i> Foto</button>
+                                    <button type="button" id="reset_foto" class="btn btn-danger" disabled><i class="fas fa-undo"></i> Ulang</button>
                                     <input type="hidden" name="foto" id="foto" />
-                                    <button type="button" id="tanpa_webcam" class="btn btn-warning">Tanpa Webcam</button>
-                                    <button type="button" id="dengan_webcam" class="btn btn-success">Dengan Webcam</button>
+                                    <button type="button" id="tanpa_webcam" class="btn btn-warning"><i class="fas fa-times-circle"></i> Close</button>
+                                    <button type="button" id="dengan_webcam" class="btn btn-success"><i class="fas fa-camera-retro"></i> Buka</button>
                                 </div>
                             </div>
                             @else
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <input type="hidden" name="foto" id="foto" />
-                                    <button type="button" id="tanpa_webcam" class="btn btn-danger">Klik ini Tanpa Webcam</button>
+                                    <button type="button" id="tanpa_webcam" class="btn btn-danger">Klik ini Tanpa Kamera</button>
                                 </div>
                             </div>
                             @endif
@@ -256,7 +256,7 @@
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama, #canvas, #dengan_webcam {
+        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama, #canvas, #tanpa_webcam, #video, #ambil_foto, #reset_foto {
             display: none;
         }
 

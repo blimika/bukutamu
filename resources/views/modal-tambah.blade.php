@@ -74,7 +74,7 @@
                     <dt class="col-sm-4">E-mail</dt>
                     <dd class="col-sm-8"><span id="tamu_email"></span></dd>
                     <dt class="col-sm-4">Telepon</dt>
-                    <dd class="col-sm-8"><span id="tamu_telepon"></span></dd>
+                    <dd class="col-sm-8"><span id="tamu_telepon"></span> <a href="" id="tamu_wa" target="_blank" class="btn waves-effect btn-success btn-xs waves-light"><i class="fab fa-whatsapp"></i></a></dd>
                     <dt class="col-sm-4">Alamat</dt>
                     <dd class="col-sm-8"><span id="tamu_alamat"></span></dd>
                     <dt class="col-sm-4">Kode QRcode</dt>

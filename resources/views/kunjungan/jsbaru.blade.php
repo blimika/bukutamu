@@ -406,15 +406,27 @@ window.addEventListener("DOMContentLoaded", function() {
 
 			// Trigger photo take
 			document.getElementById('ambil_foto').addEventListener('click', function() {
+                var canvas = document.getElementById('canvas');
+                var w = video.videoWidth;
+                var h = video.videoHeight;
+                canvas.width = w;
+                canvas.height = h;
+                // context.drawImage(video,0,0,w,h);
+
+
                 $('#canvas').toggle();
                 $('#reset_foto').prop('disabled', false);
                 $('#ambil_foto').prop('disabled', true);
                 $('#tambah_data').prop('disabled', false);
-                var canvas = document.getElementById('canvas');
-				context.drawImage(video, 0, 0, 640, 480);
-                $('#video').hide();
-                var dataURL = canvas.toDataURL('image/png',0.90);
+
+				context.drawImage(video, 0, 0, w,h);
+                //$('#video').hide();
+                var dataURL = canvas.toDataURL('image/png',1.0);
                 $('#foto').val(dataURL);
+
+                canvas.style.display='block';
+                canvas.style.width = '100%';
+                video.style.display='none';
 			});
 		}, false);
 </script>

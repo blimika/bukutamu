@@ -37,7 +37,7 @@
             <div class="card-body">
                     <h4 class="card-title text-right">Scan QR Code Pengunjung</h4>
 
-                <h1 class='text-center'>Masih dalam pengembangan</h1>
+                <div class="col-lg-offset-1 col-lg-8" id="reader"></div>
             </div>
         </div>
     </div>
@@ -62,6 +62,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
 @stop
 @section('js')
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript">
 <script>
 $('#pstcheck').change(function(){
         $('#PSTlayanan').show();
@@ -117,6 +118,18 @@ $("#tgl_kunjungan").datepicker({
     // prevent datepicker from firing bootstrap modal "show.bs.modal"
     event.stopPropagation();
 });
+function onScanSuccess(decodedText, decodedResult) {
+    // Handle on success condition with the decoded text or result.
+    console.log(`Scan result: ${decodedText}`, decodedResult);
+    html5QrcodeScanner.clear();
+}
 
+function onScanError(errorMessage) {
+    // handle on error condition, with error message
+}
+
+var html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader", { fps: 10, qrbox: 250 });
+html5QrcodeScanner.render(onScanSuccess, onScanError);
     </script>
 @stop

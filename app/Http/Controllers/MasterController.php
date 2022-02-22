@@ -179,7 +179,7 @@ class MasterController extends Controller
 
                     //buat qrcode img nya langsung
                     $qrcode_foto = QrCode::format('png')
-                    ->size(400)->margin(1)->errorCorrection('H')
+                    ->size(500)->margin(1)->errorCorrection('H')
                     ->generate($qrcode);
                     $output_file = '/img/qrcode/'.$qrcode.'-'.$item->id.'.png';
                     //$data_foto = base64_decode($qrcode_foto);
