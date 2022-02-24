@@ -739,6 +739,6 @@ class BukutamuController extends Controller
     }
     public function ScanQrcode()
     {
-        return view('kunjungan.scanqr');
+        return view('kunjungan.under');
     }
 }
