@@ -42,7 +42,7 @@
                             @include('lama.filter')
                         </div>
                     </div>
-                    <h4 class="card-title">Data Customer List untuk SPI 2021</h4>
+                    <h4 class="card-title">Data Customer List untuk SKD</h4>
                     <div class="table-responsive m-t-40">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
@@ -53,6 +53,7 @@
                                     <th>Email</th>
                                     <th>Waktu Kunjungan</th>
                                     <th>Pekerjaan</th>
+                                    <th>Tamu</th>
                                     <th>Keperluan/Data dicari</th>
 
                                 </tr>
@@ -65,6 +66,7 @@
                                     <th>Email</th>
                                     <th>Waktu Kunjungan</th>
                                     <th>Pekerjaan</th>
+                                    <th>Tamu</th>
                                     <th>Keperluan/Data dicari</th>
 
                                 </tr>
@@ -88,6 +90,13 @@
                                             <td>{{$item->tamu->email}} </td>
                                             <td>{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('dddd, D MMMM Y')}}</td>
                                             <td>{{$item->tamu->pekerjaan->nama}} - {{$item->tamu->kerja_detil}}</td>
+                                            <td class="text-center">
+                                                @if ($item->is_pst=='0')
+                                                <span class="badge badge-danger badge-pill">Kantor</span>
+                                                @else
+                                                <span class="badge badge-success badge-pill">PST</span>
+                                                @endif
+                                            </td>
                                             <td>{{$item->keperluan}}</td>
                                         </tr>
                                     @endforeach

@@ -41,7 +41,7 @@ class BukutamuController extends Controller
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
-        return view('depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas]);
+        return view('new-depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas]);
     }
 
     public function lama()
@@ -705,7 +705,7 @@ class BukutamuController extends Controller
                             return $query->whereMonth('tanggal','=',$bulan_filter);
                         })
                         ->whereYear('tanggal','=',$tahun_filter)
-                        ->where('is_pst','1')
+                        //->where('is_pst','1')
                         ->orderBy('tanggal','desc')
                         ->get();
         //dd($Kunjungan);
