@@ -701,6 +701,9 @@ class BukutamuController extends Controller
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')->with('pLayanan')
+                        ->when($tamu_filter < 9,function ($query) use ($tamu_filter){
+                            return $query->where('is_pst','=',$tamu_filter);
+                        })
                         ->when($bulan_filter,function ($query) use ($bulan_filter){
                             return $query->whereMonth('tanggal','=',$bulan_filter);
                         })

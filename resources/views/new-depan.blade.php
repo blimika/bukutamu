@@ -35,7 +35,7 @@
 </div>
 <div class="row">
     <div class="col-12">
-    <h5 class="card-subtitle float-right m-b-10 text-info">Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}}</h5>
+    <h5 class="card-subtitle float-right m-b-10">Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}}</h5>
     </div>
 </div>
 @if ($Kunjungan->isEmpty())
@@ -48,53 +48,63 @@
     </div>
 </div>
 @else
-<div class="row">
+<div class="row el-element-overlay">
     @foreach ($Kunjungan as $item)
-    <!-- .col -->
-    <div class="col-md-4 col-lg-4 col-xlg-3">
-        <div class="card card-body">
-            <div class="row align-items-center">
-                <div class="col-md-4 col-lg-4 text-center">
-                    @if ($item->file_foto != NULL)
-                    <a class="image-popup-no-margins" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}"> <img src="{{asset('storage/'.$item->file_foto)}}" alt="image" class="img-responsive" /> </a>
-                    @endif
+    <!-- tampilan baru--->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="el-card-item">
+                <div class="el-card-avatar el-overlay-1">
+                    <img src="{{asset('storage/'.$item->file_foto)}}" alt="image" class="img-responsive"/>
+                    <div class="el-overlay">
+                        <ul class="el-info">
+                            @if ($item->file_foto != NULL)
+                            <li>
+                                <a class="btn default btn-outline image-popup-vertical-fit" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
+                                    <i class="icon-magnifier"></i>
+                                </a>
+                            </li>
+                            @endif
+                            <li>
+                                <a class="btn default btn-outline" href="javascript:void(0);" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">
+                                    <i class="icon-link"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-md-8 col-lg-8">
-                    <h5 class="box-title m-b-0"><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a>
-                        @if ($item->f_feedback==1)
-                        <span data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} belum memberikan feedback, klik tombol ini untuk memberikan feedback"><button type="button" class="float-right btn waves-effect waves-light btn-rounded btn-sm btn-danger" data-tamuid="{{$item->tamu_id}}" data-toggle="modal" data-target="#FeedbackModal" data-kunjunganid="{{$item->id}}" >Feedback</button></span>
+                <div class="el-card-content">
+                    <h4 class="box-title">{{$item->tamu->nama_lengkap}}</h4>
+                    <small>{{$item->tamu->pekerjaan->nama}} - {{$item->tamu->kerja_detil}}</small>
+                    <p>
+                        @if ($item->tamu->jk->inisial=='L')
+                        <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
                         @else
-                        <button type="button" class="float-right btn btn-circle btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} sudah memberikan feedback"><i class="fas fa-check"></i></button>
+                        <span class="badge badge-danger badge-pill">{{$item->tamu->jk->inisial}}</span>
                         @endif
-                    </h5>
-                    @if ($item->tamu->jk->inisial=='L')
-                    <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
-                    @else
-                    <span class="badge badge-danger badge-pill">{{$item->tamu->jk->inisial}}</span>
-                    @endif
-                    @if ($item->is_pst=='0')
-                    <span class="badge badge-danger badge-pill">Kantor</span>
-                    @else
-                    <span class="badge badge-success badge-pill">PST</span>
-                    @endif
-                    <span class="badge badge-warning badge-pill">{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</span>
-                    <p class="m-b-5">
-                        <small>{{$item->tamu->pekerjaan->nama}} - {{$item->tamu->kerja_detil}}</small>
+                        @if ($item->is_pst=='0')
+                        <span class="badge badge-danger badge-pill">Kantor</span>
+                        @else
+                        <span class="badge badge-success badge-pill">PST</span>
+                        @endif
+                        <span class="badge badge-warning badge-pill">{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</span>
+                        <br />
+                        <i>{{$item->keperluan}}</i>
                     </p>
+                    <div class="m-r-10 float-right">
+                        <span>{{ $item->created_at->diffForHumans()}}</span>
+                        @if ($item->f_feedback==1)
+                        <span data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} belum memberikan feedback, klik tombol ini untuk memberikan feedback"><button type="button" class="btn waves-effect waves-light btn-rounded btn-sm btn-danger" data-tamuid="{{$item->tamu_id}}" data-toggle="modal" data-target="#FeedbackModal" data-kunjunganid="{{$item->id}}" >Feedback</button></span>
+                        @else
+                        <button type="button" class="btn btn-circle btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} sudah memberikan feedback"><i class="fas fa-check"></i></button>
+                        @endif
+                    </div>
 
-                    <address>
-                        {{$item->tamu->alamat}}
-                        <br/>
-                        <abbr title="Nomor HP">HP:</abbr> {{$item->tamu->telepon}}
-                    </address>
-                    <i>{{$item->keperluan}}</i>
-                    <br />
-                    <small>{{ $item->created_at->diffForHumans()}}</small>
                 </div>
             </div>
         </div>
     </div>
-    <!-- /.col -->
+    <!-- batas tampilan baru--->
     @endforeach
 </div>
 @endif
@@ -130,8 +140,8 @@
     <!--alerts CSS -->
     <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
+    <!-- page css -->
+    <link href="{{asset('dist/css/pages/user-card.css')}}" rel="stylesheet">
 @stop
 @section('js')
 <script>
@@ -150,25 +160,6 @@ $('#pstcheck').change(function(){
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
-
-    <script>
-         $(document).ready(function() {
-            $('.image-popup-no-margins').magnificPopup({
-		type: 'image',
-		closeOnContentClick: true,
-		closeBtnInside: false,
-		fixedContentPos: true,
-		mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
-		image: {
-			verticalFit: true
-		},
-		zoom: {
-			enabled: true,
-			duration: 300 // don't foget to change the duration also in CSS
-		}
-	});
-            });
-    </script>
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
     <!-- Magnific popup JavaScript -->
@@ -204,4 +195,5 @@ $("#tgl_kunjungan").datepicker({
 });
 
     </script>
+   <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
 @stop
