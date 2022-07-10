@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Bukutamu</li>
             </ol>
-            <!--<button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#InputDataLamaModal"><i class="fa fa-plus-circle"></i> Tambah</button>-->
+            <a href="{{route('kunjungan.baru')}}" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Kunjungan Baru</a>
         </div>
     </div>
 </div>
@@ -142,7 +142,7 @@
         </div>
     </div>
 </div>
-@include('modal-tambah')
+@include('modal-feedback')
 @include('lama.modal')
 @endsection
 
@@ -150,9 +150,6 @@
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTFasilitas, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas_lama, #canvas  {
-            display: none;
-        }
         .starrating > input {display: none;}  /* Remove radio buttons */
         .starrating > label:before {
         content: "\f005"; /* Star */
@@ -179,18 +176,6 @@
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
 @stop
 @section('js')
-<script>
-$('#pstcheck').change(function(){
-        $('#PSTlayanan').toggle();
-        $('#PSTmanfaat').toggle();
-        $('#PSTFasilitas').toggle();
-    });
-    $('#pstcheck_lama').change(function(){
-        $('#PSTlayanan_lama').toggle();
-        $('#PSTmanfaat_lama').toggle();
-        $('#PSTFasilitas_lama').toggle();
-    });
-</script>
 @include('js')
 <script>
     $(document).ready(function() {
@@ -246,35 +231,6 @@ $('#pstcheck').change(function(){
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
-    <script>
-   $('#tgl_lahir').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$('#tgl_lahir_lama').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$("#tgl_kunjungan").datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-/
-    </script>
+
 @include('lama.js')
 @stop

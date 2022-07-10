@@ -28,6 +28,19 @@ class FeedbackController extends Controller
     public function list()
     {
         //menu tambah
+        $data_tahun = DB::table('kunjungan')
+                    ->selectRaw('year(tanggal) as tahun')
+                    ->groupBy('tahun')
+                    ->orderBy('tahun','asc')
+                      ->get();
+        if (request('tahun')==NULL)
+        {
+            $tahun_filter=date('Y');
+        }
+        else
+        {
+           $tahun_filter = request('tahun');
+        }
         $Midentitas = Midentitas::orderBy('id','asc')->get();
         $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
         $Mjk = Mjk::orderBy('id','asc')->get();
@@ -38,9 +51,15 @@ class FeedbackController extends Controller
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
         //batas tambah
-        $feed = Feedback::orderBy('feedback_tanggal','desc')->get();
-        $nama_feed = Feedback::LeftJoin('kunjungan','kunjungan.id','=','feedback.kunjungan_id')->orderBy('tanggal','desc')->paginate(30);
-        return view('feedback.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mfasilitas'=>$Mfasilitas,'dataFeedback'=>$feed,'dataNamaFeedback'=>$nama_feed]);
+        $feed = Feedback::when($tahun_filter > 0,function ($query) use ($tahun_filter){
+                    return $query->whereYear('feedback_tanggal','=',$tahun_filter);
+                })->orderBy('feedback_tanggal','desc')->get();
+        $nama_feed = Feedback::LeftJoin('kunjungan','kunjungan.id','=','feedback.kunjungan_id')
+                    ->when($tahun_filter > 0,function ($query) use ($tahun_filter){
+                        return $query->whereYear('feedback_tanggal','=',$tahun_filter);
+                    })
+                    ->orderBy('tanggal','desc')->paginate(30);
+        return view('feedback.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mfasilitas'=>$Mfasilitas,'dataFeedback'=>$feed,'dataNamaFeedback'=>$nama_feed,'dataTahun'=>$data_tahun,'tahun'=>$tahun_filter]);
     }
     public function Simpan(Request $request)
     {

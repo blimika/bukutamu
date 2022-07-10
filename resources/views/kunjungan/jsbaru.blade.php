@@ -16,6 +16,8 @@ var jenis = $("#jenis_identitas").val();
 var nomor = $('#nomor_identitas').val();
 if (jenis == "")
 {
+    $('#jenis_identitas_label').removeClass("has-danger");
+    $('#jenis_identitas_label').addClass("has-danger");
     Swal.fire({
         type: 'error',
         title: 'error',
@@ -23,14 +25,30 @@ if (jenis == "")
         });
     return false;
 }
+else
+{
+    $('#jenis_identitas_label').removeClass("has-danger");
+    $('#jenis_identitas_label').addClass("has-success");
+}
 if (nomor == "")
 {
+    $('#nomor_identitas_label').removeClass("has-danger");
+    $('#nomor_identitas').removeClass("form-control-danger");
+    $('#nomor_identitas_label').addClass("has-danger");
+    $('#nomor_identitas').addClass("form-control-danger");
     Swal.fire({
         type: 'error',
         title: 'error',
         text: 'Masukkan nomor identitas'
         });
     return false;
+}
+else
+{
+    $('#nomor_identitas_label').removeClass("has-danger");
+    $('#nomor_identitas').removeClass("form-control-danger");
+    $('#nomor_identitas_label').addClass("has-success");
+    $('#nomor_identitas').addClass("form-control-success");
 }
 $.ajax({
 url : '{{route('cekid',['',''])}}/'+jenis+'/'+nomor,

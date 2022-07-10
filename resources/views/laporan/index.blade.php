@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Laporan</li>
             </ol>
-        
+
         </div>
     </div>
 </div>
@@ -37,23 +37,23 @@
                     </div>
                 </div>
                     <h4 class="card-title">Laporan pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
-                    
+
                     <div class="table-responsive m-t-40">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
-                                <tr class="bg-info">
-                                    <th rowspan="2" class="text-center">No</th>
-                                    <th rowspan="2" class="text-center">Bulan</th>
-                                    <th colspan="3" class="text-center">PST</th>
-                                    <th colspan="3" class="text-center">Kantor</th>
+                                <tr>
+                                    <th rowspan="2" class="text-center bg-info">No</th>
+                                    <th rowspan="2" class="text-center bg-info">Bulan</th>
+                                    <th colspan="3" class="text-center bg-info">PST</th>
+                                    <th colspan="3" class="text-center bg-success">Kantor</th>
                                 </tr>
-                                <tr class="bg-info">
-                                    <th class="text-center">Laki-Laki</th>
-                                    <th class="text-center">Perempuan</th>
-                                    <th class="text-center">Total</th>
-                                    <th class="text-center">Laki-Laki</th>
-                                    <th class="text-center">Perempuan</th>
-                                    <th class="text-center">Total</th>
+                                <tr>
+                                    <th class="text-center bg-info">Laki-Laki</th>
+                                    <th class="text-center bg-info">Perempuan</th>
+                                    <th class="text-center bg-info">Total</th>
+                                    <th class="text-center bg-success">Laki-Laki</th>
+                                    <th class="text-center bg-success">Perempuan</th>
+                                    <th class="text-center bg-success">Total</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -68,7 +68,7 @@
                                     <th class="text-center">Total</th>
                                 </tr>
                                 <tr>
-                                    
+
                                     <th colspan="3" class="text-center">PST</th>
                                     <th colspan="3" class="text-center">Kantor</th>
                                 </tr>
@@ -77,10 +77,10 @@
                                 @php
                                  $laki =0;
                                  $wanita =0;
-                                 $total =0; 
+                                 $total =0;
                                  $kntrlaki =0;
                                  $kntrwanita =0;
-                                 $kntrtotal =0;  
+                                 $kntrtotal =0;
                                 @endphp
                                 @for ($i = 1; $i <= 12; $i++)
                                     <tr>
@@ -103,7 +103,7 @@
                                     @endphp
                                 @endfor
                                 <tr>
-                                   
+
                                     <td colspan="2">Total</td>
                                     <td>{{$laki}}</td>
                                     <td>{{$wanita}}</td>
@@ -141,12 +141,12 @@ $('#pstcheck').change(function(){
         $('#PSTlayanan').toggle();
         $('#PSTmanfaat').toggle();
         $('#PSTFasilitas').toggle();
-    }); 
+    });
     $('#pstcheck_lama').change(function(){
         $('#PSTlayanan_lama').toggle();
         $('#PSTmanfaat_lama').toggle();
         $('#PSTFasilitas_lama').toggle();
-    }); 
+    });
 </script>
 @include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
@@ -173,7 +173,7 @@ $('#pstcheck').change(function(){
                 ],
                 responsive: true,
                 "displayLength": 30,
-                
+
             });
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
         });

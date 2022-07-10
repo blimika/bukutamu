@@ -33,7 +33,10 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Feedback Pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
+                <h4 class="card-title">Feedback Pengunjung BPS Provinsi Nusa Tenggara Barat @if($tahun > 0)
+                    Tahun {{$tahun}}
+                @endif</h4>
+                @include('feedback.filter')
                 <div class="row">
                     <div class="col-lg-3 col-md-12 border-right p-l-0">
                         <center class="m-t-30 m-b-40 p-t-20 p-b-20">
@@ -181,18 +184,12 @@
         </div>
     </div>
 </div>
-@include('modal-tambah')
-@include('lama.modal')
+
 @endsection
 
 @section('css')
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
-    <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama {
-            display: none;
-        }
-    </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
     <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
@@ -201,18 +198,7 @@
     <link href="{{asset('dist/css/pages/progressbar-page.css')}}" rel="stylesheet">
 @stop
 @section('js')
-<script>
-$('#pstcheck').change(function(){
-        $('#PSTlayanan').toggle();
-        $('#PSTmanfaat').toggle();
-        $('#PSTFasilitas').toggle();
-    });
-    $('#pstcheck_lama').change(function(){
-        $('#PSTlayanan_lama').toggle();
-        $('#PSTmanfaat_lama').toggle();
-        $('#PSTFasilitas_lama').toggle();
-    });
-</script>
+
 @include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
@@ -246,33 +232,5 @@ $('#pstcheck').change(function(){
     </script>
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
-    <script>
-   $('#tgl_lahir').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$('#tgl_lahir_lama').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$("#tgl_kunjungan").datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-    </script>
+
 @stop

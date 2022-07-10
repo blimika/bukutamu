@@ -24,6 +24,7 @@ Auth::routes([
 
 Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
+Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
 Route::get('/tambahkunjunganbaru', 'BukutamuController@KunjunganBaru')->name('kunjungan.baru');
 Route::get('/tambahkunjunganlama', 'BukutamuController@KunjunganLama')->name('kunjungan.lama');
 Route::get('/scanqrcode', 'BukutamuController@ScanQrcode')->name('kunjungan.scan');

@@ -10,7 +10,6 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Bukutamu</li>
             </ol>
-            <!--<button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#TambahModal"><i class="fa fa-plus-circle"></i> Tambah</button>-->
             <a href="{{route('kunjungan.baru')}}" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Kunjungan Baru</a>
         </div>
     </div>
@@ -42,7 +41,7 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body"><b>Data pengunjung tidak tersedia</b>
+            <div class="card-body"><b><center>DATA PENGUNJUNG BELUM TERSEDIA</center></b>
             </div>
         </div>
     </div>
@@ -55,12 +54,22 @@
         <div class="card">
             <div class="el-card-item">
                 <div class="el-card-avatar el-overlay-1">
+                    @if ($item->file_foto != NULL)
                     <img src="{{asset('storage/'.$item->file_foto)}}" alt="image" class="img-responsive"/>
+                    @else
+                    <img src="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" alt="image" class="img-responsive"/>
+                    @endif
                     <div class="el-overlay">
                         <ul class="el-info">
                             @if ($item->file_foto != NULL)
                             <li>
                                 <a class="btn default btn-outline image-popup-vertical-fit" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
+                                    <i class="icon-magnifier"></i>
+                                </a>
+                            </li>
+                            @else
+                            <li>
+                                <a class="btn default btn-outline image-popup-vertical-fit" href="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
                                     <i class="icon-magnifier"></i>
                                 </a>
                             </li>
@@ -108,16 +117,13 @@
     @endforeach
 </div>
 @endif
-@include('modal-tambah')
+@include('modal-feedback')
 @endsection
 
 @section('css')
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama, #canvas {
-            display: none;
-        }
         .starrating > input {display: none;}  /* Remove radio buttons */
         .starrating > label:before {
         content: "\f005"; /* Star */
@@ -144,18 +150,7 @@
     <link href="{{asset('dist/css/pages/user-card.css')}}" rel="stylesheet">
 @stop
 @section('js')
-<script>
-$('#pstcheck').change(function(){
-        $('#PSTlayanan').toggle();
-        $('#PSTmanfaat').toggle();
-        $('#PSTFasilitas').toggle();
-    });
-    $('#pstcheck_lama').change(function(){
-        $('#PSTlayanan_lama').toggle();
-        $('#PSTmanfaat_lama').toggle();
-        $('#PSTFasilitas_lama').toggle();
-    });
-</script>
+
 @include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
@@ -164,36 +159,5 @@ $('#pstcheck').change(function(){
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
-
-    <script>
-   $('#tgl_lahir').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$('#tgl_lahir_lama').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-$("#tgl_kunjungan").datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    toggleActive: true,
-    todayHighlight: true
-}).on('show.bs.modal', function(event) {
-    // prevent datepicker from firing bootstrap modal "show.bs.modal"
-    event.stopPropagation();
-});
-
-    </script>
    <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
 @stop
