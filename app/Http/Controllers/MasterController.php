@@ -20,6 +20,7 @@ use App\Pstmanfaat;
 use App\Mfasilitas;
 use App\Helpers\Generate;
 use App\Feedback;
+use App\PstFasilitas;
 use Illuminate\Support\Facades\Storage;
 use QrCode;
 
@@ -143,6 +144,7 @@ class MasterController extends Controller
                     {
                         Pstlayanan::where('kunjungan_id',$item->id)->delete();
                         Pstmanfaat::where('kunjungan_id',$item->id)->delete();
+                        PstFasilitas::where('kunjungan_id',$item->id)->delete();
                     }
                     $cek_feedback = Feedback::where('kunjungan_id',$item->id)->count();
                     if ($cek_feedback > 0)

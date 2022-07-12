@@ -18,6 +18,10 @@ use App\Kunjungan;
 use App\Pstlayanan;
 use App\Pstmanfaat;
 use App\Mfasilitas;
+use App\MFas;
+use App\MManfaat;
+use App\MLay;
+use App\PstFasilitas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Feedback;
@@ -126,20 +130,27 @@ class BukutamuController extends Controller
         //$foto = $request->foto;
         // foto = tamu_id_tgl_detik;
         /*
-        "_token" => "153FTkKPokUhdO4VUfsThi5t53zn0tbM121ck801"
-        "tamu_id" => "2"
-        "edit_tamu" => "0"
-        "jenis_identitas" => "2"
-        "nomor_identitas" => "5272031903820005"
-        "nama_lengkap" => "I Putu Dyatmika"
-        "tgl_lahir" => "1982-03-19"
-        "telepon" => "081237802900"
-        "email" => "pdyatmika@gmail.com"
-        "pekerjaan_detil" => "BPS Provinsi NTB"
-        "alamat" => "Jl. Gunung Rinjani No. 2"
-        "keperluan" => "eradfda"
-        "tujuan_kedatangan" => "0" 0 = kantor, 1=pst
-        "fasilitas_utama" => null
+        array:19 [▼
+            "_token" => "5AZQLUSLhVUnfmE5yANm1tC1e5wYjategBrBFylS"
+            "tamu_id" => "2"
+            "edit_tamu" => "0"
+            "tamu_baru" => "0"
+            "jenis_identitas" => "2"
+            "nomor_identitas" => "5272031903820005"
+            "nama_lengkap" => "I Putu Dyatmika"
+            "tgl_lahir" => "1982-03-19"
+            "email" => "pdyatmika@gmail.com"
+            "telepon" => "081237802900"
+            "alamat" => "Jl. Gunung Rinjani No. 2"
+            "pekerjaan_detil" => "BPS Provinsi NTB"
+            "foto" => null
+            "tujuan_kedatangan" => "1"
+            "id_manfaat" => "1"
+            "manfaat_nama" => "Tugas Sekolah/Tugas Kuliah"
+            "pst_layanan" => array:4 [▶]
+            "pst_fasilitas" => array:2 [▶]
+            "keperluan" => "adfa fsf sfafafsa"
+            ]
         */
 
         //dd($waktu_hari_ini,$request->all());
@@ -258,7 +269,8 @@ class BukutamuController extends Controller
         }
         else {
             $is_pst=$request->tujuan_kedatangan;
-            $f_id = $request->fasilitas_utama;
+            $f_id = $request->id_manfaat;
+            //$f_id = 0;
         }
         //cek dulu apakah hari ini juga sudah mengisi
         //kalo sudah ada tidak bisa mengisi dua kali bukutamu
@@ -281,9 +293,9 @@ class BukutamuController extends Controller
             $dataKunjungan->file_foto = $namafile_kunjungan;
             $dataKunjungan->save();
             if ($is_pst>0) {
-                //isi tabel pst_layanan dan pst_manfaat
+                //isi tabel pst_layanan, pst_manfaat dan pst_fasilitas
                 $pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
-                $pst_manfaat = MKunjungan::whereIn('id',$request->pst_manfaat)->get();
+                $pst_fasilitas = MFas::whereIn('id',$request->pst_fasilitas)->get();
                 $kunjungan_id = $dataKunjungan->id;
                 foreach ($pst_layanan as $l)
                 {
@@ -293,14 +305,19 @@ class BukutamuController extends Controller
                     $dataLayanan->layanan_nama = $l->nama;
                     $dataLayanan->save();
                 }
-                foreach ($pst_manfaat as $m)
+                foreach ($pst_fasilitas as $fas)
                 {
-                    $dataManfaat = new Pstmanfaat();
-                    $dataManfaat->kunjungan_id = $kunjungan_id;
-                    $dataManfaat->manfaat_id = $m->id;
-                    $dataManfaat->manfaat_nama = $m->nama;
-                    $dataManfaat->save();
+                    $dataFasilitas = new PstFasilitas();
+                    $dataFasilitas->kunjungan_id = $kunjungan_id;
+                    $dataFasilitas->fasilitas_id = $fas->id;
+                    $dataFasilitas->fasilitas_nama = $fas->nama;
+                    $dataFasilitas->save();
                 }
+                $dataManfaat = new Pstmanfaat();
+                $dataManfaat->kunjungan_id = $kunjungan_id;
+                $dataManfaat->manfaat_id = $request->id_manfaat;
+                $dataManfaat->manfaat_nama = $request->manfaat_nama;
+                $dataManfaat->save();
 
             }
             Session::flash('message_header', "<strong>Terimakasih</strong>");
@@ -448,7 +465,7 @@ class BukutamuController extends Controller
     {
         //get dulu datanya
         //apabila is_pst = 1
-        // hapus di tabel pst_layanan dan pst_manfaat
+        // hapus di tabel pst_layanan, pst_manfaat dan pst_fasilitas
         $count = Kunjungan::where('id',$request->id)->count();
         $arr = array(
             'status'=>false,
@@ -461,6 +478,7 @@ class BukutamuController extends Controller
             {
                 Pstlayanan::where('kunjungan_id',$request->id)->delete();
                 Pstmanfaat::where('kunjungan_id',$request->id)->delete();
+                PstFasilitas::where('kunjungan_id',$request->id)->delete();
             }
             $cek_feedback = Feedback::where('kunjungan_id',$request->id)->count();
             if ($cek_feedback > 0)
@@ -736,9 +754,11 @@ class BukutamuController extends Controller
         $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
         $Mwarga = Mwarga::orderBy('id','asc')->get();
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
-        $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
-        return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mfasilitas'=>$Mfasilitas]);
+        $MFas = MFas::orderBy('id','asc')->get();
+        $MManfaat = MManfaat::orderBy('id','asc')->get();
+        $MLay = MLay::orderBy('id','asc')->get();
+        return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
     }
     public function KunjunganLama()
     {

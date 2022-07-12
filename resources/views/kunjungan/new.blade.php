@@ -51,7 +51,7 @@
                             <input type="hidden" name="tamu_baru" id="tamu_baru" value="0" />
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Identitas</label>
-                                <div class="col-md-4" id="jenis_identitas_label">
+                                <div class="col-md-4" id="jenis_identitas_error">
                                     <select class="form-control" id="jenis_identitas" name="jenis_identitas" required>
                                             <option value="">Pilih Jenis</option>
                                             @foreach ($Midentitas as $item_identitas)
@@ -62,12 +62,12 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div class="row">
-                                        <div class="col-md-7" id="nomor_identitas_label">
+                                        <div class="col-md-7" id="nomor_identitas_error">
                                                 <input type="text" class="form-control" placeholder="Nomor Identitas" id="nomor_identitas" name="nomor_identitas" required>
                                         </div>
                                         <div class="col-md-5">
-                                                <button type="button" name="cek_id" id="cek_id" class="btn btn-info">CEK ID</button>
-                                                <button type="button" name="edit_id" id="edit_id" class="btn btn-success" disabled>EDIT</button>
+                                                <button type="button" name="cek_id" id="cek_id" class="btn btn-info"><i class="fas fa-search"></i></button>
+                                                <button type="button" name="edit_id" id="edit_id" class="btn btn-success" disabled><i class="fas fa-pencil-alt"></i></button>
                                         </div>
 
                                     </div>
@@ -75,13 +75,13 @@
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Nama lengkap</label>
-                                <div class="col-md-9">
+                                <div class="col-md-9" id="nama_lengkap_error">
                                     <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Jenis Kelamin</label>
-                                <div class="col-md-4">
+                                <div class="col-md-4" id="id_jk_error">
                                     <select class="form-control" id="id_jk" name="id_jk" required disabled>
                                         <option value=""></option>
                                         @foreach ($Mjk as $item_jk)
@@ -92,25 +92,25 @@
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Tanggal lahir</label>
-                                <div class="col-md-4">
+                                <div class="col-md-4" id="tgl_lahir_error">
                                     <input type="text" class="form-control" id="tgl_lahir" name="tgl_lahir" autocomplete="off" required readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">E-Mail</label>
-                                <div class="col-md-9">
+                                <div class="col-md-9" id="email_error">
                                     <input type="text" class="form-control" id="email" name="email" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Nomor Handphone</label>
-                                <div class="col-md-9">
+                                <div class="col-md-9" id="telepon_error">
                                     <input type="text" class="form-control" id="telepon" name="telepon" required readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Kewarganegaraan</label>
-                                <div class="col-md-9">
+                                <div class="col-md-9" id="mwarga_error">
                                     <select class="form-control" id="mwarga" name="mwarga" required disabled>
                                         <option value=""></option>
                                         @foreach ($Mwarga as $id_warga)
@@ -121,13 +121,13 @@
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Alamat</label>
-                                <div class="col-md-9">
+                                <div class="col-md-9" id="alamat_error">
                                     <textarea class="form-control" rows="4" name="alamat" id="alamat" readonly></textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Pendidikan terakhir</label>
-                                <div class="col-md-4">
+                                <div class="col-md-4" id="id_mdidik_error">
                                     <select class="form-control" id="id_mdidik" name="id_mdidik" required disabled>
                                         <option value=""></option>
                                         @foreach ($Mpendidikan as $item_didik)
@@ -138,7 +138,7 @@
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Pekerjaan Utama</label>
-                                <div class="col-md-4">
+                                <div class="col-md-4" id="id_kerja_error">
                                     <select class="form-control" id="id_kerja" name="id_kerja" required disabled>
                                         <option value=""></option>
                                         @foreach ($Mpekerjaan as $i_pekerjaan)
@@ -149,7 +149,7 @@
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Kategori Instansi/Institusi</label>
-                                <div class="col-md-6">
+                                <div class="col-md-6" id="kat_kerja_error">
                                     <select class="form-control" id="kat_kerja" name="kat_kerja" required disabled>
                                         <option value=""></option>
                                         @foreach ($Mkatpekerjaan as $id_katkerja)
@@ -160,7 +160,7 @@
                             </div>
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Nama Instansi/Institusi</label>
-                                <div class="col-md-9">
+                                <div class="col-md-9" id="pekerjaan_detil_error">
                                     <input type="text" class="form-control" id="pekerjaan_detil" name="pekerjaan_detil" required readonly>
                                 </div>
                             </div>
@@ -168,27 +168,34 @@
                             <h3 class="card-title">Photo Pengunjung</h3>
                             <h6 class="card-subtitle">ambil posisi terlihat semua wajah</h6>
                             <hr class="m-t-0 m-b-20">
-                            @if (ENV('APP_WEBCAM_MODE') == true)
                             <div class="row">
-                                <div class="form-group col-md-12">
-                                    <video id="video" width="100%" height="auto" autoplay aria-hidden="false"></video>
-                                    <canvas id="canvas" width="100%" height="auto" aria-hidden="true"></canvas>
-                                    <br />
-                                    <button type="button" id="ambil_foto" class="btn btn-success"><i class="fas fa-camera"></i> Foto</button>
-                                    <button type="button" id="reset_foto" class="btn btn-danger" disabled><i class="fas fa-undo"></i> Ulang</button>
-                                    <input type="hidden" name="foto" id="foto" />
-                                    <button type="button" id="tanpa_webcam" class="btn btn-warning"><i class="fas fa-times-circle"></i> Close</button>
-                                    <button type="button" id="dengan_webcam" class="btn btn-success"><i class="fas fa-camera-retro"></i> Buka</button>
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-10">
+                                    @if (ENV('APP_WEBCAM_MODE') == true)
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <video id="video" width="100%" height="auto" autoplay aria-hidden="false"></video>
+                                                <canvas id="canvas" width="100%" height="auto" aria-hidden="true"></canvas>
+                                                <br />
+                                                <button type="button" id="ambil_foto" class="btn btn-success"><i class="fas fa-camera"></i> Foto</button>
+                                                <button type="button" id="reset_foto" class="btn btn-danger" disabled><i class="fas fa-undo"></i> Ulang</button>
+                                                <input type="hidden" name="foto" id="foto" />
+                                                <button type="button" id="tanpa_webcam" class="btn btn-warning"><i class="fas fa-times-circle"></i> Close</button>
+                                                <button type="button" id="dengan_webcam" class="btn btn-success"><i class="fas fa-camera-retro"></i> Buka</button>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <input type="hidden" name="foto" id="foto" />
+                                                <button type="button" id="tanpa_webcam" class="btn btn-danger">Klik ini Tanpa Kamera</button>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
+                                <div class="col-lg-1"></div>
                             </div>
-                            @else
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <input type="hidden" name="foto" id="foto" />
-                                    <button type="button" id="tanpa_webcam" class="btn btn-danger">Klik ini Tanpa Kamera</button>
-                                </div>
-                            </div>
-                            @endif
+
                             <h3 class="card-title">Tujuan Kedatangan</h3>
                             <hr class="m-t-0 m-b-20">
                             <div class="row">
@@ -204,8 +211,23 @@
 
                                 </div>
                             </div>
+                            <div class="form-group row" id="PSTManfaat">
+                                <div class="col-md-3">
+                                <label class="control-label text-right">Pemanfaatan hasil kunjungan</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="id_manfaat" name="id_manfaat">
+                                        <option value="">Pilih salah satu</option>
+                                        @foreach ($MManfaat as $i_manfaat)
+                                                <option value="{{$i_manfaat->id}}">{{$i_manfaat->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                    <br />
+                                    <input type="text" name="manfaat_nama" id="manfaat_nama" class="form-control manfaat_nama" placeholder="Pemanfaatan hasil kunjungan lainnya"/>
+                                </div>
+                            </div>
                             <div class="row">
-                                    <div class="form-group col-md-6" id="PSTlayanan">
+                                    <div class="form-group col-md-6" id="PSTLayanan">
                                             <h5>Layanan yang ingin diakses : <span class="text-danger">*</span></h5>
                                             @foreach ($Mlayanan as $item_layanan)
                                                     <div class="custom-control custom-checkbox">
@@ -215,33 +237,21 @@
                                             @endforeach
 
                                     </div>
-                                    <div class="form-group col-md-6" id="PSTmanfaat">
-                                                    <h5>Pemanfaatan hasil kunjungan : <span class="text-danger">*</span></h5>
-                                                    @foreach ($MKunjungan as $item_kunjungan)
+                                    <div class="form-group col-md-6" id="PSTFasilitas">
+                                                    <h5>Fasilitas yang Digunakan : <span class="text-danger">*</span></h5>
+                                                    @foreach ($Mfasilitas as $item_fasilitas)
                                                             <div class="custom-control custom-checkbox">
-                                                                    <input type="checkbox" class="custom-control-input pst_manfaat" name="pst_manfaat[]" value="{{$item_kunjungan->id}}" id="kunjungan_{{$item_kunjungan->id}}">
-                                                                    <label class="custom-control-label" for="kunjungan_{{$item_kunjungan->id}}">{{$item_kunjungan->nama}}</label>
+                                                                    <input type="checkbox" class="custom-control-input pst_fasilitas" name="pst_fasilitas[]" value="{{$item_fasilitas->id}}" id="fasilitas_{{$item_fasilitas->id}}">
+                                                                    <label class="custom-control-label" for="fasilitas_{{$item_fasilitas->id}}">{{$item_fasilitas->nama}}</label>
                                                             </div>
                                                     @endforeach
+                                                    <input type="text" name="fas_lainnya" id="fas_lainnya" class="form-control fas_lainnya" placeholder="Fasilitas lainnya yang digunakan"/>
                                     </div>
 
                             </div>
-                            <div class="row">
-                                    <div class="form-group col-md-6" id="PSTFasilitas">
-                                            <h5>Fasilitas Utama : <span class="text-danger">*</span></h5>
-                                            <select name="fasilitas_utama" class="form-control pst_fasilitas">
-                                                <option value="">Pilih Fasilitas</option>
-                                                @foreach ($Mfasilitas as $item_fasilitas)
-                                                    <option value="{{$item_fasilitas->id}}">{{$item_fasilitas->nama}}</option>
-                                                @endforeach
-                                            </select>
-                                    </div>
-                            </div>
-                            <h3 class="card-title" id="keperluan_label">Keperluan</h3>
-                            <hr class="m-t-0 m-b-20">
                             <div class="form-group row">
-                                <label class="control-label text-right col-md-3"></label>
-                                <div class="col-md-9">
+                                <label class="control-label text-right col-md-3" id="keperluan_label">Keperluan</label>
+                                <div class="col-md-9" id="keperluan_error">
                                     <textarea class="form-control" rows="4" id="keperluan" name="keperluan" required></textarea>
                                 </div>
                             </div>
@@ -274,7 +284,7 @@
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama, #canvas, #tanpa_webcam, #video, #ambil_foto, #reset_foto {
+        #canvas, #tanpa_webcam, #video, #ambil_foto, #reset_foto {
             display: none;
         }
 
@@ -289,23 +299,30 @@
 @stop
 @section('js')
 <script>
+$( document ).ready(function() {
+    $('#PSTLayanan').hide();
+    $('#PSTManfaat').hide();
+    $('#PSTFasilitas').hide();
+    $('#manfaat_nama').hide();
+    $('#fas_lainnya').hide();
+});
 $('#pstcheck').change(function(){
-        $('#PSTlayanan').show();
-        $('#PSTmanfaat').show();
+        $('#PSTManfaat').show();
+        $('#PSTLayanan').show();
         $('#PSTFasilitas').show();
         $('.pst_fasilitas').prop('required',true);
         $('#keperluan_label').text("Data yang dicari");
 });
 $('#kantorcheck').change(function(){
-        $('#PSTlayanan').hide();
-        $('#PSTmanfaat').hide();
+        $('#PSTLayanan').hide();
+        $('#PSTManfaat').hide();
         $('#PSTFasilitas').hide();
         $('.pst_fasilitas').prop('required',false);
         $('#keperluan_label').text("Keperluan");
 });
 
 </script>
-@include('kunjungan.jsbaru')
+@include('kunjungan.jsnew')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>

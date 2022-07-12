@@ -337,12 +337,20 @@ $('#tambah_data').on('click', function(e) {
 
     if (keperluan == "")
     {
+        $('#keperluan_label_border').removeClass("has-danger");
+        $('#keperluan_label_border').addClass("has-danger");
         Swal.fire({
             type: 'error',
             title: 'error',
             text: 'Keperluan/Data yang dicari tidak boleh kosong'
             });
         return false;
+    }
+    else
+    {
+        $('#keperluan_label_border').removeClass("has-danger");
+        $('#keperluan_label_border').addClass("has-success");
+
     }
 
 
