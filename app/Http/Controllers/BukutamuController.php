@@ -34,6 +34,39 @@ class BukutamuController extends Controller
     //
     public function depan()
     {
+        //filter
+        $data_bulan = array(
+            1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'
+        );
+        $data_bulan_pendek = array(
+            1=>'JAN','FEB','MAR','APR','MEI','JUN','JUL','AGU','SEP','OKT','NOV','DES'
+        );
+        $data_tahun = DB::table('kunjungan')
+                    ->selectRaw('year(tanggal) as tahun')
+                    ->groupBy('tahun')
+                    ->orderBy('tahun','asc')
+                      ->get();
+        if (request('tahun')==NULL)
+        {
+            $tahun_filter=date('Y');
+        }
+        else
+        {
+           $tahun_filter = request('tahun');
+        }
+        if (request('bulan')==NULL)
+        {
+            $bulan_filter = NULL;
+        }
+        elseif (request('bulan')==0)
+        {
+            $bulan_filter = NULL;
+        }
+        else
+        {
+            $bulan_filter = request('bulan');
+        }
+        //batas filter
         $Midentitas = Midentitas::orderBy('id','asc')->get();
         $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
         $Mjk = Mjk::orderBy('id','asc')->get();
@@ -43,9 +76,25 @@ class BukutamuController extends Controller
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
-        $Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
+        //$Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
-        return view('new-depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas]);
+        $Kunjungan = Kunjungan::with('tamu')
+                        ->when($bulan_filter == NULL,function ($query){
+                            return $query->whereDate('tanggal', Carbon::today());
+                        })
+                        ->when($bulan_filter > 0,function ($query) use ($bulan_filter,$tahun_filter){
+                            return $query->whereMonth('tanggal',$bulan_filter)->whereYear('tanggal',$tahun_filter);
+                        })
+                        ->orderBy('tanggal','desc')->get();
+        //dd($data_tahun);
+        if ($bulan_filter == NULL)
+        {
+            $bulan_filter= (int) date('m');
+        }
+        //grafik
+
+        //batas grafik
+        return view('new-depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'dataTahun'=>$data_tahun,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataBulanPendek'=>$data_bulan_pendek,'bulan'=>$bulan_filter]);
     }
 
     public function lama()
@@ -112,7 +161,7 @@ class BukutamuController extends Controller
                             return $query->where('is_pst','=',$tamu_filter);
                         })
                         ->when($bulan_filter,function ($query) use ($bulan_filter){
-                            return $query->whereMonth('tanggal','=',$bulan_filter);
+                            return $query->whereMonth('tanggal',$bulan_filter);
                         })
                         ->whereYear('tanggal','=',$tahun_filter)
                         ->orderBy('tanggal','desc')->get();
@@ -288,6 +337,8 @@ class BukutamuController extends Controller
             $dataKunjungan->tamu_id = $id_tamu;
             $dataKunjungan->tanggal = Carbon::today()->format('Y-m-d');
             $dataKunjungan->keperluan = $request->keperluan;
+            $dataKunjungan->jenis_kunjungan = $request->jenis_kunjungan;
+            $dataKunjungan->jumlah_tamu = $request->jumlah_tamu;
             $dataKunjungan->is_pst = $is_pst;
             $dataKunjungan->f_id = $f_id;
             $dataKunjungan->file_foto = $namafile_kunjungan;

@@ -37,90 +37,38 @@
     <h5 class="card-subtitle float-right m-b-10">Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}}</h5>
     </div>
 </div>
-@if ($Kunjungan->isEmpty())
 <div class="row">
-    <div class="col-12">
+    <div class="col-lg-12 col-md-12">
         <div class="card">
-            <div class="card-body"><b><center>DATA PENGUNJUNG BELUM TERSEDIA</center></b>
+            <div class="card-body p-b-0">
+                <h3 class="card-title">Dashboard Bukutamu</h3>
+                @include('depan.filter')
             </div>
-        </div>
-    </div>
-</div>
-@else
-<div class="row el-element-overlay">
-    @foreach ($Kunjungan as $item)
-    <!-- tampilan baru--->
-    <div class="col-lg-3 col-md-6">
-        <div class="card">
-            <div class="el-card-item">
-                <div class="el-card-avatar el-overlay-1">
-                    @if ($item->file_foto != NULL)
-                    <img src="{{asset('storage/'.$item->file_foto)}}" alt="image" class="img-responsive"/>
-                    @else
-                    <img src="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" alt="image" class="img-responsive"/>
-                    @endif
-                    <div class="el-overlay">
-                        <ul class="el-info">
-                            @if ($item->file_foto != NULL)
-                            <li>
-                                <a class="btn default btn-outline image-popup-vertical-fit" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
-                            @else
-                            <li>
-                                <a class="btn default btn-outline image-popup-vertical-fit" href="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
-                            @endif
-                            <li>
-                                <a class="btn default btn-outline" href="javascript:void(0);" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">
-                                    <i class="icon-link"></i>
-                                </a>
-                            </li>
-                        </ul>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs customtab" role="tablist">
+                <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#grafik" role="tab"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">Grafik Pengunjung</span></a> </li>
+                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#data" role="tab"><span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">Data Pengunjung</span></a> </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="grafik" role="tabpanel">
+                    <div class="p-20">
+                        @include('depan.tabgrafik')
                     </div>
                 </div>
-                <div class="el-card-content">
-                    <h4 class="box-title">{{$item->tamu->nama_lengkap}}</h4>
-                    <small>{{$item->tamu->pekerjaan->nama}} - {{$item->tamu->kerja_detil}}</small>
-                    <p>
-                        @if ($item->tamu->jk->inisial=='L')
-                        <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
-                        @else
-                        <span class="badge badge-danger badge-pill">{{$item->tamu->jk->inisial}}</span>
-                        @endif
-                        @if ($item->is_pst=='0')
-                        <span class="badge badge-danger badge-pill">Kantor</span>
-                        @else
-                        <span class="badge badge-success badge-pill">PST</span>
-                        @endif
-                        <span class="badge badge-warning badge-pill">{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</span>
-                        <br />
-                        <i>{{$item->keperluan}}</i>
-                    </p>
-                    <div class="m-r-10 float-right">
-                        <span>{{ $item->created_at->diffForHumans()}}</span>
-                        @if ($item->f_feedback==1)
-                        <span data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} belum memberikan feedback, klik tombol ini untuk memberikan feedback"><button type="button" class="btn waves-effect waves-light btn-rounded btn-sm btn-danger" data-tamuid="{{$item->tamu_id}}" data-toggle="modal" data-target="#FeedbackModal" data-kunjunganid="{{$item->id}}" >Feedback</button></span>
-                        @else
-                        <button type="button" class="btn btn-circle btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} sudah memberikan feedback"><i class="fas fa-check"></i></button>
-                        @endif
-                    </div>
-
+                <div class="tab-pane p-20" id="data" role="tabpanel">
+                    @include('depan.tabpengunjung')
                 </div>
             </div>
         </div>
     </div>
-    <!-- batas tampilan baru--->
-    @endforeach
 </div>
-@endif
 @include('modal-feedback')
 @endsection
 
 @section('css')
+    <!--This page css - Morris CSS -->
+    <link href="{{asset('assets/node_modules/morrisjs/morris.css')}}" rel="stylesheet">
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
@@ -148,6 +96,8 @@
     <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
     <!-- page css -->
     <link href="{{asset('dist/css/pages/user-card.css')}}" rel="stylesheet">
+    <!-- page css -->
+    <link href="{{asset('dist/css/pages/tab-page.css')}}" rel="stylesheet">
 @stop
 @section('js')
 
@@ -160,4 +110,8 @@
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
    <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
+    <!--Morris JavaScript -->
+    <script src="{{asset('assets/node_modules/raphael/raphael-min.js')}}"></script>
+    <script src="{{asset('assets/node_modules/morrisjs/morris.js')}}"></script>
+   @include('depan.morris')
 @stop

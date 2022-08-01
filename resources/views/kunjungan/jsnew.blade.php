@@ -348,9 +348,30 @@
             $('#keperluan_error').addClass("has-success");
 
         }
-
-
-        var tujuan_kedatangan = $('input[name="tujuan_kedatangan"]:checked').val();;
+        var jenis_kunjungan = $('input[name="jenis_kunjungan"]:checked').val();
+        if (jenis_kunjungan == 2)
+        {
+            var jumlah_tamu = $('#jumlah_tamu').val();
+            if (jumlah_tamu == "")
+            {
+                Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Jumlah tamu harus terisi karena jenis kunjungan kelompok'
+                });
+                return false;
+            }
+            else if (jumlah_tamu < 2)
+            {
+                Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Karena terpilih kelompok, jumlah tamu minimal 2 orang'
+                });
+                return false;
+            }
+        }
+        var tujuan_kedatangan = $('input[name="tujuan_kedatangan"]:checked').val();
         if (tujuan_kedatangan == 1)
         {
             //check minimal 1 di chek untuk pst_layanan, pst_fasilitas

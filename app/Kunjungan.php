@@ -24,6 +24,12 @@ class Kunjungan extends Model
     public function pManfaat(){
     	return $this->hasMany('App\Pstmanfaat', 'kunjungan_id', 'id');
     }
+    public function pFasilitas(){
+    	return $this->hasMany('App\PstFasilitas', 'kunjungan_id', 'id');
+    }
+    public function jKunjungan(){
+    	return $this->belongsTo('App\Mjkunjungan', 'jenis_kunjungan', 'id');
+    }
     public function Fasilitas()
     {
         return $this->belongsTo('App\Mfasilitas', 'f_id', 'id');

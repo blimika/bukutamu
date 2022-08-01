@@ -41,14 +41,34 @@
                 <div class="row">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-8 col-sm-12">
-                            <h3 class="card-title">Biodata Pengunjung</h3>
-                            <h6 class="card-subtitle">silakan input data sesuai identitas yang dimiliki </h6>
-                            <hr class="m-t-0 m-b-20">
                         <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="tamu_id" id="tamu_id" value="" />
                             <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
                             <input type="hidden" name="tamu_baru" id="tamu_baru" value="0" />
+                            <h3 class="card-title">Jenis Kunjungan</h3>
+                            <h6 class="card-subtitle">silakan isikan sesuai jenis kunjungan </h6>
+                            <hr class="m-t-0 m-b-20">
+                            <div class="form-group row">
+                                <label class="control-label text-right col-md-3">Jenis Kunjungan</label>
+                                <div class="col-md-4" id="jenis_kunjungan">
+                                    <div class="form-group col-md-12">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="perorangan" name="jenis_kunjungan" value="1" class="custom-control-input" required checked="checked">
+                                            <label class="custom-control-label radio-inline" for="perorangan">Perorangan</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="kelompok" name="jenis_kunjungan" value="2" class="custom-control-input">
+                                            <label class="custom-control-label radio-inline" for="kelompok">Kelompok</label>
+                                        </div>
+                                        <input type="number" name="jumlah_tamu" id="jumlah_tamu" value="1" class="form-control jumlah_tamu col-md-6" placeholder="Jumlah tamu"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <h3 class="card-title">Biodata Pengunjung</h3>
+                            <h6 class="card-subtitle">silakan input data sesuai identitas yang dimiliki </h6>
+                            <hr class="m-t-0 m-b-20">
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Identitas</label>
                                 <div class="col-md-4" id="jenis_identitas_error">
@@ -305,6 +325,7 @@ $( document ).ready(function() {
     $('#PSTFasilitas').hide();
     $('#manfaat_nama').hide();
     $('#fas_lainnya').hide();
+    $('#jumlah_tamu').hide();
 });
 $('#pstcheck').change(function(){
         $('#PSTManfaat').show();
@@ -319,6 +340,16 @@ $('#kantorcheck').change(function(){
         $('#PSTFasilitas').hide();
         $('.pst_fasilitas').prop('required',false);
         $('#keperluan_label').text("Keperluan");
+});
+$('#kelompok').change(function(){
+        $('#jumlah_tamu').show();
+        $('#jumlah_tamu').prop('required',true);
+        $('#jumlah_tamu').prop('value',null);
+});
+$('#perorangan').change(function(){
+        $('#jumlah_tamu').hide();
+        $('#jumlah_tamu').prop('required',false);
+        $('#jumlah_tamu').val(1);
 });
 
 </script>

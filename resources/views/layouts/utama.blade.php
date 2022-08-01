@@ -12,6 +12,9 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/favicon.png')}}">
     <title>Bukutamu BPS Provinsi Nusa Tenggara Barat</title>
+    @section('css')
+
+    @show
     <!-- Custom CSS -->
     <link href="{{asset('dist/css/style.css')}}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -20,9 +23,7 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    @section('css')
 
-    @show
 </head>
 
 <body class="horizontal-nav boxed skin-megna fixed-layout">
@@ -106,7 +107,7 @@
     <!--Custom JavaScript -->
     <script src="{{asset('dist/js/custom.min.js')}}"></script>
     @section('js')
-       
+
     @show
 </body>
 
