@@ -4,8 +4,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Grafik Kunjungan Tamu Bulan {{$dataBulan[$bulan]}} {{$tahun}}</h4>
-                <div id="chart-kunjungan-depan" style="height: 300px;"></div>
+                <div id="chart-kunjungan-hc" style="height: 340px;"></div>
             </div>
         </div>
     </div>
@@ -30,7 +29,7 @@
             <div class="col-md-4 col-lg-2">
                 <div class="card">
                     <div class="box bg-success text-center">
-                        <h1 class="font-light text-white">{{Generate::JumlahKunjunganBulan(\Carbon\Carbon::now()->format('m'),\Carbon\Carbon::now()->format('Y'))}}</h1>
+                        <h1 class="font-light text-white">{{Generate::JumlahKunjunganBulan($bulan,$tahun)}}</h1>
                         <h6 class="text-white">Kunjungan Bulan {{$dataBulanPendek[$bulan]}} {{$tahun}}</h6>
                     </div>
                 </div>
@@ -39,7 +38,7 @@
             <div class="col-md-4 col-lg-2">
                 <div class="card">
                     <div class="box bg-megna text-center">
-                        <h1 class="font-light text-white">{{Generate::JumlahTamuBulan(\Carbon\Carbon::now()->format('m'),\Carbon\Carbon::now()->format('Y'))}}</h1>
+                        <h1 class="font-light text-white">{{Generate::JumlahTamuBulan($bulan,$tahun)}}</h1>
                         <h6 class="text-white">Tamu Bulan {{$dataBulanPendek[$bulan]}} {{$tahun}}</h6>
                     </div>
                 </div>
@@ -69,8 +68,8 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Grafik Kunjungan Tahun {{$tahun}}</h4>
-                <div id="chart-kunjungan-tahunan" style="height: 300px;"></div>
+                <!--<h4 class="card-title">Grafik Kunjungan Tahun {{$tahun}}</h4>-->
+                <div id="chart-tahunan-hc" style="height: 340px;"></div>
             </div>
         </div>
     </div>

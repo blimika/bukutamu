@@ -100,6 +100,60 @@ class Generate {
         ->select(\DB::Raw('nama_bulan as bulan_tahun, COALESCE(jumlah_total,0) as k_total,COALESCE(jumlah_kntr,0) as k_kantor,COALESCE(jumlah_pst,0) as k_pst'))->get()->toJson();
         return $data;
     }
+    public static function GrafikTahunanHc($tahun)
+    {
+        /*
+        $Data = \DB::table('bulan')->
+                leftJoin(\DB::Raw("(select month(tgl_brkt) as bln, count(*) as jumlah,format((sum(kuitansi.total_biaya)/1000000),2) as totalbiaya from transaksi left join kuitansi on kuitansi.trx_id=transaksi.trx_id where flag_trx > 3 and year(tgl_brkt)='".$tahun."' GROUP by bln) as trx"),'bulan.id_bulan','=','trx.bln')->select(\DB::Raw('nama_bulan as y,  COALESCE(jumlah,0) as a,COALESCE(totalbiaya,0) as b'))->get()->toJson();
+        */
+        $data_total = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_total, count(*) as jumlah_total from kunjungan where year(tanggal)='".$tahun."' and is_pst='0' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->select(\DB::Raw('COALESCE(jumlah_total,0) as k_total'))->get();
+        $data_kantor = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_kntr, count(*) as jumlah_kntr from kunjungan where year(tanggal)='".$tahun."' and is_pst='0' GROUP by bln_kntr) as kantor"),'bulan.id','=','kantor.bln_kntr')
+        ->select(\DB::Raw('COALESCE(jumlah_kntr,0) as k_kantor'))->get();
+        $data_pst = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_pst, count(*) as jumlah_pst from kunjungan where year(tanggal)='".$tahun."' and is_pst='1' GROUP by bln_pst) as pst"),'bulan.id','=','pst.bln_pst')
+        ->select(\DB::Raw('COALESCE(jumlah_pst,0) as k_pst'))->get();
+        $data_bulan = \DB::table('bulan')->select(\DB::Raw('nama_bulan_pendek'))->get();
+        foreach ($data_total as $item)
+        {
+            $kun_total[] = $item->k_total;
+        }
+        foreach ($data_kantor as $item)
+        {
+            $kun_kantor[] = $item->k_kantor;
+        }
+        foreach ($data_pst as $item)
+        {
+            $kun_pst[] = $item->k_pst;
+        }
+        $data[] = array(
+            'name'=>'Kunjungan Kantor',
+            'data'=>$kun_kantor,
+        );
+        $data[] = array(
+            'name'=>'Kunjungan PST',
+            'data'=>$kun_pst,
+        );
+        $data[] = array(
+            'name'=>'Total Kunjungan',
+            'data'=>$kun_total,
+        );
+        //dd($data);
+        $data = json_encode($data);
+        foreach ($data_bulan as $item)
+        {
+            $data_bln[]=$item->nama_bulan_pendek;
+        }
+        $cat_tgl = json_encode($data_bln);
+        $arr = array(
+            'data_final'=> $data,
+            'cat_final'=> $cat_tgl
+        );
+        //dd($arr);
+        return $arr;
+    }
     public static function GrafikBulanan($bulan,$tahun)
     {
         $tgl_cek = $tahun.'-'.$bulan.'-01';
@@ -153,5 +207,74 @@ class Generate {
         //dd($data);
         $data = json_encode($data);
         return $data;
+    }
+    public static function GrafikBulananHc($bulan,$tahun)
+    {
+        $tgl_cek = $tahun.'-'.$bulan.'-01';
+        $jumlah_hari = \Carbon\Carbon::parse($tgl_cek)->daysInMonth;
+        $kun_kantor = array();
+        $kun_pst = array();
+        $kun_total = array();
+        $cat_tgl = array();
+        for ($i=1;$i<=$jumlah_hari;$i++)
+        {
+            $tgl_i = $tahun.'-'.$bulan.'-'.$i;
+            $item_kantor = \App\Kunjungan::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))->where('is_pst','0')
+                    ->select(\DB::Raw('tanggal, COALESCE(count(*),0) as k_kantor, COALESCE(sum(jumlah_tamu),0) as t_kantor'))->groupBy('tanggal')->first();
+            $item_pst = \App\Kunjungan::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))->where('is_pst','1')
+                    ->select(\DB::Raw('tanggal, COALESCE(count(*),0) as k_pst, COALESCE(sum(jumlah_tamu),0) as t_pst'))->groupBy('tanggal')->first();
+            $item = \App\Kunjungan::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))
+                    ->select(\DB::Raw('tanggal, COALESCE(count(*),0) as k_jumlah, COALESCE(sum(jumlah_tamu),0) as t_jumlah'))->groupBy('tanggal')->first();
+            if ($item)
+            {
+                if ($item_kantor)
+                {
+                    $k_kantor = $item_kantor->k_kantor;
+                }
+                else
+                {
+                    $k_kantor = 0;
+                }
+                if ($item_pst)
+                {
+                    $k_pst = $item_pst->k_pst;
+                }
+                else
+                {
+                    $k_pst = 0;
+                }
+                $kun_kantor[] = $k_kantor;
+                $kun_pst[] = $k_pst;
+                $kun_total[] = $item->k_jumlah;
+            }
+            else
+            {
+                $kun_kantor[] = 0;
+                $kun_pst[] = 0;
+                $kun_total[] = 0;
+            }
+            $cat_tgl[]=$i;
+
+        }
+        $data[] = array(
+            'name'=>'Kunjungan Kantor',
+            'data'=>$kun_kantor,
+        );
+        $data[] = array(
+            'name'=>'Kunjungan PST',
+            'data'=>$kun_pst,
+        );
+        $data[] = array(
+            'name'=>'Total Kunjungan',
+            'data'=>$kun_total,
+        );
+        $data = json_encode($data);
+        $cat_tgl = json_encode($cat_tgl);
+        $arr = array(
+            'data_final'=>$data,
+            'cat_final'=>$cat_tgl
+        );
+        //dd($arr);
+        return $arr;
     }
 }

@@ -98,6 +98,8 @@
     <link href="{{asset('dist/css/pages/user-card.css')}}" rel="stylesheet">
     <!-- page css -->
     <link href="{{asset('dist/css/pages/tab-page.css')}}" rel="stylesheet">
+    <!--highcharts-->
+    <link href="{{asset('dist/grafik/highcharts.css')}}" rel="stylesheet">
 @stop
 @section('js')
 
@@ -110,8 +112,16 @@
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
    <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
+    <!--highchart-->
+    <script src="{{asset('dist/grafik/highcharts.js')}}"></script>
+    <script src="{{asset('dist/grafik/exporting.js')}}"></script>
+    <script src="{{asset('dist/grafik/offline-exporting.js')}}"></script>
+    <script src="{{asset('dist/grafik/export-data.js')}}"></script>
+    <script src="{{asset('dist/grafik/series-label.js')}}"></script>
+    <script src="{{asset('dist/grafik/accessibility.js')}}"></script>
     <!--Morris JavaScript -->
     <script src="{{asset('assets/node_modules/raphael/raphael-min.js')}}"></script>
     <script src="{{asset('assets/node_modules/morrisjs/morris.js')}}"></script>
    @include('depan.morris')
+   @include('depan.hc')
 @stop
