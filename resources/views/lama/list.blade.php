@@ -116,6 +116,13 @@
                                                     @else
                                                     <span class="badge badge-success badge-pill">PST</span>
                                                     @endif
+                                                    <br />
+                                                    @if($item->jenis_kunjungan == 1)
+                                                    <span class="badge badge-info badge-pill">{{$item->jKunjungan->nama}}</span>
+                                                    @else
+                                                    <span class="badge badge-warning badge-pill">{{$item->jKunjungan->nama}}
+                                                        ({{$item->jumlah_tamu}} org)
+                                                    @endif</span>
                                             </td>
                                             <td class="text-center">
                                                 @if ($item->f_feedback==1)

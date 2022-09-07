@@ -77,8 +77,8 @@
                     <dd class="col-sm-8"><span id="tamu_telepon"></span> <a href="" id="tamu_wa" target="_blank" class="btn waves-effect btn-success btn-xs waves-light"><i class="fab fa-whatsapp"></i></a></dd>
                     <dt class="col-sm-4">Alamat</dt>
                     <dd class="col-sm-8"><span id="tamu_alamat"></span></dd>
-                    <dt class="col-sm-4">Kode QRcode</dt>
-                    <dd class="col-sm-8"><img src="" id="kodeqr" width="200px"></dd>
+                    <!--<dt class="col-sm-4">Kode QRcode</dt>
+                    <dd class="col-sm-8"><img src="" id="kodeqr" width="200px"></dd>-->
                     <dt class="col-sm-4">Foto</dt>
                     <dd class="col-sm-8"><img src="" id="tamu_foto" class="col-sm-12"></dd>
                     <dt class="col-sm-4">Kunjungan</dt>

@@ -107,7 +107,7 @@ class Generate {
                 leftJoin(\DB::Raw("(select month(tgl_brkt) as bln, count(*) as jumlah,format((sum(kuitansi.total_biaya)/1000000),2) as totalbiaya from transaksi left join kuitansi on kuitansi.trx_id=transaksi.trx_id where flag_trx > 3 and year(tgl_brkt)='".$tahun."' GROUP by bln) as trx"),'bulan.id_bulan','=','trx.bln')->select(\DB::Raw('nama_bulan as y,  COALESCE(jumlah,0) as a,COALESCE(totalbiaya,0) as b'))->get()->toJson();
         */
         $data_total = \DB::table('bulan')
-        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_total, count(*) as jumlah_total from kunjungan where year(tanggal)='".$tahun."' and is_pst='0' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_total, count(*) as jumlah_total from kunjungan where year(tanggal)='".$tahun."' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
         ->select(\DB::Raw('COALESCE(jumlah_total,0) as k_total'))->get();
         $data_kantor = \DB::table('bulan')
         ->leftJoin(\DB::Raw("(select month(tanggal) as bln_kntr, count(*) as jumlah_kntr from kunjungan where year(tanggal)='".$tahun."' and is_pst='0' GROUP by bln_kntr) as kantor"),'bulan.id','=','kantor.bln_kntr')
