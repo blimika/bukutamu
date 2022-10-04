@@ -30,6 +30,9 @@ class Kunjungan extends Model
     public function jKunjungan(){
     	return $this->belongsTo('App\Mjkunjungan', 'jenis_kunjungan', 'id');
     }
+    public function mTujuan(){
+    	return $this->belongsTo('App\MTujuan', 'is_pst', 'kode');
+    }
     public function Fasilitas()
     {
         return $this->belongsTo('App\Mfasilitas', 'f_id', 'id');

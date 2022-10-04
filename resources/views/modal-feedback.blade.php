@@ -39,6 +39,7 @@
 
             </div>
             <div class="modal-footer">
+                <a href="" class="btn btn-success waves-effect" id="tamu_timeline">TIMELINE</a>
                 <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">CLOSE</button>
             </div>
         </form>

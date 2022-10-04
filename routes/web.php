@@ -28,6 +28,7 @@ Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunj
 Route::get('/tambahkunjunganbaru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');
 Route::get('/tambahkunjunganlama', 'BukutamuController@KunjunganLama')->name('kunjungan.lama');
 Route::get('/scanqrcode', 'BukutamuController@ScanQrcode')->name('kunjungan.scan');
+Route::get('/detil/pengunjung/{idtamu}', 'BukutamuController@DetilTamu')->name('tamu.detil');
 Route::get('/edit/{id}', 'BukutamuController@editdata')->name('edit');
 Route::get('/cekid/{jenis_identitas}/{nomor_identitas}', 'BukutamuController@cekID')->name('cekid');
 Route::get('/getdatakunjungan/{id}', 'BukutamuController@getDataKunjungan')->name('getdatakunjungan');

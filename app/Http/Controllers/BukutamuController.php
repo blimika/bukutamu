@@ -828,4 +828,16 @@ class BukutamuController extends Controller
     {
         return view('kunjungan.under');
     }
+    public function DetilTamu($idtamu)
+    {
+        $data_tamu = Mtamu::where('id',$idtamu)->first();
+        $Kunjungan = Kunjungan::with('tamu')
+                        ->where('tamu_id',$idtamu)
+                        ->orderBy('tanggal','asc')->get();
+        //dd($Kunjungan);
+        return view('detil.tamu',[
+            'dataTamu'=>$data_tamu,
+            'dataKunjungan'=>$Kunjungan
+        ]);
+    }
 }

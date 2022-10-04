@@ -307,6 +307,7 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             }
             $('#ViewModal .modal-body #tamu_wa').attr("href",tamu_wa)
             $('#ViewModal .modal-body #tamu_alamat').text(data.hasil.alamat)
+            $('#ViewModal .modal-footer #tamu_timeline').attr("href","{{route('tamu.detil','')}}/"+tamuid)
             //$('#ViewModal .modal-body #kodeqr').attr("src",'{{asset("storage")}}/img/qrcode/'+data.hasil.kode_qr+'-'+tamuid+'.png')
                 if (data.hasil.url_foto != null)
                 {
