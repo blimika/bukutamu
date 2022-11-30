@@ -45,6 +45,7 @@
                                     <th>Tgl Lahir</th>
                                     <th>Email</th>
                                     <th>Pekerjaan</th>
+                                    <th>Jumlah Kunjungan</th>
                                     @if (Auth::user())
                                     <th>Aksi</th>
                                     @endif
@@ -61,6 +62,7 @@
                                     <th>Tgl Lahir</th>
                                     <th>Email</th>
                                     <th>Pekerjaan</th>
+                                    <th>Jumlah Kunjungan</th>
                                     @if (Auth::user())
                                     <th>Aksi</th>
                                     @endif
@@ -95,8 +97,9 @@
                                             <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->isoFormat('D MMMM Y')}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->pekerjaan->nama}}</td>
+                                            <td>{{$item->kunjungan->count()}}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-info" data-tamuidmaster="{{$item->id}}" data-kodeqrmaster="{{$item->kode_qr}}" data-toggle="modal" data-target="#ViewModalMaster"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
+                                                <button class="btn btn-sm btn-info" data-id="{{$item->id}}" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
                                                 <button class="btn btn-sm btn-danger hapuspengunjungmaster" data-id="{{$item->id}}" data-nama="{{$item->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung {{$item->nama_lengkap}}"></i></button>
                                             </td>
                                         </tr>
@@ -109,7 +112,7 @@
         </div>
     </div>
 </div>
-@include('master.modal')
+@include('modal-view')
 @endsection
 
 @section('css')

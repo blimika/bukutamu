@@ -40,6 +40,9 @@
                     <div class="row">
                         <div class="col-lg-12 col-sm-12 col-xs-12">
                             @include('lama.filter')
+                            @if (Auth::user())
+                            <a href="{{route('master.synckunjungan')}}" class="btn btn-danger float-right"><i class="fas fa-sync"></i> Sync Kunjungan</a>
+                            @endif
                         </div>
                     </div>
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
@@ -50,12 +53,11 @@
                                     <th>No</th>
                                     <th>Photo</th>
                                     <th>Nama</th>
-                                    <th>No Identitas</th>
                                     <th>JK</th>
                                     <th>Alamat</th>
                                     <th>Keperluan/Data dicari</th>
                                     <th>Umur</th>
-                                    <th>Tamu</th>
+                                    <th>Kunjungan</th>
                                     <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
                                     @if (Auth::user())
@@ -69,12 +71,11 @@
                                     <th>No</th>
                                     <th>Photo</th>
                                     <th>Nama</th>
-                                    <th>No Identitas</th>
                                     <th>JK</th>
                                     <th>Alamat</th>
                                     <th>Keperluan/Data dicari</th>
                                     <th>Umur</th>
-                                    <th>Tamu</th>
+                                    <th>Kunjungan</th>
                                     <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
                                     @if (Auth::user())
@@ -99,7 +100,6 @@
                                                 @endif
                                             </td>
                                             <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a></td>
-                                            <td>{{$item->tamu->nomor_identitas}}</td>
                                             <td>
                                                 @if ($item->tamu->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
@@ -122,7 +122,14 @@
                                                     @else
                                                     <span class="badge badge-warning badge-pill">{{$item->jKunjungan->nama}}
                                                         ({{$item->jumlah_tamu}} org)
-                                                    @endif</span>
+                                                    </span>
+                                                    <span class="badge badge-info badge-pill">
+                                                        L {{$item->tamu_m}}
+                                                    </span>
+                                                    <span class="badge badge-danger badge-pill">
+                                                        P {{$item->tamu_f}}
+                                                    </span>
+                                                    @endif
                                             </td>
                                             <td class="text-center">
                                                 @if ($item->f_feedback==1)
@@ -135,7 +142,13 @@
                                             @if (Auth::user())
                                             <td>
                                                 <button class="btn btn-sm btn-info ubahpstkantor" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-ispst="{{$item->is_pst}}"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->is_pst == 0) PST @else Kantor @endif"></i></button>
-                                                <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button></td>
+
+                                                @if($item->jenis_kunjungan==2)
+                                                <button class="btn btn-sm btn-success" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="modal" data-target="#EditKunjunganModal"><i class="fas fa-pen-square" data-toggle="tooltip" title="Edit Kunjungan ini"></i></button>
+                                                @endif
+                                                <button class="btn btn-sm btn-warning ubahjeniskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-jnskunjungan="{{$item->jenis_kunjungan}}" data-fotokunjungan="@if ($item->file_foto) {{asset('storage/'.$item->file_foto)}} @else https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=Tidak+ada+foto+pengunjung @endif"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->jenis_kunjungan == 1) {{$Mjkunjungan[1]->nama}} @else {{$Mjkunjungan[0]->nama}} @endif"></i></button>
+                                                <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button>
+                                            </td>
                                             @endif
                                         </tr>
                                     @endforeach
@@ -149,6 +162,8 @@
         </div>
     </div>
 </div>
+@include('modal-view')
+@include('lama.modal-kunjungan')
 @include('modal-feedback')
 @include('lama.modal')
 @endsection
@@ -183,6 +198,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
 @stop
 @section('js')
+@include('lama.js')
 @include('js')
 <script>
     $(document).ready(function() {
@@ -195,7 +211,6 @@
       buttons: [
           'copy','excel','print'
       ],
-      responsive: true,
       iDisplayLength: 30,
       "fnDrawCallback": function () {
           $('.image-popup').magnificPopup({

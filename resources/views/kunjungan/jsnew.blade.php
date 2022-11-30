@@ -352,6 +352,8 @@
         if (jenis_kunjungan == 2)
         {
             var jumlah_tamu = $('#jumlah_tamu').val();
+            var tamu_laki = $('#tamu_laki').val();
+            var tamu_wanita = $('#tamu_wanita').val();
             if (jumlah_tamu == "")
             {
                 Swal.fire({
@@ -370,6 +372,34 @@
                 });
                 return false;
             }
+            if (tamu_laki == "")
+            {
+                Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Jumlah Tamu Laki-laki minimal terisi 0'
+                });
+                return false;
+            }
+            if (tamu_wanita == "")
+            {
+                Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Jumlah Tamu Perempuan minimal terisi 0'
+                });
+                return false;
+            }
+            if (jumlah_tamu != (parseInt(tamu_laki)+parseInt(tamu_wanita)))
+            {
+                Swal.fire({
+                type: 'error',
+                title: 'error',
+                text: 'Jumlah tamu total ('+jumlah_tamu+') tidak sama dengan jumlah tamu laki-laki ('+tamu_laki+') + jumlah tamu perempuan ('+tamu_wanita+')'
+                });
+                return false;
+            }
+
         }
         var tujuan_kedatangan = $('input[name="tujuan_kedatangan"]:checked').val();
         if (tujuan_kedatangan == 1)

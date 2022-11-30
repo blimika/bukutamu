@@ -15,6 +15,16 @@
 
         </select>
     </div>
+    <div class="col-md-2">
+        <select name="jns_kunjungan" id="jns_kunjungan" class="form-control">
+        <option value="0">Semua Kunjungan</option>
+        @foreach ($Mjkunjungan as $kun)
+            <option value="{{$kun->id}}" @if($kun->id == $jns_kunjungan)
+                selected
+            @endif>{{$kun->nama}}</option>
+        @endforeach
+        </select>
+    </div>
       <div class="col-md-2">
           <select name="bulan" id="bulan" class="form-control">
            <option value="0">Semua Bulan</option>

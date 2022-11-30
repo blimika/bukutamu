@@ -63,6 +63,7 @@
         </div>
     </div>
 </div>
+@include('modal-view')
 @include('modal-feedback')
 @endsection
 

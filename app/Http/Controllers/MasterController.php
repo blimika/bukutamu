@@ -30,6 +30,7 @@ class MasterController extends Controller
     public function ListPengunjung()
     {
         $Mtamu = Mtamu::orderBy('id','asc')->get();
+        //dd($Mtamu);
         return view('master.listpengunjung',['dataTamu'=>$Mtamu]);
     }
     public function CariPengunjung($id)
@@ -64,6 +65,11 @@ class MasterController extends Controller
                             'is_pst'=>$item->is_pst,
                             'f_id'=>$item->f_id,
                             'f_feedback'=>$item->f_feedback,
+                            'jenis_kunjungan'=>$item->jenis_kunjungan,
+                            'jumlah_tamu'=>$item->jumlah_tamu,
+                            'tamu_m'=>$item->tamu_m,
+                            'tamu_f'=>$item->tamu_m,
+                            'flag_edit_tamu'=>$item->flag_edit_tamu,
                             'file_foto'=>$item->file_foto,
                             'created_at'=>$item->created_at,
                             'created_at_nama'=>Carbon::parse($item->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
@@ -268,5 +274,76 @@ class MasterController extends Controller
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
         return redirect()->route('pengunjung.list');
+    }
+    public function ListSyncKunjungan()
+    {
+        //cek kunjungan
+        $countKunjungan = Kunjungan::where('flag_edit_tamu','0')->count();
+        if ($countKunjungan > 0)
+        {
+            //proses nama
+            $dataKunjungan = Kunjungan::get();
+            foreach ($dataKunjungan as $item)
+            {
+                //proses semua kunjungan
+                //cek dulu jenis kunjungan
+                //apabila nilai 2 (kelompok)
+                //jumlah mengikut jenis kelamin penanggung jawab kunjungan
+                if ($item->jenis_kunjungan == 2)
+                {
+                    if ($item->tamu->id_jk == 1)
+                    {
+                        //laki-laki
+                        //update isiannya
+                        $data_update = Kunjungan::where('id',$item->id)->first();
+                        $data_update->tamu_m = $item->jumlah_tamu;
+                        $data_update->tamu_f = 0;
+                        $data_update->flag_edit_tamu = 1;
+                        $data_update->update();
+                    }
+                    else
+                    {
+                        //update perempuan
+                        $data_update = Kunjungan::where('id',$item->id)->first();
+                        $data_update->tamu_f = $item->jumlah_tamu;
+                        $data_update->tamu_m = 0;
+                        $data_update->flag_edit_tamu = 1;
+                        $data_update->update();
+                    }
+                }
+                else
+                {
+                    if ($item->tamu->id_jk == 1)
+                    {
+                        //laki-laki
+                        //update isiannya
+                        $data_update = Kunjungan::where('id',$item->id)->first();
+                        $data_update->tamu_m = 1;
+                        $data_update->tamu_f = 0;
+                        $data_update->flag_edit_tamu = 1;
+                        $data_update->update();
+                    }
+                    else
+                    {
+                        //update perempuan
+                        $data_update = Kunjungan::where('id',$item->id)->first();
+                        $data_update->tamu_f = 1;
+                        $data_update->tamu_m = 0;
+                        $data_update->flag_edit_tamu = 1;
+                        $data_update->update();
+                    }
+                }
+            }
+            $pesan_error = 'Data jenis kunjungan dengan jumlah tamu berhasil di sync';
+            $warna_error = 'success';
+        }
+        else
+        {
+            $pesan_error = 'Data kunjungan masih kosong / semua kunjungan sudah sinkron';
+            $warna_error = 'danger';
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('lama');
     }
 }

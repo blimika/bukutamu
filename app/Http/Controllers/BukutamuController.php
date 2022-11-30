@@ -22,6 +22,7 @@ use App\MFas;
 use App\MManfaat;
 use App\MLay;
 use App\PstFasilitas;
+use App\Mjkunjungan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Feedback;
@@ -76,6 +77,7 @@ class BukutamuController extends Controller
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
         //$Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')
@@ -85,7 +87,7 @@ class BukutamuController extends Controller
                         ->when($bulan_filter > 0,function ($query) use ($bulan_filter,$tahun_filter){
                             return $query->whereMonth('tanggal',$bulan_filter)->whereYear('tanggal',$tahun_filter);
                         })
-                        ->orderBy('tanggal','desc')->get();
+                        ->orderBy('created_at','desc')->get();
         //dd($data_tahun);
         if ($bulan_filter == NULL)
         {
@@ -145,6 +147,15 @@ class BukutamuController extends Controller
         {
             $bulan_filter = request('bulan');
         }
+
+        if (request('jns_kunjungan')==NULL or request('jns_kunjungan')==0)
+        {
+            $kunjungan_filter=0;
+        }
+        else
+        {
+            $kunjungan_filter=request('jns_kunjungan');
+        }
         //batas filter
         $Midentitas = Midentitas::orderBy('id','asc')->get();
         $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
@@ -156,6 +167,7 @@ class BukutamuController extends Controller
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')
                         ->when($tamu_filter < 9,function ($query) use ($tamu_filter){
                             return $query->where('is_pst','=',$tamu_filter);
@@ -163,10 +175,14 @@ class BukutamuController extends Controller
                         ->when($bulan_filter,function ($query) use ($bulan_filter){
                             return $query->whereMonth('tanggal',$bulan_filter);
                         })
+                        ->when($kunjungan_filter > 0,function ($query) use ($kunjungan_filter){
+                            return $query->where('jenis_kunjungan',$kunjungan_filter);
+                        })
                         ->whereYear('tanggal','=',$tahun_filter)
                         ->orderBy('tanggal','desc')->get();
         //dd($tamu_filter);
-        return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter]);
+        //dd($Kunjungan);
+        return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter,'Mjkunjungan'=>$Mjkunjungan,'jns_kunjungan'=>$kunjungan_filter]);
     }
 
     public function simpan(Request $request)
@@ -200,6 +216,10 @@ class BukutamuController extends Controller
             "pst_fasilitas" => array:2 [▶]
             "keperluan" => "adfa fsf sfafafsa"
             ]
+            jenis_kunjungan" => "2"
+            "jumlah_tamu" => "3"
+            "tamu_laki" => "0"
+            "tamu_wanita" => "3"
         */
 
         //dd($waktu_hari_ini,$request->all());
@@ -333,15 +353,48 @@ class BukutamuController extends Controller
         }
         else
         {
+            //cek jenis kunjungan
+            //perorangan atau kelompok
+            //perorangan skip aja pakai jk dari tamu_id
+            //kelompok isikan sesuai jumlah
+            /*
+            jenis_kunjungan" => "2"
+            "jumlah_tamu" => "3"
+            "tamu_laki" => "0"
+            "tamu_wanita" => "3"
+            */
+            if ($request->jenis_kunjungan == 2) {
+                $jumlah_tamu = $request->jumlah_tamu;
+                $laki = $request-> tamu_laki;
+                $wanita = $request->tamu_wanita;
+            }
+            else
+            {
+                $jumlah_tamu = 1;
+                //cek jenis kelamin ambil dari query data diatas
+                if ($data->id_jk == 1)
+                {
+                    $laki=1;
+                    $wanita=0;
+                }
+                else
+                {
+                    $laki=0;
+                    $wanita=1;
+                }
+            }
             $dataKunjungan = new Kunjungan();
             $dataKunjungan->tamu_id = $id_tamu;
             $dataKunjungan->tanggal = Carbon::today()->format('Y-m-d');
             $dataKunjungan->keperluan = $request->keperluan;
             $dataKunjungan->jenis_kunjungan = $request->jenis_kunjungan;
-            $dataKunjungan->jumlah_tamu = $request->jumlah_tamu;
+            $dataKunjungan->jumlah_tamu = $jumlah_tamu;
+            $dataKunjungan->tamu_m = $laki;
+            $dataKunjungan->tamu_f = $wanita;
             $dataKunjungan->is_pst = $is_pst;
             $dataKunjungan->f_id = $f_id;
             $dataKunjungan->file_foto = $namafile_kunjungan;
+            $dataKunjungan->flag_edit_tamu = 1; //flag_tidak bisa di sync
             $dataKunjungan->save();
             if ($is_pst>0) {
                 //isi tabel pst_layanan, pst_manfaat dan pst_fasilitas
@@ -508,6 +561,43 @@ class BukutamuController extends Controller
         Session::flash('message_type', $warna_error);
         return redirect()->route('lama');
     }
+    public function UpdateKunjungan(Request $request)
+    {
+        /*
+        array:6 [▼
+        "_token" => "MPyUnD3up3FVIa4PvOYD05a5gZadI0H011tZt2fw"
+        "kunjungan_id" => "1180"
+        "tamu_id" => "1004"
+        "jumlah_tamu" => "2"
+        "tamu_laki" => "1"
+        "tamu_wanita" => "1"
+        ]
+        */
+        //dd($request->all());
+
+        $cek_kunjungan = Kunjungan::where('id',$request->kunjungan_id)->count();
+        if ($cek_kunjungan > 0)
+        {
+            //ada kunjungan update
+            $data = Kunjungan::where('id',$request->kunjungan_id)->first();
+            $data->jumlah_tamu = $request->jumlah_tamu;
+            $data->tamu_m = $request->tamu_laki;
+            $data->tamu_f = $request->tamu_wanita;
+            $data->flag_edit_tamu = 1;
+            $data->update();
+            $pesan_error = 'Data kunjungan an. <strong>'.$data->tamu->nama_lengkap .'</strong> sudah di update';
+            $warna_error = 'success';
+        }
+        else
+        {
+            //data kunjungan tidak ada
+            $pesan_error = 'Data kunjungan tidak tersedia';
+            $warna_error = 'danger';
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('lama');
+    }
     public function editdata($id)
     {}
     public function updatedata(Request $request)
@@ -596,6 +686,41 @@ class BukutamuController extends Controller
             $arr = array(
                 'status'=>true,
                 'hasil'=>'Data kunjungan an. '.$nama.' berhasil diubah ke '.$usulan_ispst_nama
+            );
+        }
+        return Response()->json($arr);
+    }
+    public function UbahJenisKunjungan(Request $request)
+    {
+
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data kunjungan tidak tersedia'
+        );
+        $cek_kunjungan = Kunjungan::where('id',$request->id)->count();
+        if ($cek_kunjungan > 0)
+        {
+            //data kunjungan ada
+            $data = Kunjungan::where('id',$request->id)->first();
+            $id_jk = $data->tamu->id_jk;
+            if ($id_jk == 1)
+            {
+                $tamu_laki = 1;
+                $tamu_wanita = 0;
+            }
+            else
+            {
+                $tamu_laki = 0;
+                $tamu_wanita = 1;
+            }
+            $data->jenis_kunjungan = $request->jnskunjungan_after;
+            $data->jumlah_tamu= 1;
+            $data->tamu_m = $tamu_laki;
+            $data->tamu_f = $tamu_wanita;
+            $data->update();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data kunjungan an. '.$data->tamu->nama_lengkap.' berhasil diubah ke '.$data->jKunjungan->nama
             );
         }
         return Response()->json($arr);

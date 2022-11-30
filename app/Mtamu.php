@@ -32,4 +32,8 @@ class Mtamu extends Model
     {
         return $this->belongsTo('App\Mwarga', 'id_mwarga', 'id');
     }
+    public function kunjungan()
+    {
+        return $this->hasMany('App\Kunjungan','tamu_id','id');
+    }
 }

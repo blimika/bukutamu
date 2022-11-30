@@ -453,11 +453,12 @@ $(".ubahpstkantor").click(function (e) {
 });
 //batas hapus
 // Put event listeners into place
+/*
 'use strict';
 window.addEventListener("DOMContentLoaded", function() {
 			// Grab elements, create settings, etc.
             var canvas = document.getElementById('canvas');
-            var context = canvas.getContext('2d');
+            var context = canvas.getContext("2d");
             var video = document.getElementById('video');
             var mediaConfig =  { video: true };
             var errBack = function(e) {
@@ -473,7 +474,7 @@ window.addEventListener("DOMContentLoaded", function() {
                 });
             }
 
-            /* Legacy code below! */
+            /* Legacy code below! */ /*
             else if(navigator.getUserMedia) { // Standard
 				navigator.getUserMedia(mediaConfig, function(stream) {
 					video.src = stream;
@@ -503,5 +504,5 @@ window.addEventListener("DOMContentLoaded", function() {
                 var dataURL = canvas.toDataURL('image/png',0.90);
                 $('#TambahModal .modal-body #foto').val(dataURL);
 			});
-		}, false);
+		}, false); */
 </script>
