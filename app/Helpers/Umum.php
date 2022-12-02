@@ -1,6 +1,8 @@
 <?php
 namespace App\Helpers;
 
+use Illuminate\Support\Arr;
+
 class Tanggal {
     public static function Panjang($tgl) {
         $bln_panjang = array(1=>"Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
@@ -144,7 +146,7 @@ class Generate {
         ->select(\DB::Raw('nama_bulan as bulan_tahun, COALESCE(jumlah_total,0) as k_total,COALESCE(jumlah_kntr,0) as k_kantor,COALESCE(jumlah_pst,0) as k_pst'))->get()->toJson();
         return $data;
     }
-    public static function GrafikTahunanHc($tahun)
+    public static function GrafikTahunanHc_Lama($tahun)
     {
         /*
         $Data = \DB::table('bulan')->
@@ -183,6 +185,53 @@ class Generate {
         $data[] = array(
             'name'=>'Total Kunjungan',
             'data'=>$kun_total,
+        );
+        //dd($data);
+        $data = json_encode($data);
+        foreach ($data_bulan as $item)
+        {
+            $data_bln[]=$item->nama_bulan_pendek;
+        }
+        $cat_tgl = json_encode($data_bln);
+        $arr = array(
+            'data_final'=> $data,
+            'cat_final'=> $cat_tgl
+        );
+        //dd($arr);
+        return $arr;
+    }
+    public static function GrafikTahunanHc($tahun)
+    {
+        /*
+        $Data = \DB::table('bulan')->
+                leftJoin(\DB::Raw("(select month(tgl_brkt) as bln, count(*) as jumlah,format((sum(kuitansi.total_biaya)/1000000),2) as totalbiaya from transaksi left join kuitansi on kuitansi.trx_id=transaksi.trx_id where flag_trx > 3 and year(tgl_brkt)='".$tahun."' GROUP by bln) as trx"),'bulan.id_bulan','=','trx.bln')->select(\DB::Raw('nama_bulan as y,  COALESCE(jumlah,0) as a,COALESCE(totalbiaya,0) as b'))->get()->toJson();
+        */
+        $data_total = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_total, count(*) as jumlah_total, sum(jumlah_tamu) as jumlah_tamu, sum(tamu_m) as tamu_laki, sum(tamu_f) as tamu_wanita from kunjungan where year(tanggal)='".$tahun."' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->select(\DB::Raw('COALESCE(jumlah_total,0) as k_total, COALESCE(jumlah_tamu,0) as jumlah_tamu, COALESCE(tamu_laki,0) as tamu_laki, COALESCE(tamu_wanita,0) as tamu_wanita'))->get();
+        $data_bulan = \DB::table('bulan')->select(\DB::Raw('nama_bulan_pendek'))->get();
+        foreach ($data_total as $item)
+        {
+            $kunjungan[] = $item->k_total;
+            $jumlah_tamu[] = (int) $item->jumlah_tamu;
+            $tamu_laki[] = (int) $item->tamu_laki;
+            $tamu_wanita[] = (int) $item->tamu_wanita;
+        }
+        $data[] = array(
+            'name'=>'Kunjungan',
+            'data'=>$kunjungan,
+        );
+        $data[] = array(
+            'name'=>'Jumlah Tamu',
+            'data'=>$jumlah_tamu,
+        );
+        $data[] = array(
+            'name'=>'Tamu Laki-laki',
+            'data'=>$tamu_laki,
+        );
+        $data[] = array(
+            'name'=>'Tamu Perempuan',
+            'data'=>$tamu_wanita,
         );
         //dd($data);
         $data = json_encode($data);
@@ -252,7 +301,7 @@ class Generate {
         $data = json_encode($data);
         return $data;
     }
-    public static function GrafikBulananHc($bulan,$tahun)
+    public static function GrafikBulananHc_lama($bulan,$tahun)
     {
         $tgl_cek = $tahun.'-'.$bulan.'-01';
         $jumlah_hari = \Carbon\Carbon::parse($tgl_cek)->daysInMonth;
@@ -313,6 +362,65 @@ class Generate {
             'data'=>$kun_total,
         );
         $data = json_encode($data);
+        $cat_tgl = json_encode($cat_tgl);
+        $arr = array(
+            'data_final'=>$data,
+            'cat_final'=>$cat_tgl
+        );
+        dd($arr);
+        return $arr;
+    }
+    public static function GrafikBulananHc($bulan,$tahun)
+    {
+        $tgl_cek = $tahun.'-'.$bulan.'-01';
+        $jumlah_hari = \Carbon\Carbon::parse($tgl_cek)->daysInMonth;
+        $kunjungan = array();
+        $tamu_laki= array();
+        $tamu_wanita = array();
+        $jumlah_tamu = array();
+        $cat_tgl = array();
+
+        for ($i=1;$i<=$jumlah_hari;$i++)
+        {
+            $item="";
+            $tgl_i = $tahun.'-'.$bulan.'-'.$i;
+            $item = \App\Kunjungan::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))
+                    ->select(\DB::Raw('tanggal, COALESCE(count(*),0) as k_jumlah, COALESCE(sum(jumlah_tamu),0) as t_jumlah, COALESCE(sum(tamu_m),0) as tamu_laki, COALESCE(sum(tamu_f),0) as tamu_wanita'))->groupBy('tanggal')->first();
+            if ($item)
+            {
+                $kunjungan[] = (int) $item->k_jumlah;
+                $jumlah_tamu[]= (int) $item->t_jumlah;
+                $tamu_laki[] = (int) $item->tamu_laki;
+                $tamu_wanita[] = (int) $item->tamu_wanita;
+            }
+            else
+            {
+                $kunjungan[] = 0;
+                $tamu_laki[] = 0;
+                $tamu_wanita[] = 0;
+                $jumlah_tamu[]= 0;
+            }
+            $cat_tgl[]=$i;
+
+        }
+        $data[] = array(
+            'name'=>'Kunjungan',
+            'data'=>$kunjungan,
+        );
+        $data[] = array(
+            'name'=>'Jumlah Tamu',
+            'data'=>$jumlah_tamu,
+        );
+        $data[] = array(
+            'name'=>'Tamu Laki-laki',
+            'data'=>$tamu_laki,
+        );
+        $data[] = array(
+            'name'=>'Tamu Perempuan',
+            'data'=>$tamu_wanita,
+        );
+        $data = json_encode($data);
+        //dd($data);
         $cat_tgl = json_encode($cat_tgl);
         $arr = array(
             'data_final'=>$data,

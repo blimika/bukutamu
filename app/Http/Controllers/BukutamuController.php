@@ -96,7 +96,7 @@ class BukutamuController extends Controller
         //grafik
 
         //batas grafik
-        return view('new-depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'dataTahun'=>$data_tahun,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataBulanPendek'=>$data_bulan_pendek,'bulan'=>$bulan_filter]);
+        return view('new-depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Mjkunjungan'=>$Mjkunjungan,'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'dataTahun'=>$data_tahun,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataBulanPendek'=>$data_bulan_pendek,'bulan'=>$bulan_filter]);
     }
 
     public function lama()
@@ -596,7 +596,7 @@ class BukutamuController extends Controller
         }
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
-        return redirect()->route('lama');
+        return redirect()->back();
     }
     public function editdata($id)
     {}

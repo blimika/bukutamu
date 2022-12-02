@@ -57,14 +57,24 @@
                         @else
                         <span class="badge badge-success badge-pill">PST</span>
                         @endif
-                        <span class="badge badge-warning badge-pill">{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</span>
-                        <span class="badge badge-primary badge-pill">{{$item->jKunjungan->nama}} @if($item->jenis_kunjungan > 1)
+                        <span class="badge badge-primary badge-pill">{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</span>
+                        @if($item->jenis_kunjungan == 1)
+                        <span class="badge badge-info badge-pill">{{$item->jKunjungan->nama}}</span>
+                        @else
+                        <span class="badge badge-warning badge-pill">{{$item->jKunjungan->nama}}
                             ({{$item->jumlah_tamu}} org)
-                        @endif</span>
-                        <br />
-                        <i>{{$item->keperluan}}</i>
-                        <br />
-                        <small>{{Tanggal::HariPanjang($item->tanggal)}}</small>
+                        </span>
+                        <span class="badge badge-info badge-pill">
+                            L {{$item->tamu_m}}
+                        </span>
+                        <span class="badge badge-danger badge-pill">
+                            P {{$item->tamu_f}}
+                        </span>
+                        @endif
+                        <p class="m-r-5 m-l-5">
+                            <i>{{$item->keperluan}}</i>
+                        </p>
+                        <span class="label label-success text-dark">{{Tanggal::LengkapHariPanjang($item->created_at)}}</span>
                     </p>
                     <div class="m-r-10 float-right">
                         <span>{{ $item->created_at->diffForHumans()}}</span>
@@ -74,8 +84,19 @@
                         <button type="button" class="btn btn-circle btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="{{$item->tamu->nama_lengkap}} sudah memberikan feedback"><i class="fas fa-check"></i></button>
                         @endif
                     </div>
+                    @if (Auth::user())
+                        <div class="m-l-10">
+                            <button class="btn btn-sm btn-info ubahpstkantor" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-ispst="{{$item->is_pst}}"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->is_pst == 0) PST @else Kantor @endif"></i></button>
 
+                            @if($item->jenis_kunjungan==2)
+                            <button class="btn btn-sm btn-success" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="modal" data-target="#EditKunjunganModal"><i class="fas fa-pen-square" data-toggle="tooltip" title="Edit Kunjungan ini"></i></button>
+                            @endif
+                            <button class="btn btn-sm btn-warning ubahjeniskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-jnskunjungan="{{$item->jenis_kunjungan}}" data-fotokunjungan="@if ($item->file_foto) {{asset('storage/'.$item->file_foto)}} @else https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=Tidak+ada+foto+pengunjung @endif"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->jenis_kunjungan == 1) {{$Mjkunjungan[1]->nama}} @else {{$Mjkunjungan[0]->nama}} @endif"></i></button>
+                            <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button>
+                        </div>
+                    @endif
                 </div>
+
             </div>
         </div>
     </div>

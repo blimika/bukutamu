@@ -63,6 +63,7 @@
         </div>
     </div>
 </div>
+@include('lama.modal-kunjungan')
 @include('modal-view')
 @include('modal-feedback')
 @endsection
@@ -103,7 +104,7 @@
     <link href="{{asset('dist/grafik/highcharts.css')}}" rel="stylesheet">
 @stop
 @section('js')
-
+@include('lama.js')
 @include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->

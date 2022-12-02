@@ -4,7 +4,7 @@
             type: 'column'
         },
         title: {
-            text: 'Grafik Kunjungan Tamu Bulan {{$dataBulan[$bulan]}} {{$tahun}}'
+            text: 'Grafik Jumlah Kunjungan dan Tamu Menurut Jenis Kelamin Bulan {{$dataBulan[$bulan]}} {{$tahun}}'
         },
         subtitle: {
             text: ''
@@ -41,7 +41,7 @@
             type: 'column'
         },
         title: {
-            text: 'Grafik Kunjungan Tahun {{$tahun}}'
+            text: 'Grafik Jumlah Kunjungan dan Tamu Menurut Jenis Kelamin Tahun {{$tahun}}'
         },
         subtitle: {
             text: ''
