@@ -24,6 +24,49 @@ use Illuminate\Support\Facades\DB;
 class LaporanController extends Controller
 {
     //
+    public function NewLaporan()
+    {
+        if (request('tahun')==NULL)
+        {
+            $tahun_filter=date('Y');
+        }
+        elseif (request('tahun')==0)
+        {
+            $tahun_filter=date('Y');
+        }
+        else
+        {
+            $tahun_filter = request('tahun');
+        }
+        $data_bulan = array (
+            1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'
+        );
+        $data_tahun = DB::table('kunjungan')
+                        ->selectRaw('year(tanggal) as tahun')
+                        ->groupBy('tahun')
+                        ->orderBy('tahun','asc')
+                        ->get();
+
+        $data_total = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_total, count(*) as jumlah_total, sum(jumlah_tamu) as jumlah_tamu, sum(tamu_m) as tamu_laki, sum(tamu_f) as tamu_wanita from kunjungan where year(tanggal)='".$tahun_filter."' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->select(\DB::Raw('nama_bulan,COALESCE(jumlah_total,0) as k_total, COALESCE(jumlah_tamu,0) as jumlah_tamu, COALESCE(tamu_laki,0) as tamu_laki, COALESCE(tamu_wanita,0) as tamu_wanita'))->get();
+        $data_pst = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_total, count(*) as jumlah_total, sum(jumlah_tamu) as jumlah_tamu, sum(tamu_m) as tamu_laki, sum(tamu_f) as tamu_wanita from kunjungan where is_pst='1' and year(tanggal)='".$tahun_filter."' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->select(\DB::Raw('nama_bulan,COALESCE(jumlah_total,0) as k_total, COALESCE(jumlah_tamu,0) as jumlah_tamu, COALESCE(tamu_laki,0) as tamu_laki, COALESCE(tamu_wanita,0) as tamu_wanita'))->get();
+        $data_kantor = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(tanggal) as bln_total, count(*) as jumlah_total, sum(jumlah_tamu) as jumlah_tamu, sum(tamu_m) as tamu_laki, sum(tamu_f) as tamu_wanita from kunjungan where is_pst='0' and year(tanggal)='".$tahun_filter."' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->select(\DB::Raw('nama_bulan,COALESCE(jumlah_total,0) as k_total, COALESCE(jumlah_tamu,0) as jumlah_tamu, COALESCE(tamu_laki,0) as tamu_laki, COALESCE(tamu_wanita,0) as tamu_wanita'))->get();
+
+        //dd($data_pst);
+        return view('laporan.new',[
+            'dataBulan'=>$data_bulan,
+            'dataTahun'=>$data_tahun,
+            'tahun'=>$tahun_filter,
+            'data_pst'=>$data_pst,
+            'data_kantor'=>$data_kantor,
+            'data_total'=>$data_total
+        ]);
+    }
     public function list()
     {
         /*

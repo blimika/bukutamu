@@ -42,6 +42,7 @@ Route::get('/spi', 'BukutamuController@CLSpi')->name('spi');
 Route::get('/skd', 'BukutamuController@ListSkd')->name('skd');
 Route::get('/feedback', 'FeedbackController@list')->name('feedback.list');
 Route::post('/feedback/simpan', 'FeedbackController@Simpan')->name('feedback.simpan');
+Route::get('/laporan/newpengunjung', 'LaporanController@NewLaporan')->name('laporan.newpengunjung');
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/hapuskunjungan', 'BukutamuController@hapus')->name('hapus.kunjungan');
     Route::get('/master/pengunjung', 'MasterController@ListPengunjung')->name('pengunjung.list');

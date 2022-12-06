@@ -48,13 +48,14 @@
                             <li>
                                     <a class="waves-effect waves-dark ml-auto" href="{{route('lama')}}"><i class="ti-eye"></i><span class="hide-menu">Semua Data</span></a>
                             </li>
-                            @if (Auth::user())
+
                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Laporan</span></a>
                                 <ul aria-expanded="false" class="collapse">
-                                    <li><a href="{{route('laporan.pengunjung')}}">Laporan Pengunjung</a></li>
-                                    <li><a href="javascript:void(0)">Laporan Tingkat Kepuasan</a></li>
+                                    <li><a href="{{route('laporan.newpengunjung')}}">Laporan Pengunjung</a></li>
+                                    <!---<li><a href="javascript:void(0)">Laporan Tingkat Kepuasan</a></li>--->
                                 </ul>
                             </li>
+                            @if (Auth::user())
                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
                                 <ul aria-expanded="false" class="collapse">
                                     <li><a href="{{route('pengunjung.list')}}">Pengunjung</a></li>
