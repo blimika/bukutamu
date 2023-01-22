@@ -382,26 +382,29 @@ class Generate {
 
         for ($i=1;$i<=$jumlah_hari;$i++)
         {
+
             $item="";
             $tgl_i = $tahun.'-'.$bulan.'-'.$i;
-            $item = \App\Kunjungan::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))
+            //if (\Carbon\Carbon::parse($tgl_i)->format('w') > 0 and \Carbon\Carbon::parse($tgl_i)->format('w') < 6)
+            //{
+                $item = \App\Kunjungan::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))
                     ->select(\DB::Raw('tanggal, COALESCE(count(*),0) as k_jumlah, COALESCE(sum(jumlah_tamu),0) as t_jumlah, COALESCE(sum(tamu_m),0) as tamu_laki, COALESCE(sum(tamu_f),0) as tamu_wanita'))->groupBy('tanggal')->first();
-            if ($item)
-            {
-                $kunjungan[] = (int) $item->k_jumlah;
-                $jumlah_tamu[]= (int) $item->t_jumlah;
-                $tamu_laki[] = (int) $item->tamu_laki;
-                $tamu_wanita[] = (int) $item->tamu_wanita;
-            }
-            else
-            {
-                $kunjungan[] = 0;
-                $tamu_laki[] = 0;
-                $tamu_wanita[] = 0;
-                $jumlah_tamu[]= 0;
-            }
-            $cat_tgl[]=$i;
-
+                if ($item)
+                {
+                    $kunjungan[] = (int) $item->k_jumlah;
+                    $jumlah_tamu[]= (int) $item->t_jumlah;
+                    $tamu_laki[] = (int) $item->tamu_laki;
+                    $tamu_wanita[] = (int) $item->tamu_wanita;
+                }
+                else
+                {
+                    $kunjungan[] = 0;
+                    $tamu_laki[] = 0;
+                    $tamu_wanita[] = 0;
+                    $jumlah_tamu[]= 0;
+                }
+                $cat_tgl[]=$i;
+           // }
         }
         $data[] = array(
             'name'=>'Kunjungan',

@@ -41,7 +41,7 @@
                         <div class="col-lg-12 col-sm-12 col-xs-12">
                             @include('lama.filter')
                             @if (Auth::user())
-                            <a href="{{route('master.synckunjungan')}}" class="btn btn-danger float-right"><i class="fas fa-sync"></i> Sync Kunjungan</a>
+                             <!--<a href="{{route('master.synckunjungan')}}" class="btn btn-danger float-right"><i class="fas fa-sync"></i> Sync Kunjungan</a>-->
                             @endif
                         </div>
                     </div>

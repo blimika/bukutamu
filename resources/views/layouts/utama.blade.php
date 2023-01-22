@@ -79,7 +79,8 @@
         <!-- footer -->
         <!-- ============================================================== -->
         <footer class="footer">
-            © 2018 Bidang IPDS BPS Provinsi NTB
+            © 2020 - {!! date('Y') !!} <span class="text-success">BPS Provinsi Nusa Tenggara Barat</span>
+            <span class="float-right">Created by <a href="https://ig.dyatmika.com" class="text-success" target="_blank">Blimika</a></span>
         </footer>
         <!-- ============================================================== -->
         <!-- End footer -->

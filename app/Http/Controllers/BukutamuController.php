@@ -955,6 +955,8 @@ class BukutamuController extends Controller
     }
     public function DetilTamu($idtamu)
     {
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
         $data_tamu = Mtamu::where('id',$idtamu)->first();
         $Kunjungan = Kunjungan::with('tamu')
                         ->where('tamu_id',$idtamu)
@@ -962,7 +964,9 @@ class BukutamuController extends Controller
         //dd($Kunjungan);
         return view('detil.tamu',[
             'dataTamu'=>$data_tamu,
-            'dataKunjungan'=>$Kunjungan
+            'dataKunjungan'=>$Kunjungan,
+            'MKunjungan' => $MKunjungan,
+            'Mjkunjungan'=>$Mjkunjungan
         ]);
     }
 }

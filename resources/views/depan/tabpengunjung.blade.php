@@ -16,18 +16,31 @@
             <div class="el-card-item">
                 <div class="el-card-avatar el-overlay-1">
                     @if ($item->file_foto != NULL)
-                    <img src="{{asset('storage/'.$item->file_foto)}}" alt="image" class="img-responsive"/>
+                        @if (Storage::disk('public')->exists($item->file_foto))
+                            <img src="{{asset('storage/'.$item->file_foto)}}" alt="image" class="img-responsive"/>
+                        @else
+                            <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/>
+                        @endif
                     @else
-                    <img src="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" alt="image" class="img-responsive"/>
+                        <img src="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" alt="image" class="img-responsive"/>
                     @endif
                     <div class="el-overlay">
                         <ul class="el-info">
                             @if ($item->file_foto != NULL)
-                            <li>
-                                <a class="btn default btn-outline image-popup-vertical-fit" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
+                                @if (Storage::disk('public')->exists($item->file_foto))
+                                    <li>
+                                        <a class="btn default btn-outline image-popup-vertical-fit" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
+                                            <i class="icon-magnifier"></i>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a class="btn default btn-outline image-popup-vertical-fit" href="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=Photo+tidak+ada" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">
+                                            <i class="icon-magnifier"></i>
+                                        </a>
+                                    </li>
+                                @endif
+
                             @else
                             <li>
                                 <a class="btn default btn-outline image-popup-vertical-fit" href="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}">

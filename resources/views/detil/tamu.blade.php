@@ -86,7 +86,7 @@
                                     @if ($item->jenis_kunjungan == 1)
                                     <strong class="font-weight-bold">{{$item->jKunjungan->nama}}</strong>,
                                     @else
-                                    <strong class="font-weight-bold">{{$item->jKunjungan->nama}}</strong> sebanyak <strong>{{$item->jumlah_tamu}} orang</strong>,
+                                    <strong class="font-weight-bold">{{$item->jKunjungan->nama}}</strong> sebanyak <strong>{{$item->jumlah_tamu}} orang (@if($item->tamu_m > 0){{$item->tamu_m}} laki-laki, @endif @if ($item->tamu_f > 0){{$item->tamu_f}} perempuan @endif)</strong>,
                                     @endif
 
                                     @if ($item->is_pst == 0)
@@ -97,6 +97,17 @@
                                     <strong class="font-weight-bold">{{$item->keperluan}}</strong>
                                 </p>
                                 <p>
+                                    @if (Auth::user())
+                                        <span class="m-l-10">
+                                            <button class="btn btn-sm btn-info ubahpstkantor" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-ispst="{{$item->is_pst}}"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->is_pst == 0) PST @else Kantor @endif"></i></button>
+
+                                            @if($item->jenis_kunjungan==2)
+                                            <button class="btn btn-sm btn-success" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="modal" data-target="#EditKunjunganModal"><i class="fas fa-pen-square" data-toggle="tooltip" title="Edit Kunjungan ini"></i></button>
+                                            @endif
+                                            <button class="btn btn-sm btn-warning ubahjeniskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-jnskunjungan="{{$item->jenis_kunjungan}}" data-fotokunjungan="@if ($item->file_foto) {{asset('storage/'.$item->file_foto)}} @else https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=Tidak+ada+foto+pengunjung @endif"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->jenis_kunjungan == 1) {{$Mjkunjungan[1]->nama}} @else {{$Mjkunjungan[0]->nama}} @endif"></i></button>
+                                            <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button>
+                                        </span>
+                                    @endif
                                     @if ($item->f_feedback==1)
                                     <button type="button" class="btn waves-effect waves-light btn-rounded btn-sm btn-danger" data-tamuid="{{$item->tamu_id}}" data-toggle="modal" data-target="#FeedbackModal" data-kunjunganid="{{$item->id}}" >Feedback</button>
                                     @else
@@ -118,6 +129,8 @@
     </div>
 </div>
 @include('modal-feedback')
+@include('lama.modal-kunjungan')
+@include('lama.modal')
 @endsection
 
 @section('css')
@@ -156,8 +169,11 @@
     <link href="{{asset('dist/css/pages/user-card.css')}}" rel="stylesheet">
 @stop
 @section('js')
-    @include('js')
+     <!-- Sweet-Alert  -->
+     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
+    @include('js')
+    @include('lama.js')
 @stop
