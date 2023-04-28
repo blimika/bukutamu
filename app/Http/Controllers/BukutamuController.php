@@ -813,6 +813,14 @@ class BukutamuController extends Controller
         {
             $bulan_filter = request('bulan');
         }
+        if (request('jns_kunjungan')==NULL or request('jns_kunjungan')==0)
+        {
+            $kunjungan_filter=0;
+        }
+        else
+        {
+            $kunjungan_filter=request('jns_kunjungan');
+        }
         //batas filter
         $Midentitas = Midentitas::orderBy('id','asc')->get();
         $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
@@ -824,6 +832,7 @@ class BukutamuController extends Controller
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')->with('pLayanan')
                         ->when($bulan_filter,function ($query) use ($bulan_filter){
                             return $query->whereMonth('tanggal','=',$bulan_filter);
@@ -833,7 +842,7 @@ class BukutamuController extends Controller
                         ->orderBy('tanggal','desc')
                         ->get();
         //dd($Kunjungan);
-        return view('spi.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter]);
+        return view('spi.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter,'Mjkunjungan'=>$Mjkunjungan,'jns_kunjungan'=>$kunjungan_filter]);
     }
     public function ListSkd()
     {
@@ -883,6 +892,15 @@ class BukutamuController extends Controller
         {
             $bulan_filter = request('bulan');
         }
+
+        if (request('jns_kunjungan')==NULL or request('jns_kunjungan')==0)
+        {
+            $kunjungan_filter=0;
+        }
+        else
+        {
+            $kunjungan_filter=request('jns_kunjungan');
+        }
         //batas filter
         $Midentitas = Midentitas::orderBy('id','asc')->get();
         $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
@@ -894,6 +912,7 @@ class BukutamuController extends Controller
         $Mlayanan = Mlayanan::orderBy('id','asc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
         $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
         $Kunjungan = Kunjungan::with('tamu')->with('pLayanan')
                         ->when($tamu_filter < 9,function ($query) use ($tamu_filter){
                             return $query->where('is_pst','=',$tamu_filter);
@@ -906,7 +925,7 @@ class BukutamuController extends Controller
                         ->orderBy('tanggal','desc')
                         ->get();
         //dd($Kunjungan);
-        return view('skd.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter]);
+        return view('skd.index',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu,'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter,'Mjkunjungan'=>$Mjkunjungan,'jns_kunjungan'=>$kunjungan_filter]);
     }
     public function KunjunganBaru()
     {
