@@ -62,6 +62,7 @@
                                     <li><a href="javascript:void(0)">Pendidikan</a></li>
                                     <li><a href="{{route('pengunjung.kode')}}">Generate QRCode</a></li>
                                     <li><a href="{{route('photo.sync')}}">Photo Sync</a></li>
+                                    <li><a href="{{route('layanan.sync')}}">Layanan Sync</a></li>
                                 </ul>
                             </li>
                             @endif

@@ -39,6 +39,7 @@ Route::get('/master/getdatatamu/{id}', 'MasterController@CariPengunjung')->name(
 Route::post('/simpanlama', 'BukutamuController@SimpanLama')->name('simpan.lama');
 Route::get('/lama', 'BukutamuController@lama')->name('lama');
 Route::get('/spi', 'BukutamuController@CLSpi')->name('spi');
+Route::get('/spi23', 'BukutamuController@CLSpi23')->name('spi23');
 Route::get('/skd', 'BukutamuController@ListSkd')->name('skd');
 Route::get('/feedback', 'FeedbackController@list')->name('feedback.list');
 Route::post('/feedback/simpan', 'FeedbackController@Simpan')->name('feedback.simpan');
@@ -54,6 +55,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/lama/updatekunjungan', 'BukutamuController@UpdateKunjungan')->name('update.kunjungan');
     Route::post('/lama/ubahjeniskunjungan', 'BukutamuController@UbahJenisKunjungan')->name('ubah.jeniskunjungan');
     Route::get('/master/photosync', 'MasterController@SyncPhoto')->name('photo.sync');
+    Route::get('/master/layanansync/', 'MasterController@SyncLayananManfaat')->name('layanan.sync');
+    Route::get('/master/genlayanansync/{tahun}', 'MasterController@GenSyncLayananManfaat')->name('genlayanan.sync');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

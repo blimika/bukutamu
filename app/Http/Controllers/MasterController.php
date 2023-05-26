@@ -18,10 +18,16 @@ use App\Kunjungan;
 use App\Pstlayanan;
 use App\Pstmanfaat;
 use App\Mfasilitas;
-use App\Helpers\Generate;
-use App\Feedback;
+use App\MFas;
+use App\MManfaat;
+use App\MLay;
 use App\PstFasilitas;
+use App\Mjkunjungan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Feedback;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\Generate;
 use QrCode;
 
 class MasterController extends Controller
@@ -345,5 +351,115 @@ class MasterController extends Controller
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
         return redirect()->route('lama');
+    }
+    public function SyncLayananManfaat()
+    {
+        $data_bulan = array(
+            1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'
+        );
+        $data_tahun = DB::table('kunjungan')
+                    ->selectRaw('year(tanggal) as tahun')
+                    ->groupBy('tahun')
+                    ->orderBy('tahun','asc')
+                      ->get();
+        //dd($data_tahun);
+        //filter
+        if (request('tamu_pst')==NULL)
+        {
+            $tamu_filter = 9;
+        }
+        elseif (request('tamu_pst')==0)
+        {
+            $tamu_filter = 0;
+        }
+        else
+        {
+            $tamu_filter = request('tamu_pst');
+        }
+        if (request('tahun')==NULL)
+        {
+            $tahun_filter=date('Y');
+        }
+        elseif (request('tahun')==0)
+        {
+            $tahun_filter=date('Y');
+        }
+        else
+        {
+            $tahun_filter = request('tahun');
+        }
+        if (request('bulan')==NULL)
+        {
+            $bulan_filter= (int) date('m');
+        }
+        elseif (request('bulan')==0)
+        {
+            $bulan_filter = NULL;
+        }
+        else
+        {
+            $bulan_filter = request('bulan');
+        }
+        if (request('jns_kunjungan')==NULL or request('jns_kunjungan')==0)
+        {
+            $kunjungan_filter=0;
+        }
+        else
+        {
+            $kunjungan_filter=request('jns_kunjungan');
+        }
+        //batas filter
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mlayanan = Mlayanan::orderBy('id','asc')->get();
+        $Mtamu = Mtamu::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
+        $dataManfaat = Pstmanfaat::get();
+        $dataLayanan = Pstlayanan::with('Kunjungan')
+                        ->when($bulan_filter,function ($query) use ($bulan_filter){
+                            return $query->whereMonth('created_at','=',$bulan_filter);
+                        })
+                        ->whereYear('created_at','=',$tahun_filter)->get();
+        return view('master.layanan',['dataLayanan'=>$dataLayanan,'dataManfaat'=>$dataManfaat,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun]);
+    }
+    public function GenSyncLayananManfaat($tahun)
+    {
+
+        $dataLayanan = Pstlayanan::whereYear('created_at','=',$tahun)->get();
+        if ($dataLayanan)
+        {
+            foreach ($dataLayanan as $item)
+            {
+                if (Carbon::parse($item->created_at) < Carbon::parse('2022-08-01'))
+                {
+                    //ngga bisa generate
+                    $namaLayanan = Mlayanan::where('id',$item->layanan_id)->first();
+                }
+                else
+                {
+                    $namaLayanan = MLay::where('id',$item->layanan_id)->first();
+                }
+
+                $dLayanan = Pstlayanan::where('id',$item->id)->first();
+                $dLayanan->layanan_nama_new = $namaLayanan->nama;
+                $dLayanan->update();
+            }
+            $pesan_error = 'Data layanan sudah tersinkron';
+            $warna_error = 'success';
+        }
+        else
+        {
+            $pesan_error = 'Data kunjungan masih kosong / semua kunjungan sudah sinkron';
+            $warna_error = 'danger';
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('layanan.sync');
     }
 }
