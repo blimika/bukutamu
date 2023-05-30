@@ -409,6 +409,7 @@ class BukutamuController extends Controller
                     $dataLayanan->kunjungan_id = $kunjungan_id;
                     $dataLayanan->layanan_id = $l->id;
                     $dataLayanan->layanan_nama = $l->nama;
+                    $dataLayanan->layanan_nama_new = $l->nama;
                     $dataLayanan->save();
                 }
                 foreach ($pst_fasilitas as $fas)
@@ -423,6 +424,7 @@ class BukutamuController extends Controller
                 $dataManfaat->kunjungan_id = $kunjungan_id;
                 $dataManfaat->manfaat_id = $request->id_manfaat;
                 $dataManfaat->manfaat_nama = $request->manfaat_nama;
+                $dataManfaat->manfaat_nama_new = $request->manfaat_nama;
                 $dataManfaat->save();
 
             }
@@ -535,6 +537,7 @@ class BukutamuController extends Controller
             $dataKunjungan->save();
             if ($is_pst>0) {
                 //isi tabel pst_layanan dan pst_manfaat
+                /* kode lama
                 $pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
                 $pst_manfaat = MKunjungan::whereIn('id',$request->pst_manfaat)->get();
                 $kunjungan_id = $dataKunjungan->id;
@@ -544,6 +547,7 @@ class BukutamuController extends Controller
                     $dataLayanan->kunjungan_id = $kunjungan_id;
                     $dataLayanan->layanan_id = $l->id;
                     $dataLayanan->layanan_nama = $l->nama;
+                    $dataLayanan->layanan_nama_new = $l->nama;
                     $dataLayanan->save();
                 }
                 foreach ($pst_manfaat as $m)
@@ -552,8 +556,36 @@ class BukutamuController extends Controller
                     $dataManfaat->kunjungan_id = $kunjungan_id;
                     $dataManfaat->manfaat_id = $m->id;
                     $dataManfaat->manfaat_nama = $m->nama;
+                    $dataManfaat->manfaat_nama_new = $m->nama;
                     $dataManfaat->save();
                 }
+                */
+                $pst_layanan = MLay::whereIn('id',$request->pst_layanan)->get();
+                $pst_fasilitas = MFas::whereIn('id',$request->pst_fasilitas)->get();
+                $kunjungan_id = $dataKunjungan->id;
+                foreach ($pst_layanan as $l)
+                {
+                    $dataLayanan = new Pstlayanan();
+                    $dataLayanan->kunjungan_id = $kunjungan_id;
+                    $dataLayanan->layanan_id = $l->id;
+                    $dataLayanan->layanan_nama = $l->nama;
+                    $dataLayanan->layanan_nama_new = $l->nama;
+                    $dataLayanan->save();
+                }
+                foreach ($pst_fasilitas as $fas)
+                {
+                    $dataFasilitas = new PstFasilitas();
+                    $dataFasilitas->kunjungan_id = $kunjungan_id;
+                    $dataFasilitas->fasilitas_id = $fas->id;
+                    $dataFasilitas->fasilitas_nama = $fas->nama;
+                    $dataFasilitas->save();
+                }
+                $dataManfaat = new Pstmanfaat();
+                $dataManfaat->kunjungan_id = $kunjungan_id;
+                $dataManfaat->manfaat_id = $request->id_manfaat;
+                $dataManfaat->manfaat_nama = $request->manfaat_nama;
+                $dataManfaat->manfaat_nama_new = $request->manfaat_nama;
+                $dataManfaat->save();
 
             }
             $pesan_error = 'Data pengunjung <b>'.trim($request->nama_lengkap).'</b> tanggal kunjungan <b>'.$request->tgl_kunjungan.'</b> berhasil ditambahkan';
