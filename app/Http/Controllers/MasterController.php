@@ -99,6 +99,7 @@ class MasterController extends Controller
                     'nama_lengkap'=>$dataCek->nama_lengkap,
                     'tgl_lahir'=>$dataCek->tgl_lahir,
                     'tgl_lahir_nama'=>Carbon::parse($dataCek->tgl_lahir)->isoFormat('D MMMM Y'),
+                    'umur'=>Carbon::parse($dataCek->tgl_lahir)->age,
                     'id_jk'=>$dataCek->id_jk,
                     'nama_jk'=>$dataCek->jk->nama,
                     'inisial_jk'=>$dataCek->jk->inisial,

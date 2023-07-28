@@ -286,14 +286,16 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             {
             $('#ViewModal .modal-body #tamu_id').text(tamuid)
             $('#ViewModal .modal-body #tamu_nama').text(data.hasil.nama_lengkap)
+            @if (Auth::user())
             $('#ViewModal .modal-body #tamu_identitas').text(data.hasil.nomor_identitas+' ('+ data.hasil.id_identitas_nama +')')
+            @endif
             $('#ViewModal .modal-body #tamu_jk').text(data.hasil.nama_jk)
-            $('#ViewModal .modal-body #tamu_lahir').text(data.hasil.tgl_lahir_nama)
+            $('#ViewModal .modal-body #tamu_lahir').text(data.hasil.tgl_lahir_nama+' ('+ data.hasil.umur + ' tahun)')
             $('#ViewModal .modal-body #tamu_kerja').text(data.hasil.nama_kerja)
             $('#ViewModal .modal-body #kerja_detil').text(data.hasil.kerja_detil)
             $('#ViewModal .modal-body #kat_kerja_nama').text(data.hasil.kat_kerja_nama)
             $('#ViewModal .modal-body #tamu_pendidikan').text(data.hasil.nama_mdidik)
-            $('#ViewModal .modal-body #tamu_warga').text(data.hasil.nama_mwarga)
+            //$('#ViewModal .modal-body #tamu_warga').text(data.hasil.nama_mwarga)
             $('#ViewModal .modal-body #tamu_email').text(data.hasil.email)
             $('#ViewModal .modal-body #tamu_telepon').text(data.hasil.telepon)
             if (data.hasil.telepon != null)
@@ -321,6 +323,10 @@ $('#ViewModal').on('show.bs.modal', function (event) {
                 {
                     var teks = "";
                     var tmax = data.hasil.kunjungan.jumlah;
+                    if (tmax > 10)
+                    {
+                        var tmax = 10;
+                    }
                     var i;
                     var kunjungan = data.hasil.kunjungan.hasil;
                     for (i = 0; i < tmax; i++) {

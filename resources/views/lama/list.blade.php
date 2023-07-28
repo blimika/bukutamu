@@ -53,11 +53,7 @@
                                     <th>No</th>
                                     <th>Photo</th>
                                     <th>Nama</th>
-                                    <th>JK</th>
-                                    <th>Alamat</th>
                                     <th>Keperluan/Data dicari</th>
-                                    <th>Umur</th>
-                                    <th>Kunjungan</th>
                                     <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
                                     @if (Auth::user())
@@ -71,11 +67,7 @@
                                     <th>No</th>
                                     <th>Photo</th>
                                     <th>Nama</th>
-                                    <th>JK</th>
-                                    <th>Alamat</th>
                                     <th>Keperluan/Data dicari</th>
-                                    <th>Umur</th>
-                                    <th>Kunjungan</th>
                                     <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
                                     @if (Auth::user())
@@ -97,26 +89,27 @@
                                                 <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}}">
                                                     <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
                                                 </a>
+                                                @else
+                                                   <img src="https://via.placeholder.com/200x200/0000FF/EEAAFF/?text=No+Photo" class="img-circle" width="60" height="60" />
                                                 @endif
                                             </td>
-                                            <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a></td>
-                                            <td>
+                                            <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a>
+                                                <br />
                                                 @if ($item->tamu->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
                                                 @else
                                                 <span class="badge badge-danger badge-pill">{{$item->tamu->jk->inisial}}</span>
                                                 @endif
                                             </td>
-                                            <td>{{$item->tamu->alamat}} </td>
-                                            <td>{{$item->keperluan}}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->tamu->tgl_lahir)->age}}</td>
-                                            <td class="text-center">
-                                                    @if ($item->is_pst=='0')
+                                            <td>
+                                                {{$item->keperluan}}
+                                                <p>
+                                                @if ($item->is_pst=='0')
                                                     <span class="badge badge-danger badge-pill">Kantor</span>
                                                     @else
                                                     <span class="badge badge-success badge-pill">PST</span>
                                                     @endif
-                                                    <br />
+
                                                     @if($item->jenis_kunjungan == 1)
                                                     <span class="badge badge-info badge-pill">{{$item->jKunjungan->nama}}</span>
                                                     @else
@@ -130,6 +123,7 @@
                                                         P {{$item->tamu_f}}
                                                     </span>
                                                     @endif
+                                                </p>
                                             </td>
                                             <td class="text-center">
                                                 @if ($item->f_feedback==1)
@@ -141,13 +135,20 @@
                                             <td>{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('dddd, D MMMM Y')}}</td>
                                             @if (Auth::user())
                                             <td>
-                                                <button class="btn btn-sm btn-info ubahpstkantor" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-ispst="{{$item->is_pst}}"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->is_pst == 0) PST @else Kantor @endif"></i></button>
-
-                                                @if($item->jenis_kunjungan==2)
-                                                <button class="btn btn-sm btn-success" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="modal" data-target="#EditKunjunganModal"><i class="fas fa-pen-square" data-toggle="tooltip" title="Edit Kunjungan ini"></i></button>
-                                                @endif
-                                                <button class="btn btn-sm btn-warning ubahjeniskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-jnskunjungan="{{$item->jenis_kunjungan}}" data-fotokunjungan="@if ($item->file_foto) {{asset('storage/'.$item->file_foto)}} @else https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=Tidak+ada+foto+pengunjung @endif"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->jenis_kunjungan == 1) {{$Mjkunjungan[1]->nama}} @else {{$Mjkunjungan[0]->nama}} @endif"></i></button>
-                                                <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="ti-settings"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item ubahpstkantor" href="#" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-ispst="{{$item->is_pst}}" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->is_pst == 0) PST @else Kantor @endif">Ubah Status</a>
+                                                        @if($item->jenis_kunjungan==2)
+                                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="modal" data-target="#EditKunjunganModal">Edit</a>
+                                                        @endif
+                                                        <a class="dropdown-item ubahjeniskunjungan" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-jnskunjungan="{{$item->jenis_kunjungan}}" data-fotokunjungan="@if ($item->file_foto) {{asset('storage/'.$item->file_foto)}} @else https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=Tidak+ada+foto+pengunjung @endif" data-toggle="tooltip" title="Ubah Jenis Kunjungan Ke @if ($item->jenis_kunjungan == 1) {{$Mjkunjungan[1]->nama}} @else {{$Mjkunjungan[0]->nama}} @endif">Ubah Jenis</a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item hapuskunjungan" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus</a>
+                                                    </div>
+                                                </div>
                                             </td>
                                             @endif
                                         </tr>

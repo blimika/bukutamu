@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Bukutamu</li>
             </ol>
-            <button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#InputDataLamaModal"><i class="fa fa-plus-circle"></i> Tambah</button>
+            <a href="{{route('kunjungan.baru')}}" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Kunjungan Baru</a>
         </div>
     </div>
 </div>
@@ -47,9 +47,19 @@
                             </div>
                             <div class="timeline-body">
                                 <div class="m-t-20 row">
-                                    <div class="col-md-3 col-xs-12"><img src="{{asset('storage/img/qrcode/'.$dataTamu->kode_qr.'-'.$dataTamu->id.'.png')}}" alt="user" class="img-responsive radius" /></div>
+                                    <div class="col-md-3 col-xs-12">
+                                        @if ($dataTamu->tamu_foto != NULL)
+                                            @if (Storage::disk('public')->exists($dataTamu->tamu_foto))
+                                                <img src="{{asset('storage/'.$dataTamu->tamu_foto)}}" alt="user" class="img-responsive radius" />
+                                            @else
+                                                <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/>
+                                            @endif
+                                        @else
+                                            <img src="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" alt="image" class="img-responsive"/>
+                                        @endif
+                                    </div>
                                     <div class="col-md-9 col-xs-12">
-                                        <p>Identitas <strong class="font-weight-bold">{{$dataTamu->identitas->nama}}</strong> nomor <strong class="font-weight-bold">{{$dataTamu->nomor_identitas}}</strong> lahir pada hari <strong class="font-weight-bold">{{Tanggal::HariPanjang($dataTamu->tgl_lahir)}}</strong> jenis kelamin <strong class="font-weight-bold">{{$dataTamu->jk->nama}}</strong> pekerjaan <strong class="font-weight-bold">{{$dataTamu->pekerjaan->nama}}</strong> di <strong class="font-weight-bold">{{$dataTamu->kerja_detil}}</strong> alamat <strong class="font-weight-bold">{{$dataTamu->alamat}}</strong> dengan email <strong class="font-weight-bold">{{$dataTamu->email}}</strong> and nomor hp <strong class="font-weight-bold">{{$dataTamu->telepon}}</strong></p>
+                                        <p>Lahir pada hari <strong class="font-weight-bold">{{Tanggal::HariPanjang($dataTamu->tgl_lahir)}} ({{ \Carbon\Carbon::parse($dataTamu->tgl_lahir)->age}} tahun)</strong> jenis kelamin <strong class="font-weight-bold">{{$dataTamu->jk->nama}}</strong> pekerjaan <strong class="font-weight-bold">{{$dataTamu->pekerjaan->nama}}</strong> di <strong class="font-weight-bold">{{$dataTamu->kerja_detil}}</strong> alamat <strong class="font-weight-bold">{{$dataTamu->alamat}}</strong> dengan email <strong class="font-weight-bold">{{$dataTamu->email}}</strong> and nomor hp <strong class="font-weight-bold">{{$dataTamu->telepon}}</strong></p>
                                     </div>
                                 </div>
 
