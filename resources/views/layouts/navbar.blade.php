@@ -59,7 +59,7 @@
                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
                                 <ul aria-expanded="false" class="collapse">
                                     <li><a href="{{route('pengunjung.list')}}">Pengunjung</a></li>
-                                    <li><a href="javascript:void(0)">Pendidikan</a></li>
+                                    <li><a href="javascript:void(0)">Operator</a></li>
                                     <li><a href="{{route('pengunjung.kode')}}">Generate QRCode</a></li>
                                     <li><a href="{{route('photo.sync')}}">Photo Sync</a></li>
                                     <li><a href="{{route('layanan.sync')}}">Layanan Sync</a></li>

@@ -50,12 +50,13 @@
                                     <div class="col-md-3 col-xs-12">
                                         @if ($dataTamu->tamu_foto != NULL)
                                             @if (Storage::disk('public')->exists($dataTamu->tamu_foto))
-                                                <img src="{{asset('storage/'.$dataTamu->tamu_foto)}}" alt="user" class="img-responsive radius" />
+                                                <a class="image-popup-vertical-fit" href="{{asset('storage'.$dataTamu->tamu_foto)}}" title="Nama : {{$dataTamu->nama_lengkap}} | Umur : {{ \Carbon\Carbon::parse($dataTamu->tgl_lahir)->age}} Tahun"><img src="{{asset('storage/'.$dataTamu->tamu_foto)}}" alt="user" class="img-responsive radius" /></a>
+                                                
                                             @else
-                                                <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/>
+                                            <a class="image-popup-vertical-fit" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : {{$dataTamu->nama_lengkap}} | Umur : {{ \Carbon\Carbon::parse($dataTamu->tgl_lahir)->age}} Tahun"><img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/></a>
                                             @endif
                                         @else
-                                            <img src="https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo" alt="image" class="img-responsive"/>
+                                        <a class="image-popup-vertical-fit" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : {{$dataTamu->nama_lengkap}} | Umur : {{ \Carbon\Carbon::parse($dataTamu->tgl_lahir)->age}} Tahun"><img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/></a>
                                         @endif
                                     </div>
                                     <div class="col-md-9 col-xs-12">
@@ -83,15 +84,19 @@
                                 <h4 class="timeline-title">Kunjungan hari {{Tanggal::HariPanjang($item->tanggal)}}</h4>
                             </div>
                             <div class="timeline-body el-element-overlay">
-                                @if ($item->file_foto)
-
                                 <div class="el-card-item">
-                                <div class="el-card-avatar el-overlay-1">
-                                    <a class="image-popup-vertical-fit" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}"> <img src="{{asset('storage'.$item->file_foto)}}" alt="user" /> </a>
-                                </div>
-                                </div>
-
+                                    <div class="el-card-avatar el-overlay-1">
+                                @if ($item->file_foto != NULL)
+                                    @if (Storage::disk('public')->exists($item->file_foto))
+                                        <a class="image-popup-vertical-fit" href="{{asset('storage'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}"> <img src="{{asset('storage'.$item->file_foto)}}" alt="user" /> </a>
+                                    @else
+                                        <a class="image-popup-vertical-fit" href="https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=belum+ada+photo" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}"> <img src="https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=belum+ada+photo" alt="user" /> </a>
+                                    @endif
+                                @else
+                                        <a class="image-popup-vertical-fit" href="https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=belum+ada+photo" title="Nama : {{$item->tamu->nama_lengkap}} | Kunjungan : {{\Tanggal::HariPanjang($item->updated_at)}}"> <img src="https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=belum+ada+photo" alt="user" /> </a>
                                 @endif
+                                    </div>
+                                </div>
                                 <p>Kunjungan ke <strong class="font-weight-bold">{{$item->mTujuan->nama}}</strong> secara
                                     @if ($item->jenis_kunjungan == 1)
                                     <strong class="font-weight-bold">{{$item->jKunjungan->nama}}</strong>,

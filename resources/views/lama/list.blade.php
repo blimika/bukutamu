@@ -86,11 +86,19 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>
                                                 @if ($item->file_foto != NULL)
-                                                <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}}">
-                                                    <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
-                                                </a>
+                                                    @if (Storage::disk('public')->exists($item->file_foto))
+                                                    <a class="image-popup" href="{{asset('storage/'.$item->file_foto)}}" title="Nama : {{$item->tamu->nama_lengkap}}">
+                                                        <img src="{{asset('storage/'.$item->file_foto)}}" class="img-circle" width="60" height="60" />
+                                                    </a>
+                                                    @else
+                                                        <a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : {{$item->tamu->nama_lengkap}}">
+                                                        <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                                                        </a>
+                                                    @endif
                                                 @else
-                                                   <img src="https://via.placeholder.com/200x200/0000FF/EEAAFF/?text=No+Photo" class="img-circle" width="60" height="60" />
+                                                    <a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : {{$item->tamu->nama_lengkap}}">
+                                                    <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                                                    </a>
                                                 @endif
                                             </td>
                                             <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a>

@@ -40,4 +40,7 @@ class User extends Authenticatable
     public function isAdmin(){
         return Auth()->user()->level === '20';
     }
+    public function mLevel(){
+    	return $this->belongsTo('App\MasterLevel', 'level', 'kode');
+    }
 }

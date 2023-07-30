@@ -33,11 +33,108 @@ use QrCode;
 class MasterController extends Controller
 {
     //
+    public function PageListPengujung(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = Mtamu::select('count(*) as allcount')->count();
+        $totalRecordswithFilter = Mtamu::select('count(*) as allcount')->where('nama_lengkap', 'like', '%' .$searchValue . '%')->count();
+
+        // Fetch records
+        $records = Mtamu::orderBy($columnName,$columnSortOrder)
+            ->where('mtamu.nama_lengkap', 'like', '%' .$searchValue . '%')
+            ->select('mtamu.*')
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $data_arr = array();
+        $sno = $start+1;
+        foreach($records as $record){
+            $id = $record->id;
+            $id_midentitas = $record->id_midentitas;
+            $nomor_identitas = $record->nomor_identitas;
+            $url_foto = $record->tamu_foto;
+            $nama_lengkap = $record->nama_lengkap;
+            $email = $record->email;
+            $jk = $record->id_jk;
+            $tgl_lahir = $record->tgl_lahir;
+            $telepon = $record->telepon;
+            $id_mkerja = $record->id_mkerja;
+            $kode_qr = $record->kode_qr;
+            $alamat = $record->alamat;
+            $total_kunjungan = $record->kunjungan->count();
+            if ($record->tamu_foto != NULL)
+            {
+                if (Storage::disk('public')->exists($record->tamu_foto))
+                {
+                    $tamu_foto = '<a class="image-popup" href="'.asset('storage/'.$record->tamu_foto).'" title="Nama : '.$record->nama_lengkap.'">
+                <img src="'.asset('storage/'.$record->tamu_foto).'" class="img-circle" width="60" height="60" class="img-responsive" />
+            </a>';
+                }
+                else 
+                {
+                    $tamu_foto = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
+                    <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                    </a>';
+                }
+            }
+            else 
+            {
+                $tamu_foto = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
+                <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                </a>';
+            }
+            $aksi = '<button class="btn btn-sm btn-info" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data '.$record->nama_lengkap.'"></i></button>
+            <button class="btn btn-sm btn-danger hapuspengunjungmaster" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung '.$record->nama_lengkap.'"></i></button>';
+
+            $data_arr[] = array(
+                "id" => $id,
+                "id_midentitas"=>$id_midentitas,
+                "nomor_identitas"=> $nomor_identitas,
+                "url_foto"=>$url_foto,
+                "nama_lengkap"=>$nama_lengkap,
+                "email"=>$email,
+                "jk"=>$jk,
+                "tgl_lahir"=>$tgl_lahir,
+                "telepon"=>$telepon,
+                "id_mkerja"=>$id_mkerja,
+                "kode_qr"=>$kode_qr,
+                "alamat"=>$alamat,
+                "total_kunjungan"=>$total_kunjungan,
+                "aksi"=>$aksi,
+                "tamu_foto" => $tamu_foto
+            );
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
+        ); 
+
+        echo json_encode($response);
+        exit;
+    }
     public function ListPengunjung()
     {
-        $Mtamu = Mtamu::orderBy('id','asc')->get();
+        //$Mtamu = Mtamu::orderBy('id','asc')->paginate(30);
         //dd($Mtamu);
-        return view('master.listpengunjung',['dataTamu'=>$Mtamu]);
+        return view('master.listpengunjung');
     }
     public function CariPengunjung($id)
     {

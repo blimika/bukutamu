@@ -69,7 +69,44 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                               
+                                @if ($dataTamu->isEmpty())
+                                    <tr>
+                                        <td colspan="8" class="text-center"><b>Data pengunjung tidak tersedia</b></td>
+                                    </tr>
+                                @else
+                                    @foreach ($dataTamu as $item)
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td>
+                                                @if ($item->tamu_foto != NULL)
+                                                    <a class="image-popup" href="{{asset('storage/'.$item->tamu_foto)}}" title="Nama : {{$item->nama_lengkap}}">
+                                                        <img src="{{asset('storage/'.$item->tamu_foto)}}" class="img-circle" width="60" height="60" class="img-responsive" />
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td>{{$item->nama_lengkap}}</td>
+                                            <td>{{$item->nomor_identitas}}  <br /> ({{$item->identitas->nama}})</td>
+                                            <td>{{$item->kode_qr}}</td>
+                                            <td>
+                                                @if ($item->jk->inisial=='L')
+                                                <span class="badge badge-info badge-pill">{{$item->jk->inisial}}</span>
+                                                @else
+                                                <span class="badge badge-danger badge-pill">{{$item->jk->inisial}}</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->isoFormat('D MMMM Y')}}</td>
+                                            <td>{{$item->email}}</td>
+                                            <td>{{$item->pekerjaan->nama}}</td>
+                                            <td>{{$item->kunjungan->count()}}</td>
+                                            @if (Auth::user()->level > 1)
+                                            <td>
+                                                <button class="btn btn-sm btn-info" data-id="{{$item->id}}" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data {{$item->nama_lengkap}}"></i></button>
+                                                <button class="btn btn-sm btn-danger hapuspengunjungmaster" data-id="{{$item->id}}" data-nama="{{$item->nama_lengkap}}"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung {{$item->nama_lengkap}}"></i></button>
+                                            </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -108,33 +145,19 @@
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
-    <script type="text/javascript">
-        $(document).ready(function(){
-
-          // DataTable
-          $('#dTabel').DataTable({
-             processing: true,
-             serverSide: true,
-             ajax: "{{route('pengunjung.page')}}",
-             columns: [
-                { data: 'id' },
-                { data: 'tamu_foto' },
-                { data: 'nama_lengkap' },
-                { data: 'nomor_identitas' },
-                { data: 'kode_qr' },
-                { data: 'jk' },
-                { data: 'tgl_lahir' },
-                { data: 'email' },
-                { data: 'id_mkerja' },
-                { data: 'total_kunjungan' },
-                { data: 'aksi' },
-             ],
+    <script>
+        $(document).ready(function() {
+            var table = $('#dTabel').dataTable({
+            aLengthMenu: [
+                [1, 2],
+                [1, 2]
+            ],
             dom: 'Bfrtip',
-            iDisplayLength: 30,
             buttons: [
                 'copy','excel','print'
             ],
             responsive: true,
+            iDisplayLength: 30,
             "fnDrawCallback": function () {
                 $('.image-popup').magnificPopup({
                 type: 'image',
@@ -151,74 +174,10 @@
                 },
 
                 });
-                //hapus tamu
-                $(".hapuspengunjungmaster").click(function (e) {
-                    e.preventDefault();
-                    var id = $(this).data('id');
-                    var nama = $(this).data('nama');
-                    Swal.fire({
-                                title: 'Akan dihapus?',
-                                text: "Data pengunjung "+nama+" akan dihapus permanen",
-                                type: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Hapus'
-                            }).then((result) => {
-                                if (result.value) {
-                                    //response ajax disini
-                                    $.ajaxSetup({
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                        }
-                                    });
-                                    $.ajax({
-                                        url : '{{route('pengunjung.hapus')}}',
-                                        method : 'post',
-                                        data: {
-                                            id: id
-                                        },
-                                        cache: false,
-                                        dataType: 'json',
-                                        success: function(data){
-                                            if (data.status == true)
-                                            {
-                                                Swal.fire(
-                                                    'Berhasil!',
-                                                    ''+data.hasil+'',
-                                                    'success'
-                                                ).then(function() {
-                                                    location.reload();
-                                                });
-                                            }
-                                            else
-                                            {
-                                                Swal.fire(
-                                                    'Error!',
-                                                    ''+data.hasil+'',
-                                                    'danger'
-                                                );
-                                            }
-
-                                        },
-                                        error: function(){
-                                            Swal.fire(
-                                                'Error',
-                                                'Koneksi Error',
-                                                'danger'
-                                            );
-                                        }
-
-                                    });
-
-                                }
-                            })
-                });
-                //batas hapus
                 }
-          });
-          $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
-        });
+            });
+            $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
+            });
     </script>
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
