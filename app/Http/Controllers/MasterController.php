@@ -33,6 +33,40 @@ use QrCode;
 class MasterController extends Controller
 {
     //
+
+    public function PengunjungSync()
+    {
+        $count = Mtamu::count();
+        if ($count > 0)
+        {
+            $data = Mtamu::get();
+            foreach ($data as $item)
+            {
+                if ($item->kunjungan->count() > 0)
+                {
+                    $total_kunjungan = '';
+                    $data_update = Mtamu::where('id',$item->id)->first();
+                    $data_update->total_kunjungan = $item->kunjungan->count();
+                    $data_update->update();
+                }
+            }
+
+            $arr = array(
+                'status'=>true,
+                'pesan_error'=>'Data kunjungan berhasil sync',
+            );
+        }
+        else
+        {
+            $arr = array(
+                'status'=>false,
+                'pesan_error'=>'Data pengunjung masih kosong',
+            );
+        }
+
+        //return redirect()->route('pengunjung.list');
+        return Response()->json($arr);
+    }
     public function PageListPengujung(Request $request)
     {
         $draw = $request->get('draw');
@@ -76,7 +110,7 @@ class MasterController extends Controller
             $id_mkerja = $record->id_mkerja;
             $kode_qr = $record->kode_qr;
             $alamat = $record->alamat;
-            $total_kunjungan = $record->kunjungan->count();
+            $total_kunjungan = $record->total_kunjungan;
             if ($record->tamu_foto != NULL)
             {
                 if (Storage::disk('public')->exists($record->tamu_foto))
@@ -85,14 +119,14 @@ class MasterController extends Controller
                 <img src="'.asset('storage/'.$record->tamu_foto).'" class="img-circle" width="60" height="60" class="img-responsive" />
             </a>';
                 }
-                else 
+                else
                 {
                     $tamu_foto = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
                     <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                     </a>';
                 }
             }
-            else 
+            else
             {
                 $tamu_foto = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
                 <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
@@ -108,7 +142,7 @@ class MasterController extends Controller
                 "url_foto"=>$url_foto,
                 "nama_lengkap"=>$nama_lengkap,
                 "email"=>$email,
-                "jk"=>$jk,
+                "id_jk"=>$jk,
                 "tgl_lahir"=>$tgl_lahir,
                 "telepon"=>$telepon,
                 "id_mkerja"=>$id_mkerja,
@@ -125,7 +159,7 @@ class MasterController extends Controller
             "iTotalRecords" => $totalRecords,
             "iTotalDisplayRecords" => $totalRecordswithFilter,
             "aaData" => $data_arr
-        ); 
+        );
 
         echo json_encode($response);
         exit;

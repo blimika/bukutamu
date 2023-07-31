@@ -10,6 +10,7 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Master Pengunjung</li>
             </ol>
+            <a href="javascript:void(0)" class="btn btn-info d-lg-block m-l-15 synckunjungan"><i class="fas fa-sync"></i> Sync Kunjungan</a>
         </div>
     </div>
 </div>
@@ -31,8 +32,16 @@
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Data pengunjung BPS Provinsi Nusa Tenggara Barat</h4>
-
-                    <div class="table-responsive m-t-40">
+                    <center id="preloading">
+                        <button class="btn btn-success" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading, Memproses data kunjungan...
+                          </button>
+                    </center>
+                    <center id="pesanerror">
+                        <div class="alert alert-success m-5"><span id="tekserror"></span></div>
+                    </center>
+                    <div class="table-responsive m-t-40 tabeldata">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
@@ -69,7 +78,7 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                               
+
                             </tbody>
                         </table>
                     </div>
@@ -89,6 +98,12 @@
     <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
+    <style type="text/css">
+    #preloading, #pesanerror
+    {
+        display: none;
+    }
+    </style>
 @stop
 @section('js')
 
@@ -110,7 +125,32 @@
     <!-- end - This is for export functionality only -->
     <script type="text/javascript">
         $(document).ready(function(){
+            //script button
+            $(".synckunjungan").click(function(e) {
+                e.preventDefault();
+                $('#preloading').toggle();
+                $('.tabeldata').toggle();
+                $.ajax({
+                    url: "{{route('listpengunjung.sync')}}",
+                    method : 'get',
+                    cache: false,
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#preloading').toggle();
+                        $('.tabeldata').toggle();
+                        if (data.status == true)
+                        {
+                            $('#pesanerror').toggle();
+                            $('#pesanerror #tekserror').text(data.pesan_error);
+                        }
+                    },
+                    error: function() {
+                        $('#preloading').toggle();
+                        $('.tabeldata').toggle();
 
+                    }
+                });
+            });
           // DataTable
           $('#dTabel').DataTable({
              processing: true,
@@ -122,7 +162,7 @@
                 { data: 'nama_lengkap' },
                 { data: 'nomor_identitas' },
                 { data: 'kode_qr' },
-                { data: 'jk' },
+                { data: 'id_jk' },
                 { data: 'tgl_lahir' },
                 { data: 'email' },
                 { data: 'id_mkerja' },
@@ -220,6 +260,7 @@
           $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
         });
     </script>
+
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
      <!-- Magnific popup JavaScript -->
