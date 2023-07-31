@@ -100,14 +100,23 @@ class MasterController extends Controller
         foreach($records as $record){
             $id = $record->id;
             $id_midentitas = $record->id_midentitas;
-            $nomor_identitas = $record->nomor_identitas;
+            $nomor_identitas = $record->nomor_identitas .'<br /> <span class="badge badge-success badge-pill">'. $record->identitas->nama .'</span>';
             $url_foto = $record->tamu_foto;
             $nama_lengkap = $record->nama_lengkap;
             $email = $record->email;
-            $jk = $record->id_jk;
-            $tgl_lahir = $record->tgl_lahir;
+            if ($record->jk->inisial=='L')
+            {
+                $jk = '<span class="badge badge-info badge-pill">'.$record->jk->inisial.'</span>';
+            }
+            
+            else
+            {
+                $jk = '<span class="badge badge-danger badge-pill">'.$record->jk->inisial.'</span>';
+            }
+            
+            $tgl_lahir = Carbon::parse($record->tgl_lahir)->isoFormat('D MMMM Y') .'<br />('.Carbon::parse($record->tgl_lahir)->age.' tahun)';
             $telepon = $record->telepon;
-            $id_mkerja = $record->id_mkerja;
+            $id_mkerja = $record->pekerjaan->nama .' - '.$record->kerja_detil;
             $kode_qr = $record->kode_qr;
             $alamat = $record->alamat;
             $total_kunjungan = $record->total_kunjungan;

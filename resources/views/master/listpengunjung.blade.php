@@ -49,7 +49,6 @@
                                     <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
-                                    <th>Kode</th>
                                     <th>JK</th>
                                     <th>Tgl Lahir</th>
                                     <th>Email</th>
@@ -66,7 +65,6 @@
                                     <th>Photo</th>
                                     <th>Nama</th>
                                     <th>No Identitas</th>
-                                    <th>Kode</th>
                                     <th>JK</th>
                                     <th>Tgl Lahir</th>
                                     <th>Email</th>
@@ -161,7 +159,6 @@
                 { data: 'tamu_foto' },
                 { data: 'nama_lengkap' },
                 { data: 'nomor_identitas' },
-                { data: 'kode_qr' },
                 { data: 'id_jk' },
                 { data: 'tgl_lahir' },
                 { data: 'email' },
