@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth']], function () {
     //api list pengunjung per 30 user
     Route::get('/list/pengunjung', 'MasterController@PageListPengujung')->name('pengunjung.page');
     Route::get('/list/pengunjungsync', 'MasterController@PengunjungSync')->name('listpengunjung.sync');
+    Route::post('/master/simpan/pengunjung', 'MasterController@SimpanPengunjung')->name('pengunjung.simpan');
     Route::get('/master/synckunjungan', 'MasterController@ListSyncKunjungan')->name('master.synckunjungan');
     Route::get('/master/pengunjungsync', 'MasterController@SyncKodePengunjung')->name('pengunjung.kode');
     Route::post('/hapuspengunjung', 'MasterController@HapusPengunjung')->name('pengunjung.hapus');

@@ -12,6 +12,8 @@
                     @if (Auth::user())
                     <dt class="col-sm-4">Identitas</dt>
                     <dd class="col-sm-8"><span id="tamu_identitas"></span></dd>
+                    <dt class="col-sm-4">Kode</dt>
+                    <dd class="col-sm-8"><span id="tamu_kode"></span></dd>
                     @endif
                     <dt class="col-sm-4">Nama Lengkap</dt>
                     <dd class="col-sm-8"><span id="tamu_nama"></span></dd>

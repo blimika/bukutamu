@@ -141,9 +141,21 @@ class MasterController extends Controller
                 <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                 </a>';
             }
-            $aksi = '<button class="btn btn-sm btn-info" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewModal"><i class="fas fa-search" data-toggle="tooltip" title="View Data '.$record->nama_lengkap.'"></i></button>
-            <button class="btn btn-sm btn-danger hapuspengunjungmaster" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'"><i class="fas fa-trash" class="fas fa-key" data-toggle="tooltip" title="Hapus Data Pengunjung '.$record->nama_lengkap.'"></i></button>';
-
+          
+            $aksi ='
+                <div class="btn-group">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ti-settings"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewModal">View</a>
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMasterModal">Edit</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item hapuspengunjungmaster" href="#" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'">Hapus</a>
+                   
+                </div>
+            </div>
+            ';
             $data_arr[] = array(
                 "id" => $id,
                 "id_midentitas"=>$id_midentitas,
@@ -173,11 +185,55 @@ class MasterController extends Controller
         echo json_encode($response);
         exit;
     }
+    public function SimpanPengunjung(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data pengunjung tidak tersedia'
+        );
+        $data = Mtamu::where('id',$request->tamu_id)->first();
+        if ($data)
+        {
+            //simpan data pengunjung
+            $data->id_midentitas = $request->jenis_identitas;
+            $data->nomor_identitas = trim($request->nomor_identitas);
+            $data->nama_lengkap = trim($request->nama_lengkap);
+            $data->tgl_lahir = $request->tgl_lahir;
+            $data->id_jk = $request->id_jk;
+            $data->id_mkerja = $request->id_kerja;
+            $data->id_mkat_kerja = $request->kat_kerja;
+            $data->kerja_detil = $request->pekerjaan_detil;
+            $data->id_mdidik = $request->id_mdidik;
+            $data->id_mwarga = $request->mwarga;
+            $data->email = trim($request->email);
+            $data->telepon = trim($request->telepon);
+            $data->alamat = trim($request->alamat);
+            $data->update();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data pengunjung an. '.$request->nama_lengkap.' berhasil diupdate'
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
+    }
     public function ListPengunjung()
     {
         //$Mtamu = Mtamu::orderBy('id','asc')->paginate(30);
         //dd($Mtamu);
-        return view('master.listpengunjung');
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $MFas = MFas::orderBy('id','asc')->get();
+        $MManfaat = MManfaat::orderBy('id','asc')->get();
+        $MLay = MLay::orderBy('id','asc')->get();
+        return view('master.listpengunjung',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
+        //return view('master.listpengunjung');
     }
     public function CariPengunjung($id)
     {

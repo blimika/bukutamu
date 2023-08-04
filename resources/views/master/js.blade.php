@@ -140,6 +140,7 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             {
             $('#ViewModal .modal-body #tamu_id').text(tamuid)
             $('#ViewModal .modal-body #tamu_nama').text(data.hasil.nama_lengkap)
+            $('#ViewModal .modal-body #tamu_kode').text(data.hasil.kode_qr)
             $('#ViewModal .modal-body #tamu_identitas').text(data.hasil.nomor_identitas+' ('+ data.hasil.id_identitas_nama +')')
             $('#ViewModal .modal-body #tamu_jk').text(data.hasil.nama_jk)
             $('#ViewModal .modal-body #tamu_lahir').text(data.hasil.tgl_lahir_nama)

@@ -85,6 +85,7 @@
     </div>
 </div>
 @include('modal-view')
+@include('master.modal-edit')
 @endsection
 
 @section('css')
@@ -104,7 +105,7 @@
     </style>
 @stop
 @section('js')
-
+@include('master.js-edit')
 @include('master.js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
@@ -140,6 +141,7 @@
                         {
                             $('#pesanerror').toggle();
                             $('#pesanerror #tekserror').text(data.pesan_error);
+                            $('#dTabel').DataTable().ajax.reload(null,false);
                         }
                     },
                     error: function() {
@@ -156,7 +158,7 @@
              ajax: "{{route('pengunjung.page')}}",
              columns: [
                 { data: 'id' },
-                { data: 'tamu_foto' },
+                { data: 'tamu_foto', orderable: false },
                 { data: 'nama_lengkap' },
                 { data: 'nomor_identitas' },
                 { data: 'id_jk' },
@@ -164,7 +166,7 @@
                 { data: 'email' },
                 { data: 'id_mkerja' },
                 { data: 'total_kunjungan' },
-                { data: 'aksi' },
+                { data: 'aksi', orderable: false },
              ],
             dom: 'Bfrtip',
             iDisplayLength: 30,
@@ -225,7 +227,7 @@
                                                     ''+data.hasil+'',
                                                     'success'
                                                 ).then(function() {
-                                                    location.reload();
+                                                    $('#dTabel').DataTable().ajax.reload(null,false);
                                                 });
                                             }
                                             else
@@ -263,4 +265,15 @@
      <!-- Magnific popup JavaScript -->
      <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
      <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
+     <script>
+        $('#tgl_lahir').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    toggleActive: true,
+    todayHighlight: true
+}).on('show.bs.modal', function(event) {
+    // prevent datepicker from firing bootstrap modal "show.bs.modal"
+    event.stopPropagation();
+});
+</script>
 @stop
