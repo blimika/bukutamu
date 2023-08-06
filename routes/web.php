@@ -61,6 +61,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/master/photosync', 'MasterController@SyncPhoto')->name('photo.sync');
     Route::get('/master/layanansync/', 'MasterController@SyncLayananManfaat')->name('layanan.sync');
     Route::get('/master/genlayanansync/{tahun}', 'MasterController@GenSyncLayananManfaat')->name('genlayanan.sync');
+    //member
+    Route::get('/member/list', 'MemberController@ListMember')->name('member.list');
+    Route::get('/member/pagelist', 'MemberController@PageListMember')->name('member.page');
+    Route::post('/member/hapus', 'MemberController@HapusMember')->name('member.hapus');
+    Route::post('/member/simpan', 'MemberController@SimpanMember')->name('member.simpan');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

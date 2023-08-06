@@ -43,4 +43,7 @@ class User extends Authenticatable
     public function mLevel(){
     	return $this->belongsTo('App\MasterLevel', 'level', 'kode');
     }
+    public function mtamu(){
+    	return $this->belongsTo('App\Mtamu', 'tamu_id', 'id')->where('tamu_id','>','0');
+    }
 }

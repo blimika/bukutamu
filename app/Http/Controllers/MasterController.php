@@ -285,7 +285,29 @@ class MasterController extends Controller
                     'jumlah'=>$cek_kunjungan
                 );
             }
-
+            //cek member/users
+            $arr_member = array('hasil'=>'Data member tidak tersedia','status'=>false);
+            if ($dataCek->member)
+            {
+                //member terkoneksi
+                $arr_member = array(
+                    'hasil' => array(
+                        'id'=> $dataCek->member->id,
+                        'name' => $dataCek->member->name,
+                        'username' => $dataCek->member->username,
+                        'level' => $dataCek->member->level,
+                        'level_nama' => $dataCek->member->mLevel->nama,
+                        'lastlogin' => $dataCek->member->lastlogin,
+                        'lastip' => $dataCek->member->lastip,
+                        'user_foto' => $dataCek->member->user_foto,
+                        'created_at'=>$dataCek->member->created_at,
+                        'created_at_nama'=>Carbon::parse($dataCek->member->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                        'updated_at'=>$dataCek->member->updated_at,
+                        'updated_at_nama'=>Carbon::parse($dataCek->member->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    ),
+                    'status'=>true
+                );
+            }
             $arr = array(
                 'hasil' => array(
                     'tamu_id'=>$dataCek->id,
@@ -317,7 +339,8 @@ class MasterController extends Controller
                     'updated_at'=>$dataCek->updated_at,
                     'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     'url_foto'=>$dataCek->tamu_foto,
-                    'kunjungan'=>$arr_kunjungan
+                    'kunjungan'=>$arr_kunjungan,
+                    'member'=>$arr_member
                 ),
                 'status' => true
             );

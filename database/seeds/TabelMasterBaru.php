@@ -15,7 +15,8 @@ class TabelMasterBaru extends Seeder
         DB::table('mlevel')->insert([
             ['id'=>1,'kode' => 1, 'nama' => 'Pengunjung'],
             ['id'=>2,'kode' => 10, 'nama' => 'Operator'],
-            ['id'=>3,'kode' => 20, 'nama' => 'Admin'],
+            ['id'=>3,'kode' => 15, 'nama' => 'Admin'],
+            ['id'=>4,'kode' => 20, 'nama' => 'Super Admin'],
         ]);
         DB::table('msaluran')->insert([
             ['id'=>1,'kode' => 0, 'nama' => 'Kantor'],
