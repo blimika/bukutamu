@@ -688,14 +688,16 @@ class BukutamuController extends Controller
                 //hapus yg ada di pstlayanan dan pstmanfaat
                 Pstlayanan::where('kunjungan_id',$request->id)->delete();
                 Pstmanfaat::where('kunjungan_id',$request->id)->delete();
+                $f_id = '0';
             }
             else
             {
                 $usulan_is_pst = 1;
+                $f_id = '5';
                 $usulan_ispst_nama = 'PST';
                 //tambahkan ke pstlayanan  dan pstmanfaat
-                $pst_layanan = Mlayanan::whereIn('id',['1','2'])->get();
-                $pst_manfaat = MKunjungan::whereIn('id',['32'])->get();
+                $pst_layanan = Mlayanan::whereIn('id',['1'])->get();
+                $pst_manfaat = MManfaat::where('id',$f_id)->first();
                 $kunjungan_id = $request->id;
                 foreach ($pst_layanan as $l)
                 {
@@ -705,6 +707,7 @@ class BukutamuController extends Controller
                     $dataLayanan->layanan_nama = $l->nama;
                     $dataLayanan->save();
                 }
+                /*
                 foreach ($pst_manfaat as $m)
                 {
                     $dataManfaat = new Pstmanfaat();
@@ -713,8 +716,17 @@ class BukutamuController extends Controller
                     $dataManfaat->manfaat_nama = $m->nama;
                     $dataManfaat->save();
                 }
+                */
+                $dataManfaat = new Pstmanfaat();
+                $dataManfaat->kunjungan_id = $kunjungan_id;
+                $dataManfaat->manfaat_id = $f_id;
+                $dataManfaat->manfaat_nama = $pst_manfaat->nama;
+                $dataManfaat->manfaat_nama_new = $pst_manfaat->nama;
+                $dataManfaat->save();
+                
             }
             $data->is_pst = $usulan_is_pst;
+            $data->f_id = $f_id;
             $data->update();
             $nama = $data->tamu->nama_lengkap;
             $arr = array(

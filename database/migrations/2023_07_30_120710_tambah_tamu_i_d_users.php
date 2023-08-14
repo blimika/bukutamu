@@ -16,7 +16,10 @@ class TambahTamuIDUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->bigInteger('tamu_id')->unsigned()->default(0)->after('level');
-            //$table->bigInteger('tamu_id')->unsigned();
+            $table->string('user_foto',250)->nullable()->after('tamu_id');
+            $table->string('telepon',20)->nullable()->after('user_foto');
+            $table->boolean('flag')->default(1)->after('telepon');
+            $table->string('email_kodever',10)->default(0)->after('flag');
         });
     }
 

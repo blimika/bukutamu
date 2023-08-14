@@ -11,7 +11,6 @@
                      <input type="hidden" name="tamu_id" id="tamu_id" value="" />
                      <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
                         @include('form-tambah')
-
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="tambah_data" class="btn btn-success waves-effect waves-light" disabled>Simpan</button>
