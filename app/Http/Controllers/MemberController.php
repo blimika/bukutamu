@@ -123,9 +123,9 @@ class MemberController extends Controller
                     <i class="ti-settings"></i>
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewModal">View</a>
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMasterModal">Edit</a>
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#GantipassModal">Ganti Password</a>
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewMemberModal">View</a>
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMemberModal">Edit</a>
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#GantiPasswdModal">Ganti Password</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapusmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'">Hapus</a>
                    
@@ -244,4 +244,122 @@ class MemberController extends Controller
         #dd($request->all());
         return Response()->json($arr);
     }
+    public function CariMember($id)
+    {
+        $dataCek = User::where('id',$id)->first();
+        $arr = array('hasil' => 'Data member tidak tersedia', 'status' => false);
+        if ($dataCek) {
+            //data tamu tersedia
+            //create qrcode simpan di public
+            //$qrcode = base64_encode(QrCode::format('png')->size(100)->margin(0)->generate($dataCek->kode_qr));
+            /*
+            $qrcode_foto = QrCode::format('png')
+                    ->size(200)->errorCorrection('H')
+                     ->generate($dataCek->kode_qr);
+            $output_file = '/img/qrcode/'.$dataCek->kode_qr.'-'.$dataCek->id.'.png';
+            //$data_foto = base64_decode($qrcode_foto);
+            Storage::disk('public')->put($output_file, $qrcode_foto);
+            */
+            //cek member/users
+            $arr_pengunjung = array('hasil'=>'Data pengujung tidak tersedia','status'=>false);
+            if ($dataCek->tamu_id > 0)
+            {
+                //dd($dataCek->mtamu);
+                if ($dataCek->mtamu)
+                {
+                    $cek_kunjungan = Kunjungan::where('tamu_id',$dataCek->tamu_id)->count();
+                    $arr_kunjungan = array('hasil'=>'Data Kunjungan Kosong','status'=>false);
+                    if ($cek_kunjungan > 0)
+                    {
+                        //ada kunjungan
+                        $dataKunjungan = Kunjungan::with('tamu','pLayanan','pManfaat')->where('tamu_id',$dataCek->tamu_id)->orderBy('created_at','desc')->take(10)->get();
+                        foreach ($dataKunjungan as $item)
+                        {
+                            $dataItem[] = array(
+                                    'id'=>$item->id,
+                                    'tanggal'=>$item->tanggal,
+                                    'tanggal_nama'=>Carbon::parse($item->tanggal)->isoFormat('D MMMM Y'),
+                                    'keperluan'=>$item->keperluan,
+                                    'is_pst'=>$item->is_pst,
+                                    'f_id'=>$item->f_id,
+                                    'f_feedback'=>$item->f_feedback,
+                                    'jenis_kunjungan'=>$item->jenis_kunjungan,
+                                    'jumlah_tamu'=>$item->jumlah_tamu,
+                                    'tamu_m'=>$item->tamu_m,
+                                    'tamu_f'=>$item->tamu_m,
+                                    'flag_edit_tamu'=>$item->flag_edit_tamu,
+                                    'file_foto'=>$item->file_foto,
+                                    'created_at'=>$item->created_at,
+                                    'created_at_nama'=>Carbon::parse($item->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                                    'updated_at'=>$item->updated_at,
+                                    'updated_at_nama'=>Carbon::parse($item->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                            );
+                        }
+                        $arr_kunjungan = array(
+                            'hasil' => $dataItem,
+                            'status'=>true,
+                            'jumlah'=>$cek_kunjungan
+                        );
+                    }
+                    $arr_pengunjung = array(
+                        'hasil' => array(
+                            'tamu_id'=>$dataCek->mtamu->id,
+                            'id_identitas'=>$dataCek->mtamu->id_midentitas,
+                            'id_identitas_nama'=>$dataCek->mtamu->identitas->nama,
+                            'nomor_identitas'=>$dataCek->mtamu->nomor_identitas,
+                            'nama_lengkap'=>$dataCek->mtamu->nama_lengkap,
+                            'tgl_lahir'=>$dataCek->mtamu->tgl_lahir,
+                            'tgl_lahir_nama'=>Carbon::parse($dataCek->mtamu->tgl_lahir)->isoFormat('D MMMM Y'),
+                            'umur'=>Carbon::parse($dataCek->mtamu->tgl_lahir)->age,
+                            'id_jk'=>$dataCek->mtamu->id_jk,
+                            'nama_jk'=>$dataCek->mtamu->jk->nama,
+                            'inisial_jk'=>$dataCek->mtamu->jk->inisial,
+                            'id_kerja'=>$dataCek->mtamu->id_mkerja,
+                            'nama_kerja'=>$dataCek->mtamu->pekerjaan->nama,
+                            'kat_kerja'=>$dataCek->mtamu->id_mkat_kerja,
+                            'kat_kerja_nama'=>$dataCek->mtamu->kategoripekerjaan->nama,
+                            'kerja_detil'=>$dataCek->mtamu->kerja_detil,
+                            'id_mdidik'=>$dataCek->mtamu->id_mdidik,
+                            'nama_mdidik'=>$dataCek->mtamu->pendidikan->nama ,
+                            'id_mwarga'=>$dataCek->mtamu->id_mwarga,
+                            'nama_mwarga'=>$dataCek->mtamu->warga->nama,
+                            'email'=>$dataCek->mtamu->email,
+                            'telepon'=>$dataCek->mtamu->telepon ,
+                            'alamat'=>$dataCek->mtamu->alamat,
+                            'kode_qr'=>$dataCek->mtamu->kode_qr,
+                            'created_at'=>$dataCek->mtamu->created_at,
+                            'created_at_nama'=>Carbon::parse($dataCek->mtamu->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                            'updated_at'=>$dataCek->mtamu->updated_at,
+                            'updated_at_nama'=>Carbon::parse($dataCek->mtamu->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                            'url_foto'=>$dataCek->mtamu->tamu_foto,
+                            'kunjungan'=>$arr_kunjungan,
+                        ),
+                        'status' => true
+                    ); 
+                }   
+            }
+            
+            $arr = array(
+                'hasil' => array(
+                    'id'=> $dataCek->id,
+                    'name' => $dataCek->name,
+                    'username' => $dataCek->username,
+                    'level' => $dataCek->level,
+                    'level_nama' => $dataCek->mLevel->nama,
+                    'lastlogin' => $dataCek->lastlogin,
+                    'lastlogin_nama'=>Carbon::parse($dataCek->lastlogin)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'lastip' => $dataCek->lastip,
+                    'user_foto' => $dataCek->user_foto,
+                    'tamu_id'=>$dataCek->tamu_id,
+                    'created_at'=>$dataCek->created_at,
+                    'created_at_nama'=>Carbon::parse($dataCek->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'updated_at'=>$dataCek->updated_at,
+                    'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'pengunjung'=>$arr_pengunjung,
+                ),
+                'status'=>true
+            );
+        }
+        return Response()->json($arr);
+    }   
 }

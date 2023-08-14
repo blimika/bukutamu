@@ -9,11 +9,13 @@
                 <dl class="row">
                     <dt class="col-sm-4">ID</dt>
                     <dd class="col-sm-8"><span id="tamu_id"></span></dd>
-                    @if (Auth::user())
+                    @if (Auth::User())
+                    @if (Auth::user()->level>1)
                     <dt class="col-sm-4">Identitas</dt>
                     <dd class="col-sm-8"><span id="tamu_identitas"></span></dd>
                     <dt class="col-sm-4">Kode</dt>
                     <dd class="col-sm-8"><span id="tamu_kode"></span></dd>
+                    @endif
                     @endif
                     <dt class="col-sm-4">Nama Lengkap</dt>
                     <dd class="col-sm-8"><span id="tamu_nama"></span></dd>

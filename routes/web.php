@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/member/pagelist', 'MemberController@PageListMember')->name('member.page');
     Route::post('/member/hapus', 'MemberController@HapusMember')->name('member.hapus');
     Route::post('/member/simpan', 'MemberController@SimpanMember')->name('member.simpan');
+    Route::get('/member/getdata/{id}', 'MemberController@CariMember')->name('member.cari');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

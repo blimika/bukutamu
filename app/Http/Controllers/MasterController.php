@@ -300,6 +300,7 @@ class MasterController extends Controller
                         'lastlogin' => $dataCek->member->lastlogin,
                         'lastip' => $dataCek->member->lastip,
                         'user_foto' => $dataCek->member->user_foto,
+                        'tamu_id' => $dataCek->member->tamu_id,
                         'created_at'=>$dataCek->member->created_at,
                         'created_at_nama'=>Carbon::parse($dataCek->member->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                         'updated_at'=>$dataCek->member->updated_at,

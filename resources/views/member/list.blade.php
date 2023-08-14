@@ -79,6 +79,9 @@
     </div>
 </div>
 @include('member.modal-tambah')
+@include('member.modal-view')
+@include('member.modal-edit')
+@include('member.modal-gantipasswd')
 @endsection
 
 @section('css')
