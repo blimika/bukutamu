@@ -1,4 +1,21 @@
 <script>
+    $('#TambahMember').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+
+        //kosongan isian
+        $('#TambahMember .modal-footer #ResetFormMember').on('click', function(e) {
+            e.preventDefault();
+            $('#TambahMember .modal-body #level').val("");
+            $('#TambahMember .modal-body #name').val("");
+            $('#TambahMember .modal-body #username').val("");
+            $('#TambahMember .modal-body #email').val("");
+            $('#TambahMember .modal-body #telepon').val("");
+            $('#TambahMember .modal-body #passwd').val("");
+            $('#TambahMember .modal-body #passwd_ulangi').val("");
+            $('#TambahMember .modal-body #member_error').text("");
+        });
+
+    });
     $('#TambahMember .modal-footer #SimpanMember').on('click', function(e) {
     e.preventDefault();
     var level = $('#TambahMember .modal-body #level').val();
@@ -17,22 +34,22 @@
     {
         $('#TambahMember .modal-body #member_error').text('Nama harus terisi');
         return false;
-    }    
+    }
     else if (username == "")
     {
         $('#TambahMember .modal-body #member_error').text('Username harus terisi');
         return false;
-    } 
+    }
     else if (email == "")
     {
         $('#TambahMember .modal-body #member_error').text('Email harus terisi');
         return false;
-    } 
+    }
     else if (telepon == "")
     {
         $('#TambahMember .modal-body #member_error').text('Telepon/WA harus terisi');
         return false;
-    } 
+    }
     else if (passwd == "")
     {
         $('#TambahMember .modal-body #member_error').text('Password harus terisi');
@@ -42,7 +59,7 @@
     {
         $('#TambahMember .modal-body #member_error').text('Ulangi password harus terisi');
         return false;
-    } 
+    }
     else if (passwd != passwd_ulangi)
     {
         $('#TambahMember .modal-body #member_error').text('Password dan ulangi password tidak sama');
@@ -59,6 +76,9 @@
                 return false;
             }
         }
+
+        //check username, email, nomor hp dulu sudah ada belum
+
         //$('#TambahMember .modal-body #formEditMasterPengunjung').submit();
         //ajax responsen
         $.ajaxSetup({
@@ -96,7 +116,7 @@
                     Swal.fire(
                         'Error!',
                         ''+data.hasil+'',
-                        'danger'
+                        'error'
                     );
                 }
 
@@ -105,7 +125,7 @@
                 Swal.fire(
                     'Error',
                     'Koneksi Error',
-                    'danger'
+                    'error'
                 );
             }
 

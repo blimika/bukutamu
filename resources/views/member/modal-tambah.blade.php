@@ -46,6 +46,7 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success waves-effect" id="SimpanMember" data-dismiss="modal">SIMPAN</button>
+                <button type="button" class="btn btn-warning waves-effect" id="ResetFormMember">RESET</button>
                 <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
             </div>
         </form>

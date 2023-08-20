@@ -34,7 +34,7 @@
         <div class="card">
             <div class="card-body">
                     <h4 class="card-title">Data member</h4>
-                    
+
                     <div class="table-responsive m-t-40 tabeldata">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
@@ -70,7 +70,7 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                                
+
                             </tbody>
                         </table>
                     </div>
@@ -207,7 +207,7 @@
                                                 Swal.fire(
                                                     'Error!',
                                                     ''+data.hasil+'',
-                                                    'danger'
+                                                    'error'
                                                 );
                                             }
 
@@ -216,7 +216,7 @@
                                             Swal.fire(
                                                 'Error',
                                                 'Koneksi Error',
-                                                'danger'
+                                                'error'
                                             );
                                         }
 

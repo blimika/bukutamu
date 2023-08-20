@@ -43,7 +43,7 @@ class MemberController extends Controller
         {
             $m_level = MasterLevel::where('kode','10')->get();
         }
-        else 
+        else
         {
             $m_level = MasterLevel::where('kode','>','1')->get();
         }
@@ -116,7 +116,7 @@ class MemberController extends Controller
                 <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                 </a>';
             }
-          
+
             $aksi ='
                 <div class="btn-group">
                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -128,7 +128,7 @@ class MemberController extends Controller
                     <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#GantiPasswdModal">Ganti Password</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapusmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'">Hapus</a>
-                   
+
                 </div>
             </div>
             ';
@@ -196,7 +196,7 @@ class MemberController extends Controller
                     'hasil'=>'Operator tidak bisa menghapus admin'
                 );
             }
-            else 
+            else
             {
                 $nama = $data->name;
                 $namafile_photo = $data->user_foto;
@@ -210,17 +210,17 @@ class MemberController extends Controller
                     'hasil'=>'Data member an. '.$nama.' berhasil dihapus'
                 );
             }
-            
+
         }
         return Response()->json($arr);
     }
     public function SimpanMember(Request $request)
     {
+        $data = User::where('username',trim($request->username))->orWhere('email',trim($request->email))->orWhere('telepon',trim($request->telepon))->first();
         $arr = array(
             'status'=>false,
-            'hasil'=>'Username tidak tersedia'
+            'hasil'=>'Username ('.trim($request->username).'), E-Mail ('.trim($request->email).') atau Nomor HP ('.trim($request->telepon).') sudah digunakan'
         );
-        $data = User::where('username',trim($request->username))->first();
         if (!$data)
         {
             //$email_kodever = Str::random(10);
@@ -335,10 +335,10 @@ class MemberController extends Controller
                             'kunjungan'=>$arr_kunjungan,
                         ),
                         'status' => true
-                    ); 
-                }   
+                    );
+                }
             }
-            
+
             $arr = array(
                 'hasil' => array(
                     'id'=> $dataCek->id,
@@ -361,5 +361,5 @@ class MemberController extends Controller
             );
         }
         return Response()->json($arr);
-    }   
+    }
 }

@@ -9,7 +9,7 @@
                 <form class="form-horizontal m-t-4" name="formEditMember" id="formEditMember" action="{{ route('member.simpan') }}"  method="POST">
                     <div class="form-group">
                     <label class="control-label">Level</label>
-                        <select class="form-control" id="level" name="level" required>
+                        <select class="form-control" id="edit_level" name="level" required>
                             <option value=""></option>
                             @foreach ($mlevel as $item)
                                     <option value="{{$item->kode}}">{{$item->nama}}</option>
@@ -18,22 +18,22 @@
                     </div>
                     <div class="form-group">
                         <label for="nama_lengkap">Nama</label>
-                        <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="name" required>
+                        <input type="text" class="form-control" id="edit_name" aria-describedby="name" placeholder="name" required>
                     </div>
                     <div class="form-group">
                         <label for="nama_lengkap">Username</label>
-                        <input type="text" class="form-control" id="username" aria-describedby="username" placeholder="username" required>
+                        <input type="text" class="form-control" id="edit_username" aria-describedby="username" placeholder="username" required>
                     </div>
                     <div class="form-group">
                         <label class="control-label">E-Mail</label>
-                            <input type="text" class="form-control" id="email" name="email">
+                            <input type="text" class="form-control" id="edit_email" name="email">
                     </div>
                     <div class="form-group">
                         <label class="control-label">Telepon/WA</label>
-                            <input type="text" class="form-control" id="telepon" name="telepon">
+                            <input type="text" class="form-control" id="edit_telepon" name="telepon">
                     </div>
                     <div class="form-group">
-                        <span id="member_error" class="text-danger"></span>
+                        <span id="edit_member_error" class="text-danger"></span>
                     </div>
             </div>
             <div class="modal-footer">

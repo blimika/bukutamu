@@ -6,22 +6,22 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal m-t-4" name="formEditMember" id="formEditMember" action="{{ route('member.simpan') }}"  method="POST">
-                    
+                <form class="form-horizontal m-t-4" name="GantiPasswd" id="GantiPasswd" action="{{ route('member.simpan') }}"  method="POST">
+
                     <div class="form-group">
                         <label for="control-label">Password Lama</label>
-                        <input type="password" class="form-control" id="passwd_lama" name="passwd_lama" required>
+                        <input type="password" class="form-control" id="edit_passwd_lama" name="edit_passwd_lama" required>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Password Baru</label>
-                            <input type="password" class="form-control" id="passwd_baru" name="passwd_baru" required>
+                            <input type="password" class="form-control" id="edit_passwd_baru" name="edit_passwd_baru" required>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Ulangi Password Baru</label>
-                            <input type="password" class="form-control" id="passwd_baru_ulangi" name="passwd_baru_ulangi" required>
+                            <input type="password" class="form-control" id="edit_ulangi_passwdbaru" name="edit_ulangi_passwdbaru" required>
                     </div>
                     <div class="form-group">
-                        <span id="member_error" class="text-danger"></span>
+                        <span id="gantipasswd_error" class="text-danger"></span>
                     </div>
             </div>
             <div class="modal-footer">
