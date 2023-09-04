@@ -36,9 +36,13 @@
                     <!--<dt class="col-sm-4">Kode QRcode</dt>
                     <dd class="col-sm-8"><img src="" id="kodeqr" width="200px"></dd>-->
                     <dt class="col-sm-4">Foto</dt>
-                    <dd class="col-sm-8"><img src="" id="tamu_foto" class="col-sm-12"></dd>
+                    <dd></dd>
+                    <dt></dt>
+                    <dd class="col-sm-12"><img src="" id="tamu_foto" class="col-sm-12"></dd>
                     <dt class="col-sm-4">Kunjungan</dt>
-                    <dd class="col-sm-8"><span id="kunjungan_terakhir"></span></dd>
+                    <dd>&nbsp;</dd>
+                    <dt></dt>
+                    <dd class="col-sm-12"><span id="kunjungan_terakhir"></span></dd>
                 </dl>
 
             </div>

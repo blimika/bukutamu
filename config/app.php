@@ -55,7 +55,10 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
-
+    /*
+    white list ip yang boleh akses tambah kunjungan
+    */
+    'ip_akses' => explode(',', env('APP_IP_AKSES')),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

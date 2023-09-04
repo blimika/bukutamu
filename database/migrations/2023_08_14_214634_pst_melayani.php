@@ -21,7 +21,7 @@ class PstMelayani extends Migration
             $table->bigInteger('kunjungan_id')->unsigned();
             $table->bigInteger('tamu_id')->unsigned();
             $table->bigInteger('userid')->unsigned();
-            $table->string('username',50)->unique();
+            $table->string('username',50);
             $table->dateTime('mulai_layanan')->nullable();
             $table->dateTime('akhir_layanan')->nullable();
             $table->timestamps();

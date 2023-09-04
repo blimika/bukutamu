@@ -17,20 +17,20 @@
                             </select>
                     </div>
                     <div class="form-group">
-                        <label for="nama_lengkap">Nama</label>
-                        <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="name" required>
+                        <label for="name">Nama</label>
+                        <input type="text" class="form-control" id="name" aria-describedby="name" autocomplete="off" placeholder="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="nama_lengkap">Username</label>
-                        <input type="text" class="form-control" id="username" aria-describedby="username" placeholder="username" required>
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" aria-describedby="username" autocomplete="off" placeholder="username" required>
                     </div>
                     <div class="form-group">
                         <label class="control-label">E-Mail</label>
-                            <input type="text" class="form-control" id="email" name="email">
+                            <input type="text" class="form-control" id="email" name="email" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label class="control-label">Telepon/WA</label>
-                            <input type="text" class="form-control" id="telepon" name="telepon">
+                            <input type="text" class="form-control" id="telepon" name="telepon" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label class="control-label">Password</label>

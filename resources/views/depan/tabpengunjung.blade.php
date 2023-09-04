@@ -49,7 +49,7 @@
                             </li>
                             @endif
                             <li>
-                                <a class="btn default btn-outline" href="javascript:void(0);" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">
+                                <a class="btn default btn-outline" href="javascript:void(0);" data-kodeqr="{{$item->tamu->kode_qr}}" data-toggle="modal" data-target="#ViewModal">
                                     <i class="icon-link"></i>
                                 </a>
                             </li>
@@ -110,8 +110,10 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="modal" data-target="#EditKunjunganModal">Edit</a>
                                     @endif
+                                    @if(Auth::user()->level > 10)
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item hapuskunjungan" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus</a>
+                                    @endif
                                 </div>
                             </div>
 

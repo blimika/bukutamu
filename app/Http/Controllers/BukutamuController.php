@@ -29,6 +29,7 @@ use App\Feedback;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Generate;
 use QrCode;
+use App\MAkses;
 
 class BukutamuController extends Controller
 {
@@ -723,7 +724,7 @@ class BukutamuController extends Controller
                 $dataManfaat->manfaat_nama = $pst_manfaat->nama;
                 $dataManfaat->manfaat_nama_new = $pst_manfaat->nama;
                 $dataManfaat->save();
-                
+
             }
             $data->is_pst = $usulan_is_pst;
             $data->f_id = $f_id;
@@ -1068,18 +1069,49 @@ class BukutamuController extends Controller
     }
     public function NewKunjungan()
     {
-        $Midentitas = Midentitas::orderBy('id','asc')->get();
-        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
-        $Mjk = Mjk::orderBy('id','asc')->get();
-        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
-        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
-        $Mwarga = Mwarga::orderBy('id','asc')->get();
-        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
-        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
-        $MFas = MFas::orderBy('id','asc')->get();
-        $MManfaat = MManfaat::orderBy('id','asc')->get();
-        $MLay = MLay::orderBy('id','asc')->get();
+        //$ipakses = config('app.ip_akses');
+        $data_ip = MAkses::where('ip',\Request::getClientIp(true))->count();
+        if (Auth::user() or $data_ip > 0)
+        {
+            $Midentitas = Midentitas::orderBy('id','asc')->get();
+            $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+            $Mjk = Mjk::orderBy('id','asc')->get();
+            $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+            $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+            $Mwarga = Mwarga::orderBy('id','asc')->get();
+            $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+            $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+            $MFas = MFas::orderBy('id','asc')->get();
+            $MManfaat = MManfaat::orderBy('id','asc')->get();
+            $MLay = MLay::orderBy('id','asc')->get();
+        }
+        else
+        {
+            return redirect()->route('depan');
+        }
         return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
+    }
+    public function KunjunganTerjadwal()
+    {
+        if (Auth::user())
+        {
+            $Midentitas = Midentitas::orderBy('id','asc')->get();
+            $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+            $Mjk = Mjk::orderBy('id','asc')->get();
+            $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+            $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+            $Mwarga = Mwarga::orderBy('id','asc')->get();
+            $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+            $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+            $MFas = MFas::orderBy('id','asc')->get();
+            $MManfaat = MManfaat::orderBy('id','asc')->get();
+            $MLay = MLay::orderBy('id','asc')->get();
+        }
+        else
+        {
+            return redirect()->route('depan');
+        }
+        return view('kunjungan.terjadwal',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
     }
     public function KunjunganLama()
     {
@@ -1098,13 +1130,13 @@ class BukutamuController extends Controller
     {
         return view('kunjungan.under');
     }
-    public function DetilTamu($idtamu)
+    public function DetilTamu($qrcode)
     {
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
-        $data_tamu = Mtamu::where('id',$idtamu)->first();
+        $data_tamu = Mtamu::where('kode_qr',$qrcode)->first();
         $Kunjungan = Kunjungan::with('tamu')
-                        ->where('tamu_id',$idtamu)
+                        ->where('tamu_id',$data_tamu->id)
                         ->orderBy('tanggal','asc')->get();
         //dd($Kunjungan);
         return view('detil.tamu',[
@@ -1113,5 +1145,9 @@ class BukutamuController extends Controller
             'MKunjungan' => $MKunjungan,
             'Mjkunjungan'=>$Mjkunjungan
         ]);
+    }
+    public function Daftar()
+    {
+        return view('users.daftar');
     }
 }

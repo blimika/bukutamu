@@ -274,17 +274,17 @@ $(".hapuskunjungan").click(function (e) {
 
 $('#ViewModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
-    var tamuid = button.data('id')
+    var kodeqr = button.data('kodeqr')
     //load dulu transaksinya
     $.ajax({
-        url : '{{route("pengunjung.cari","")}}/'+tamuid,
+        url : '{{route("pengunjung.cari","")}}/'+kodeqr,
         method : 'get',
         cache: false,
         dataType: 'json',
         success: function(data){
             if (data.status == true)
             {
-            $('#ViewModal .modal-body #tamu_id').text(tamuid)
+            $('#ViewModal .modal-body #tamu_id').text(data.hasil.id)
             $('#ViewModal .modal-body #tamu_nama').text(data.hasil.nama_lengkap)
             @if (Auth::user())
             $('#ViewModal .modal-body #tamu_kode').text(data.hasil.kode_qr)
@@ -310,7 +310,7 @@ $('#ViewModal').on('show.bs.modal', function (event) {
             }
             $('#ViewModal .modal-body #tamu_wa').attr("href",tamu_wa)
             $('#ViewModal .modal-body #tamu_alamat').text(data.hasil.alamat)
-            $('#ViewModal .modal-footer #tamu_timeline').attr("href","{{route('tamu.detil','')}}/"+tamuid)
+            $('#ViewModal .modal-footer #tamu_timeline').attr("href","{{route('tamu.detil','')}}/"+kodeqr)
             //$('#ViewModal .modal-body #kodeqr').attr("src",'{{asset("storage")}}/img/qrcode/'+data.hasil.kode_qr+'-'+tamuid+'.png')
                 if (data.hasil.url_foto != null)
                 {

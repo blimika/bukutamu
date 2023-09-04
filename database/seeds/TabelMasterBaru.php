@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class TabelMasterBaru extends Seeder
 {
@@ -25,6 +26,12 @@ class TabelMasterBaru extends Seeder
             ['id'=>4,'kode' => 3, 'nama' => 'E-Mail'],
             ['id'=>5,'kode' => 4, 'nama' => 'Whatsapp'],
             ['id'=>6,'kode' => 5, 'nama' => 'Telepon'],
+        ]);
+        DB::table('m_akses')->insert([
+            ['id'=>1,'ip' => '127.0.0.1', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
+            ['id'=>2,'ip' => '::1', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
+            ['id'=>3,'ip' => '10.52.6.31', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
+            ['id'=>4,'ip' => '202.46.65.114', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
         ]);
     }
 }

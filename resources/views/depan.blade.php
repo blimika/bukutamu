@@ -11,7 +11,9 @@
                 <li class="breadcrumb-item active">Bukutamu</li>
             </ol>
             <!--<button type="button" class="btn btn-info d-none d-lg-block m-l-15" data-toggle="modal" data-target="#TambahModal"><i class="fa fa-plus-circle"></i> Tambah</button>-->
+            @if (Auth::user() or Generate::CekAkses(\Request::getClientIp(true)))
             <a href="{{route('kunjungan.baru')}}" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Kunjungan Baru</a>
+            @endif
         </div>
     </div>
 </div>

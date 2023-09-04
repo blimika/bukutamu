@@ -29,7 +29,7 @@ use App\Feedback;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Generate;
 use QrCode;
-
+use App\MAkses;
 class MasterController extends Controller
 {
     //
@@ -108,12 +108,12 @@ class MasterController extends Controller
             {
                 $jk = '<span class="badge badge-info badge-pill">'.$record->jk->inisial.'</span>';
             }
-            
+
             else
             {
                 $jk = '<span class="badge badge-danger badge-pill">'.$record->jk->inisial.'</span>';
             }
-            
+
             $tgl_lahir = Carbon::parse($record->tgl_lahir)->isoFormat('D MMMM Y') .'<br />('.Carbon::parse($record->tgl_lahir)->age.' tahun)';
             $telepon = $record->telepon;
             $id_mkerja = $record->pekerjaan->nama .' - '.$record->kerja_detil;
@@ -141,18 +141,18 @@ class MasterController extends Controller
                 <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                 </a>';
             }
-          
+
             $aksi ='
                 <div class="btn-group">
                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="ti-settings"></i>
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewModal">View</a>
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMasterModal">Edit</a>
+                    <a class="dropdown-item" href="#" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">View</a>
+                    <a class="dropdown-item" href="#" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#EditMasterModal">Edit</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapuspengunjungmaster" href="#" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'">Hapus</a>
-                   
+
                 </div>
             </div>
             ';
@@ -185,7 +185,7 @@ class MasterController extends Controller
         echo json_encode($response);
         exit;
     }
-    public function SimpanPengunjung(Request $request)
+    public function UpdatePengunjung(Request $request)
     {
         $arr = array(
             'status'=>false,
@@ -235,9 +235,9 @@ class MasterController extends Controller
         return view('master.listpengunjung',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
         //return view('master.listpengunjung');
     }
-    public function CariPengunjung($id)
+    public function CariPengunjung($qrcode)
     {
-        $dataCek = Mtamu::where('id',$id)->first();
+        $dataCek = Mtamu::where('kode_qr',$qrcode)->first();
         $arr = array('hasil' => 'Data pengunjung tidak tersedia', 'status' => false);
         if ($dataCek) {
             //data tamu tersedia
@@ -682,5 +682,212 @@ class MasterController extends Controller
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
         return redirect()->route('layanan.sync');
+    }
+    public function AksesLayanan()
+    {
+        $data = MAkses::get();
+        return view('master.layanan-akses',['data'=>$data]);
+    }
+    public function SimpanAksesLayanan(Request $request)
+    {
+        $data = MAkses::where('ip',$request->ipaddress)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'IP Address ('.trim($request->ipaddress).') sudah ada'
+        );
+        if (!$data)
+        {
+            $data = new MAkses();
+            $data->ip = trim($request->ipaddress);
+            $data->flag = 0;
+            $data->save();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'IP Address '.$request->ipaddress.' berhasil ditambahkan'
+            );
+        }
+        return Response()->json($arr);
+    }
+    public function HapusAkses(Request $request)
+    {
+        $data = MAkses::where('id',$request->id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data IP Address ('.trim($request->ip).') tidak tersedia'
+        );
+        if ($data)
+        {
+            $ip = $data->ip;
+            $data->delete();;
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'IP Address '.$ip.' berhasil hapus'
+            );
+        }
+        return Response()->json($arr);
+    }
+    public function FlagAkses(Request $request)
+    {
+        $flag_akses = array(0=>'Edit','No-Edit');
+        $data = MAkses::where('id',$request->id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data IP Address ('.trim($request->ip).') tidak tersedia'
+        );
+        if ($data)
+        {
+            $flag_lama = $data->flag;
+            if ($data->flag == 0)
+            {
+                $flag_baru = 1;
+            }
+            else
+            {
+                $flag_baru = 0;
+            }
+            $data->flag = $flag_baru;
+            $data->update();;
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Flag IP Address ('.trim($request->ip).') diubah dari '.$flag_akses[$flag_lama].' ke '.$flag_akses[$flag_baru].' berhasil diupdate'
+            );
+        }
+        return Response()->json($arr);
+    }
+    public function UpdateAkses(Request $request)
+    {
+        $data = MAkses::where('id',$request->id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data IP Address ('.trim($request->ipaddress).') tidak tersedia'
+        );
+        if ($data)
+        {
+            $cek = MAkses::where('ip',$request->ipaddress)->where('id','<>',$request->id)->count();
+            if ($cek > 0)
+            {
+                //ada ip tsb
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Data IP Address ('.trim($request->ipaddress).') sudah digunakan'
+                );
+            }
+            else
+            {
+                $ip_lama = $data->ip;
+                $data->ip = $request->ipaddress;
+                $data->update();
+                $arr = array(
+                    'status'=>true,
+                    'hasil'=>'IP Address ('.$ip_lama.') ke ('.$request->ipaddress.') berhasil diupdate'
+                );
+            }
+        }
+        return Response()->json($arr);
+    }
+    public function PageListAkses(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = MAkses::select('count(*) as allcount')->count();
+        $totalRecordswithFilter = MAkses::select('count(*) as allcount')->where('ip', 'like', '%' .$searchValue . '%')->count();
+
+        // Fetch records
+        $records = MAkses::orderBy($columnName,$columnSortOrder)
+            ->where('m_akses.ip', 'like', '%' .$searchValue . '%')
+            ->select('m_akses.*')
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $data_arr = array();
+        $sno = $start+1;
+        foreach($records as $record){
+            $id = $record->id;
+            $ip = $record->ip;
+            $flag = $record->flag;
+            $created_at = $record->created_at;
+            $updated_at = $record->updated_at;
+            if ($record->flag == 0)
+            {
+                if (Auth::user()->level==20)
+                {
+                    $flagteks ='<a class="dropdown-item ubahflagakses" href="#" data-id="'.$record->id.'" data-ip="'.$record->ip.'" data-flag="'.$record->flag.'">Ubah Flag</a>';
+                }
+                else
+                {
+                    $flagteks = '';
+                }
+                $aksi ='
+                <div class="btn-group">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ti-settings"></i>
+                </button>
+                <div class="dropdown-menu">
+
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-ip="'.$record->ip.'" data-toggle="modal" data-target="#EditAksesModal">Edit</a>
+                    '.$flagteks.'
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item hapusakses" href="#" data-id="'.$record->id.'" data-ip="'.$record->ip.'">Hapus</a>
+                </div>
+                </div>
+                ';
+            }
+            else
+            {
+                if (Auth::user()->level == 20)
+                {
+                    $aksi ='
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti-settings"></i>
+                    </button>
+                    <div class="dropdown-menu">
+
+                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-ip="'.$record->ip.'" data-toggle="modal" data-target="#EditAksesModal">Edit</a>
+                        <a class="dropdown-item ubahflagakses" href="#" data-id="'.$record->id.'" data-ip="'.$record->ip.'" data-flag="'.$record->flag.'">Ubah Flag</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item hapusakses" href="#" data-id="'.$record->id.'" data-ip="'.$record->ip.'">Hapus</a>
+                    </div>
+                    </div>
+                    ';
+                }
+                else
+                {
+                    $aksi ='';
+                }
+            }
+            $data_arr[] = array(
+                "id" => $id,
+                "ip"=>$ip,
+                "flag"=> $flag,
+                "created_at"=>$created_at,
+                "updated_at"=>$updated_at,
+                "aksi"=>$aksi
+            );
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
+        );
+
+        echo json_encode($response);
+        exit;
     }
 }

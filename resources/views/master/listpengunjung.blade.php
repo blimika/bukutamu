@@ -276,4 +276,5 @@
     event.stopPropagation();
 });
 </script>
+@include('js')
 @stop

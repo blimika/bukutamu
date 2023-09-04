@@ -11,19 +11,19 @@ function cekUmur(birthDateString) {
 }
 $('#EditMasterModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
-    var tamuid = button.data('id')
+    var kodeqr = button.data('kodeqr')
     //load dulu transaksinya
     $.ajax({
-        url : '{{route("pengunjung.cari","")}}/'+tamuid,
+        url : '{{route("pengunjung.cari","")}}/'+kodeqr,
         method : 'get',
         cache: false,
         dataType: 'json',
         success: function(data){
             if (data.status == true)
             {
-                $('#EditMasterModal .modal-body #tamu_id_teks').text(tamuid);
-                $('#EditMasterModal .modal-body #tamu_id').val(tamuid);
-                $('#EditMasterModal .modal-footer #tamu_timeline').attr("href","{{route('tamu.detil','')}}/"+tamuid);
+                $('#EditMasterModal .modal-body #tamu_id_teks').text(data.hasil.tamu_id);
+                $('#EditMasterModal .modal-body #tamu_id').val(data.hasil.tamu_id);
+                $('#EditMasterModal .modal-footer #tamu_timeline').attr("href","{{route('tamu.detil','')}}/"+kodeqr);
                 $('#EditMasterModal .modal-body #jenis_identitas').val(data.hasil.id_identitas)
                 $('#EditMasterModal .modal-body #nomor_identitas').val(data.hasil.nomor_identitas)
                 $('#EditMasterModal .modal-body #nama_lengkap').val(data.hasil.nama_lengkap)
@@ -83,27 +83,27 @@ $('#EditMasterModal .modal-footer #updateDataPengunjung').on('click', function(e
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Nomor identitas harus terisi');
         return false;
-    }    
+    }
     else if (nama_lengkap == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Nama Lengkap harus terisi');
         return false;
-    } 
+    }
     else if (id_jk == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Pilih jenis kelamin');
         return false;
-    } 
+    }
     else if (tgl_lahir == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Tanggal lahir harus terisi');
         return false;
-    } 
+    }
     else if (cekUmur(tgl_lahir) <= 13)
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Umur minimal 14 tahun');
         return false;
-    } 
+    }
     else if (telepon == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Nomor telepon/HP harus terisi');
@@ -113,17 +113,17 @@ $('#EditMasterModal .modal-footer #updateDataPengunjung').on('click', function(e
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Pilih kewarganegaraan');
         return false;
-    } 
+    }
     else if (alamat == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Alamat harus terisi');
         return false;
-    } 
+    }
     else if (id_mdidik == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Pilih pendidikan');
         return false;
-    } 
+    }
     else if (id_kerja == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Pilih pekerjaan');
@@ -133,7 +133,7 @@ $('#EditMasterModal .modal-footer #updateDataPengunjung').on('click', function(e
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Pilih kategori pekerjaan');
         return false;
-    } 
+    }
     else if (pekerjaan_detil == "")
     {
         $('#EditMasterModal .modal-body #edit_pengunjung_error').text('Detil pekerjaan harus terisi');
@@ -158,7 +158,7 @@ $('#EditMasterModal .modal-footer #updateDataPengunjung').on('click', function(e
             }
         });
         $.ajax({
-            url : '{{route('pengunjung.simpan')}}',
+            url : '{{route('pengunjung.update')}}',
             method : 'post',
             data: {
                 tamu_id: tamu_id,
@@ -194,7 +194,7 @@ $('#EditMasterModal .modal-footer #updateDataPengunjung').on('click', function(e
                     Swal.fire(
                         'Error!',
                         ''+data.hasil+'',
-                        'danger'
+                        'error'
                     );
                 }
 
@@ -203,7 +203,7 @@ $('#EditMasterModal .modal-footer #updateDataPengunjung').on('click', function(e
                 Swal.fire(
                     'Error',
                     'Koneksi Error',
-                    'danger'
+                    'error'
                 );
             }
 

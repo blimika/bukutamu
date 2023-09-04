@@ -10,7 +10,9 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
                 <li class="breadcrumb-item active">Bukutamu</li>
             </ol>
+            @if (Auth::user() or Generate::CekAkses(\Request::getClientIp(true)))
             <a href="{{route('kunjungan.baru')}}" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Kunjungan Baru</a>
+            @endif
         </div>
     </div>
 </div>
@@ -50,28 +52,28 @@
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
-                                    <th>No</th>
+                                    <th>ID</th>
                                     <th>Photo</th>
                                     <th>Nama</th>
                                     <th>Keperluan/Data dicari</th>
                                     <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
-                                    @if (Auth::user())
-                                    <th>Aksi</th>
+                                    @if (Auth::user() && Auth::user()->level > 1)
+                                        <th>Aksi</th>
                                     @endif
 
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>No</th>
+                                    <th>ID</th>
                                     <th>Photo</th>
                                     <th>Nama</th>
                                     <th>Keperluan/Data dicari</th>
                                     <th>Feedback</th>
                                     <th>Waktu Kunjungan</th>
-                                    @if (Auth::user())
-                                    <th>Aksi</th>
+                                    @if (Auth::user() && Auth::user()->level > 1)
+                                        <th>Aksi</th>
                                     @endif
                                 </tr>
                             </tfoot>
@@ -101,7 +103,7 @@
                                                     </a>
                                                 @endif
                                             </td>
-                                            <td><a href="#" class="text-info" data-id="{{$item->tamu_id}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a>
+                                            <td><a href="#" class="text-info" data-kodeqr="{{$item->tamu->kode_qr}}" data-toggle="modal" data-target="#ViewModal">{{$item->tamu->nama_lengkap}}</a>
                                                 <br />
                                                 @if ($item->tamu->jk->inisial=='L')
                                                 <span class="badge badge-info badge-pill">{{$item->tamu->jk->inisial}}</span>
@@ -141,7 +143,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('dddd, D MMMM Y')}}</td>
-                                            @if (Auth::user())
+                                            @if (Auth::user() && Auth::user()->level > 1)
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -153,8 +155,11 @@
                                                         <a class="dropdown-item" href="#" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="modal" data-target="#EditKunjunganModal">Edit</a>
                                                         @endif
                                                         <a class="dropdown-item ubahjeniskunjungan" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-jnskunjungan="{{$item->jenis_kunjungan}}" data-fotokunjungan="@if ($item->file_foto) {{asset('storage/'.$item->file_foto)}} @else https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=Tidak+ada+foto+pengunjung @endif" data-toggle="tooltip" title="Ubah Jenis Kunjungan Ke @if ($item->jenis_kunjungan == 1) {{$Mjkunjungan[1]->nama}} @else {{$Mjkunjungan[0]->nama}} @endif">Ubah Jenis</a>
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item hapuskunjungan" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus</a>
+                                                        @if(Auth::user()->level > 10)
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item hapuskunjungan" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus</a>
+                                                        @endif
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -262,6 +267,4 @@
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
-
-@include('lama.js')
 @stop

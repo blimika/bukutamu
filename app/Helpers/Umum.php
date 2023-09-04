@@ -94,6 +94,11 @@ class Generate {
         $no_id = str_repeat('*', (strlen($nomor)-4)).substr($nomor, -4);
         return $no_id;
     }
+    public static function CekAkses($ip)
+    {
+        $count = \App\MAkses::where('ip',$ip)->count();
+        return $count;
+    }
     public static function Kode($length) {
         $kata='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $code_gen = '';

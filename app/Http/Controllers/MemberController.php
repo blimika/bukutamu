@@ -43,6 +43,10 @@ class MemberController extends Controller
         {
             $m_level = MasterLevel::where('kode','10')->get();
         }
+        elseif (Auth::User()->level==15)
+        {
+            $m_level = MasterLevel::where([['kode','>','1'],['kode','<','20']])->get();
+        }
         else
         {
             $m_level = MasterLevel::where('kode','>','1')->get();
@@ -127,8 +131,9 @@ class MemberController extends Controller
                     <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMemberModal">Edit</a>
                     <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#GantiPasswdModal">Ganti Password</a>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item ubahflagmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-flagmember="'.$record->flag.'">Ubah Flag</a>
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapusmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'">Hapus</a>
-
                 </div>
             </div>
             ';
@@ -196,6 +201,13 @@ class MemberController extends Controller
                     'hasil'=>'Operator tidak bisa menghapus admin'
                 );
             }
+            elseif (Auth::User()->level == '15' && Auth::user()->level == $data->level)
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Admin tidak bisa menghapus admin'
+                );
+            }
             else
             {
                 $nama = $data->name;
@@ -211,6 +223,58 @@ class MemberController extends Controller
                 );
             }
 
+        }
+        return Response()->json($arr);
+    }
+    public function UbahFlagMember(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data member tidak tersedia'
+        );
+        $data = User::where('id',$request->id)->first();
+        if ($data)
+        {
+            if (Auth::User()->username == $data->username)
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Tidak bisa mengubah flag sendiri'
+                );
+            }
+            elseif (Auth::User()->level < $data->level)
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Operator tidak bisa mengubah admin/superadmin flag'
+                );
+            }
+            else
+            {
+                $nama = $data->name;
+                $flag_sblm = $data->flag;
+                if ($flag_sblm == 0)
+                {
+                    $flag_baru = 1;
+                    $flag_sblm_nama = 'Nonaktif';
+                    $flag_baru_nama = 'Aktif';
+                    $email_kodever = 0;
+                }
+                else
+                {
+                    $flag_baru = 0;
+                    $flag_sblm_nama = 'Aktif';
+                    $flag_baru_nama = 'Nonaktif';
+                    $email_kodever = Str::random(10);
+                }
+                $data->flag = $flag_baru;
+                $data->email_kodever = $email_kodever;
+                $data->update();
+                $arr = array(
+                    'status'=>true,
+                    'hasil'=>'Flag data member an. '. $nama .' sudah diubah ke '. $flag_baru_nama,
+                );
+            }
         }
         return Response()->json($arr);
     }
@@ -244,8 +308,13 @@ class MemberController extends Controller
         #dd($request->all());
         return Response()->json($arr);
     }
+
     public function CariMember($id)
     {
+        $flag_nama = array(
+            0=>'Nonaktif',
+            1=>'Aktif',
+        );
         $dataCek = User::where('id',$id)->first();
         $arr = array('hasil' => 'Data member tidak tersedia', 'status' => false);
         if ($dataCek) {
@@ -338,7 +407,30 @@ class MemberController extends Controller
                     );
                 }
             }
-
+            if ($dataCek->lastlogin == NULL)
+            {
+                $lastlogin_nama = NULL;
+            }
+            else
+            {
+                $lastlogin_nama = Carbon::parse($dataCek->lastlogin)->isoFormat('dddd, D MMMM Y H:mm:ss');
+            }
+            if ($dataCek->created_at == NULL)
+            {
+                $created_at_nama = NULL;
+            }
+            else
+            {
+                $created_at_nama = Carbon::parse($dataCek->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss');
+            }
+            if ($dataCek->updated_at == NULL)
+            {
+                $updated_at_nama = NULL;
+            }
+            else
+            {
+                $updated_at_nama = Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss');
+            }
             $arr = array(
                 'hasil' => array(
                     'id'=> $dataCek->id,
@@ -346,15 +438,19 @@ class MemberController extends Controller
                     'username' => $dataCek->username,
                     'level' => $dataCek->level,
                     'level_nama' => $dataCek->mLevel->nama,
+                    'telepon' => $dataCek->telepon,
+                    'email' => $dataCek->email,
                     'lastlogin' => $dataCek->lastlogin,
-                    'lastlogin_nama'=>Carbon::parse($dataCek->lastlogin)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'lastlogin_nama'=>$lastlogin_nama,
                     'lastip' => $dataCek->lastip,
                     'user_foto' => $dataCek->user_foto,
                     'tamu_id'=>$dataCek->tamu_id,
+                    'flag'=>$dataCek->flag,
+                    'flag_nama'=>$flag_nama[$dataCek->flag],
                     'created_at'=>$dataCek->created_at,
-                    'created_at_nama'=>Carbon::parse($dataCek->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'created_at_nama'=>$created_at_nama,
                     'updated_at'=>$dataCek->updated_at,
-                    'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'updated_at_nama'=>$updated_at_nama,
                     'pengunjung'=>$arr_pengunjung,
                 ),
                 'status'=>true

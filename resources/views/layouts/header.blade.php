@@ -4,7 +4,7 @@
 <div class="navbar-header">
     <a class="navbar-brand" href="{{url('')}}">
         <!-- Logo icon -->
-        
+
             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
             <!-- Dark Logo icon -->
             <!--<img src="{{asset('assets/images/logo-bktamu.png')}}" alt="homepage" class="dark-logo" />-->
@@ -41,9 +41,9 @@
         <li class="nav-item dropdown u-pro">
             <a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="hidden-md-down">
                 @if (Auth::user())
-            {{Auth::user()->name}} 
-            @else 
-            MASUK 
+            {{Auth::user()->name}}
+            @else
+            MASUK
             @endif
             &nbsp;<i class="fa fa-angle-down"></i></span> </a>
             <div class="dropdown-menu dropdown-menu-right animated flipInY">
@@ -51,10 +51,12 @@
                 <a href="javascript:void(0)" class="dropdown-item"><i class="ti-user"></i> Profil</a>
                 <a href="javascript:void(0)" class="dropdown-item"><i class="ti-key"></i> Ganti Password</a>
                 <div class="dropdown-divider"></div>
-                <a href="{{route('logout')}}" class="dropdown-item"><i class="fa fa-power-off"></i> Logout</a>
+                <a href="{{route('logout')}}" class="dropdown-item"><i class="fas fa-power-off"></i> Logout</a>
                 @else
                 <!-- text-->
-                <a href="{{route('login')}}" class="dropdown-item"><i class="ti-user"></i> Login</a>
+                <a href="{{route('login')}}" class="dropdown-item"><i class="fas fa-power-off"></i> Login</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item"><i class="ti-user"></i> Daftar</a>
                 @endif
             </div>
         </li>
