@@ -17,8 +17,7 @@
                                 </span></a>
                                 <ul aria-expanded="false" class="collapse">
                                     @if (Auth::User())
-                                        <li><a href="javascript:void(0)"><i class="ti-user"></i> Profil</a></li>
-                                        <li><a href="javascript:void(0)"><i class="ti-key"></i> Ganti Password</a></li>
+                                        <li><a href="{{route('member.profil')}}"><i class="ti-user"></i> Profil</a></li>
                                         <li><a href="{{route('logout')}}"><i class="fa fa-power-off"></i> Logout</a></li>
                                     @else
                                         <li><a href="{{route('login')}}"><i class="fas fa-power-off"></i> Login</a></li>
@@ -61,13 +60,15 @@
                                 </ul>
                             </li>
                             @if (Auth::User())
-                            <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
-                                <ul aria-expanded="false" class="collapse">
-                                    <li><a href="{{route('pengunjung.list')}}">Pengunjung</a></li>
-                                    <li><a href="{{route('member.list')}}">Member</a></li>
-                                    <li><a href="{{route('layanan.akses')}}">Layanan Akses</a></li>
-                                </ul>
-                            </li>
+                                @if (Auth::User()->level > 1)
+                                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="{{route('pengunjung.list')}}">Pengunjung</a></li>
+                                        <li><a href="{{route('member.list')}}">Member</a></li>
+                                        <li><a href="{{route('layanan.akses')}}">Layanan Akses</a></li>
+                                    </ul>
+                                </li>
+                                @endif
                              @if (Auth::User()->level == 20)
                              <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Menu Admin</span></a>
                                 <ul aria-expanded="false" class="collapse">

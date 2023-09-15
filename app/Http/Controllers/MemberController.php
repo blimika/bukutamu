@@ -458,4 +458,63 @@ class MemberController extends Controller
         }
         return Response()->json($arr);
     }
+    public function Profil()
+    {
+        return view('member.profil');
+    }
+    public function UpdateProfil(Request $request)
+    {
+
+        $data = User::where('username',trim($request->username))->orWhere('email',trim($request->email))->orWhere('telepon',trim($request->telepon))->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Username ('.trim($request->username).'), E-Mail ('.trim($request->email).') atau Nomor HP ('.trim($request->telepon).') sudah digunakan'
+        );
+        if ($data && ($data->id == Auth::user()->id))
+        {
+            //$email_kodever = Str::random(10);
+            //simpan data member
+            $data->name = trim($request->name);
+            $data->username = trim($request->username);
+            $data->email = trim($request->email);
+            $data->telepon = trim($request->telepon);
+            $data->update();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data member an. '.$request->username.' berhasil diupdate'
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
+    }
+    public function KaitkanMember(Request $request)
+    {
+        $data = Mtamu::where('kode_qr',$request->kodeqr)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data pengunjung tidak tersedia/sudah dikaitkan'
+        );
+        if ($data && ($data->user_id == 0))
+        {
+
+            //update Mtamu
+            $data->user_id = trim($request->user_id);
+            $data->update();
+            //update User
+            $data_user = User::where('id',$request->user_id)->first();
+            if ($data_user->user_foto == null)
+            {
+                $data_user->user_foto = $data->tamu_foto;
+            }
+            $data_user->tamu_id = $data->id;
+            $data_user->update();
+
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data member an. '.Auth::user()->name.' berhasil dikaitkan ke '.$data->nama_lengkap,
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
+    }
 }

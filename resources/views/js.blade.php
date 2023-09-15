@@ -355,10 +355,11 @@ $('#ViewModal').on('show.bs.modal', function (event) {
 $('#FeedbackModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var tamuid = button.data('tamuid')
+    var kodeqr = button.data('kodeqr')
     var kunjunganid = button.data('kunjunganid')
     //load dulu transaksinya
     $.ajax({
-        url : '{{route("pengunjung.cari","")}}/'+tamuid,
+        url : '{{route("pengunjung.cari","")}}/'+kodeqr,
         method : 'get',
         cache: false,
         dataType: 'json',

@@ -55,6 +55,7 @@
                                     <th>Pekerjaan</th>
                                     <th>Jumlah Kunjungan</th>
                                     @if (Auth::user()->level > 1)
+                                    <th>User ID</th>
                                     <th>Aksi</th>
                                     @endif
                                 </tr>
@@ -71,6 +72,7 @@
                                     <th>Pekerjaan</th>
                                     <th>Jumlah Kunjungan</th>
                                     @if (Auth::user()->level > 1)
+                                    <th>User ID</th>
                                     <th>Aksi</th>
                                     @endif
                                 </tr>
@@ -166,6 +168,7 @@
                 { data: 'email' },
                 { data: 'id_mkerja' },
                 { data: 'total_kunjungan' },
+                { data: 'user_id' },
                 { data: 'aksi', orderable: false },
              ],
             dom: 'Bfrtip',

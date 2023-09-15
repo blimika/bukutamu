@@ -79,6 +79,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/member/getdata/{id}', 'MemberController@CariMember')->name('member.cari');
     //kunjungan terjadwal
     Route::get('/kunjunganterjadwal', 'BukutamuController@KunjunganTerjadwal')->name('kunjungan.terjadwal');
+    //profil user
+    Route::get('/member/profil', 'MemberController@Profil')->name('member.profil');
+    Route::post('/member/gantipasswd', 'MemberController@GantiPasswd')->name('member.gantipasswd');
+    Route::post('/member/updateprofil', 'MemberController@UpdateProfil')->name('member.updateprofil');
+    Route::post('/member/kaitkan', 'MemberController@KaitkanMember')->name('member.kaitkan');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

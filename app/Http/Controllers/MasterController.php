@@ -120,6 +120,7 @@ class MasterController extends Controller
             $kode_qr = $record->kode_qr;
             $alamat = $record->alamat;
             $total_kunjungan = $record->total_kunjungan;
+            $user_id = $record->user_id;
             if ($record->tamu_foto != NULL)
             {
                 if (Storage::disk('public')->exists($record->tamu_foto))
@@ -170,6 +171,7 @@ class MasterController extends Controller
                 "kode_qr"=>$kode_qr,
                 "alamat"=>$alamat,
                 "total_kunjungan"=>$total_kunjungan,
+                "user_id"=>$user_id,
                 "aksi"=>$aksi,
                 "tamu_foto" => $tamu_foto
             );

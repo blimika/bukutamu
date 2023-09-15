@@ -38,6 +38,6 @@ class Mtamu extends Model
     }
     public function member()
     {
-        return $this->belongsTo('App\User', 'id', 'tamu_id');
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
 }

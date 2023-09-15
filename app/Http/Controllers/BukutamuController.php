@@ -243,6 +243,7 @@ class BukutamuController extends Controller
             $data->alamat = $request->alamat;
             $data->created_at = \Carbon\Carbon::now();
             $data->kode_qr = $qrcode;
+            $data->total_kunjungan = 1;
             $data->save();
             $id_tamu = $data->id;
             $waktu_hari_ini = date('Ymd_His');
@@ -397,6 +398,11 @@ class BukutamuController extends Controller
             $dataKunjungan->file_foto = $namafile_kunjungan;
             $dataKunjungan->flag_edit_tamu = 1; //flag_tidak bisa di sync
             $dataKunjungan->save();
+            //tambah counter total_kunjungan
+            $total_kunjungan = $data->total_kunjungan;
+            $data->total_kunjungan = $total_kunjungan+1;
+            $data->update();
+            //batas
             if ($is_pst>0) {
                 //isi tabel pst_layanan, pst_manfaat dan pst_fasilitas
                 //$MLay = MLay::orderBy('id','asc')->get();

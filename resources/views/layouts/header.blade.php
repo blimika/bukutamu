@@ -48,8 +48,7 @@
             &nbsp;<i class="fa fa-angle-down"></i></span> </a>
             <div class="dropdown-menu dropdown-menu-right animated flipInY">
                 @if (Auth::user())
-                <a href="javascript:void(0)" class="dropdown-item"><i class="ti-user"></i> Profil</a>
-                <a href="javascript:void(0)" class="dropdown-item"><i class="ti-key"></i> Ganti Password</a>
+                <a href="{{route('member.profil')}}" class="dropdown-item"><i class="ti-user"></i> Profil</a>
                 <div class="dropdown-divider"></div>
                 <a href="{{route('logout')}}" class="dropdown-item"><i class="fas fa-power-off"></i> Logout</a>
                 @else

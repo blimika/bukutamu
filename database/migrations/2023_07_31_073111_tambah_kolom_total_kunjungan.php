@@ -16,6 +16,7 @@ class TambahKolomTotalKunjungan extends Migration
         Schema::table('mtamu', function (Blueprint $table) {
             //
             $table->tinyInteger('total_kunjungan')->unsigned()->default(0)->after('tamu_foto');
+            $table->bigInteger('user_id')->unsigned()->default(0)->after('total_kunjungan');
         });
     }
 
