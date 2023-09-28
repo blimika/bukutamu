@@ -24,6 +24,8 @@ Auth::routes([
 
 Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::get('/daftar', 'BukutamuController@Daftar')->name('daftar');
+Route::post('/simpandaftar', 'BukutamuController@MemberDaftar')->name('member.daftar');
+Route::post('/lupapasswd', 'BukutamuController@LupaPasswd')->name('member.lupapasswd');
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
 Route::get('/tambahkunjunganbaru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');
@@ -84,6 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/member/gantipasswd', 'MemberController@GantiPasswd')->name('member.gantipasswd');
     Route::post('/member/updateprofil', 'MemberController@UpdateProfil')->name('member.updateprofil');
     Route::post('/member/kaitkan', 'MemberController@KaitkanMember')->name('member.kaitkan');
+    Route::post('/member/putuskan', 'MemberController@PutuskanMember')->name('member.putuskan');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

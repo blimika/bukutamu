@@ -55,7 +55,7 @@
                 <!-- text-->
                 <a href="{{route('login')}}" class="dropdown-item"><i class="fas fa-power-off"></i> Login</a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item"><i class="ti-user"></i> Daftar</a>
+                <a href="{{ route('daftar') }}" class="dropdown-item"><i class="ti-user"></i> Daftar</a>
                 @endif
             </div>
         </li>

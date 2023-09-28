@@ -101,6 +101,15 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
     e.preventDefault();
     var kodeqr = $('#KaitkanModal .modal-body #kodeqr').val();
     var user_id = $('#KaitkanModal .modal-body #user_id').val();
+    var check_gantiphoto = $('#KaitkanModal .modal-body #gantiphoto').is(':checked');
+    if (check_gantiphoto == true)
+    {
+        var gantiphoto = 1;
+    }
+    else 
+    {
+        var gantiphoto = 0;
+    }
     if (kodeqr == "")
     {
         $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR harus terisi');
@@ -120,6 +129,7 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
             data: {
                 user_id: user_id,
                 kodeqr: kodeqr,
+                gantiphoto: gantiphoto
             },
             cache: false,
             dataType: 'json',
@@ -156,4 +166,71 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
         });
     }
 });
+//putuskan koneksi ke tamu
+$(".putuskan").click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    var nama = $(this).data('nama');
+    var kodeqr = $(this).data('kodeqr');
+    Swal.fire({
+                title: 'Putuskan koneksi?',
+                text: "Data pengunjung "+nama+" akan putuskan kaitan",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Putuskan'
+            }).then((result) => {
+                if (result.value) {
+                    //response ajax disini
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url : '{{route('member.putuskan')}}',
+                        method : 'post',
+                        data: {
+                            id: id,
+                            nama: nama,
+                            kodeqr: kodeqr
+                        },
+                        cache: false,
+                        dataType: 'json',
+                        success: function(data){
+                            if (data.status == true)
+                            {
+                                Swal.fire(
+                                    'Berhasil!',
+                                    ''+data.hasil+'',
+                                    'success'
+                                ).then(function() {
+                                    location.reload();
+                                });
+                            }
+                            else
+                            {
+                                Swal.fire(
+                                    'Error!',
+                                    ''+data.hasil+'',
+                                    'error'
+                                );
+                            }
+
+                        },
+                        error: function(){
+                            Swal.fire(
+                                'Error',
+                                'Koneksi Error',
+                                'error'
+                            );
+                        }
+
+                    });
+
+                }
+            })
+});
+//batas koneksi
 </script>

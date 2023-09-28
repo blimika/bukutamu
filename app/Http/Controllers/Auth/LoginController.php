@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -49,6 +49,34 @@ class LoginController extends Controller
         //$dataTahunDasar = \App\TahunDasar::orderBy('tahun', 'asc')->get();
         return view('users.login');
     }
+    protected function authenticate(Request $request)
+    {
+        $count = User::where([['username','=',$request->username],['flag',1]])->count();
+        if ($count>0)
+        {
+            $dd_cek_username = User::where([['username','=',$request->username],['flag',1]])->first();
+             //cek pake auth login
+             $this->validate($request, [
+                $this->username() => 'required|string',
+                'password' => 'required|string',
+            ]);
+
+            if (auth()->attempt(['username' => $request->username, 'password' => $request->password, 'flag' => 1])) {
+                //JIKA BERHASIL, MAKA REDIRECT KE HALAMAN HOME
+                return view('depan');
+            }
+            //JIKA SALAH, MAKA KEMBALI KE LOGIN DAN TAMPILKAN NOTIFIKASI
+            Session::flash('err_password', 'Password tidak benar!');
+            return redirect()->route('login');
+        }
+        else {
+            //tidak ada username
+            //return view('login.index')->withError('Username tidak terdaftar');
+            Session::flash('err_username', 'Username tidak terdaftar atau belum aktif, silakan cek email untuk aktivasi');
+            return redirect()->route('login');
+        }
+
+    }
     protected function validateLogin(Request $request)
     {
         $this->validate($request, [
@@ -65,8 +93,10 @@ class LoginController extends Controller
     }
     protected function credentials(Request $request)
     {
-        return $request->only($this->username(), 'password');
+        //return $request->only($this->username(), 'password');
+        return ['username' => $request->{$this->username()}, 'password' => $request->password, 'flag' => 1];
     }
+   
     public function authenticated(Request $request, $user)
     {
         $user->lastlogin = Carbon::now()->toDateTimeString();

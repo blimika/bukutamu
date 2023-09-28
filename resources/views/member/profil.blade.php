@@ -99,7 +99,7 @@
                                     @if (Auth::user()->tamu_id == 0)
                                         <span class="badge badge-pill badge-danger">belum terkoneksi</span> <button class="btn btn-sm btn-rounded btn-success" id="KaitanPengunjung" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}" data-toggle="modal" data-target="#KaitkanModal"><i class="fas fa-bolt" data-toggle="tooltip" title="Kaitkan data pengunjung"></i> KAITKAN</button>
                                     @else
-                                        <span class="badge badge-pill badge-success putuskan">sudah terkoneksi</span> <button class="btn btn-sm btn-rounded btn-danger" id="KaitanPengunjung" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-bolt" data-toggle="tooltip" title="Putuskan kaitan"></i> PUTUSKAN</button>
+                                        <span class="badge badge-pill badge-success">sudah terkoneksi</span> <button class="btn btn-sm btn-rounded btn-danger putuskan" id="PutuskanKoneksi" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}" data-kodeqr="{{ Auth::user()->mtamu->kode_qr }}"><i class="fas fa-bolt" data-toggle="tooltip" title="Putuskan kaitan"></i> PUTUSKAN</button>
                                     @endif
                                 </dd>
                             </dl>

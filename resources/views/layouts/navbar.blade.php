@@ -21,7 +21,7 @@
                                         <li><a href="{{route('logout')}}"><i class="fa fa-power-off"></i> Logout</a></li>
                                     @else
                                         <li><a href="{{route('login')}}"><i class="fas fa-power-off"></i> Login</a></li>
-                                        <li><a href="#"><i class="fas fa-power-off"></i> Daftar</a></li>
+                                        <li><a href="{{ route('daftar') }}"><i class="fas fa-power-off"></i> Daftar</a></li>
                                     @endif
                                 </ul>
                             </li>

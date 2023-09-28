@@ -11,12 +11,15 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/favicon.png')}}">
-    <title>Elite Admin Template - The Ultimate Multipurpose admin template</title>
+    <title>Daftar Bukutamu - BPS Provinsi NTB</title>
+    
     <!-- page css -->
-    <link href="{{asset('assets/node_modules/register-steps/steps.css')}}" rel="stylesheet">
-    <link href="{{asset('dist/css/pages/register3.css')}}" rel="stylesheet">
+    <link href="{{ asset('dist/css/pages/login-register-lock.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="{{asset('dist/css/style.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
+    <!--alerts CSS -->
+    <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -25,7 +28,7 @@
 <![endif]-->
 </head>
 
-<body class="skin-default card-no-border">
+<body>
     <!-- ============================================================== -->
     <!-- Preloader - style you can find in spinners.css -->
     <!-- ============================================================== -->
@@ -38,49 +41,56 @@
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    <section id="wrapper" class="step-register">
-        <div class="register-box">
-            <div class="">
-                <a href="javascript:void(0)" class="text-center m-b-40"><img src="{{asset('assets/images/logo-bktamu.png')}}" alt="Home" /><br/><img src="{{asset('assets/images/tulisan-bukutamu.png')}}" alt="Home" /></a>
-                <!-- multistep form -->
-                <form id="msform">
-                    <!-- progressbar -->
-                    <ul id="eliteregister">
-                        <li class="active">Akun info</li>
-                        <li>Data profil</li>
-                        <li>Keperluan</li>
-                    </ul>
-                    <!-- fieldsets -->
-                    <fieldset>
-                        <h2 class="fs-title">Akun Info</h2>
-                        <h3 class="fs-subtitle">Halaman 1</h3>
-                        <input type="text" name="username" placeholder="Username" autocomplete="off" required/>
-                        <input type="text" name="email" placeholder="Email" autocomplete="off" required />
-                        <input type="password" name="passwd" placeholder="Password" required />
-                        <input type="password" name="ulangi_passwd" placeholder="Ulangi Password" required />
-                        <input type="button" name="next" class="next action-button" value="Selanjutnya" />
-                    </fieldset>
-                    <fieldset>
-                        <h2 class="fs-title">Data Profil</h2>
-                        <h3 class="fs-subtitle">Halaman 2</h3>
-                        <input type="text" name="twitter" placeholder="Twitter" />
-                        <input type="text" name="facebook" placeholder="Facebook" />
-                        <input type="text" name="gplus" placeholder="Google Plus" />
-                        <input type="button" name="previous" class="previous action-button" value="Sebelumnya" />
-                        <input type="button" name="next" class="next action-button" value="Selanjutnya" />
-                    </fieldset>
-                    <fieldset>
-                        <h2 class="fs-title">Keperluan</h2>
-                        <h3 class="fs-subtitle">Halaman 3</h3>
-                        <input type="text" name="fname" placeholder="First Name" />
-                        <input type="text" name="lname" placeholder="Last Name" />
-                        <input type="text" name="phone" placeholder="Phone" />
-                        <textarea name="address" placeholder="Address"></textarea>
-                        <input type="button" name="previous" class="previous action-button" value="Sebelumnya" />
-                        <input type="submit" name="submit" class="submit action-button" value="Kirim" />
-                    </fieldset>
+    <section id="wrapper" class="login-register login-sidebar" style="background-image:url({{ asset('assets/images/background/login-register.jpg') }});">
+        <div class="login-box card">
+            <div class="card-body">
+                <form class="form-horizontal form-material" id="loginform" action="index.html">
+                    <div class="text-center">
+                        <a href="{{ url('') }}" class="text-center m-b-40"><img src="{{asset('assets/images/logo-bktamu.png')}}" alt="Home" /><br/><img src="{{asset('assets/images/tulisan-bukutamu.png')}}" alt="Home" /></a>
+                    </div>
+                    <h3 class="box-title m-t-40 m-b-0">Daftar Sekarang</h3><small>Bukutamu BPS Provinsi Nusa Tenggara Barat</small>
+                    <div class="form-group m-t-20">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="text" required="" name="nama_lengkap" placeholder="Nama Lengkap">
+                        </div>
+                    </div>
+                    <div class="form-group m-t-20">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="text" required=""name="username"  placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="form-group m-t-20">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="text" required="" name="telepon" placeholder="Nomor Telepon">
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="text" required="" name="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="password" required="" name="passwd" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="password" required="" name="ulangi_passwd" placeholder="Ulangi Password">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group text-center m-t-20">
+                        <div class="col-xs-12">
+                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">DAFTAR</button>
+                        </div>
+                    </div>
+                    <div class="form-group m-b-0">
+                        <div class="col-sm-12 text-center">
+                            <p>Sudah memiliki akun? <a href="{{ route('login') }}" class="text-info m-l-5"><b>Masuk</b></a></p>
+                        </div>
+                    </div>
                 </form>
-                <div class="clear"></div>
             </div>
         </div>
     </section>
@@ -90,27 +100,26 @@
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="{{asset('assets/node_modules/jquery/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{ asset('assets/node_modules/jquery/jquery-3.2.1.min.js') }}"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="{{asset('assets/node_modules/popper/popper.min.js')}}"></script>
-    <script src="{{asset('assets/node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-    <!-- Menu Plugin JavaScript -->
-    <script src="{{asset('assets/node_modules/register-steps/jquery.easing.min.js')}}"></script>
-    <script src="{{asset('assets/node_modules/register-steps/register-init.js')}}"></script>
+    <script src="{{ asset('assets/node_modules/popper/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <!-- Sweet-Alert  -->
+    <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
     <script type="text/javascript">
-    $(function() {
-        $(".preloader").fadeOut();
-    });
-    $(function() {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
-    // ==============================================================
-    // Login and Recover Password
-    // ==============================================================
-    $('#to-recover').on("click", function() {
-        $("#loginform").slideUp();
-        $("#recoverform").fadeIn();
-    });
+        $(function() {
+            $(".preloader").fadeOut();
+        });
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+        // ============================================================== 
+        // Login and Recover Password 
+        // ============================================================== 
+        $('#to-recover').on("click", function() {
+            $("#loginform").slideUp();
+            $("#recoverform").fadeIn();
+        });
     </script>
 </body>
 

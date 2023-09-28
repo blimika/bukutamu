@@ -6,13 +6,20 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal m-t-4" name="formKaitkanPengunjung" id="formKaitkanPengunjung" action="{{ route('member.simpan') }}"  method="POST">
+                <form class="form-horizontal m-t-4" name="formKaitkanPengunjung" id="formKaitkanPengunjung" action="#"  method="POST">
 
                     <div class="form-group">
                         <label for="kodeqr">Kode QR Pengunjung</label>
                         <input type="text" class="form-control" id="kodeqr" aria-describedby="kodeqr" autocomplete="off" placeholder="Kode QR Pengunjung" required>
                     </div>
-
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" name="gantiphoto" class="custom-control-input" id="gantiphoto" value="1">
+                                <label class="custom-control-label" for="gantiphoto">Photo profil diganti</label> 
+                            </div> 
+                        </div>
+                    </div>
                     <div class="form-group">
                         <span id="kaitkan_error" class="text-danger"></span>
                     </div>

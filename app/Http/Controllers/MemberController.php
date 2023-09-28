@@ -41,15 +41,15 @@ class MemberController extends Controller
     {
         if (Auth::User()->level==10)
         {
-            $m_level = MasterLevel::where('kode','10')->get();
+            $m_level = MasterLevel::where('kode','<','15')->get();
         }
         elseif (Auth::User()->level==15)
         {
-            $m_level = MasterLevel::where([['kode','>','1'],['kode','<','20']])->get();
+            $m_level = MasterLevel::where('kode','<','20')->get();
         }
         else
         {
-            $m_level = MasterLevel::where('kode','>','1')->get();
+            $m_level = MasterLevel::get();
         }
         $data_users = User::get();
         return view('member.list',['mlevel'=>$m_level,'dataUser'=>$data_users]);
@@ -496,13 +496,12 @@ class MemberController extends Controller
         );
         if ($data && ($data->user_id == 0))
         {
-
             //update Mtamu
             $data->user_id = trim($request->user_id);
             $data->update();
             //update User
             $data_user = User::where('id',$request->user_id)->first();
-            if ($data_user->user_foto == null)
+            if ($data_user->user_foto == NULL or $request->gantiphoto == "1")
             {
                 $data_user->user_foto = $data->tamu_foto;
             }
@@ -511,10 +510,37 @@ class MemberController extends Controller
 
             $arr = array(
                 'status'=>true,
-                'hasil'=>'Data member an. '.Auth::user()->name.' berhasil dikaitkan ke '.$data->nama_lengkap,
+                'hasil'=>'Data member an. <b>'.Auth::user()->name.'</b> berhasil dikaitkan ke '.$data->nama_lengkap,
             );
         }
         #dd($request->all());
+        return Response()->json($arr);
+    }
+    public function PutuskanMember(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data pengunjung tidak tersedia/sudah dikaitkan'
+        );
+        $data = Mtamu::where('kode_qr',$request->kodeqr)->first();
+        if ($data && ($data->user_id != 0))
+        {
+            //akan dieksekusi kalo user_id di data mtamu tidak nol
+            //update Mtamu
+            $data->user_id = 0;
+            $data->update();
+            //update user 
+            $data_user = User::where('id',$request->id)->first();
+            $data_user->tamu_id = 0;
+            $data_user->update();
+
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data member an. <b>'.Auth::user()->name.'</b> berhasil dihapus kaitan',
+            );
+
+        }
+
         return Response()->json($arr);
     }
 }

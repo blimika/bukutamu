@@ -1156,4 +1156,12 @@ class BukutamuController extends Controller
     {
         return view('users.daftar');
     }
+    public function MemberDaftar(Request $request)
+    {
+
+    }
+    public function LupaPasswd(Request $request)
+    {
+        
+    }
 }
