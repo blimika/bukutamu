@@ -1192,6 +1192,7 @@ class BukutamuController extends Controller
             $body->telepon = $data->telepon;
             $body->email_kodever = $data->email_kodever;
             $body->tanggal_buat = Carbon::parse($data->created_at)->format('Y-m-d H:i:s');
+            $body->link_aktivasi = route('member.aktivasi',[$body->username,$body->email_kodever]);
             //batas
             $arr = array(
                 'status'=>true,
@@ -1236,5 +1237,28 @@ class BukutamuController extends Controller
         }
         #dd($request->all());
         return Response()->json($arr);
+    }
+    public function MemberAktivasi($user,$kode)
+    {
+        $data = User::where([['username',$user],['email_kodever',$kode],['flag','0']])->first();
+        if ($data)
+        {
+            //user belum aktivasi
+            $data->flag = 1;
+            $data->email_kodever = 0;
+            $data->update();
+            $pesan_error = 'user berhasil di aktivasi';
+            $warna_error = 'success';
+        }
+        else 
+        {
+            //user tidak ditemukan atau sudah teraktivasi
+            $pesan_error = 'user tidak ditemukan/user sudah teraktivasi';
+            $warna_error = 'danger';
+            
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return view('users.aktivasi');
     }
 }

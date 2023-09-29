@@ -26,7 +26,7 @@ Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::get('/daftar', 'BukutamuController@Daftar')->name('daftar');
 Route::post('/simpandaftar', 'BukutamuController@MemberDaftar')->name('member.daftar');
 Route::post('/lupapasswd', 'BukutamuController@LupaPasswd')->name('member.lupapasswd');
-Route::get('/member/aktivasi/{kode}', 'BukutamuController@MemberAktivasi')->name('member.aktivasi');
+Route::get('/member/aktivasi/{user}/{kode}', 'BukutamuController@MemberAktivasi')->name('member.aktivasi');
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
 Route::get('/tambahkunjunganbaru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');

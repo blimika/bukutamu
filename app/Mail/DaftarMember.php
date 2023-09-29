@@ -32,6 +32,6 @@ class DaftarMember extends Mailable
         //return $this->markdown('emails.daftarmember')->with('body',$this->body);
         return $this->from('noreply@bpsntb.id','BUKUTAMU')
                     ->subject('[NOREPLY] Pendaftaran Member Baru')
-                    ->view('emails.daftarmember');
+                    ->markdown('emails.daftarmember')->with('body',$this->body);
     }
 }
