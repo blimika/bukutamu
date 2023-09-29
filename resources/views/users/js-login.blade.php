@@ -20,11 +20,6 @@
                 return false;
             }
         }
-
-        //check username, email, nomor hp dulu sudah ada belum
-
-        //$('#TambahMember .modal-body #formEditMasterPengunjung').submit();
-        //ajax responsen
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

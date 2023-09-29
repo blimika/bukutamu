@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class DaftarMember extends Mailable implements ShouldQueue
+class DaftarMember extends Mailable
 {
     use Queueable, SerializesModels;
     public $body;
@@ -32,6 +32,6 @@ class DaftarMember extends Mailable implements ShouldQueue
         //return $this->markdown('emails.daftarmember')->with('body',$this->body);
         return $this->from('noreply@bpsntb.id','BUKUTAMU')
                     ->subject('[NOREPLY] Pendaftaran Member Baru')
-                    ->markdown('emails.daftarmember')->with('body',$this->body);
+                    ->view('emails.daftarmember');
     }
 }

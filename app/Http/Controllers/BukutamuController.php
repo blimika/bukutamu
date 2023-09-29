@@ -1192,15 +1192,15 @@ class BukutamuController extends Controller
             $body->telepon = $data->telepon;
             $body->email_kodever = $data->email_kodever;
             $body->tanggal_buat = Carbon::parse($data->created_at)->format('Y-m-d H:i:s');
-            if (ENV('APP_KIRIM_MAIL') == true)
-            {
-                Mail::to($data->email)->send(new DaftarMember($body));
-            }
             //batas
             $arr = array(
                 'status'=>true,
                 'hasil'=>'Data member an. '.$request->name.' ('.$request->username.') berhasil ditambahkan, silakan check email untuk aktivasi'
             );
+            if (ENV('APP_KIRIM_MAIL') == true)
+            {
+                Mail::to($data->email)->send(new DaftarMember($body));
+            }
         }
         #dd($request->all());
         return Response()->json($arr);
