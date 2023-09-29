@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/favicon.png')}}">
     <title>Login to Bukutamu</title>
@@ -17,8 +18,9 @@
     <link href="{{asset('dist/css/pages/login-register-lock.css')}}" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{asset('dist/css/style.min.css')}}" rel="stylesheet">
-    
-    
+
+    <!--alerts CSS -->
+    <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -72,11 +74,11 @@
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="customCheck1">
                                     <label class="custom-control-label" for="customCheck1">Remember me</label>
-                                </div> 
-                                <div class="ml-auto">
-                                    <a href="javascript:void(0)" id="to-recover" class="text-muted"><i class="fas fa-lock m-r-5"></i> Lupa Password?</a> 
                                 </div>
-                            </div>   
+                                <div class="ml-auto">
+                                    <a href="javascript:void(0)" id="to-recover" class="text-muted"><i class="fas fa-lock m-r-5"></i> Lupa Password?</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     @if (Session::has('err_username'))
@@ -97,7 +99,8 @@
                         </div>
                     </div>
                 </form>
-                <form class="form-horizontal" id="recoverform" action="{{ route('member.lupapasswd') }}">
+                <form class="form-horizontal" id="recoverform" method="POST" action="{{ route('member.lupapasswd') }}">
+                    @csrf
                     <div class="form-group ">
                         <div class="col-xs-12">
                             <h3>Lupa Password</h3>
@@ -106,12 +109,17 @@
                     </div>
                     <div class="form-group ">
                         <div class="col-xs-12">
-                            <input class="form-control" type="text" required="" placeholder="Email">
+                            <input class="form-control" type="text" required="" name="lupa_email" id="lupa_email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <span id="lupa_error" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group text-center m-t-20">
                         <div class="col-xs-12">
-                            <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button>
+                            <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" id="ResetPasswd" type="submit">Reset</button>
                         </div>
                     </div>
                 </form>
@@ -128,7 +136,10 @@
     <!-- Bootstrap tether Core JavaScript -->
     <script src="{{asset('assets/node_modules/popper/popper.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <!-- Sweet-Alert  -->
+    <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
     <!--Custom JavaScript -->
+    @include('users.js-login')
     <script type="text/javascript">
         $(function() {
             $(".preloader").fadeOut();
@@ -136,15 +147,15 @@
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
         });
-        // ============================================================== 
-        // Login and Recover Password 
-        // ============================================================== 
+        // ==============================================================
+        // Login and Recover Password
+        // ==============================================================
         $('#to-recover').on("click", function() {
             $("#loginform").slideUp();
             $("#recoverform").fadeIn();
         });
     </script>
-    
+
 </body>
 
 </html>

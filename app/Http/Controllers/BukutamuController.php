@@ -30,7 +30,13 @@ use Illuminate\Support\Facades\Storage;
 use App\Helpers\Generate;
 use QrCode;
 use App\MAkses;
-
+use App\User;
+use App\MasterLevel;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DaftarMember;
+use App\Mail\ResetPasswd;
 class BukutamuController extends Controller
 {
     //
@@ -1158,10 +1164,77 @@ class BukutamuController extends Controller
     }
     public function MemberDaftar(Request $request)
     {
-
+        $data = User::where('username',trim($request->username))->orWhere('email',trim($request->email))->orWhere('telepon',trim($request->telepon))->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Username ('.trim($request->username).'), E-Mail ('.trim($request->email).') atau Nomor HP ('.trim($request->telepon).') sudah digunakan'
+        );
+        if (!$data)
+        {
+            //$email_kodever = Str::random(10);
+            //simpan data member
+            $data = new User();
+            $data->level = 1;
+            $data->name = trim($request->name);
+            $data->username = trim($request->username);
+            $data->email = trim($request->email);
+            $data->telepon = trim($request->telepon);
+            $data->password = bcrypt($request->passwd);
+            $data->email_kodever = Str::random(10);
+            $data->flag = 0;
+            $data->tamu_id = 0;
+            $data->save();
+            //kirim mail
+            $body = new \stdClass();
+            $body->nama_lengkap = $data->name;
+            $body->username = $data->username;
+            $body->email = $data->email;
+            $body->telepon = $data->telepon;
+            $body->email_kodever = $data->email_kodever;
+            $body->tanggal_buat = Carbon::parse($data->created_at)->format('Y-m-d H:i:s');
+            if (ENV('APP_KIRIM_MAIL') == true)
+            {
+                Mail::to($data->email)->send(new DaftarMember($body));
+            }
+            //batas
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data member an. '.$request->name.' ('.$request->username.') berhasil ditambahkan, silakan check email untuk aktivasi'
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
     }
     public function LupaPasswd(Request $request)
     {
-        
+        $data = User::where('email',trim($request->email))->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Username tidak ditemukan'
+        );
+        if ($data)
+        {
+            $passwd_baru = Str::random(10);
+            //simpan data member
+            $data->password = bcrypt($passwd_baru);
+            $data->update();
+            //kirim mail
+            $body = new \stdClass();
+            $body->nama_lengkap = $data->name;
+            $body->username = $data->username;
+            $body->passwd_baru = $passwd_baru;
+            $body->tanggal_minta = Carbon::parse(NOW())->format('Y-m-d H:i:s');
+            if (ENV('APP_KIRIM_MAIL') == true)
+            {
+                Mail::to($data->email)->send(new ResetPasswd($body));
+            }
+            //batas
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Password member an. '.$data->name.' ('.$data->username.') berhasil direset, silakan check email'
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
     }
 }

@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
+    'failed' => 'Username/Password Salah!.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'belumaktif'=> 'Username tidak terdaftar atau belum aktif, silakan cek email untuk aktivasi',
+    'salahpasswd' => 'Password salah!.',
 
 ];

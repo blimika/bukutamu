@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\User;
 class LoginController extends Controller
 {
     /*
@@ -72,10 +72,10 @@ class LoginController extends Controller
         else {
             //tidak ada username
             //return view('login.index')->withError('Username tidak terdaftar');
+            $errors = [$this->username() => trans('auth.belumaktif')];
             Session::flash('err_username', 'Username tidak terdaftar atau belum aktif, silakan cek email untuk aktivasi');
             return redirect()->route('login');
         }
-
     }
     protected function validateLogin(Request $request)
     {
@@ -96,7 +96,27 @@ class LoginController extends Controller
         //return $request->only($this->username(), 'password');
         return ['username' => $request->{$this->username()}, 'password' => $request->password, 'flag' => 1];
     }
-   
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $errors = [$this->username() => trans('auth.failed')];
+
+        // Load user from database
+        //User::where([['username','=',$request->username],['flag',1]])->first()
+        $cek_user = User::where('username',$request->username)->first();
+
+        // Check if user was successfully loaded, that the password matches
+        // and active is not 1. If so, override the default error message.
+        if ($cek_user && \Hash::check($request->password, $cek_user->password) && $cek_user->flag != 1) {
+            $errors = [$this->username() => trans('auth.belumaktif')];
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json($errors, 422);
+        }
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withErrors($errors);
+    }
     public function authenticated(Request $request, $user)
     {
         $user->lastlogin = Carbon::now()->toDateTimeString();
