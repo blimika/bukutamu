@@ -120,7 +120,14 @@ class MemberController extends Controller
                 <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                 </a>';
             }
-
+            if ($record->flag == 0)
+            {
+                $link_aktivasi = '<a class="dropdown-item kirimaktivasi" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-flagmember="'.$record->flag.'">Kirim Aktivasi</a>';
+            }
+            else 
+            {
+                $link_aktivasi='';
+            }
             $aksi ='
                 <div class="btn-group">
                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -129,9 +136,10 @@ class MemberController extends Controller
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewMemberModal">View</a>
                     <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMemberModal">Edit</a>
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#GantiPasswdModal">Ganti Password</a>
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-username="'.$record->username.'" data-toggle="modal" data-target="#GantiPasswdModal">Ganti Password</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item ubahflagmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-flagmember="'.$record->flag.'">Ubah Flag</a>
+                    '.$link_aktivasi.'
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapusmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'">Hapus</a>
                 </div>
@@ -269,6 +277,7 @@ class MemberController extends Controller
                 }
                 $data->flag = $flag_baru;
                 $data->email_kodever = $email_kodever;
+                $data->email_verified_at = Carbon::parse(NOW())->format('Y-m-d H:i:s');
                 $data->update();
                 $arr = array(
                     'status'=>true,
@@ -541,6 +550,120 @@ class MemberController extends Controller
 
         }
 
+        return Response()->json($arr);
+    }
+    public function AdmGantiPasswd(Request $request)
+    {
+        //hanya admin dan operator yg bisa ganti password nya 
+        //tapi tidak bisa ganti password sendiri harus dari menu profil
+        //admin boleh ganti password level dibawahnya
+        if (Auth::User()->level < 10) {
+            $arr = array(
+                'status'=>false,
+                'hasil'=>'Anda tidak memiliki akses untuk ganti password member'
+            );
+            return Response()->json($arr);
+        }
+        $data = User::where('id',$request->id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data member tidak ditemukan'
+        );
+        if ($data)
+        {
+            if ($data->username == 'admin')
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Superadmin tidak ganti password melalui menu ini, harus melalui menu profil'
+                );
+            }
+            elseif (Auth::User()->username == $data->username)
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Tidak bisa mengganti password sendiri, harus dari menu profil'
+                );
+            }
+            elseif (Auth::User()->level < $data->level)
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Operator tidak bisa mengganti password admin/superadmin'
+                );
+            }
+            elseif (Auth::User()->level == '15' && Auth::user()->level == $data->level)
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Admin tidak bisa mengganti password admin, hanya bisa level dibawahnya'
+                );
+            }
+            elseif ($request->passwd_baru != $request->ulangi_passwd_baru )
+            {
+                /*
+                id: gp_id,
+                passwd_baru: gp_passwd,
+                ulangi_passwd_baru: gp_ulangi_passwd,
+                */
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Password baru dan ulangi password tidak sama'
+                );
+            }
+            else
+            {
+                //$data->password = bcrypt($request->passwd);
+                $data->password = bcrypt($request->passwd_baru);
+                $data->update();
+                
+                $arr = array(
+                    'status'=>true,
+                    'hasil'=>'Password member an. '.$data->name.' berhasil diganti'
+                );
+            }
+        }
+
+        return Response()->json($arr);
+    }
+    public function GantiPasswd(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data profil tidak ditemukan'
+        );
+        $data = User::where('id',Auth::user()->id)->first();
+        if ($data)
+        {
+            /*
+             passwd_lama: passwd_lama,
+                passwd_baru: passwd_baru,
+                ulangi_passwd_baru: ulangi_passwd_baru,
+                */
+            if (!\Hash::check($request->passwd_lama, $data->password))
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Password lama tidak sama'
+                );
+            }
+            elseif ($request->passwd_baru != $request->ulangi_passwd_baru)
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Password baru tidak sama dengan ulangi password baru'
+                );
+            }
+            else 
+            {
+                $data->password = bcrypt($request->passwd_baru);
+                $data->update();
+                $arr = array(
+                    'status'=>true,
+                    'hasil'=>'Password berhasil diganti, anda akan otomatis logout, dan masuk dengan password baru'
+                );
+            }
+        }
         return Response()->json($arr);
     }
 }

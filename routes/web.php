@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/master/update/pengunjung', 'MasterController@UpdatePengunjung')->name('pengunjung.update');
     //nambah flag jenis kunjungan ditambahkan field flag_edit_tamu = 0 belum sync, 1 sudah sync
     Route::get('/master/synckunjungan', 'MasterController@ListSyncKunjungan')->name('master.synckunjungan');
-    Route::get('/master/pengunjungsync', 'MasterController@SyncKodePengunjung')->name('pengunjung.kode');
+    Route::get('/master/pengunjungsynckode', 'MasterController@SyncKodePengunjung')->name('pengunjung.kode');
     Route::post('/hapuspengunjung', 'MasterController@HapusPengunjung')->name('pengunjung.hapus');
     Route::get('/laporan/pengunjung', 'LaporanController@list')->name('laporan.pengunjung');
     Route::post('/ubahkunjungan', 'BukutamuController@UbahKunjungan')->name('ubah.kunjungan');
@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth']], function () {
     //profil user
     Route::get('/member/profil', 'MemberController@Profil')->name('member.profil');
     Route::post('/member/gantipasswd', 'MemberController@GantiPasswd')->name('member.gantipasswd');
+    Route::post('/member/admgantipasswd', 'MemberController@AdmGantiPasswd')->name('member.admgantipasswd');
     Route::post('/member/updateprofil', 'MemberController@UpdateProfil')->name('member.updateprofil');
     Route::post('/member/kaitkan', 'MemberController@KaitkanMember')->name('member.kaitkan');
     Route::post('/member/putuskan', 'MemberController@PutuskanMember')->name('member.putuskan');

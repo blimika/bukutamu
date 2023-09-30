@@ -10,18 +10,18 @@
             <input type="text" class="form-control" id="username" aria-describedby="username" autocomplete="off" placeholder="username" value="{{Auth::user()->username}}" required>
         </div>
         <div class="form-group">
-            <label class="control-label">E-Mail</label>
+            <label for="email">E-Mail</label>
                 <input type="text" class="form-control" id="email" name="email" value="{{Auth::user()->email}}" autocomplete="off">
         </div>
         <div class="form-group">
-            <label class="control-label">Telepon/WA</label>
+            <label for="telepon">Telepon/WA</label>
                 <input type="text" class="form-control" id="telepon" name="telepon" value="{{Auth::user()->telepon}}" autocomplete="off">
         </div>
         <div class="form-group">
             <span id="member_error" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-success waves-effect" id="UpdateProfil" data-dismiss="modal">UPDATE</button>
+            <button type="submit" class="btn btn-success waves-effect" id="UpdateProfil" name="UpdateProfil">UPDATE</button>
         </div>
     </form>
 </div>

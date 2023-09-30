@@ -1,5 +1,5 @@
 <script>
-$('#GantiPasswdProfil').on('click', function(e) {
+$('#GantiPasswdTombol').on('click', function(e) {
     e.preventDefault();
     $('#GantiPassword').toggle();
     $('#EditProfil').hide();
@@ -233,4 +233,84 @@ $(".putuskan").click(function (e) {
             })
 });
 //batas koneksi
+//ganti passwd profil
+$('#UpdatePasswd').on('click', function(e) {
+    e.preventDefault();
+    var passwd_lama = $('#edit_passwd_lama').val();
+    var passwd_baru = $('#edit_passwd_baru').val();
+    var ulangi_passwd_baru = $('#edit_ulangi_passwdbaru').val();
+    if (passwd_lama == "")
+    {
+        $('#formGantiPasswd #gantipasswd_error').text('Password lama harus terisi');
+        return false;
+    }
+    else if (passwd_baru == "")
+    {
+        $('#formGantiPasswd #gantipasswd_error').text('Password baru harus terisi');
+        return false;
+    }
+    else if (ulangi_passwd_baru == "")
+    {
+        $('#formGantiPasswd #gantipasswd_error').text('Ulangi Password baru harus terisi');
+        return false;
+    }
+    else if (passwd_baru != ulangi_passwd_baru)
+    {
+        $('#formGantiPasswd #gantipasswd_error').text('Password baru dengan Ulangi Password baru tidak sama');
+        return false;
+    }
+    else
+    {
+       //ajax
+        //ajax update
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url : '{{route('member.gantipasswd')}}',
+            method : 'post',
+            data: {
+                passwd_lama: passwd_lama,
+                passwd_baru: passwd_baru,
+                ulangi_passwd_baru: ulangi_passwd_baru,
+            },
+            cache: false,
+            dataType: 'json',
+            success: function(data){
+                if (data.status == true)
+                {
+                    Swal.fire(
+                        'Berhasil!',
+                        ''+data.hasil+'',
+                        'success'
+                    ).then(function() {
+                        location.replace('{{route('logout')}}');
+                    });
+                }
+                else
+                {
+                    Swal.fire(
+                        'Error!',
+                        ''+data.hasil+'',
+                        'error'
+                    );
+                    
+                }
+
+            },
+            error: function(){
+                Swal.fire(
+                    'Error',
+                    'Koneksi Error',
+                    'error'
+                );
+            }
+
+        });
+       //batas ajax
+    }
+});
+///batas
 </script>

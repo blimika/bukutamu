@@ -284,7 +284,7 @@ $('#ViewModal').on('show.bs.modal', function (event) {
         success: function(data){
             if (data.status == true)
             {
-            $('#ViewModal .modal-body #tamu_id').text(data.hasil.id)
+            $('#ViewModal .modal-body #tamu_id').text(data.hasil.tamu_id)
             $('#ViewModal .modal-body #tamu_nama').text(data.hasil.nama_lengkap)
             @if (Auth::user())
             $('#ViewModal .modal-body #tamu_kode').text(data.hasil.kode_qr)

@@ -85,6 +85,14 @@
                                         belum pernah update
                                     @endif
                                 </dd>
+                                <dt class="col-lg-3 col-md-3 col-xs-12">Aktivasi </dt>
+                                <dd class="col-lg-9 col-sm-9">
+                                    @if (Auth::user()->email_verified_at)
+                                        {{\Carbon\Carbon::parse(Auth::user()->email_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss')}}
+                                    @else
+                                        <i>-belum tersedia-</i>
+                                    @endif
+                                </dd>
                                 <dt class="col-lg-3 col-md-3 col-xs-12">Flag</dt>
                                 <dd class="col-lg-9 col-sm-9">
                                     @if (Auth::user()->flag == 1)
@@ -135,8 +143,8 @@
                 <h4 class="card-title">Menu Profil</h4>
                 <div class="col-lg-12 col-md-12 col-xs-12 m-t-30">
                     <button class="btn btn-rounded btn-sm btn-success" id="EditProfilTombol" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-pencil-alt" data-toggle="tooltip" title="Edit Data"></i> EDIT</button>
-                    <button class="btn btn-rounded btn-sm btn-danger" id="GantiPasswdProfil" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-key" data-toggle="tooltip" title="Ganti Password"></i> GANTI PASSWORD</button>
-                    <button class="btn btn-rounded btn-sm btn-warning" id="EditPhotoProfil" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-pencil-alt" data-toggle="tooltip" title="Edit Photo Profil"></i> Edit Photo</button>
+                    <button class="btn btn-rounded btn-sm btn-danger" id="GantiPasswdTombol" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-key" data-toggle="tooltip" title="Ganti Password"></i> GANTI PASSWORD</button>
+                    <button class="btn btn-rounded btn-sm btn-warning" id="EditPhotoTombol" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-pencil-alt" data-toggle="tooltip" title="Edit Photo Profil"></i> Edit Photo</button>
                 </div>
                 <div class="m-t-10">
                     <center id="pesanerror">

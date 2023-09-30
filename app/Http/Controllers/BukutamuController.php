@@ -1246,6 +1246,7 @@ class BukutamuController extends Controller
             //user belum aktivasi
             $data->flag = 1;
             $data->email_kodever = 0;
+            $data->email_verified_at = Carbon::parse(NOW())->format('Y-m-d H:i:s');
             $data->update();
             $pesan_error = 'user berhasil di aktivasi';
             $warna_error = 'success';

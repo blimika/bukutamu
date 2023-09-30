@@ -42,13 +42,10 @@ class MasterController extends Controller
             $data = Mtamu::get();
             foreach ($data as $item)
             {
-                if ($item->kunjungan->count() > 0)
-                {
-                    $total_kunjungan = '';
+                   
                     $data_update = Mtamu::where('id',$item->id)->first();
                     $data_update->total_kunjungan = $item->kunjungan->count();
                     $data_update->update();
-                }
             }
 
             $arr = array(
