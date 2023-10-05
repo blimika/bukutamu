@@ -98,6 +98,7 @@
                         @endif
                     </div>
                     @if (Auth::user())
+                        @if (Auth::user()->level > 1)
                         <div class="float-left m-l-5">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -118,6 +119,7 @@
                             </div>
 
                         </div>
+                        @endif
                     @endif
                 </div>
 

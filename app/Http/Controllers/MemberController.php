@@ -28,11 +28,13 @@ use Illuminate\Support\Facades\DB;
 use App\Feedback;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Generate;
+use App\Mail\EmailVerifikasi;
 use QrCode;
 use App\User;
 use App\MasterLevel;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 class MemberController extends Controller
 {
@@ -124,7 +126,7 @@ class MemberController extends Controller
             {
                 $link_aktivasi = '<a class="dropdown-item kirimaktivasi" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-flagmember="'.$record->flag.'">Kirim Aktivasi</a>';
             }
-            else 
+            else
             {
                 $link_aktivasi='';
             }
@@ -303,6 +305,7 @@ class MemberController extends Controller
             $data->name = trim($request->name);
             $data->username = trim($request->username);
             $data->email = trim($request->email);
+            $data->email_ganti = trim($request->email);
             $data->telepon = trim($request->telepon);
             $data->password = bcrypt($request->passwd);
             $data->email_kodever = Str::random(10);
@@ -440,6 +443,22 @@ class MemberController extends Controller
             {
                 $updated_at_nama = Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss');
             }
+            if ($dataCek->email_verified_at == NULL)
+            {
+                $email_verified_at_nama = NULL;
+            }
+            else
+            {
+                $email_verified_at_nama = Carbon::parse($dataCek->email_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss');
+            }
+            if ($dataCek->akun_verified_at == NULL)
+            {
+                $akun_verified_at_nama = NULL;
+            }
+            else
+            {
+                $akun_verified_at_nama = Carbon::parse($dataCek->akun_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss');
+            }
             $arr = array(
                 'hasil' => array(
                     'id'=> $dataCek->id,
@@ -449,6 +468,7 @@ class MemberController extends Controller
                     'level_nama' => $dataCek->mLevel->nama,
                     'telepon' => $dataCek->telepon,
                     'email' => $dataCek->email,
+                    'email_ganti' => $dataCek->email_ganti,
                     'lastlogin' => $dataCek->lastlogin,
                     'lastlogin_nama'=>$lastlogin_nama,
                     'lastip' => $dataCek->lastip,
@@ -460,10 +480,73 @@ class MemberController extends Controller
                     'created_at_nama'=>$created_at_nama,
                     'updated_at'=>$dataCek->updated_at,
                     'updated_at_nama'=>$updated_at_nama,
+                    'email_verified_at'=>$dataCek->email_verified_at,
+                    'email_verified_at_nama'=>$email_verified_at_nama,
+                    'akun_verified_at'=>$dataCek->akun_verified_at,
+                    'akun_verified_at_nama'=>$akun_verified_at_nama,
                     'pengunjung'=>$arr_pengunjung,
                 ),
                 'status'=>true
             );
+        }
+        return Response()->json($arr);
+    }
+    public function UpdateMemberData(Request $request)
+    {
+        $cekData = User::where('username',trim($request->username))->orWhere('email',trim($request->email))->orWhere('email_ganti',trim($request->email))->orWhere('telepon',trim($request->telepon))->first();
+        $data = User::where('id',$request->id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Username ('.trim($request->username).'), E-Mail ('.trim($request->email).') atau Nomor HP ('.trim($request->telepon).') sudah digunakan/username tidak ditemukan'
+        );
+        if ($data && (!$cekData or ($cekData && $cekData->id == $request->id)))
+        {
+            //$email_kodever = Str::random(10);
+            //simpan data member
+            //jika email sblmnya dgn email baru beda tambah email kodever
+            $data->name = trim($request->name);
+            $data->username = trim($request->username);
+            $data->level = trim($request->level);
+            if ($data->email != $request->email)
+            {
+                $data->email_ganti = trim($request->email); //karena belum aktivasi
+                $data->email_kodever = Str::random(10);
+            }
+            $data->telepon = trim($request->telepon);
+            $data->update();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data member an. '.$request->name.' ('.$request->username.') berhasil diupdate'
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
+    }
+    public function VerifikasiEmail(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Verifikasi email error'
+        );
+        //load data
+        //verifikasi email
+        $data = User::where('id',$request->id)->first();
+        $body = new \stdClass();
+        $body->nama_lengkap = $data->name;
+        $body->username = $data->username;
+        $body->email = $data->email_ganti;
+        $body->telepon = $data->telepon;
+        $body->email_kodever = $data->email_kodever;
+        $body->tanggal_buat = Carbon::parse($data->created_at)->format('Y-m-d H:i:s');
+        $body->link_aktivasi = route('member.mailaktivasi',[$body->username,$body->email_kodever,$body->email]);
+        //batas
+        $arr = array(
+            'status'=>true,
+            'hasil'=>'Verifikasi email member an. '.$data->name.' ('.$data->username.') sudah dikirim, silakan check email baru untuk aktivasi'
+        );
+        if (ENV('APP_KIRIM_MAIL') == true)
+        {
+            Mail::to($data->email_ganti)->send(new EmailVerifikasi($body));
         }
         return Response()->json($arr);
     }
@@ -473,24 +556,29 @@ class MemberController extends Controller
     }
     public function UpdateProfil(Request $request)
     {
-
-        $data = User::where('username',trim($request->username))->orWhere('email',trim($request->email))->orWhere('telepon',trim($request->telepon))->first();
+        $cekData = User::where('username',trim($request->username))->orWhere('email',trim($request->email))->orWhere('email_ganti',trim($request->email))->orWhere('telepon',trim($request->telepon))->first();
+        $data = User::where('id',Auth::user()->id)->first();
         $arr = array(
             'status'=>false,
-            'hasil'=>'Username ('.trim($request->username).'), E-Mail ('.trim($request->email).') atau Nomor HP ('.trim($request->telepon).') sudah digunakan'
+            'hasil'=>'Username ('.trim($request->username).'), E-Mail ('.trim($request->email).') atau Nomor HP ('.trim($request->telepon).') sudah digunakan/username tidak ditemukan'
         );
-        if ($data && ($data->id == Auth::user()->id))
+        if ($data && (!$cekData or ($cekData && $cekData->id == Auth::user()->id)))
         {
             //$email_kodever = Str::random(10);
             //simpan data member
+            //jika email sblmnya dgn email baru beda tambah email kodever
             $data->name = trim($request->name);
             $data->username = trim($request->username);
-            $data->email = trim($request->email);
+            if ($data->email != $request->email)
+            {
+                $data->email_ganti = trim($request->email); //karena belum aktivasi
+                $data->email_kodever = Str::random(10);
+            }
             $data->telepon = trim($request->telepon);
             $data->update();
             $arr = array(
                 'status'=>true,
-                'hasil'=>'Data member an. '.$request->username.' berhasil diupdate'
+                'hasil'=>'Data member an. '.$request->name.' ('.$request->username.') berhasil diupdate, jika mengganti username silakan login ulang dgn username baru'
             );
         }
         #dd($request->all());
@@ -538,7 +626,7 @@ class MemberController extends Controller
             //update Mtamu
             $data->user_id = 0;
             $data->update();
-            //update user 
+            //update user
             $data_user = User::where('id',$request->id)->first();
             $data_user->tamu_id = 0;
             $data_user->update();
@@ -554,7 +642,7 @@ class MemberController extends Controller
     }
     public function AdmGantiPasswd(Request $request)
     {
-        //hanya admin dan operator yg bisa ganti password nya 
+        //hanya admin dan operator yg bisa ganti password nya
         //tapi tidak bisa ganti password sendiri harus dari menu profil
         //admin boleh ganti password level dibawahnya
         if (Auth::User()->level < 10) {
@@ -616,7 +704,7 @@ class MemberController extends Controller
                 //$data->password = bcrypt($request->passwd);
                 $data->password = bcrypt($request->passwd_baru);
                 $data->update();
-                
+
                 $arr = array(
                     'status'=>true,
                     'hasil'=>'Password member an. '.$data->name.' berhasil diganti'
@@ -654,7 +742,7 @@ class MemberController extends Controller
                     'hasil'=>'Password baru tidak sama dengan ulangi password baru'
                 );
             }
-            else 
+            else
             {
                 $data->password = bcrypt($request->passwd_baru);
                 $data->update();

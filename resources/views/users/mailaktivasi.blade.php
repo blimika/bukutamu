@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Daftar Member Bukutamu BPS Provinsi Nusa Tenggara Barat">
+    <meta name="description" content="Mail Aktivasi Member Bukutamu BPS Provinsi Nusa Tenggara Barat">
     <meta name="author" content="I Putu Dyatmika">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/favicon.png')}}">
-    <title>Daftar Bukutamu - BPS Provinsi NTB</title>
+    <title>Mail Aktivasi Bukutamu - BPS Provinsi NTB</title>
 
     <!-- page css -->
     <link href="{{ asset('dist/css/pages/login-register-lock.css') }}" rel="stylesheet">
@@ -49,7 +49,7 @@
                     <div class="text-center">
                         <a href="{{ url('') }}" class="text-center m-b-40"><img src="{{asset('assets/images/logo-bktamu.png')}}" alt="Home" /><br/><img src="{{asset('assets/images/tulisan-bukutamu.png')}}" alt="Home" /></a>
                     </div>
-                    <h3 class="box-title m-t-40 m-b-0">Aktivasi pendaftaran</h3><small>Bukutamu BPS Provinsi Nusa Tenggara Barat</small>
+                    <h3 class="box-title m-t-40 m-b-0">Mail Aktivasi</h3><small>Bukutamu BPS Provinsi Nusa Tenggara Barat</small>
                     @csrf
 
                     <div class="form-group" style="margin-top:20px;">

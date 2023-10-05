@@ -42,7 +42,7 @@ class MasterController extends Controller
             $data = Mtamu::get();
             foreach ($data as $item)
             {
-                   
+
                     $data_update = Mtamu::where('id',$item->id)->first();
                     $data_update->total_kunjungan = $item->kunjungan->count();
                     $data_update->update();
@@ -304,6 +304,10 @@ class MasterController extends Controller
                         'created_at_nama'=>Carbon::parse($dataCek->member->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                         'updated_at'=>$dataCek->member->updated_at,
                         'updated_at_nama'=>Carbon::parse($dataCek->member->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                        'email_verified_at'=>$dataCek->member->email_verified_at,
+                        'email_verified_at_nama'=>Carbon::parse($dataCek->member->email_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                        'akun_verified_at'=>$dataCek->member->akun_verified_at,
+                        'akun_verified_at_nama'=>Carbon::parse($dataCek->member->akun_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     ),
                     'status'=>true
                 );

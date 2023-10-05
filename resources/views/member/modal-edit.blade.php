@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal m-t-4" name="formEditMember" id="formEditMember" action="{{ route('member.simpan') }}"  method="POST">
+                <form class="form-horizontal m-t-4" name="formEditMember" id="formEditMember" action=""  method="POST">
                     <div class="form-group">
                     <label class="control-label">Level</label>
                         <select class="form-control" id="edit_level" name="level" required>
@@ -35,9 +35,13 @@
                     <div class="form-group">
                         <span id="edit_member_error" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <small class="font-italic">Mengubah alamat e-mail, akan membuat email baru perlu verifikasi ulang</small>
+                    </div>
+                    <input type="hidden" id="edit_member_id" name="member_id" value="" />
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success waves-effect" id="UpdateMember" data-dismiss="modal">UPDATE</button>
+                <button type="submit" class="btn btn-success waves-effect" id="UpdateMemberData" name="UpdateMemberData" data-dismiss="modal">UPDATE</button>
                 <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
             </div>
         </form>

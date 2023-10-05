@@ -56,7 +56,13 @@
                                 <dt class="col-lg-3 col-md-3 col-xs-12">Username</dt>
                                 <dd class="col-lg-9 col-sm-9">{{Auth::user()->username}}</dd>
                                 <dt class="col-lg-3 col-md-3 col-xs-12">Email</dt>
-                                <dd class="col-lg-9 col-sm-9">{{Auth::user()->email}}</dd>
+                                <dd class="col-lg-9 col-sm-9">
+                                    @if (Auth::user()->email_kodever == "0")
+                                        {{Auth::user()->email}} <span class="badge badge-pill badge-success">sudah verifikasi</span>
+                                    @else
+                                        {{Auth::user()->email_ganti}} <button class="btn btn-xs btn-danger btn-rounded mailverifikasi" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}">belum verifikasi</button>
+                                    @endif
+                                    </dd>
                                 <dt class="col-lg-3 col-md-3 col-xs-12">Nomor Telepon</dt>
                                 <dd class="col-lg-9 col-sm-9">
                                     @if (Auth::user()->telepon)
@@ -85,10 +91,10 @@
                                         belum pernah update
                                     @endif
                                 </dd>
-                                <dt class="col-lg-3 col-md-3 col-xs-12">Aktivasi </dt>
+                                <dt class="col-lg-3 col-md-3 col-xs-12">Akun aktivasi </dt>
                                 <dd class="col-lg-9 col-sm-9">
-                                    @if (Auth::user()->email_verified_at)
-                                        {{\Carbon\Carbon::parse(Auth::user()->email_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss')}}
+                                    @if (Auth::user()->akun_verified_at)
+                                        {{\Carbon\Carbon::parse(Auth::user()->akun_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss')}}
                                     @else
                                         <i>-belum tersedia-</i>
                                     @endif

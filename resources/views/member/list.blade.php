@@ -322,4 +322,5 @@
     @include('member.js-tambah')
     @include('member.js-view')
     @include('member.js-gantipasswd')
+    @include('member.js-edit')
 @stop

@@ -106,7 +106,7 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
     {
         var gantiphoto = 1;
     }
-    else 
+    else
     {
         var gantiphoto = 0;
     }
@@ -166,6 +166,72 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
         });
     }
 });
+//verifikasi email
+$(".mailverifikasi").click(function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    var nama = $(this).data('nama');
+    Swal.fire({
+                title: 'Email verifikasi?',
+                text: "Kirim email verifikasi?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Kirim'
+            }).then((result) => {
+                if (result.value) {
+                    //response ajax disini
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url : '{{route('member.mailverifikasi')}}',
+                        method : 'post',
+                        data: {
+                            id: id,
+                            nama: nama,
+                        },
+                        cache: false,
+                        dataType: 'json',
+                        success: function(data){
+                            if (data.status == true)
+                            {
+                                Swal.fire(
+                                    'Berhasil!',
+                                    ''+data.hasil+'',
+                                    'success'
+                                ).then(function() {
+                                    location.reload();
+                                });
+                            }
+                            else
+                            {
+                                Swal.fire(
+                                    'Error!',
+                                    ''+data.hasil+'',
+                                    'error'
+                                );
+                            }
+
+                        },
+                        error: function(){
+                            Swal.fire(
+                                'Error',
+                                'Koneksi Error',
+                                'error'
+                            );
+                        }
+
+                    });
+
+                }
+            })
+
+});
+//batas verifikasi
 //putuskan koneksi ke tamu
 $(".putuskan").click(function (e) {
     e.preventDefault();
@@ -296,7 +362,7 @@ $('#UpdatePasswd').on('click', function(e) {
                         ''+data.hasil+'',
                         'error'
                     );
-                    
+
                 }
 
             },

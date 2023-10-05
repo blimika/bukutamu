@@ -51,7 +51,7 @@
                                         @if ($dataTamu->tamu_foto != NULL)
                                             @if (Storage::disk('public')->exists($dataTamu->tamu_foto))
                                                 <a class="image-popup-vertical-fit" href="{{asset('storage'.$dataTamu->tamu_foto)}}" title="Nama : {{$dataTamu->nama_lengkap}} | Umur : {{ \Carbon\Carbon::parse($dataTamu->tgl_lahir)->age}} Tahun"><img src="{{asset('storage/'.$dataTamu->tamu_foto)}}" alt="user" class="img-responsive radius" /></a>
-                                                
+
                                             @else
                                             <a class="image-popup-vertical-fit" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : {{$dataTamu->nama_lengkap}} | Umur : {{ \Carbon\Carbon::parse($dataTamu->tgl_lahir)->age}} Tahun"><img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/></a>
                                             @endif
@@ -113,6 +113,7 @@
                                 </p>
                                 <p>
                                     @if (Auth::user())
+                                        @if (Auth::user()->level > 1)
                                         <span class="m-l-10">
                                             <button class="btn btn-sm btn-info ubahpstkantor" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-ispst="{{$item->is_pst}}"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->is_pst == 0) PST @else Kantor @endif"></i></button>
 
@@ -122,6 +123,7 @@
                                             <button class="btn btn-sm btn-warning ubahjeniskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-jnskunjungan="{{$item->jenis_kunjungan}}" data-fotokunjungan="@if ($item->file_foto) {{asset('storage/'.$item->file_foto)}} @else https://via.placeholder.com/640x480/0000FF/FFFFFF/?text=Tidak+ada+foto+pengunjung @endif"><i class="fas fa-clipboard" data-toggle="tooltip" title="Ubah Status Kunjungan Ke @if ($item->jenis_kunjungan == 1) {{$Mjkunjungan[1]->nama}} @else {{$Mjkunjungan[0]->nama}} @endif"></i></button>
                                             <button class="btn btn-sm btn-danger hapuskunjungan" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Kunjungan ini"></i></button>
                                         </span>
+                                        @endif
                                     @endif
                                     @if ($item->f_feedback==1)
                                     <button type="button" class="btn waves-effect waves-light btn-rounded btn-sm btn-danger" data-tamuid="{{$item->tamu_id}}" data-toggle="modal" data-target="#FeedbackModal" data-kunjunganid="{{$item->id}}" >Feedback</button>

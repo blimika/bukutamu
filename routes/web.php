@@ -27,6 +27,7 @@ Route::get('/daftar', 'BukutamuController@Daftar')->name('daftar');
 Route::post('/simpandaftar', 'BukutamuController@MemberDaftar')->name('member.daftar');
 Route::post('/lupapasswd', 'BukutamuController@LupaPasswd')->name('member.lupapasswd');
 Route::get('/member/aktivasi/{user}/{kode}', 'BukutamuController@MemberAktivasi')->name('member.aktivasi');
+Route::get('/member/mail/{user}/{kode}/{email}', 'BukutamuController@MailAktivasi')->name('member.mailaktivasi');
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
 Route::get('/tambahkunjunganbaru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');
@@ -79,7 +80,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/member/hapus', 'MemberController@HapusMember')->name('member.hapus');
     Route::post('/member/simpan', 'MemberController@SimpanMember')->name('member.simpan');
     Route::post('/member/ubahflag', 'MemberController@UbahFlagMember')->name('member.ubahflag');
+    Route::post('/member/updatedata', 'MemberController@UpdateMemberData')->name('member.updatedata');
     Route::get('/member/getdata/{id}', 'MemberController@CariMember')->name('member.cari');
+    Route::post('/member/mailverifikasi', 'MemberController@VerifikasiEmail')->name('member.mailverifikasi');
     //kunjungan terjadwal
     Route::get('/kunjunganterjadwal', 'BukutamuController@KunjunganTerjadwal')->name('kunjungan.terjadwal');
     //profil user

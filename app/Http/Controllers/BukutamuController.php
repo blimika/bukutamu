@@ -1085,6 +1085,15 @@ class BukutamuController extends Controller
         $data_ip = MAkses::where('ip',\Request::getClientIp(true))->count();
         if (Auth::user() or $data_ip > 0)
         {
+            if (Auth::user()->level == 1)
+            {
+                //login sebagai pengunjung
+                //load mtamu
+                if (Auth::user()->tamu_id != 0)
+                {
+
+                }
+            }
             $Midentitas = Midentitas::orderBy('id','asc')->get();
             $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
             $Mjk = Mjk::orderBy('id','asc')->get();
@@ -1178,6 +1187,7 @@ class BukutamuController extends Controller
             $data->name = trim($request->name);
             $data->username = trim($request->username);
             $data->email = trim($request->email);
+            $data->email_ganti = trim($request->email);
             $data->telepon = trim($request->telepon);
             $data->password = bcrypt($request->passwd);
             $data->email_kodever = Str::random(10);
@@ -1188,7 +1198,7 @@ class BukutamuController extends Controller
             $body = new \stdClass();
             $body->nama_lengkap = $data->name;
             $body->username = $data->username;
-            $body->email = $data->email;
+            $body->email = $data->email_ganti;
             $body->telepon = $data->telepon;
             $body->email_kodever = $data->email_kodever;
             $body->tanggal_buat = Carbon::parse($data->created_at)->format('Y-m-d H:i:s');
@@ -1238,28 +1248,55 @@ class BukutamuController extends Controller
         #dd($request->all());
         return Response()->json($arr);
     }
+    public function MailAktivasi($user,$kode,$email)
+    {
+        $data = User::where([['username',$user],['email_kodever',$kode],['email_ganti',$email]])->first();
+        if ($data)
+        {
+            //user belum aktivasi
+            $data->email = $email;
+            $data->email_kodever = 0;
+            $data->email_verified_at = Carbon::parse(NOW())->format('Y-m-d H:i:s');
+            $data->update();
+            $pesan_error = 'Email baru berhasil di aktivasi';
+            $warna_error = 'success';
+        }
+        else
+        {
+            //user tidak ditemukan atau sudah teraktivasi
+            $pesan_error = 'user tidak ditemukan/user sudah teraktivasi';
+            $warna_error = 'danger';
+
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return view('users.mailaktivasi');
+    }
     public function MemberAktivasi($user,$kode)
     {
         $data = User::where([['username',$user],['email_kodever',$kode],['flag','0']])->first();
         if ($data)
         {
             //user belum aktivasi
+            //akun_verified_at
             $data->flag = 1;
             $data->email_kodever = 0;
             $data->email_verified_at = Carbon::parse(NOW())->format('Y-m-d H:i:s');
+            $data->akun_verified_at = Carbon::parse(NOW())->format('Y-m-d H:i:s');
             $data->update();
             $pesan_error = 'user berhasil di aktivasi';
             $warna_error = 'success';
         }
-        else 
+        else
         {
             //user tidak ditemukan atau sudah teraktivasi
             $pesan_error = 'user tidak ditemukan/user sudah teraktivasi';
             $warna_error = 'danger';
-            
+
         }
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
         return view('users.aktivasi');
     }
+
 }

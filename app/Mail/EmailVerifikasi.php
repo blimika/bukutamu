@@ -7,15 +7,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class DaftarMember extends Mailable implements ShouldQueue
+class EmailVerifikasi extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    public $body;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
+    public $body;
+
     public function __construct($body)
     {
         //
@@ -29,9 +31,9 @@ class DaftarMember extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        //return $this->markdown('emails.daftarmember')->with('body',$this->body);
+        //return $this->markdown('emails.mailverifikasi');
         return $this->from('noreply@bpsntb.id','BUKUTAMU')
-                    ->subject('[NOREPLY] Pendaftaran Member Baru')
-                    ->markdown('emails.daftarmember')->with('body',$this->body);
+                    ->subject('[NOREPLY] E-mail Verifikasi')
+                    ->markdown('emails.mailverifikasi')->with('body',$this->body);
     }
 }

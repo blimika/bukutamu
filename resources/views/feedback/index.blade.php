@@ -144,6 +144,7 @@
                     </div>
                 </div>
                 @if (Auth::user())
+                    @if (Auth::user()->level > 1)
                 <div class="row">
                     <div class="col-lg-8 col-md-12">
                         @foreach ($dataNamaFeedback as $item)
@@ -179,6 +180,7 @@
                         {{$dataNamaFeedback->links()}}
                     </div>
                 </div>
+                    @endif
                 @endif
             </div>
         </div>
