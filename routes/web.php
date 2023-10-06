@@ -28,6 +28,48 @@ Route::post('/simpandaftar', 'BukutamuController@MemberDaftar')->name('member.da
 Route::post('/lupapasswd', 'BukutamuController@LupaPasswd')->name('member.lupapasswd');
 Route::get('/member/aktivasi/{user}/{kode}', 'BukutamuController@MemberAktivasi')->name('member.aktivasi');
 Route::get('/member/mail/{user}/{kode}/{email}', 'BukutamuController@MailAktivasi')->name('member.mailaktivasi');
+Route::get('/cth1', function () {
+     //kirim mail
+     $body = new \stdClass();
+     $body->nama_lengkap = 'I Putu Dyatmika';
+     $body->username = 'mika';
+     $body->email = 'mika@bpsntb.id';
+     $body->telepon = '0871272818213';
+     $body->email_kodever = 'NjJJMN99121';
+     $body->tanggal_buat = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+     $body->link_aktivasi = route('member.aktivasi',[$body->username,$body->email_kodever]);
+
+    return new App\Mail\DaftarMember($body);
+});
+Route::get('/cth2', function () {
+    //kirim mail
+    $body = new \stdClass();
+    $body->nama_lengkap = 'I Putu Dyatmika';
+    $body->username = 'mika';
+    $body->email = 'mika@bpsntb.id';
+    $body->telepon = '0871272818213';
+    $body->email_kodever = 'NjJJMN99121';
+    $body->tanggal_minta = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+    $body->passwd_baru = 'TestPass1';
+
+    $body->link_aktivasi = route('member.aktivasi',[$body->username,$body->email_kodever]);
+    return new App\Mail\ResetPasswd($body);
+});
+Route::get('/cth3', function () {
+    //kirim mail
+    $body = new \stdClass();
+    $body->nama_lengkap = 'I Putu Dyatmika';
+    $body->username = 'mika';
+    $body->email = 'mika@bpsntb.id';
+    $body->telepon = '0871272818213';
+    $body->email_kodever = 'NjJJMN99121';
+    $body->tanggal_minta = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+    $body->passwd_baru = 'TestPass1';
+
+    $body->link_aktivasi = route('member.aktivasi',[$body->username,$body->email_kodever]);
+
+   return new App\Mail\EmailVerifikasi($body);
+});
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
 Route::get('/tambahkunjunganbaru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');

@@ -537,7 +537,7 @@ class MemberController extends Controller
         $body->email = $data->email_ganti;
         $body->telepon = $data->telepon;
         $body->email_kodever = $data->email_kodever;
-        $body->tanggal_buat = Carbon::parse($data->created_at)->format('Y-m-d H:i:s');
+        $body->tanggal_buat = Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss');
         $body->link_aktivasi = route('member.mailaktivasi',[$body->username,$body->email_kodever,$body->email]);
         //batas
         $arr = array(

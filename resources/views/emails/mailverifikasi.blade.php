@@ -7,6 +7,13 @@ Permintaan penggantian alamat email baru. silakan klik link aktivasi dibawah ini
 AKTIVASI EMAIL
 @endcomponent
 
+@component('mail::panel')
+Jika mengalami kendala dalam klik tombol aktivasi, silakan copy paste link dibawah ini <br>
+<strong>{{$body->link_aktivasi}}</strong>
+@endcomponent
+
 Terimakasih,<br>
-BPS Provinsi Nusa Tenggara Barat
+Aplikasi Bukutamu <br>
+BPS Provinsi Nusa Tenggara Barat<br>
+Jl. Dr. Soedjono No. 74 Mataram NTB 83116
 @endcomponent

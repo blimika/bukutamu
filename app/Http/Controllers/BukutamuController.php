@@ -1201,7 +1201,7 @@ class BukutamuController extends Controller
             $body->email = $data->email_ganti;
             $body->telepon = $data->telepon;
             $body->email_kodever = $data->email_kodever;
-            $body->tanggal_buat = Carbon::parse($data->created_at)->format('Y-m-d H:i:s');
+            $body->tanggal_buat = Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss');
             $body->link_aktivasi = route('member.aktivasi',[$body->username,$body->email_kodever]);
             //batas
             $arr = array(
@@ -1234,7 +1234,7 @@ class BukutamuController extends Controller
             $body->nama_lengkap = $data->name;
             $body->username = $data->username;
             $body->passwd_baru = $passwd_baru;
-            $body->tanggal_minta = Carbon::parse(NOW())->format('Y-m-d H:i:s');
+            $body->tanggal_minta = Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
             if (ENV('APP_KIRIM_MAIL') == true)
             {
                 Mail::to($data->email)->send(new ResetPasswd($body));
