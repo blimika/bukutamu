@@ -97,6 +97,130 @@ $('#UpdateProfil').on('click', function(e) {
         }
     }
 });
+//kodeqr button click
+$('#KaitkanModal .modal-body #cek_kodeqr').on('click', function(e) {
+    e.preventDefault();
+    var kodeqr = $('#KaitkanModal .modal-body #kodeqr').val();
+    var user_id = $('#KaitkanModal .modal-body #user_id').val();
+    if (kodeqr == "")
+    {
+        $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR harus terisi');
+        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+        return false;
+    }
+    else
+    {
+        //load ajax get
+        $.ajax({
+        url : '{{route("pengunjung.cari","")}}/'+kodeqr,
+        method : 'get',
+        cache: false,
+        dataType: 'json',
+        success: function(data){
+            if (data.status == true)
+            {
+                //cek dulu apakah sudah dikaitkan?
+                if (data.hasil.member.status == true)
+                {
+                    $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR sudah dikaitkan dengan member lain, nama '+data.hasil.member.hasil.name);
+                    $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+                    $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+                    return false;
+                }
+                else
+                {
+                    $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR ditemukan, nama '+data.hasil.nama_lengkap);
+                    $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-success').removeClass('text-danger');
+                    $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', false);
+                    return false;
+                }
+
+            }
+            else
+            {
+                $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR ('+kodeqr+') tidak ditemukan');
+                $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+                $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+                return false;
+            }
+        },
+        error: function(){
+            alert("error load modal");
+        }
+
+        });
+        //batas load ajax
+    }
+});
+//batas
+//jenis_identitas button click
+$('#KaitkanModal .modal-body #cek_identitas').on('click', function(e) {
+    e.preventDefault();
+    var jenis = $("#KaitkanModal .modal-body #jenis_identitas").val();
+    var nomor = $('#KaitkanModal .modal-body #nomor_identitas').val();
+    var user_id = $('#KaitkanModal .modal-body #user_id').val();
+    if (jenis == "")
+    {
+        $('#KaitkanModal .modal-body #kaitkan_error').text('Pilih Salah Satu Jenis Identitas');
+        $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+        return false;
+    }
+    else if (nomor == "")
+    {
+        $('#KaitkanModal .modal-body #kaitkan_error').text('Nomor identitas tidak boleh kosong');
+        $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+        return false;
+    }
+    else
+    {
+        //load ajax get
+        $.ajax({
+    url : '{{route('cekid',['',''])}}/'+jenis+'/'+nomor,
+    method : 'get',
+    cache: false,
+    dataType: 'json',
+    success: function(data){
+
+        if (data.status == true) {
+            //identitas true
+            //cek dulu apakah sudah dikaitkan?
+            if (data.hasil.member.status == true)
+            {
+                $('#KaitkanModal .modal-body #kaitkan_error').text('Identitas sudah dikaitkan dengan member lain, nama '+data.hasil.member.hasil.name);
+                $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+                $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+                return false;
+            }
+            else
+            {
+                $('#KaitkanModal .modal-body #kaitkan_error').text('Identitas berhasil ditemukan, nama '+data.hasil.nama_lengkap);
+                $('#KaitkanModal .modal-body #kodeqr').val(data.hasil.kode_qr)
+                $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-success').removeClass('text-danger');
+                $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', false);
+                return false;
+            }
+
+        }
+        else {
+            $('#KaitkanModal .modal-body #kaitkan_error').text('Identitas tidak ditemukan, silakan perbaiki isian');
+            $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+            $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+            return false;
+
+        }
+    },
+    error: function(){
+        alert("error");
+    }
+
+    });
+
+        //batas load ajax
+    }
+});
+//batas
 $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
     e.preventDefault();
     var kodeqr = $('#KaitkanModal .modal-body #kodeqr').val();
@@ -113,6 +237,7 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
     if (kodeqr == "")
     {
         $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR harus terisi');
+        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
         return false;
     }
     else

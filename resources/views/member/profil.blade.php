@@ -37,7 +37,7 @@
                     <center class="m-t-30">
                         @if (Auth::user()->user_foto != NULL)
                             @if (Storage::disk('public')->exists(Auth::user()->user_foto))
-                            <img src="{{asset('storage/'.Auth::user()->user_foto)}}" width="200" class="img-responsive radius" />
+                            <img src="{{asset('storage'.Auth::user()->user_foto)}}" width="200" class="img-responsive radius" />
                             @else
                                 <img src="https://via.placeholder.com/480x480/0022FF/FFFFFF/?text=photo+tidak+ada" class="img-circle" width="150" />
                             @endif

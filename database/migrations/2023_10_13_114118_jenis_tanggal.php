@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TabelHariLibur extends Migration
+class JenisTanggal extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class TabelHariLibur extends Migration
      */
     public function up()
     {
-        Schema::create('mlibur', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->date('tanggal');
-            $table->string('deskripsi',250);
-            $table->timestamps();
+        Schema::create('jtanggal', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->boolean('kode');
+            $table->string('nama',200);
         });
     }
 
@@ -28,6 +27,6 @@ class TabelHariLibur extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mlibur');
+        Schema::dropIfExists('jtanggal');
     }
 }

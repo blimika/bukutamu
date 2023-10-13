@@ -33,5 +33,9 @@ class TabelMasterBaru extends Seeder
             ['id'=>3,'ip' => '10.52.6.31', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
             ['id'=>4,'ip' => '202.46.65.114', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
         ]);
+        DB::table('jtanggal')->insert([
+            ['id'=>1,'kode' => 1, 'nama' => 'Kerja'],
+            ['id'=>2,'kode' => 2, 'nama' => 'Libur'],
+        ]);
     }
 }

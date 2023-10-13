@@ -343,6 +343,7 @@ class MasterController extends Controller
                     'updated_at'=>$dataCek->updated_at,
                     'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                     'url_foto'=>$dataCek->tamu_foto,
+                    'user_id'=>$dataCek->user_id,
                     'kunjungan'=>$arr_kunjungan,
                     'member'=>$arr_member
                 ),

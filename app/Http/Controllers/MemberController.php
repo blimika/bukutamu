@@ -552,7 +552,8 @@ class MemberController extends Controller
     }
     public function Profil()
     {
-        return view('member.profil');
+        $Midentitas = Midentitas::orderBy('id','asc')->get();
+        return view('member.profil',['j_identitas'=>$Midentitas]);
     }
     public function UpdateProfil(Request $request)
     {
@@ -600,7 +601,17 @@ class MemberController extends Controller
             $data_user = User::where('id',$request->user_id)->first();
             if ($data_user->user_foto == NULL or $request->gantiphoto == "1")
             {
-                $data_user->user_foto = $data->tamu_foto;
+                //$namafile_profil = '/img/profil/tamu_profil_'.$request->tamu_id.'.png';
+                $nama_file_member = '/img/member/member_foto_'.$request->user_id.'.png';
+                $data_user->user_foto = $nama_file_member;
+                //copy ke storage rill
+                //Storage::disk('public')->put($namafile_profil, $data_foto);
+                //Storage::disk('FTP')->put('new/file1.jpg', Storage::get('old/file1.jpg'));
+                //Storage::copy('old/file.jpg', 'new/file.jpg');
+                //Storage::disk('public')->put($nama_file, Storage::get('/'.$data->tamu_foto));
+                //$data_foto = Storage::disk('public')->get($data->tamu_foto);
+                Storage::disk('public')->put($nama_file_member, Storage::disk('public')->get($data->tamu_foto));
+
             }
             $data_user->tamu_id = $data->id;
             $data_user->update();

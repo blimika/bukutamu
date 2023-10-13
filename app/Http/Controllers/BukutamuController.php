@@ -804,10 +804,77 @@ class BukutamuController extends Controller
         $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
         if ($dataCek) {
             //nomor identitas ada / tamu sudah pernah datang
+            //cek kunjungan
+            $cek_kunjungan = Kunjungan::where('tamu_id',$dataCek->id)->count();
+            $arr_kunjungan = array('hasil'=>'Data Kunjungan Kosong','status'=>false);
+            if ($cek_kunjungan > 0)
+            {
+                //ada kunjungan
+                $dataKunjungan = Kunjungan::with('tamu','pLayanan','pManfaat')->where('tamu_id',$dataCek->id)->orderBy('created_at','desc')->take(10)->get();
+                foreach ($dataKunjungan as $item)
+                {
+                    $dataItem[] = array(
+                            'id'=>$item->id,
+                            'tanggal'=>$item->tanggal,
+                            'tanggal_nama'=>Carbon::parse($item->tanggal)->isoFormat('D MMMM Y'),
+                            'keperluan'=>$item->keperluan,
+                            'is_pst'=>$item->is_pst,
+                            'f_id'=>$item->f_id,
+                            'f_feedback'=>$item->f_feedback,
+                            'jenis_kunjungan'=>$item->jenis_kunjungan,
+                            'jumlah_tamu'=>$item->jumlah_tamu,
+                            'tamu_m'=>$item->tamu_m,
+                            'tamu_f'=>$item->tamu_m,
+                            'flag_edit_tamu'=>$item->flag_edit_tamu,
+                            'file_foto'=>$item->file_foto,
+                            'created_at'=>$item->created_at,
+                            'created_at_nama'=>Carbon::parse($item->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                            'updated_at'=>$item->updated_at,
+                            'updated_at_nama'=>Carbon::parse($item->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    );
+                }
+                $arr_kunjungan = array(
+                    'hasil' => $dataItem,
+                    'status'=>true,
+                    'jumlah'=>$cek_kunjungan
+                );
+            }
+            //batas kunjungan
+            //cek member/users
+            $arr_member = array('hasil'=>'Data member tidak tersedia','status'=>false);
+            if ($dataCek->member)
+            {
+                //member terkoneksi
+                $arr_member = array(
+                    'hasil' => array(
+                        'id'=> $dataCek->member->id,
+                        'name' => $dataCek->member->name,
+                        'username' => $dataCek->member->username,
+                        'level' => $dataCek->member->level,
+                        'level_nama' => $dataCek->member->mLevel->nama,
+                        'lastlogin' => $dataCek->member->lastlogin,
+                        'lastip' => $dataCek->member->lastip,
+                        'user_foto' => $dataCek->member->user_foto,
+                        'tamu_id' => $dataCek->member->tamu_id,
+                        'created_at'=>$dataCek->member->created_at,
+                        'created_at_nama'=>Carbon::parse($dataCek->member->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                        'updated_at'=>$dataCek->member->updated_at,
+                        'updated_at_nama'=>Carbon::parse($dataCek->member->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                        'email_verified_at'=>$dataCek->member->email_verified_at,
+                        'email_verified_at_nama'=>Carbon::parse($dataCek->member->email_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                        'akun_verified_at'=>$dataCek->member->akun_verified_at,
+                        'akun_verified_at_nama'=>Carbon::parse($dataCek->member->akun_verified_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    ),
+                    'status'=>true
+                );
+            }
+            //batas member
             $arr = array(
                 'hasil' => array(
+                    /*
                     'tamu_id'=>$dataCek->id,
                     'nama_lengkap'=>$dataCek->nama_lengkap,
+                    'kode_qr'=>$dataCek->kode_qr,
                     'tgl_lahir'=>$dataCek->tgl_lahir,
                     'id_jk'=>$dataCek->id_jk,
                     'id_kerja'=>$dataCek->id_mkerja,
@@ -818,6 +885,41 @@ class BukutamuController extends Controller
                     'email'=>$dataCek->email,
                     'telepon'=>$dataCek->telepon ,
                     'alamat'=>$dataCek->alamat
+                    */
+                    'tamu_id'=>$dataCek->id,
+                    'id_identitas'=>$dataCek->id_midentitas,
+                    'id_identitas_nama'=>$dataCek->identitas->nama,
+                    'nomor_identitas'=>$dataCek->nomor_identitas,
+                    'nama_lengkap'=>$dataCek->nama_lengkap,
+                    'tgl_lahir'=>$dataCek->tgl_lahir,
+                    'tgl_lahir_nama'=>Carbon::parse($dataCek->tgl_lahir)->isoFormat('D MMMM Y'),
+                    'umur'=>Carbon::parse($dataCek->tgl_lahir)->age,
+                    'id_jk'=>$dataCek->id_jk,
+                    'nama_jk'=>$dataCek->jk->nama,
+                    'inisial_jk'=>$dataCek->jk->inisial,
+                    'id_kerja'=>$dataCek->id_mkerja,
+                    'nama_kerja'=>$dataCek->pekerjaan->nama,
+                    'kat_kerja'=>$dataCek->id_mkat_kerja,
+                    'kat_kerja_nama'=>$dataCek->kategoripekerjaan->nama,
+                    'kerja_detil'=>$dataCek->kerja_detil,
+                    'pekerjaan_detil'=>$dataCek->kerja_detil,
+                    'id_mdidik'=>$dataCek->id_mdidik,
+                    'nama_mdidik'=>$dataCek->pendidikan->nama ,
+                    'id_mwarga'=>$dataCek->id_mwarga,
+                    'mwarga'=>$dataCek->id_mwarga,
+                    'nama_mwarga'=>$dataCek->warga->nama,
+                    'email'=>$dataCek->email,
+                    'telepon'=>$dataCek->telepon ,
+                    'alamat'=>$dataCek->alamat,
+                    'kode_qr'=>$dataCek->kode_qr,
+                    'created_at'=>$dataCek->created_at,
+                    'created_at_nama'=>Carbon::parse($dataCek->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'updated_at'=>$dataCek->updated_at,
+                    'updated_at_nama'=>Carbon::parse($dataCek->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                    'url_foto'=>$dataCek->tamu_foto,
+                    'user_id'=>$dataCek->user_id,
+                    'kunjungan'=>$arr_kunjungan,
+                    'member'=>$arr_member
                 ),
                 'status' => true
             );
@@ -1085,14 +1187,22 @@ class BukutamuController extends Controller
         $data_ip = MAkses::where('ip',\Request::getClientIp(true))->count();
         if (Auth::user() or $data_ip > 0)
         {
-            if (Auth::user()->level == 1)
+            if (Auth::user())
             {
                 //login sebagai pengunjung
                 //load mtamu
-                if (Auth::user()->tamu_id != 0)
+                if (Auth::user()->level == 1 and Auth::user()->tamu_id != 0)
                 {
-
+                    $dataTamu = Mtamu::where('id',Auth::user()->tamu_id)->first();
                 }
+                else
+                {
+                    $dataTamu ='';
+                }
+            }
+            else
+            {
+                $dataTamu ='';
             }
             $Midentitas = Midentitas::orderBy('id','asc')->get();
             $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
@@ -1110,7 +1220,7 @@ class BukutamuController extends Controller
         {
             return redirect()->route('depan');
         }
-        return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
+        return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat,'dataTamu'=>$dataTamu]);
     }
     public function KunjunganTerjadwal()
     {
