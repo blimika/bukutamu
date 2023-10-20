@@ -69,6 +69,7 @@
                                         <li><a href="{{route('pengunjung.list')}}">Pengunjung</a></li>
                                         <li><a href="{{route('member.list')}}">Member</a></li>
                                         <li><a href="{{route('layanan.akses')}}">Layanan Akses</a></li>
+                                        <li><a href="{{route('master.tanggal')}}">Tanggal</a></li>
                                     </ul>
                                 </li>
                                 @endif

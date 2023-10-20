@@ -35,7 +35,8 @@ class TabelMasterBaru extends Seeder
         ]);
         DB::table('jtanggal')->insert([
             ['id'=>1,'kode' => 1, 'nama' => 'Kerja'],
-            ['id'=>2,'kode' => 2, 'nama' => 'Libur'],
+            ['id'=>2,'kode' => 2, 'nama' => 'Sabtu/Minggu'],
+            ['id'=>3,'kode' => 3, 'nama' => 'Libur'],
         ]);
     }
 }

@@ -10,11 +10,8 @@
 
                     <div class="form-group row">
                         <label for="kodeqr" class="control-label col-md-2">Kode QR</label>
-                        <div class="col-md-6">
+                        <div class="input-group col-md-10">
                             <input type="text" class="form-control" name="kodeqr" id="kodeqr" aria-describedby="kodeqr" autocomplete="off" placeholder="Kode QR Pengunjung" required>
-                        </div>
-
-                        <div class="col-md-4">
                             <button type="button" name="cek_kodeqr" id="cek_kodeqr" class="btn btn-success"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
@@ -25,24 +22,18 @@
                     </div>
                     <div class="form-group row">
                         <label class="control-label col-md-2">Identitas</label>
-                        <div class="col-md-4">
+                        <div class="input-group col-md-10">
                             <select class="form-control" id="jenis_identitas" name="jenis_identitas" required>
                                     <option value="">Jenis</option>
                                     @foreach ($j_identitas as $item)
                                         <option value="{{$item->id}}">{{$item->nama}}</option>
                                     @endforeach
                             </select>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-9" id="nomor_identitas_error">
-                                        <input type="text" class="form-control" placeholder="Nomor Identitas" id="nomor_identitas" name="nomor_identitas" required>
-                                </div>
-                                <div class="col-md-2">
-                                        <button type="button" name="cek_identitas" id="cek_identitas" class="btn btn-info"><i class="fas fa-search"></i></button>
-                                </div>
+                            <span class="input-group-addon bg-info b-0 text-white">&nbsp;</span>
+                            <input type="text" class="form-control" placeholder="Nomor Identitas" id="nomor_identitas" name="nomor_identitas" required>
+                            <span class="input-group-addon b-0">&nbsp;</span>
+                            <button type="button" name="cek_identitas" id="cek_identitas" class="btn btn-info"><i class="fas fa-search"></i></button>
 
-                            </div>
                         </div>
                     </div>
                     <div class="form-group row">

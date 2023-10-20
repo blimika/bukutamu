@@ -134,6 +134,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/member/updateprofil', 'MemberController@UpdateProfil')->name('member.updateprofil');
     Route::post('/member/kaitkan', 'MemberController@KaitkanMember')->name('member.kaitkan');
     Route::post('/member/putuskan', 'MemberController@PutuskanMember')->name('member.putuskan');
+    //master tanggal
+    Route::get('/master/tanggal', 'TanggalController@MasterTanggal')->name('master.tanggal');
+    Route::get('/master/listtanggal', 'TanggalController@PageListTanggal')->name('master.listtanggal');
+    Route::post('/master/gen/tanggal', 'TanggalController@GenerateTanggal')->name('master.gentanggal');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

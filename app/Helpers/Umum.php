@@ -408,7 +408,24 @@ class Generate {
                     $tamu_wanita[] = 0;
                     $jumlah_tamu[]= 0;
                 }
-                $cat_tgl[]=$i;
+                //ambil info tanggal
+                $info_tanggal = \App\MTanggal::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))->first();
+                if ($info_tanggal)
+                {
+                    if ($info_tanggal->jtgl > 1)
+                    {
+                        $cat_tgl[]=$i.'-'.$info_tanggal->deskripsi;
+                    }
+                    else
+                    {
+                        $cat_tgl[]=$i.'-'.$info_tanggal->hari;
+                    }
+                }
+                else
+                {
+                    $cat_tgl[]=$i;
+                }
+
            // }
         }
         $data[] = array(

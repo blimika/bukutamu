@@ -641,7 +641,6 @@ class MemberController extends Controller
             $data_user = User::where('id',$request->id)->first();
             $data_user->tamu_id = 0;
             $data_user->update();
-
             $arr = array(
                 'status'=>true,
                 'hasil'=>'Data member an. <b>'.Auth::user()->name.'</b> berhasil dihapus kaitan',

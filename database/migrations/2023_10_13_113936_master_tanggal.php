@@ -16,6 +16,7 @@ class MasterTanggal extends Migration
         Schema::create('mtanggal', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('tanggal');
+            $table->string('hari',6)->nullable();
             $table->tinyInteger('jtgl')->default(1); //flag kerja = 1, libur = 2
             $table->string('deskripsi',250)->nullable();
             $table->timestamps();
