@@ -37,6 +37,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DaftarMember;
 use App\Mail\ResetPasswd;
+use App\MTanggal;
+
 class BukutamuController extends Controller
 {
     //
@@ -1183,44 +1185,56 @@ class BukutamuController extends Controller
     }
     public function NewKunjungan()
     {
-        //$ipakses = config('app.ip_akses');
-        $data_ip = MAkses::where('ip',\Request::getClientIp(true))->count();
-        if (Auth::user() or $data_ip > 0)
+        //cek tanggal dulu
+        //apakah hari libur skrg
+        $cek_hari = MTanggal::where('tanggal',Carbon::today()->format('Y-m-d'))->first();
+        //dd($cek_hari);
+        if ($cek_hari->jtgl == 1)
         {
-            if (Auth::user())
+            //$ipakses = config('app.ip_akses');
+            $data_ip = MAkses::where('ip',\Request::getClientIp(true))->count();
+            if (Auth::user() or $data_ip > 0)
             {
-                //login sebagai pengunjung
-                //load mtamu
-                if (Auth::user()->level == 1 and Auth::user()->tamu_id != 0)
+                if (Auth::user())
                 {
-                    $dataTamu = Mtamu::where('id',Auth::user()->tamu_id)->first();
+                    //login sebagai pengunjung
+                    //load mtamu
+                    if (Auth::user()->level == 1 and Auth::user()->tamu_id != 0)
+                    {
+                        $dataTamu = Mtamu::where('id',Auth::user()->tamu_id)->first();
+                    }
+                    else
+                    {
+                        $dataTamu ='';
+                    }
                 }
                 else
                 {
                     $dataTamu ='';
                 }
+                $Midentitas = Midentitas::orderBy('id','asc')->get();
+                $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+                $Mjk = Mjk::orderBy('id','asc')->get();
+                $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+                $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+                $Mwarga = Mwarga::orderBy('id','asc')->get();
+                $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+                $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+                $MFas = MFas::orderBy('id','asc')->get();
+                $MManfaat = MManfaat::orderBy('id','asc')->get();
+                $MLay = MLay::orderBy('id','asc')->get();
             }
             else
             {
-                $dataTamu ='';
+                return redirect()->route('depan');
             }
-            $Midentitas = Midentitas::orderBy('id','asc')->get();
-            $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
-            $Mjk = Mjk::orderBy('id','asc')->get();
-            $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
-            $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
-            $Mwarga = Mwarga::orderBy('id','asc')->get();
-            $MKunjungan = MKunjungan::orderBy('id','asc')->get();
-            $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
-            $MFas = MFas::orderBy('id','asc')->get();
-            $MManfaat = MManfaat::orderBy('id','asc')->get();
-            $MLay = MLay::orderBy('id','asc')->get();
+            return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat,'dataTamu'=>$dataTamu]);
         }
         else
         {
-            return redirect()->route('depan');
+            return view('kunjungan.libur',['tanggal'=>$cek_hari]);
         }
-        return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat,'dataTamu'=>$dataTamu]);
+
     }
     public function KunjunganTerjadwal()
     {

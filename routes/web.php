@@ -77,12 +77,14 @@ Route::get('/tambahkunjunganlama', 'BukutamuController@KunjunganLama')->name('ku
 Route::get('/scanqrcode', 'BukutamuController@ScanQrcode')->name('kunjungan.scan');
 Route::get('/detil/pengunjung/{qrcode}', 'BukutamuController@DetilTamu')->name('tamu.detil');
 Route::get('/edit/{id}', 'BukutamuController@editdata')->name('edit');
-Route::get('/cekid/{jenis_identitas}/{nomor_identitas}', 'BukutamuController@cekID')->name('cekid');
-//api getdatakunjungan
+//api json tanpa middleware
 Route::get('/getdatakunjungan/{id}', 'BukutamuController@getDataKunjungan')->name('getdatakunjungan');
+Route::get('/master/getdatatamu/{qrcode}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
+Route::get('/cekid/{jenis_identitas}/{nomor_identitas}', 'BukutamuController@cekID')->name('cekid');
+Route::get('/master/getdatatamu/{qrcode}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
 //api get data tamu
 #Route::get('/master/getdatatamu/{id}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
-Route::get('/master/getdatatamu/{qrcode}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
+
 
 Route::post('/simpanlama', 'BukutamuController@SimpanLama')->name('simpan.lama');
 Route::get('/lama', 'BukutamuController@lama')->name('lama');
