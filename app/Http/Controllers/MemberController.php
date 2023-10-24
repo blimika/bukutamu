@@ -553,10 +553,21 @@ class MemberController extends Controller
     public function Profil()
     {
         $Midentitas = Midentitas::orderBy('id','asc')->get();
-        return view('member.profil',['j_identitas'=>$Midentitas]);
+        $Mpekerjaan = Mpekerjaan::orderBy('id','asc')->get();
+        $Mjk = Mjk::orderBy('id','asc')->get();
+        $Mpendidikan = Mpendidikan::orderBy('id','asc')->get();
+        $Mkatpekerjaan = Mkatpekerjaan::orderBy('id','asc')->get();
+        $Mwarga = Mwarga::orderBy('id','asc')->get();
+        $MKunjungan = MKunjungan::orderBy('id','asc')->get();
+        $Mfasilitas = Mfasilitas::orderBy('id','asc')->get();
+        $MFas = MFas::orderBy('id','asc')->get();
+        $MManfaat = MManfaat::orderBy('id','asc')->get();
+        $MLay = MLay::orderBy('id','asc')->get();
+        return view('member.profil',['j_identitas'=>$Midentitas,'Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
     }
     public function UpdateProfil(Request $request)
     {
+        //dd($request);
         $cekData = User::where('username',trim($request->username))->orWhere('email',trim($request->email))->orWhere('email_ganti',trim($request->email))->orWhere('telepon',trim($request->telepon))->first();
         $data = User::where('id',Auth::user()->id)->first();
         $arr = array(
@@ -582,7 +593,56 @@ class MemberController extends Controller
                 'hasil'=>'Data member an. '.$request->name.' ('.$request->username.') berhasil diupdate, jika mengganti username silakan login ulang dgn username baru'
             );
         }
-        #dd($request->all());
+        //dd($request->all());
+        return Response()->json($arr);
+    }
+    public function UpdateBiodata(Request $request)
+    {
+        /*
+        bio_id: bio_id,
+        bio_tamu_id: bio_tamu_id,
+        bio_jenis_identitas: bio_jenis_identitas,
+        bio_nomor_identitas: bio_nomor_identitas,
+        bio_nama_lengkap: bio_nama_lengkap,
+        bio_id_jk: bio_id_jk,
+        bio_tgl_lahir: bio_tgl_lahir,
+        bio_email: bio_email,
+        bio_telepon: bio_telepon,
+        bio_mwarga: bio_mwarga,
+        bio_alamat: bio_alamat,
+        bio_id_mdidik: bio_id_mdidik,
+        bio_id_kerja: bio_id_kerja,
+        bio_kat_kerja: bio_kat_kerja,
+        bio_pekerjaan_detil: bio_pekerjaan_detil
+        */
+        //cek email dan nomor telepon tidak boleh sama
+        $cekData = Mtamu::where('email',trim($request->bio_email))->orWhere('telepon',trim($request->bio_telepon))->first();
+        $data = Mtamu::where('id',$request->bio_tamu_id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'data pengunjung ('.trim($request->bio_nama_lengkap).'), E-Mail ('.trim($request->bio_email).') atau Nomor HP ('.trim($request->bio_telepon).') sudah digunakan/biodata tidak ditemukan'
+        );
+        if ($data && (!$cekData or ($cekData && $cekData->id == Auth::user()->tamu_id)))
+        {
+            //update data member
+            $data->id_midentitas = $request->bio_jenis_identitas;
+            $data->nomor_identitas = $request->bio_nomor_identitas;
+            $data->nama_lengkap = $request->bio_nama_lengkap;
+            $data->tgl_lahir = $request->bio_tgl_lahir;
+            $data->id_jk = $request->bio_id_jk;
+            $data->id_mkerja = $request->bio_id_kerja;
+            $data->kerja_detil = $request->bio_pekerjaan_detil;
+            $data->id_mdidik = $request->bio_id_mdidik;
+            $data->id_mwarga = $request->bio_mwarga;
+            $data->email = $request->bio_email;
+            $data->telepon = $request->bio_telepon;
+            $data->alamat = $request->bio_alamat;
+            $data->update();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Biodata pengunjung an. '.$request->bio_nama_lengkap.' berhasil diupdate'
+            );
+        }
         return Response()->json($arr);
     }
     public function KaitkanMember(Request $request)

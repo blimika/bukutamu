@@ -33,8 +33,12 @@
                             <li>
                                 <a class="waves-effect waves-dark ml-auto" href="#" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Data</span></a>
                                 <ul aria-expanded="false" class="collapse">
-                                    <li><a href="{{route('kunjungan.baru')}}">Kunjungan Baru</a></li>
+                                    @if (Generate::CekAkses(\Request::getClientIp(true)))
+                                        <li><a href="{{route('kunjungan.baru')}}">Kunjungan Baru</a></li>
+                                    @endif
+                                    @if (Auth::user())
                                     <li><a href="{{route('kunjungan.terjadwal')}}">Kunjungan Terjadwal</a></li>
+                                    @endif
                                     <!--<li><a href="{{route('kunjungan.lama')}}">Kunjungan Lama</a></li>-->
                                     <!--<li><a href="{{route('kunjungan.scan')}}">SCAN QRCODE</a></li>--->
                                 </ul>

@@ -3,11 +3,29 @@ $('#GantiPasswdTombol').on('click', function(e) {
     e.preventDefault();
     $('#GantiPassword').toggle();
     $('#EditProfil').hide();
+    $('#EditBiodataMember').hide();
+    $('#EditPhoto').hide();
 });
 $('#EditProfilTombol').on('click', function(e) {
     e.preventDefault();
     $('#EditProfil').toggle();
     $('#GantiPassword').hide();
+    $('#EditBiodataMember').hide();
+    $('#EditPhoto').hide();
+});
+$('#EditBiodataTombol').on('click', function(e) {
+    e.preventDefault();
+    $('#EditBiodataMember').toggle();
+    $('#GantiPassword').hide();
+    $('#EditProfil').hide();
+    $('#EditPhoto').hide();
+});
+$('#EditPhotoTombol').on('click', function(e) {
+    e.preventDefault();
+    $('#EditPhoto').toggle();
+    $('#GantiPassword').hide();
+    $('#EditProfil').hide();
+    $('#EditBiodataMember').hide();
 });
 $('#UpdateProfil').on('click', function(e) {
     e.preventDefault();
@@ -504,4 +522,158 @@ $('#UpdatePasswd').on('click', function(e) {
     }
 });
 ///batas
+//update biodata clik
+$('#UpdateBiodata').on('click', function(e) {
+    e.preventDefault();
+    var bio_id = $('#bio_id').val();
+    var bio_tamu_id = $('#bio_tamu_id').val();
+    var bio_jenis_identitas = $('#bio_jenis_identitas').val();
+    var bio_nomor_identitas = $('#bio_nomor_identitas').val();
+    var bio_nama_lengkap = $('#bio_nama_lengkap').val();
+    var bio_id_jk = $('#bio_id_jk').val();
+    var bio_tgl_lahir = $('#bio_tgl_lahir').val();
+    var bio_email = $('#bio_email').val();
+    var bio_telepon = $('#bio_telepon').val();
+    var bio_mwarga = $('#bio_mwarga').val();
+    var bio_alamat = $('#bio_alamat').val();
+    var bio_id_mdidik = $('#bio_id_mdidik').val();
+    var bio_id_kerja = $('#bio_id_kerja').val();
+    var bio_kat_kerja = $('#bio_kat_kerja').val();
+    var bio_pekerjaan_detil = $('#bio_pekerjaan_detil').val();
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (bio_jenis_identitas == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Pilih salah satu Jenis Identitas');
+        return false;
+    }
+    else if (bio_nomor_identitas == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Nomor identitas harus terisi');
+        return false;
+    }
+    else if (bio_nama_lengkap == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Nama lengkap harus terisi');
+        return false;
+    }
+    else if (bio_id_jk == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Pilih salah satu Jenis Kelamin');
+        return false;
+    }
+    else if (bio_tgl_lahir == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Tanggal lahir harus terisi');
+        return false;
+    }
+    else if (bio_email == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Email harus terisi');
+        return false;
+    }
+    else if (!bio_email.match(mailformat))
+    {
+        $('#formEditBiodata #bio_update_error').text('Format email tidak sesuai');
+        return false;
+    }
+    else if (bio_telepon == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Telepon harus terisi');
+        return false;
+    }
+    else if (bio_mwarga == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Pilih salah satu kewarganegaraan');
+        return false;
+    }
+    else if (bio_alamat == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Alamat harus terisi');
+        return false;
+    }
+    else if (bio_id_mdidik == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Pilih salah satu pendidikan');
+        return false;
+    }
+    else if (bio_id_kerja == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Pilih salah satu pekerjaan');
+        return false;
+    }
+    else if (bio_kat_kerja == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Pilih salah satu jenis pekerjaan');
+        return false;
+    }
+    else if (bio_pekerjaan_detil == "")
+    {
+        $('#formEditBiodata #bio_update_error').text('Detil perkerjaan harus terisi');
+        return false;
+    }
+    else
+    {
+            //ajax update
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url : '{{route('member.updatebiodata')}}',
+                method : 'post',
+                data: {
+                    bio_id: bio_id,
+                    bio_tamu_id: bio_tamu_id,
+                    bio_jenis_identitas: bio_jenis_identitas,
+                    bio_nomor_identitas: bio_nomor_identitas,
+                    bio_nama_lengkap: bio_nama_lengkap,
+                    bio_id_jk: bio_id_jk,
+                    bio_tgl_lahir: bio_tgl_lahir,
+                    bio_email: bio_email,
+                    bio_telepon: bio_telepon,
+                    bio_mwarga: bio_mwarga,
+                    bio_alamat: bio_alamat,
+                    bio_id_mdidik: bio_id_mdidik,
+                    bio_id_kerja: bio_id_kerja,
+                    bio_kat_kerja: bio_kat_kerja,
+                    bio_pekerjaan_detil: bio_pekerjaan_detil
+                },
+                cache: false,
+                dataType: 'json',
+                success: function(data){
+                    if (data.status == true)
+                    {
+                        Swal.fire(
+                            'Berhasil!',
+                            ''+data.hasil+'',
+                            'success'
+                        ).then(function() {
+                            //sudah sukses
+                            location.reload();
+                        });
+                    }
+                    else
+                    {
+                        Swal.fire(
+                            'Error!',
+                            ''+data.hasil+'',
+                            'error'
+                        );
+                    }
+
+                },
+                error: function(){
+                    Swal.fire(
+                        'Error',
+                        'Koneksi Error',
+                        'error'
+                    );
+                }
+
+            });
+            //batas update
+    }
+});
+//batas
 </script>

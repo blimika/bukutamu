@@ -37,7 +37,7 @@
                     <center class="m-t-30">
                         @if (Auth::user()->user_foto != NULL)
                             @if (Storage::disk('public')->exists(Auth::user()->user_foto))
-                            <img src="{{asset('storage'.Auth::user()->user_foto)}}" width="200" class="img-responsive radius" />
+                            <img src="{{asset('storage'.Auth::user()->user_foto)}}" width="200" height="200" class="img-circle" />
                             @else
                                 <img src="https://via.placeholder.com/480x480/0022FF/FFFFFF/?text=photo+tidak+ada" class="img-circle" width="150" />
                             @endif
@@ -122,16 +122,32 @@
                                 <dl class="row">
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Tamu ID</dt>
                                     <dd class="col-lg-9 col-sm-9">#{{Auth::user()->mtamu->id}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Identitas</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->nomor_identitas}} ({{Auth::user()->mtamu->identitas->nama}}) </dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Nama Lengkap</dt>
                                     <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->nama_lengkap}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Kode QR</dt>
                                     <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->kode_qr}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Jenis Kelamin</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->jk->nama}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Tanggal lahir</dt>
                                     <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->tgl_lahir}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">E-mail</dt>
                                     <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->email}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Telepon</dt>
                                     <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->telepon}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Kewarganegaraan</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->warga->nama}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Pendidikan</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->pendidikan->nama}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Pekerjaan</dt>
+                                    <dd class="col-lg-9 col-sm-9">
+                                        {{Auth::user()->mtamu->pekerjaan->nama}} <br />
+                                        {{Auth::user()->mtamu->kerja_detil}} <br />
+                                        {{Auth::user()->mtamu->kategoripekerjaan->nama}}
+                                    </dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Alamat</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->alamat}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Total kunjungan</dt>
                                     <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->total_kunjungan}}</dd>
                                 </dl>
@@ -149,6 +165,9 @@
                 <h4 class="card-title">Menu Profil</h4>
                 <div class="col-lg-12 col-md-12 col-xs-12 m-t-30">
                     <button class="btn btn-rounded btn-sm btn-success" id="EditProfilTombol" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-pencil-alt" data-toggle="tooltip" title="Edit Data"></i> EDIT</button>
+                    @if (Auth::user()->tamu_id != 0)
+                    <button class="btn btn-rounded btn-sm btn-info" id="EditBiodataTombol" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}" data-tamuid={{Auth::user()->tamu_id}}><i class="fas fa-pencil-alt" data-toggle="tooltip" title="Edit Biodata"></i> EDIT BIODATA</button>
+                    @endif
                     <button class="btn btn-rounded btn-sm btn-danger" id="GantiPasswdTombol" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-key" data-toggle="tooltip" title="Ganti Password"></i> GANTI PASSWORD</button>
                     <button class="btn btn-rounded btn-sm btn-warning" id="EditPhotoTombol" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}"><i class="fas fa-pencil-alt" data-toggle="tooltip" title="Edit Photo Profil"></i> Edit Photo</button>
                 </div>
@@ -156,6 +175,10 @@
                     <center id="pesanerror">
                         <div class="alert alert-success m-5"><span id="tekserror"></span></div>
                     </center>
+                    @include('member.form-editphoto')
+                    @if (Auth::user()->tamu_id != 0)
+                        @include('member.form-editbiodata')
+                    @endif
                     @include('member.form-gantipasswd')
                     @include('member.form-editprofil')
                 </div>
@@ -176,7 +199,7 @@
     <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
 
     <style type="text/css">
-    #preloading, #pesanerror, #GantiPassword, #EditProfil
+    #preloading, #pesanerror, #GantiPassword, #EditProfil, #EditBiodataMember, #EditPhoto
     {
         display: none;
     }
@@ -201,4 +224,15 @@
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
     @include('member.js-profil')
+    <script>
+        $('#bio_tgl_lahir').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    toggleActive: true,
+    todayHighlight: true
+}).on('show.bs.modal', function(event) {
+    // prevent datepicker from firing bootstrap modal "show.bs.modal"
+    event.stopPropagation();
+});
+    </script>
 @stop
