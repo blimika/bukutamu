@@ -50,6 +50,7 @@
                                     <th>Lastlogin</th>
                                     <th>Flag</th>
                                     @if (Auth::user()->level > 1)
+                                        <th>Tamu ID</th>
                                         <th>Aksi</th>
                                     @endif
                                 </tr>
@@ -67,6 +68,7 @@
                                     <th>Lastlogin</th>
                                     <th>Flag</th>
                                     @if (Auth::user()->level > 1)
+                                        <th>Tamu ID</th>
                                         <th>Aksi</th>
                                     @endif
                                 </tr>
@@ -84,6 +86,7 @@
 @include('member.modal-view')
 @include('member.modal-edit')
 @include('member.modal-gantipasswd')
+@include('member.modal-kaitkan')
 @endsection
 
 @section('css')
@@ -95,6 +98,7 @@
     <link href="{{asset('assets/node_modules/Magnific-Popup-master/dist/magnific-popup.css')}}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style type="text/css">
     #preloading, #pesanerror
     {
@@ -131,6 +135,7 @@
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
           // DataTable
@@ -149,6 +154,7 @@
                 { data: 'lastip' },
                 { data: 'lastlogin' },
                 { data: 'flag' },
+                { data: 'tamuid'},
                 { data: 'aksi', orderable: false },
              ],
             dom: 'Bfrtip',
@@ -312,8 +318,76 @@
                                     }
                                 })
                     });
-
                 //batas flag member
+                //putuskan koneksi ke tamu
+                $(".putuskanmember").click(function (e) {
+                    e.preventDefault();
+                    var id = $(this).data('id');
+                    var nama = $(this).data('nama');
+                    var tamuid = $(this).data('tamuid');
+                    var namalengkap = $(this).data('namalengkap');
+                    Swal.fire({
+                                title: 'Putuskan Kaitan?',
+                                text: "Data member <b>"+nama+"</b> akan putuskan kaitan dengan pengunjung <b>"+namalengkap+"</b>",
+                                type: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Putuskan'
+                            }).then((result) => {
+                                if (result.value) {
+                                    //response ajax disini
+                                    $.ajaxSetup({
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        }
+                                    });
+                                    $.ajax({
+                                        url : '{{route('member.putuskanakun')}}',
+                                        method : 'post',
+                                        data: {
+                                            id: id,
+                                            nama: nama,
+                                            tamuid: tamuid,
+                                            namalengkap: namalengkap,
+                                        },
+                                        cache: false,
+                                        dataType: 'json',
+                                        success: function(data){
+                                            if (data.status == true)
+                                            {
+                                                Swal.fire(
+                                                    'Berhasil!',
+                                                    ''+data.hasil+'',
+                                                    'success'
+                                                ).then(function() {
+                                                    $('#dTabel').DataTable().ajax.reload(null,false);
+                                                });
+                                            }
+                                            else
+                                            {
+                                                Swal.fire(
+                                                    'Error!',
+                                                    ''+data.hasil+'',
+                                                    'error'
+                                                );
+                                            }
+
+                                        },
+                                        error: function(){
+                                            Swal.fire(
+                                                'Error',
+                                                'Koneksi Error',
+                                                'error'
+                                            );
+                                        }
+
+                                    });
+
+                                }
+                            })
+                });
+//batas koneksi
                 }
           });
           $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
@@ -323,4 +397,5 @@
     @include('member.js-view')
     @include('member.js-gantipasswd')
     @include('member.js-edit')
+    @include('member.js-kaitkan')
 @stop

@@ -101,6 +101,7 @@ class MemberController extends Controller
             $tamu_id = $record->tamu_id;
             $lastlogin = $record->lastlogin;
             $lastip = $record->lastip;
+            $tamuid = $record->tamu_id;
             if ($record->user_foto != NULL)
             {
                 if (Storage::disk('public')->exists($record->user_foto))
@@ -130,6 +131,25 @@ class MemberController extends Controller
             {
                 $link_aktivasi='';
             }
+            //kaitkan / putuskan koneksi pengunjung
+            if (Auth::user()->level > 10)
+            {
+                if ($record->tamu_id != 0)
+                {
+                    //putuskan
+                    $link_tamuid = '<div class="dropdown-divider"></div>
+                    <a class="dropdown-item putuskanmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-tamuid="'.$record->tamu_id.'" data-namalengkap="'.$record->mtamu->nama_lengkap.'">Putuskan</a>
+                    ';
+                }
+                else
+                {
+                    //kaitkan
+                    $link_tamuid ='<div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-username="'.$record->username.'" data-toggle="modal" data-target="#KaitkanModal">Kaitkan</a>
+                    ';
+                }
+            }
+
             $aksi ='
                 <div class="btn-group">
                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -144,6 +164,7 @@ class MemberController extends Controller
                     '.$link_aktivasi.'
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapusmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'">Hapus</a>
+                    '.$link_tamuid.'
                 </div>
             </div>
             ';
@@ -160,6 +181,7 @@ class MemberController extends Controller
                 "lastlogin"=>$lastlogin,
                 "lastip"=>$lastip,
                 "user_foto"=>$user_foto,
+                "tamuid"=>$tamuid,
                 "aksi"=>$aksi
             );
         }
@@ -220,6 +242,13 @@ class MemberController extends Controller
             }
             else
             {
+                //jika sudah terkait diputuskan dulu kaitannya ke Mtamu
+                if ($data->tamu_id != 0)
+                {
+                    $dtamu = Mtamu::where('id',$data->tamu_id)->first();
+                    $dtamu->user_id = 0;
+                    $dtamu->update();
+                }
                 $nama = $data->name;
                 $namafile_photo = $data->user_foto;
                 $data->delete();
@@ -662,16 +691,19 @@ class MemberController extends Controller
             if ($data_user->user_foto == NULL or $request->gantiphoto == "1")
             {
                 //$namafile_profil = '/img/profil/tamu_profil_'.$request->tamu_id.'.png';
-                $nama_file_member = '/img/member/member_foto_'.$request->user_id.'.png';
-                $data_user->user_foto = $nama_file_member;
                 //copy ke storage rill
                 //Storage::disk('public')->put($namafile_profil, $data_foto);
                 //Storage::disk('FTP')->put('new/file1.jpg', Storage::get('old/file1.jpg'));
                 //Storage::copy('old/file.jpg', 'new/file.jpg');
                 //Storage::disk('public')->put($nama_file, Storage::get('/'.$data->tamu_foto));
                 //$data_foto = Storage::disk('public')->get($data->tamu_foto);
-                Storage::disk('public')->put($nama_file_member, Storage::disk('public')->get($data->tamu_foto));
-
+                //cek dulu foto profil yg mau dicopy ada tidak file nya
+                if (Storage::disk('public')->exists($data->tamu_foto))
+                {
+                    $nama_file_member = '/img/member/member_foto_'.$request->user_id.'.png';
+                    $data_user->user_foto = $nama_file_member;
+                    Storage::disk('public')->put($nama_file_member, Storage::disk('public')->get($data->tamu_foto));
+                }
             }
             $data_user->tamu_id = $data->id;
             $data_user->update();
@@ -704,6 +736,32 @@ class MemberController extends Controller
             $arr = array(
                 'status'=>true,
                 'hasil'=>'Data member an. <b>'.Auth::user()->name.'</b> berhasil dihapus kaitan',
+            );
+
+        }
+
+        return Response()->json($arr);
+    }
+    public function PutuskanAkunMember(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Data pengunjung tidak tersedia'
+        );
+        $data = Mtamu::where('id',$request->tamuid)->first();
+        if ($data && ($data->user_id != 0))
+        {
+            //akan dieksekusi kalo user_id di data mtamu tidak nol
+            //update Mtamu
+            $data->user_id = 0;
+            $data->update();
+            //update user
+            $data_user = User::where('id',$request->id)->first();
+            $data_user->tamu_id = 0;
+            $data_user->update();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Data member an. <b>'.$request->nama.'</b> berhasil dihapus kaitan dengan pengunjung <b>'.$request->namalengkap.'</b>',
             );
 
         }

@@ -367,9 +367,20 @@ class MasterController extends Controller
             //$data->delete();
             $namafile_photo = $data->tamu_foto;
             $data->delete();
+            //cek di tabel user apakah terkait
+            //jika terkait di nol kan
+            if ($data->user_id != 0)
+            {
+                $duser = User::where('tamu_id',$request->id)->first();
+                $duser->tamu_id = 0;
+                $duser->update();
+            }
             if ($data->tamu_foto != NULL)
             {
-                Storage::disk('public')->delete($namafile_photo);
+                if (Storage::disk('public')->exists($namafile_photo))
+                {
+                    Storage::disk('public')->delete($namafile_photo);
+                }
             }
             $cek_kunjungan = Kunjungan::where('tamu_id',$request->id)->count();
             if ($cek_kunjungan > 0)
@@ -389,7 +400,10 @@ class MasterController extends Controller
                         Feedback::where('kunjungan_id',$item->id)->delete();
                     }
                     $namafile_kunjungan = $item->file_foto;
-                    Storage::disk('public')->delete($namafile_kunjungan);
+                    if (Storage::disk('public')->exists($namafile_kunjungan))
+                    {
+                        Storage::disk('public')->delete($namafile_kunjungan);
+                    }
                 }
                 Kunjungan::where('tamu_id',$request->id)->delete();
             }
