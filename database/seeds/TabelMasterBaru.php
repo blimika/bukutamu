@@ -38,5 +38,13 @@ class TabelMasterBaru extends Seeder
             ['id'=>2,'kode' => 2, 'nama' => 'Sabtu/Minggu'],
             ['id'=>3,'kode' => 3, 'nama' => 'Libur'],
         ]);
+        DB::table('users')->insert([
+            ['name' => 'I Putu Dyatmika','username'=>'blimika', 'email' => 'mika@bpsntb.id', 'password' => bcrypt('1'), 'level' => '15'],
+            ['name' => 'Yati Daryati Nurmalasari','username'=>'yatidar', 'email' => 'yatidar@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Rimassatya Pawestri','username'=>'rimas', 'email' => 'rimas@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Wahyudi Septiawan','username'=>'wahyudi', 'email' => 'wahyudi@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Lalu Yuriade Mulana','username'=>'yuriade', 'email' => 'yuriade@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Isti','username'=>'isti', 'email' => 'isti@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+        ]);
     }
 }

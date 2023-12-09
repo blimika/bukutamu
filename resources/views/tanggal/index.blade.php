@@ -85,7 +85,6 @@
 @section('css')
     <!-- Date picker plugins css -->
     <link href="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
     <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">

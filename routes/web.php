@@ -84,8 +84,6 @@ Route::get('/cekid/{jenis_identitas}/{nomor_identitas}', 'BukutamuController@cek
 Route::get('/master/getdatatamu/{qrcode}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
 //api get data tamu
 #Route::get('/master/getdatatamu/{id}', 'MasterController@CariPengunjung')->name('pengunjung.cari');
-
-
 Route::post('/simpanlama', 'BukutamuController@SimpanLama')->name('simpan.lama');
 Route::get('/lama', 'BukutamuController@lama')->name('lama');
 Route::get('/spi', 'BukutamuController@CLSpi')->name('spi');
@@ -140,8 +138,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/member/updatebiodata', 'MemberController@UpdateBiodata')->name('member.updatebiodata');
     //master tanggal
     Route::get('/master/tanggal', 'TanggalController@MasterTanggal')->name('master.tanggal');
+    Route::get('/master/gettanggal/{id}', 'TanggalController@CariTanggal')->name('cari.tanggal');
     Route::get('/master/listtanggal', 'TanggalController@PageListTanggal')->name('master.listtanggal');
     Route::post('/master/gen/tanggal', 'TanggalController@GenerateTanggal')->name('master.gentanggal');
+    Route::post('/master/updatetgl', 'TanggalController@UpdateTanggal')->name('master.updatetgl');
+    //tamu
+    Route::get('/tamu/list', 'BukutamuController@ListTamu')->name('tamu.list');
+    Route::get('/tamu/pagelist', 'BukutamuController@PageListTamu')->name('tamu.pagelist');
+    Route::post('/tamu/mulailayanan', 'BukutamuController@MulaiLayanan')->name('tamu.mulailayanan');
+    Route::post('/tamu/akhirlayanan', 'BukutamuController@AkhirLayanan')->name('tamu.akhirlayanan');
+
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

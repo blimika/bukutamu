@@ -1280,9 +1280,16 @@ class BukutamuController extends Controller
         $MKunjungan = MKunjungan::orderBy('id','asc')->get();
         $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
         $data_tamu = Mtamu::where('kode_qr',$qrcode)->first();
-        $Kunjungan = Kunjungan::with('tamu')
+        if ($data_tamu)
+        {
+            $Kunjungan = Kunjungan::with('tamu')
                         ->where('tamu_id',$data_tamu->id)
                         ->orderBy('tanggal','asc')->get();
+        }
+        else
+        {
+            $Kunjungan ="";
+        }
         //dd($Kunjungan);
         return view('detil.tamu',[
             'dataTamu'=>$data_tamu,
@@ -1421,6 +1428,196 @@ class BukutamuController extends Controller
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
         return view('users.aktivasi');
+    }
+    public function ListTamu()
+    {
+        return view('tamu.index');
+    }
+    public function PageListTamu(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = Kunjungan::select('count(*) as allcount')->count();
+        $totalRecordswithFilter =  DB::table('kunjungan')->
+        leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')->select('count(*) as allcount')->where('nama_lengkap', 'like', '%' .$searchValue . '%')->count();
+
+        // Fetch records
+        $records = DB::table('kunjungan')
+        ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+        ->leftJoin('mjk','mtamu.id_jk','=','mjk.id')
+        ->leftJoin('mtujuan','kunjungan.is_pst','=','mtujuan.kode')
+        ->leftJoin('users','kunjungan.petugas_id','=','users.id')
+        ->leftJoin('mjkunjungan','kunjungan.jenis_kunjungan','=','mjkunjungan.id')
+        ->where('nama_lengkap', 'like', '%' .$searchValue . '%')
+        ->select('kunjungan.*','mtamu.nama_lengkap','mtamu.kode_qr','mtamu.id_jk','mjk.inisial','mtujuan.nama_pendek','mtujuan.nama as tujuan_nama','users.name','users.username','mjkunjungan.nama as jkunjungan_nama')
+        ->skip($start)
+        ->take($rowperpage)
+        ->orderBy($columnName,$columnSortOrder)
+        ->get();
+
+        $data_arr = array();
+        $sno = $start+1;
+        foreach($records as $record){
+            $id = $record->id;
+            $nama_lengkap = '<a href="#" class="text-info" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">'.$record->nama_lengkap.'</a>';
+            $keperluan = $record->keperluan;
+            $tanggal = $record->tanggal;
+           
+            if ($record->jam_datang == "")
+            {
+                $mulai = '<button type="button" class="btn btn-circle btn-success btn-sm mulailayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-hand-holding-heart"></i></button>';
+            }
+            else 
+            {
+                $mulai = Carbon::parse($record->jam_datang)->format('H:i:s');
+            }
+            if ($record->jam_pulang == "")
+            {
+                $akhir = '<button type="button" class="btn btn-circle btn-danger btn-sm akhirlayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-sign-out-alt"></i></button>';
+            }
+            else 
+            {
+                $akhir = Carbon::parse($record->jam_pulang)->format('H:i:s');
+            }
+            //photo
+            if ($record->file_foto != NULL)
+            {
+                if (Storage::disk('public')->exists($record->file_foto))
+                {
+                    $photo = '<a class="image-popup" href="'.asset('storage/'.$record->file_foto).'" title="Nama : '.$record->nama_lengkap.'">
+                <img src="'.asset('storage/'.$record->file_foto).'" class="img-circle" width="60" height="60" class="img-responsive" />
+            </a>';
+                }
+                else
+                {
+                    $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
+                    <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                    </a>';
+                }
+            }
+            else
+            {
+                $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
+                <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                </a>';
+            }
+            //batas photo
+            if ($record->petugas_id != 0)
+            {
+                $petugas = $record->name;
+            }
+            else 
+            {
+                $petugas = '<span class="badge badge-danger badge-pill">belum ada</span';
+            }
+            if ($record->inisial=='L')
+            {
+                $jk = '<span class="badge badge-info badge-pill">'.$record->inisial.'</span>';
+            }
+            else
+            {
+                $jk = '<span class="badge badge-danger badge-pill">'.$record->inisial.'</span>';
+            }
+
+            if ($record->is_pst == 0)
+            {
+                $tujuan = '<span class="badge badge-danger badge-pill">'.$record->nama_pendek.'</span>';
+            }
+            else
+            {
+                $tujuan = '<span class="badge badge-success badge-pill">'.$record->nama_pendek.'</span>';
+            }
+
+            if ($record->jenis_kunjungan == 1)
+            {
+                $jkunjungan = '<span class="badge badge-info badge-pill">'.$record->jkunjungan_nama.'</span>';
+            }
+            else
+            {
+                $jkunjungan = '<span class="badge badge-warning badge-pill">'.$record->jkunjungan_nama.' ('.$record->jumlah_tamu.' org)</span> <span class="badge badge-info badge-pill">L '.$record->tamu_m.'</span> <span class="badge badge-danger badge-pill">P '.$record->tamu_f.'</span>';
+            }
+
+            $aksi ='
+                <div class="btn-group">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ti-settings"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">View</a>
+                                      
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item hapuskunjungantamu" href="#" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus Kunjungan</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item hapuspengunjungmaster" href="#" data-id="'.$record->tamu_id.'" data-nama="'.$record->nama_lengkap.'">Hapus Pengunjung</a>
+
+                </div>
+            </div>
+            ';
+            $data_arr[] = array(
+                "id" => $id,
+                "photo"=>$photo,
+                "nama_lengkap"=>$nama_lengkap.'<br />'.$jk,
+                "keperluan"=>$keperluan.'<br />'.$tujuan.' '.$jkunjungan,
+                "tanggal"=>$tanggal,
+                "jam_datang"=>$mulai,
+                "jam_pulang"=>$akhir,
+                "petugas_id"=>$petugas,               
+                "aksi"=>$aksi
+            );
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
+        );
+
+        echo json_encode($response);
+        exit;
+    }
+    public function MulaiLayanan(Request $request)
+    {
+        $data = Kunjungan::where([['id',$request->id],['jam_datang',NULL]])->first();
+        $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
+        if ($data) {
+            $data->petugas_id = Auth::user()->id;
+            $data->petugas_username = Auth::user()->username;
+            $data->jam_datang = \Carbon\Carbon::now();
+            $data->update();
+            $arr = array(
+                 'hasil'=> 'Data kunjungan an. '.$data->tamu->nama_lengkap.' berhasil dimulai',
+                 'status'=> true
+            );
+        }
+        return Response()->json($arr);
+    }
+    public function AkhirLayanan(Request $request)
+    {
+        $data = Kunjungan::where([['id',$request->id],['jam_pulang',NULL]])->first();
+        $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
+        if ($data) {
+            $data->jam_pulang = \Carbon\Carbon::now();
+            $data->update();
+            $arr = array(
+                 'hasil'=> 'Data kunjungan an. '.$data->tamu->nama_lengkap.' berhasil dikahiri',
+                 'status'=> true
+            );
+        }
+        return Response()->json($arr);
     }
 
 }

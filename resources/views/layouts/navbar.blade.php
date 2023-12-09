@@ -66,7 +66,7 @@
                             @if (Auth::User())
                                 @if (Auth::User()->level > 1)
                                 <li>
-                                    <a class="waves-effect waves-dark ml-auto" href="#"><i class="ti-layers"></i><span class="hide-menu">Tamu PST</span></a>
+                                    <a class="waves-effect waves-dark ml-auto" href="{{ route('tamu.list') }}"><i class="ti-layers"></i><span class="hide-menu">Tamu BPS</span></a>
                                 </li>
                                 <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
                                     <ul aria-expanded="false" class="collapse">

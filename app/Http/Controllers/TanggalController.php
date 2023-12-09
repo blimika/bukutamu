@@ -15,13 +15,78 @@ use Illuminate\Support\Facades\Mail;
 use App\MTanggal;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use App\JTanggal;
 
 class TanggalController extends Controller
 {
     //
     public function MasterTanggal()
     {
-        return view('tanggal.index');
+        $data_jtanggal = JTanggal::get();
+        return view('tanggal.index',['jtanggal'=>$data_jtanggal]);
+    }
+    public function CariTanggal($id)
+    {
+        $data = MTanggal::where('id',$id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Tanggal tidak ditemukan'
+        );
+        if ($data)
+        {
+            $arr_data = array(
+                "id" => $data->id,
+                "tanggal" => $data->tanggal,
+                "hari" => $data->hari,
+                "hari_num"=> (int) Carbon::parse($data->tanggal)->format('w'),
+                "jtgl" => $data->jtgl,
+                "jtgl_nama" => $data->jTanggal->nama,
+                "deskripsi" => $data->deskripsi,
+                "created_at" => $data->created_at,
+                "created_at_nama"=>Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                "updated_at" =>$data->updated_at,
+                "updated_at_nama"=>Carbon::parse($data->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+            );
+            $arr = array(
+                'status'=>true,
+                'hasil'=> $arr_data
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
+    }
+    public function UpdateTanggal(Request $request)
+    {
+        $data = MTanggal::where('id',$request->id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Tanggal tidak ditemukan'
+        );
+        if ($data)
+        {
+            /*
+             id: id,
+                    jtgl: jtgl,
+                    deskripsi: deskripsi,
+                    hari_num: hari_num,
+                    */
+            if ($request->jtgl == 1)
+            {
+                $deskripsi = "";
+            }
+            else 
+            {
+                $deskripsi = trim($request->deskripsi);
+            }
+            $data->jtgl = $request->jtgl;
+            $data->deskripsi = $deskripsi;
+            $data->update();
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Tanggal sudah di update'
+            );
+        }
+        return Response()->json($arr);
     }
     public function PageListTanggal(Request $request)
     {
@@ -68,9 +133,9 @@ class TanggalController extends Controller
                     </button>
                     <div class="dropdown-menu">
 
-                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'" data-toggle="modal" data-target="#EditAksesModal">Edit</a>
+                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'" data-toggle="modal" data-target="#EditTanggal">Edit</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item hapusakses" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'">Hapus</a>
+                        <a class="dropdown-item hapusakses" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'">Ubah Flag</a>
                     </div>
                     </div>
                     ';

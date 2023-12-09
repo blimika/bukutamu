@@ -41,4 +41,8 @@ class Kunjungan extends Model
     {
         return $this->belongsTo('App\Feedback', 'id', 'kunjungan_id');
     }
+    public function Petugas()
+    {
+        return $this->belongsTo('App\User', 'petugas_id', 'id');
+    }
 }
