@@ -41,14 +41,20 @@
                 <div class="row">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-8 col-sm-12">
-                        <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
+                        <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan.terjadwal')}}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="tamu_id" id="tamu_id" value="" />
                             <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
                             <input type="hidden" name="tamu_baru" id="tamu_baru" value="0" />
                             <h3 class="card-title">Rencana Kunjungan</h3>
-                            <h6 class="card-subtitle">silakan isikan rencanan kunjungan </h6>
+                            <h6 class="card-subtitle">silakan isikan rencana kunjungan </h6>
                             <hr class="m-t-0 m-b-20">
+                            <div class="form-group row">
+                                <label class="control-label text-right col-md-3">Tanggal Kunjungan</label>
+                                <div class="col-md-3" id="tgl_kunjungan_error">
+                                    <input type="text" class="form-control" id="tgl_kunjungan" name="tgl_kunjungan" autocomplete="off" required style="border: 1px solid black;" placeholder="Tanggal kunjungan">
+                                </div>
+                            </div>
+                            <!--jenis kunjungan-->
                             <h3 class="card-title">Jenis Kunjungan</h3>
                             <h6 class="card-subtitle">silakan isikan sesuai jenis kunjungan </h6>
                             <hr class="m-t-0 m-b-20">
@@ -84,9 +90,13 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <h3 class="card-title">Biodata Pengunjung</h3>
+                            @if (Auth::user()->tamu_id != 0)
+                                @include('kunjungan.form-biodata-terjadwal')
+                            @else
+                            <!--batas jenis kunjungan-->
+                            <input type="hidden" name="tamu_id" id="tamu_id" value="" />
+                            <h3 class="card-title">Biodata Penanggung Jawab Kunjungan</h3>
                             <h6 class="card-subtitle">silakan input data sesuai identitas yang dimiliki </h6>
                             <hr class="m-t-0 m-b-20">
                             <div class="form-group row">
@@ -95,7 +105,7 @@
                                     <select class="form-control" id="jenis_identitas" name="jenis_identitas" required>
                                             <option value="">Pilih Jenis</option>
                                             @foreach ($Midentitas as $item_identitas)
-                                                    <option value="{{$item_identitas->id}}">{{$item_identitas->nama}}</option>
+                                                <option value="{{$item_identitas->id}}">{{$item_identitas->nama}}</option>
                                             @endforeach
                                     </select>
                                     <small class="form-control-feedback" id="jenis_identitas_teks"></small>
@@ -205,37 +215,7 @@
                                 </div>
                             </div>
                             <!---batas biodata--->
-                            <h3 class="card-title">Photo Pengunjung</h3>
-                            <h6 class="card-subtitle">ambil posisi terlihat semua wajah</h6>
-                            <hr class="m-t-0 m-b-20">
-                            <div class="row">
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-10">
-                                    @if (ENV('APP_WEBCAM_MODE') == true)
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
-                                                <video id="video" width="100%" height="auto" autoplay aria-hidden="false"></video>
-                                                <canvas id="canvas" width="100%" height="auto" aria-hidden="true"></canvas>
-                                                <br />
-                                                <button type="button" id="ambil_foto" class="btn btn-success"><i class="fas fa-camera"></i> Foto</button>
-                                                <button type="button" id="reset_foto" class="btn btn-danger" disabled><i class="fas fa-undo"></i> Ulang</button>
-                                                <input type="hidden" name="foto" id="foto" />
-                                                <button type="button" id="tanpa_webcam" class="btn btn-warning"><i class="fas fa-times-circle"></i> Close</button>
-                                                <button type="button" id="dengan_webcam" class="btn btn-success"><i class="fas fa-camera-retro"></i> Buka</button>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
-                                                <input type="hidden" name="foto" id="foto" />
-                                                <button type="button" id="tanpa_webcam" class="btn btn-danger">Klik ini Tanpa Kamera</button>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="col-lg-1"></div>
-                            </div>
-
+                            @endif
                             <h3 class="card-title">Tujuan Kedatangan</h3>
                             <hr class="m-t-0 m-b-20">
                             <div class="row">
@@ -301,7 +281,7 @@
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-offset-3 col-md-9">
-                                                <button type="submit" id="tambah_data" class="btn btn-success waves-effect waves-light" disabled>Simpan</button>
+                                                <button type="submit" id="tambah_data" class="btn btn-success waves-effect waves-light">Simpan</button>
                             <button type="reset" class="btn btn-danger waves-effect waves-light">Reset</button>
                                             </div>
                                         </div>
@@ -327,7 +307,9 @@
         #canvas, #tanpa_webcam, #video, #ambil_foto, #reset_foto {
             display: none;
         }
-
+        .border-hitam {
+            border: 1px solid black;
+        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
@@ -398,7 +380,7 @@ $('#perorangan').change(function(){
 });
 
 </script>
-@include('kunjungan.jsnew')
+@include('kunjungan.jsterjadwal')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -429,11 +411,13 @@ $('#tgl_lahir_lama').datepicker({
     // prevent datepicker from firing bootstrap modal "show.bs.modal"
     event.stopPropagation();
 });
+
 $("#tgl_kunjungan").datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
     toggleActive: true,
-    todayHighlight: true
+    todayHighlight: true,
+    startDate: new Date()
 }).on('show.bs.modal', function(event) {
     // prevent datepicker from firing bootstrap modal "show.bs.modal"
     event.stopPropagation();

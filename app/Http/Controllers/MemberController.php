@@ -149,25 +149,36 @@ class MemberController extends Controller
                     ';
                 }
             }
-
-            $aksi ='
-                <div class="btn-group">
-                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="ti-settings"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewMemberModal">View</a>
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMemberModal">Edit</a>
-                    <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-username="'.$record->username.'" data-toggle="modal" data-target="#GantiPasswdModal">Ganti Password</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item ubahflagmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-flagmember="'.$record->flag.'">Ubah Flag</a>
-                    '.$link_aktivasi.'
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item hapusmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'">Hapus</a>
-                    '.$link_tamuid.'
+            else 
+            {
+                $link_tamuid = "";
+            }
+            if (Auth::user()->level > 10)
+            {
+                //hanya admin yg keluar aksinya ini
+                $aksi ='
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti-settings"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#ViewMemberModal">View</a>
+                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-toggle="modal" data-target="#EditMemberModal">Edit</a>
+                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-username="'.$record->username.'" data-toggle="modal" data-target="#GantiPasswdModal">Ganti Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item ubahflagmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-flagmember="'.$record->flag.'">Ubah Flag</a>
+                        '.$link_aktivasi.'
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item hapusmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'">Hapus</a>
+                        '.$link_tamuid.'
+                    </div>
                 </div>
-            </div>
-            ';
+                ';
+            }
+            else 
+            {
+                $aksi ="";
+            }
             $data_arr[] = array(
                 "id" => $id,
                 "name"=>$name,

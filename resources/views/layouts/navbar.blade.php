@@ -35,6 +35,7 @@
                                 <ul aria-expanded="false" class="collapse">
                                     @if (Generate::CekAkses(\Request::getClientIp(true)))
                                         <li><a href="{{route('kunjungan.baru')}}">Kunjungan Baru</a></li>
+                                        <li><a href="{{route('kunjungan.konfirmasi')}}">Konfirmasi Kunjungan</a></li>
                                     @endif
                                     @if (Auth::user())
                                     <li><a href="{{route('kunjungan.terjadwal')}}">Kunjungan Terjadwal</a></li>
@@ -57,16 +58,23 @@
                                     <a class="waves-effect waves-dark ml-auto" href="{{route('lama')}}"><i class="ti-eye"></i><span class="hide-menu">Semua Data</span></a>
                             </li>-->
 
-                            <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Data Pengunjung</span></a>
+                            <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Pengunjung</span></a>
                                 <ul aria-expanded="false" class="collapse">
                                     <li><a href="{{route('laporan.newpengunjung')}}">Laporan</a></li>
                                     <li><a href="{{route('lama')}}">List Data</a></li>
                                 </ul>
                             </li>
+                            <li>
+                                <a class="waves-effect waves-dark ml-auto" href="{{route('permintaan.data')}}"><i class="ti-layers"></i><span class="hide-menu">Permintaan Data</span></a>
+                            </li>
                             @if (Auth::User())
                                 @if (Auth::User()->level > 1)
                                 <li>
-                                    <a class="waves-effect waves-dark ml-auto" href="{{ route('tamu.list') }}"><i class="ti-layers"></i><span class="hide-menu">Tamu BPS</span></a>
+                                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-layers"></i><span class="hide-menu">Tamu BPS</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="{{route('tamu.terjadwal')}}">Terjadwal</a></li>
+                                        <li><a href="{{route('tamu.list')}}">List</a></li>
+                                    </ul>
                                 </li>
                                 <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
                                     <ul aria-expanded="false" class="collapse">

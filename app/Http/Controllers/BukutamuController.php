@@ -193,7 +193,10 @@ class BukutamuController extends Controller
         //dd($Kunjungan);
         return view('lama.list',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'bulan'=>$bulan_filter,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataTahun'=>$data_tahun,'tamupst'=>$tamu_filter,'Mjkunjungan'=>$Mjkunjungan,'jns_kunjungan'=>$kunjungan_filter]);
     }
-
+    public function SimpanTerjadwal(Request $request)
+    {
+        dd($request->all());
+    }
     public function simpan(Request $request)
     {
         //$layanan= $request->pst_layanan;
@@ -251,7 +254,7 @@ class BukutamuController extends Controller
             $data->alamat = $request->alamat;
             $data->created_at = \Carbon\Carbon::now();
             $data->kode_qr = $qrcode;
-            $data->total_kunjungan = 1;
+            $data->total_kunjungan = 0;
             $data->save();
             $id_tamu = $data->id;
             $waktu_hari_ini = date('Ymd_His');
@@ -1341,7 +1344,7 @@ class BukutamuController extends Controller
             );
             if (ENV('APP_KIRIM_MAIL') == true)
             {
-                Mail::to($data->email)->send(new DaftarMember($body));
+                Mail::to($data->email)->queue(new DaftarMember($body));
             }
         }
         #dd($request->all());
@@ -1465,6 +1468,7 @@ class BukutamuController extends Controller
         ->select('kunjungan.*','mtamu.nama_lengkap','mtamu.kode_qr','mtamu.id_jk','mjk.inisial','mtujuan.nama_pendek','mtujuan.nama as tujuan_nama','users.name','users.username','mjkunjungan.nama as jkunjungan_nama')
         ->skip($start)
         ->take($rowperpage)
+        ->orderBy('tanggal','desc')
         ->orderBy($columnName,$columnSortOrder)
         ->get();
 
@@ -1482,15 +1486,23 @@ class BukutamuController extends Controller
             }
             else 
             {
-                $mulai = Carbon::parse($record->jam_datang)->format('H:i:s');
+                $mulai = '<span class="badge badge-info badge-pill">'.Carbon::parse($record->jam_datang)->format('H:i:s').'</span>';
             }
             if ($record->jam_pulang == "")
             {
-                $akhir = '<button type="button" class="btn btn-circle btn-danger btn-sm akhirlayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-sign-out-alt"></i></button>';
+                if ($record->jam_datang != "")
+                {
+                    $akhir = '<button type="button" class="btn btn-circle btn-danger btn-sm akhirlayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-sign-out-alt"></i></button>';
+                }
+                else 
+                {
+                    $akhir = '';
+                }
+                
             }
             else 
             {
-                $akhir = Carbon::parse($record->jam_pulang)->format('H:i:s');
+                $akhir = '<span class="badge badge-warning badge-pill">'.Carbon::parse($record->jam_pulang)->format('H:i:s').'</span>';
             }
             //photo
             if ($record->file_foto != NULL)
@@ -1557,7 +1569,6 @@ class BukutamuController extends Controller
                 </button>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="#" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">View</a>
-                                      
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapuskunjungantamu" href="#" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus Kunjungan</a>
                     <div class="dropdown-divider"></div>
@@ -1610,7 +1621,9 @@ class BukutamuController extends Controller
         $data = Kunjungan::where([['id',$request->id],['jam_pulang',NULL]])->first();
         $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
         if ($data) {
+            $kode_feedback = Generate::Kode(10);
             $data->jam_pulang = \Carbon\Carbon::now();
+            $data->kode_feedback = $kode_feedback;
             $data->update();
             $arr = array(
                  'hasil'=> 'Data kunjungan an. '.$data->tamu->nama_lengkap.' berhasil dikahiri',
@@ -1619,5 +1632,23 @@ class BukutamuController extends Controller
         }
         return Response()->json($arr);
     }
+    public function PermintaanData()
+    {
+        return view('permintaandata.index');
+    }
+    public function ListTamuTerjadwal()
+    {
+        $data = Kunjungan::where('flag_kunjungan','0')->get();
+        return view('terjadwal.index',[
+            'data'=>$data,
+        ]);
+    }
+    public function PageListTamuTerjadwal(Request $request)
+    {
 
+    }
+    public function KonfirmasiKunjungan()
+    {
+
+    }
 }

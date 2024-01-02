@@ -20,7 +20,12 @@
     <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
     <!--alerts CSS -->
     <link href="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.min.css')}}" rel="stylesheet">
-
+    <style type="text/css">
+        #preloading, #pesanerror
+        {
+            display: none;
+        }
+    </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -50,45 +55,56 @@
                         <a href="{{ url('') }}" class="text-center m-b-40"><img src="{{asset('assets/images/logo-bktamu.png')}}" alt="Home" /><br/><img src="{{asset('assets/images/tulisan-bukutamu.png')}}" alt="Home" /></a>
                     </div>
                     <h3 class="box-title m-t-40 m-b-0">Daftar Sekarang</h3><small>Bukutamu BPS Provinsi Nusa Tenggara Barat</small>
-                    @csrf
-                    <div class="form-group m-t-20">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="text" required="" id="nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap" autocomplete="off">
+                    <center id="preloading" class="m-t-5 m-b-5">
+                        <button class="btn btn-success" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading, Memproses pendaftaran member...
+                          </button>
+                    </center>
+                    <center id="pesanerror">
+                        <div class="alert alert-success m-t-5 m-b-5"><span id="tekserror"></span></div>
+                    </center>
+                    <div id="BoxDaftarMember">
+                        @csrf
+                        <div class="form-group m-t-20">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" required="" id="nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap" autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group m-t-20">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="text" required="" name="username" id="username" placeholder="Username" autocomplete="off">
+                        <div class="form-group m-t-20">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" required="" name="username" id="username" placeholder="Username" autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group m-t-20">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="text" required="" name="telepon" id="telepon" placeholder="Nomor Telepon" autocomplete="off">
+                        <div class="form-group m-t-20">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" required="" name="telepon" id="telepon" placeholder="Nomor Telepon" autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="text" required="" name="email" id="email" placeholder="Email" autocomplete="off">
+                        <div class="form-group ">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" required="" name="email" id="email" placeholder="Email" autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="password" required="" name="passwd" id="passwd" placeholder="Password" autocomplete="off">
+                        <div class="form-group ">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="password" required="" name="passwd" id="passwd" placeholder="Password" autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <input class="form-control" type="password" required="" name="ulangi_passwd" id="ulangi_passwd" placeholder="Ulangi Password" autocomplete="off">
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="password" required="" name="ulangi_passwd" id="ulangi_passwd" placeholder="Ulangi Password" autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <span id="member_error" class="text-danger"></span>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <span id="member_error" class="text-danger"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group text-center m-t-20">
-                        <div class="col-xs-12">
-                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" name="daftar" id="daftar">DAFTAR</button>
+                        <div class="form-group text-center m-t-20">
+                            <div class="col-xs-12">
+                                <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" name="daftar" id="daftar">DAFTAR</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group m-b-0">

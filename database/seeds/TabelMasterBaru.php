@@ -20,12 +20,12 @@ class TabelMasterBaru extends Seeder
             ['id'=>4,'kode' => 20, 'nama' => 'Super Admin'],
         ]);
         DB::table('msaluran')->insert([
-            ['id'=>1,'kode' => 0, 'nama' => 'Kantor'],
-            ['id'=>2,'kode' => 1, 'nama' => 'PST'],
-            ['id'=>3,'kode' => 2, 'nama' => 'Pojok Statistik'],
-            ['id'=>4,'kode' => 3, 'nama' => 'E-Mail'],
-            ['id'=>5,'kode' => 4, 'nama' => 'Whatsapp'],
-            ['id'=>6,'kode' => 5, 'nama' => 'Telepon'],
+            ['id'=>1,'kode' => 1, 'nama' => 'Kantor'],
+            ['id'=>2,'kode' => 2, 'nama' => 'PST'],
+            ['id'=>3,'kode' => 3, 'nama' => 'Pojok Statistik'],
+            ['id'=>4,'kode' => 4, 'nama' => 'E-Mail'],
+            ['id'=>5,'kode' => 5, 'nama' => 'Whatsapp'],
+            ['id'=>6,'kode' => 6, 'nama' => 'Telepon'],
         ]);
         DB::table('m_akses')->insert([
             ['id'=>1,'ip' => '127.0.0.1', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],

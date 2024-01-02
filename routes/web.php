@@ -24,6 +24,7 @@ Auth::routes([
 
 Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::get('/daftar', 'BukutamuController@Daftar')->name('daftar');
+Route::get('/permintaan/data', 'BukutamuController@PermintaanData')->name('permintaan.data');
 Route::post('/simpandaftar', 'BukutamuController@MemberDaftar')->name('member.daftar');
 Route::post('/lupapasswd', 'BukutamuController@LupaPasswd')->name('member.lupapasswd');
 Route::get('/member/aktivasi/{user}/{kode}', 'BukutamuController@MemberAktivasi')->name('member.aktivasi');
@@ -72,8 +73,9 @@ Route::get('/cth3', function () {
 });
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
-Route::get('/tambahkunjunganbaru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');
-Route::get('/tambahkunjunganlama', 'BukutamuController@KunjunganLama')->name('kunjungan.lama');
+Route::get('/kunjungan/baru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');
+Route::get('/kunjungan/lama', 'BukutamuController@KunjunganLama')->name('kunjungan.lama');
+Route::get('/kunjungan/konfirmasi', 'BukutamuController@KonfirmasiKunjungan')->name('kunjungan.konfirmasi');
 Route::get('/scanqrcode', 'BukutamuController@ScanQrcode')->name('kunjungan.scan');
 Route::get('/detil/pengunjung/{qrcode}', 'BukutamuController@DetilTamu')->name('tamu.detil');
 Route::get('/edit/{id}', 'BukutamuController@editdata')->name('edit');
@@ -126,7 +128,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/member/getdata/{id}', 'MemberController@CariMember')->name('member.cari');
     Route::post('/member/mailverifikasi', 'MemberController@VerifikasiEmail')->name('member.mailverifikasi');
     //kunjungan terjadwal
-    Route::get('/kunjunganterjadwal', 'BukutamuController@KunjunganTerjadwal')->name('kunjungan.terjadwal');
+    Route::get('/kunjungan/terjadwal', 'BukutamuController@KunjunganTerjadwal')->name('kunjungan.terjadwal');
+    Route::post('/kunjungan/terjadwal/simpan', 'BukutamuController@SimpanTerjadwal')->name('simpan.terjadwal');
     //profil user
     Route::get('/member/profil', 'MemberController@Profil')->name('member.profil');
     Route::post('/member/gantipasswd', 'MemberController@GantiPasswd')->name('member.gantipasswd');
@@ -142,9 +145,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/master/listtanggal', 'TanggalController@PageListTanggal')->name('master.listtanggal');
     Route::post('/master/gen/tanggal', 'TanggalController@GenerateTanggal')->name('master.gentanggal');
     Route::post('/master/updatetgl', 'TanggalController@UpdateTanggal')->name('master.updatetgl');
-    //tamu
+    Route::get('/master/cektgl/{tgl}', 'TanggalController@CekTanggal')->name('cek.tanggal');
+    //tamu PageListTamuTerjadwal
     Route::get('/tamu/list', 'BukutamuController@ListTamu')->name('tamu.list');
     Route::get('/tamu/pagelist', 'BukutamuController@PageListTamu')->name('tamu.pagelist');
+    Route::get('/tamu/terjadwal', 'BukutamuController@ListTamuTerjadwal')->name('tamu.terjadwal');
+    Route::get('/tamu/pagelistterjadwal', 'BukutamuController@PageListTamuTerjadwal')->name('tamu.pagelistterjadwal');
     Route::post('/tamu/mulailayanan', 'BukutamuController@MulaiLayanan')->name('tamu.mulailayanan');
     Route::post('/tamu/akhirlayanan', 'BukutamuController@AkhirLayanan')->name('tamu.akhirlayanan');
 

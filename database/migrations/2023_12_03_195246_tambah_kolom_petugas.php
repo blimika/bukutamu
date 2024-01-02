@@ -19,6 +19,9 @@ class TambahKolomPetugas extends Migration
             $table->string('petugas_username',50)->nullable()->after('petugas_id');
             $table->dateTime('jam_datang')->nullable()->after('petugas_username');
             $table->dateTime('jam_pulang')->nullable()->after('jam_datang');
+            $table->string('kode_feedback',7)->nullable()->after('jam_pulang'); //untuk pengiriman feedback ke email dan diisilangsung
+            $table->boolean('flag_kunjungan')->default(1)->after('kode_feedback'); //flag sdh dtg kunjungan (0 - 1) 1 sudah dtg / belum (terjadwal)
+            $table->string('kode_kunjungan',5)->default(0)->after('flag_kunjungan');
         });
     }
 
@@ -30,7 +33,6 @@ class TambahKolomPetugas extends Migration
     public function down()
     {
         Schema::table('kunjungan', function (Blueprint $table) {
-           
         });
     }
 }

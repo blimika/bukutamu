@@ -72,6 +72,10 @@ $('#daftar').on('click', function(e) {
 
         //$('#TambahMember .modal-body #formEditMasterPengunjung').submit();
         //ajax responsen
+        //sembunyikan 
+        $('#preloading').toggle();
+        $('#BoxDaftarMember').toggle();
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -91,6 +95,7 @@ $('#daftar').on('click', function(e) {
             cache: false,
             dataType: 'json',
             success: function(data){
+                $('#preloading').toggle();
                 if (data.status == true)
                 {
                     Swal.fire(
@@ -98,25 +103,34 @@ $('#daftar').on('click', function(e) {
                         ''+data.hasil+'',
                         'success'
                     ).then(function() {
-                        location.reload();
+                        //location.reload();
+                        $('#pesanerror').toggle();
+                        $('#pesanerror #tekserror').text(data.hasil);
                     });
                 }
                 else
                 {
+                    $('#BoxDaftarMember').toggle();
                     Swal.fire(
                         'Error!',
                         ''+data.hasil+'',
                         'error'
                     );
+                    $('#pesanerror').toggle();
+                    $('#pesanerror #tekserror').text(data.hasil);
                 }
 
             },
             error: function(){
+                $('#preloading').toggle();
+                $('#BoxDaftarMember').toggle();
                 Swal.fire(
                     'Error',
                     'Koneksi Error',
                     'error'
                 );
+                $('#pesanerror').toggle();
+                $('#pesanerror #tekserror').text(data.hasil);
             }
 
         });

@@ -55,6 +55,36 @@ class TanggalController extends Controller
         #dd($request->all());
         return Response()->json($arr);
     }
+    public function CekTanggal($tgl)
+    {
+        $data = MTanggal::where('tanggal',$tgl)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Tanggal tidak ditemukan'
+        );
+        if ($data)
+        {
+            $arr_data = array(
+                "id" => $data->id,
+                "tanggal" => $data->tanggal,
+                "hari" => $data->hari,
+                "hari_num"=> (int) Carbon::parse($data->tanggal)->format('w'),
+                "jtgl" => $data->jtgl,
+                "jtgl_nama" => $data->jTanggal->nama,
+                "deskripsi" => $data->deskripsi,
+                "created_at" => $data->created_at,
+                "created_at_nama"=>Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                "updated_at" =>$data->updated_at,
+                "updated_at_nama"=>Carbon::parse($data->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+            );
+            $arr = array(
+                'status'=>true,
+                'hasil'=> $arr_data
+            );
+        }
+        #dd($request->all());
+        return Response()->json($arr);
+    }
     public function UpdateTanggal(Request $request)
     {
         $data = MTanggal::where('id',$request->id)->first();

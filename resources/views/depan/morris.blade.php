@@ -1,4 +1,5 @@
 <script>
+    /*
     Morris.Bar({
         element: 'chart-kunjungan-depan',
         data: {!! Generate::GrafikBulanan($bulan,$tahun)!!},
@@ -23,4 +24,24 @@
         resize: true
 
     });
+    */
+   // Dashboard 1 Morris-chart
+$(function () {
+    "use strict";
+ // Morris donut chart
+        
+    Morris.Donut({
+        element: 'donat-pekerjaan',
+        data: {!! Generate::DonatPekerjaan($tahun)!!},
+        resize: true,
+        colors:['#3980DB','#9C814F','#DBA339','#506886','#5C5446','#009efb', '#55ce63', '#2f3d4a']
+    });
+
+    Morris.Donut({
+        element: 'donat-pendidikan',
+        data: {!! Generate::DonatPendidikan($tahun)!!},
+        resize: true,
+        colors:['#55ce63','#fccf03','#009efb', '#2f3d4a']
+    });
+ });    
 </script>

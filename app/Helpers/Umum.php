@@ -205,6 +205,60 @@ class Generate {
         //dd($arr);
         return $arr;
     }
+    public static function DonatPekerjaan($tahun)
+    {
+        $data_didik = \DB::table('kunjungan')
+                    ->leftJoin('mtamu','mtamu.id','=','kunjungan.tamu_id')
+                    ->leftJoin('mpekerjaan','mpekerjaan.id','=','mtamu.id_mkerja')
+                    ->select(\DB::Raw('mpekerjaan.id, mpekerjaan.nama,count(*) as jumlah'))
+                    ->whereYear('tanggal',$tahun)
+                    ->groupBy('mtamu.id_mkerja')
+                    ->get();
+        foreach ($data_didik as $item)
+        {
+            $arr[]=array(
+                'label'=> $item->nama,
+                'value'=> $item->jumlah
+            );
+        }
+        $data = json_encode($arr);
+        return $data;
+    }
+    public static function DonatPendidikan($tahun)
+    {
+        $data_didik = \DB::table('kunjungan')
+                    ->leftJoin('mtamu','mtamu.id','=','kunjungan.tamu_id')
+                    ->leftJoin('mpendidikan','mpendidikan.id','=','mtamu.id_mdidik')
+                    ->select(\DB::Raw('mpendidikan.id, mpendidikan.nama,count(*) as jumlah'))
+                    ->whereYear('tanggal',$tahun)
+                    ->groupBy('mtamu.id_mdidik')
+                    ->get();
+        $item_jumlah = 0;
+        foreach ($data_didik as $item)
+        {
+            
+            if ($item->id < 4)
+            {
+                $arr[]=array(
+                    'label'=> $item->nama,
+                    'value'=> $item->jumlah
+                );
+            }
+            else 
+            {
+
+                $item_jumlah = $item_jumlah + $item->jumlah ;
+            }
+           
+        }
+        $label_akhir = 'S2/S3';
+        $arr[]=array(
+            'label'=> $label_akhir,
+            'value'=> $item_jumlah
+        );
+        $data = json_encode($arr);
+        return $data;
+    }
     public static function GrafikTahunanHc($tahun)
     {
         /*
