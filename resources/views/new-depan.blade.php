@@ -42,6 +42,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="card">
+            @if(!$Kunjungan->isEmpty())
             <div class="card-body p-b-0">
                 <h3 class="card-title">Dashboard Bukutamu</h3>
                 @include('depan.filter')
@@ -62,6 +63,11 @@
                     @include('depan.tabpengunjung')
                 </div>
             </div>
+            @else
+            <div class="card-body p-b-0">
+                <h3 class="card-title text-center">Data kunjungan masih kosong</h3>
+            </div>
+            @endif
         </div>
     </div>
 </div>
@@ -106,8 +112,6 @@
     <link href="{{asset('dist/grafik/highcharts.css')}}" rel="stylesheet">
 @stop
 @section('js')
-@include('lama.js')
-@include('js')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -126,6 +130,10 @@
     <!--Morris JavaScript -->
     <script src="{{asset('assets/node_modules/raphael/raphael-min.js')}}"></script>
     <script src="{{asset('assets/node_modules/morrisjs/morris.js')}}"></script>
-   @include('depan.morris')
-   @include('depan.hc')
+    @if(!$Kunjungan->isEmpty())
+        @include('lama.js')
+        @include('js')
+        @include('depan.morris')
+        @include('depan.hc')
+    @endif
 @stop

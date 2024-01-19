@@ -48,7 +48,8 @@
                                     <th>Nama</th>
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
-                                    <th>Kode Kunjungan</th>
+                                    <th>Kode Booking</th>
+                                    <th>Flag</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -77,7 +78,7 @@
                                                         @else
                                                         <span class="badge badge-success badge-pill">PST</span>
                                                         @endif
-    
+
                                                         @if($item->jenis_kunjungan == 1)
                                                         <span class="badge badge-info badge-pill">{{$item->jKunjungan->nama}}</span>
                                                         @else
@@ -94,7 +95,8 @@
                                                     </p>
                                             </td>
                                             <td>{{$item->tanggal}}</td>
-                                            <td>{{$item->kode_kunjungan}}</td>
+                                            <td>{{$item->kode_booking}}</td>
+                                            <td>{{$item->Flag->nama}}</td>
                                             <td>
                                                 @if(Auth::user()->level > 10)
                                                 <div class="btn-group">
@@ -102,7 +104,7 @@
                                                         <i class="ti-settings"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        
+
                                                             <div class="dropdown-divider"></div>
                                                             <a class="dropdown-item hapuskunjungan" href="javascript:void(0)" data-id="{{$item->id}}" data-nama="{{$item->tamu->nama_lengkap}}" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus</a>
                                                     </div>
@@ -118,7 +120,8 @@
                                     <th>Nama</th>
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
-                                    <th>Kode Kunjungan</th>
+                                    <th>Kode Booking</th>
+                                    <th>Flag</th>
                                     <th>Aksi</th>
                                 </tr>
                             </tfoot>

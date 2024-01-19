@@ -26,8 +26,10 @@ use App\Mjkunjungan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Feedback;
+use App\FPTerjadwal;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Generate;
+use App\LPTerjadwal;
 use QrCode;
 use App\MAkses;
 use App\User;
@@ -38,6 +40,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\DaftarMember;
 use App\Mail\ResetPasswd;
 use App\MTanggal;
+use App\MFKunjungan;
+use App\Terjadwal;
 
 class BukutamuController extends Controller
 {
@@ -195,7 +199,203 @@ class BukutamuController extends Controller
     }
     public function SimpanTerjadwal(Request $request)
     {
-        dd($request->all());
+        /*
+        array:29 [▼
+        "_token" => "zjtqDIEqScR7yhLDJLBpeblcWJk8pV1AO9xOGBm1"
+        "edit_tamu" => "1"
+        "tamu_baru" => "1"
+        "tgl_kunjungan" => "2024-01-12"
+        "jenis_kunjungan" => "1"
+        "jumlah_tamu" => "1"
+        "tamu_laki" => "0"
+        "tamu_wanita" => "0"
+        "tamu_id" => "2"
+        "jenis_identitas" => "2"
+        "nomor_identitas" => "5272031903820005"
+        "nama_lengkap" => "I Putu Dyatmika"
+        "id_jk" => "1"
+        "tgl_lahir" => "1982-03-19"
+        "email" => "pdyatmika@gmail.com"
+        "telepon" => "081237802900"
+        "mwarga" => "1"
+        "alamat" => "Jl. Dr. Soedjono No. 74"
+        "id_mdidik" => "3"
+        "id_kerja" => "3"
+        "kat_kerja" => "3"
+        "pekerjaan_detil" => "BPS Provinsi NTB"
+        "tujuan_kedatangan" => "1"
+        "id_manfaat" => "4"
+        "manfaat_nama" => "Penelitian"
+        "pst_layanan" => array:3 [▼
+            0 => "1"
+            1 => "2"
+            2 => "16"
+        ]
+        "pst_fasilitas" => array:3 [▼
+            0 => "2"
+            1 => "4"
+            2 => "8"
+        ]
+        "fas_lainnya" => null
+        "keperluan" => "testing"
+        ]
+        */
+        //dd($request->all());
+        //cek dulu data penanggung jawab apa ada
+        if ($request->tamu_id==NULL) {
+            $qrcode = Generate::Kode(6);
+            $data = new Mtamu();
+            $data->id_midentitas = $request->jenis_identitas;
+            $data->nomor_identitas = trim($request->nomor_identitas);
+            $data->nama_lengkap = trim($request->nama_lengkap);
+            $data->tgl_lahir = $request->tgl_lahir;
+            $data->id_jk = $request->id_jk;
+            $data->id_mkerja = $request->id_kerja;
+            $data->id_mkat_kerja = $request->kat_kerja;
+            $data->kerja_detil = $request->pekerjaan_detil;
+            $data->id_mdidik = $request->id_mdidik;
+            $data->id_mwarga = $request->mwarga;
+            $data->email = $request->email;
+            $data->telepon = trim($request->telepon);
+            $data->alamat = $request->alamat;
+            $data->created_at = \Carbon\Carbon::now();
+            $data->kode_qr = $qrcode;
+            $data->total_kunjungan = 0;
+            $data->save();
+            $id_tamu = $data->id;
+
+
+            //buat qrcode img nya langsung
+            $qrcode_foto = QrCode::format('png')
+            ->size(500)->margin(1)->errorCorrection('H')
+             ->generate($qrcode);
+            $output_file = '/img/qrcode/'.$qrcode.'-'.$data->id.'.png';
+            //$data_foto = base64_decode($qrcode_foto);
+            Storage::disk('public')->put($output_file, $qrcode_foto);
+        }
+        else
+        {
+            if ($request->edit_tamu==1) {
+                //edit data tamu
+                $data = Mtamu::where('id','=',$request->tamu_id)->first();
+                $data->id_midentitas = $request->jenis_identitas;
+                $data->nomor_identitas = trim($request->nomor_identitas);
+                $data->nama_lengkap = trim($request->nama_lengkap);
+                $data->tgl_lahir = $request->tgl_lahir;
+                $data->id_jk = $request->id_jk;
+                $data->id_mkerja = $request->id_kerja;
+                $data->id_mkat_kerja = $request->kat_kerja;
+                $data->kerja_detil = $request->pekerjaan_detil;
+                $data->id_mdidik = $request->id_mdidik;
+                $data->id_mwarga = $request->mwarga;
+                $data->email = trim($request->email);
+                $data->telepon = trim($request->telepon);
+                $data->alamat = $request->alamat;
+                $data->update();
+            }
+            $id_tamu = $request->tamu_id;
+        }
+        //cek tujuannya
+        if ($request->tujuan_kedatangan==0) {
+            $is_pst=0;
+            $f_id = 0;
+            $f_teks = NULL;
+        }
+        else {
+            $is_pst=$request->tujuan_kedatangan;
+            $f_id = $request->id_manfaat;
+            $f_teks = $request->manfaat_nama;
+        }
+        //input ke tabel Terjadwal
+        //cek dulu apakah hari ini juga sudah mengisi
+        //kalo sudah ada tidak bisa mengisi dua kali bukutamu
+        $data = Mtamu::where('id','=',$id_tamu)->first();
+        $cek_kunjungan = Terjadwal::where([['tamu_id',$id_tamu],['tanggal',$request->tgl_kunjungan],['is_pst',$is_pst]])->count();
+        if ($cek_kunjungan > 0 )
+        {
+            //sudah ada kasih info kalo sudah mengisi
+            $pesan_error = 'Data pengunjung '.$data->nama_lengkap.' sudah pernah mengisi bukutamu hari tanggal '.Carbon::parse($request->tgl_kunjungan)->isoFormat('dddd, D MMMM Y');
+            $warna_error = 'danger';
+        }
+        else
+        {
+            //cek jenis kunjungan
+            //perorangan atau kelompok
+            //perorangan skip aja pakai jk dari tamu_id
+            //kelompok isikan sesuai jumlah
+            /*
+            jenis_kunjungan" => "2"
+            "jumlah_tamu" => "3"
+            "tamu_laki" => "0"
+            "tamu_wanita" => "3"
+            */
+            if ($request->jenis_kunjungan == 2) {
+                $jumlah_tamu = $request->jumlah_tamu;
+                $laki = $request-> tamu_laki;
+                $wanita = $request->tamu_wanita;
+            }
+            else
+            {
+                $jumlah_tamu = 1;
+                //cek jenis kelamin ambil dari query data diatas
+                if ($data->id_jk == 1)
+                {
+                    $laki=1;
+                    $wanita=0;
+                }
+                else
+                {
+                    $laki=0;
+                    $wanita=1;
+                }
+            }
+            $kode_booking = Generate::Kode(6);
+            $dataKunjungan = new Terjadwal();
+            $dataKunjungan->tamu_id = $id_tamu;
+            $dataKunjungan->kode_booking = $kode_booking;
+            $dataKunjungan->tanggal = $request->tgl_kunjungan;
+            $dataKunjungan->keperluan = $request->keperluan;
+            $dataKunjungan->jenis_kunjungan = $request->jenis_kunjungan;
+            $dataKunjungan->jumlah_tamu = $jumlah_tamu;
+            $dataKunjungan->tamu_m = $laki;
+            $dataKunjungan->tamu_f = $wanita;
+            $dataKunjungan->is_pst = $is_pst;
+            $dataKunjungan->f_id = $f_id;
+            $dataKunjungan->f_teks = $f_teks;
+
+            $dataKunjungan->save();
+            if ($is_pst>0) {
+                //isi tabel pst_layanan, pst_manfaat dan pst_fasilitas
+                //$MLay = MLay::orderBy('id','asc')->get();
+                //$pst_layanan = Mlayanan::whereIn('id',$request->pst_layanan)->get();
+                $pst_layanan = MLay::whereIn('id',$request->pst_layanan)->get();
+                $pst_fasilitas = MFas::whereIn('id',$request->pst_fasilitas)->get();
+                $terjadwal_id = $dataKunjungan->id;
+                foreach ($pst_layanan as $l)
+                {
+                    $dataLayanan = new LPTerjadwal();
+                    $dataLayanan->terjadwal_id = $terjadwal_id;
+                    $dataLayanan->l_p_id = $l->id;
+                    $dataLayanan->l_p_nama = $l->nama;
+                    $dataLayanan->save();
+                }
+                foreach ($pst_fasilitas as $fas)
+                {
+                    $dataFasilitas = new FPTerjadwal();
+                    $dataFasilitas->terjadwal_id = $terjadwal_id;
+                    $dataFasilitas->f_p_id = $fas->id;
+                    $dataFasilitas->f_p_nama = $fas->nama;
+                    $dataFasilitas->save();
+                }
+            }
+            Session::flash('message_header', "<strong>Terimakasih</strong>");
+            $pesan_error="Data Pengunjung <strong><i>".trim($request->nama_lengkap)."</i></strong> berhasil ditambahkan";
+            $warna_error="success";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('depan');
+        //batas
     }
     public function simpan(Request $request)
     {
@@ -1453,9 +1653,9 @@ class BukutamuController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
         // Total records
-        $totalRecords = Kunjungan::select('count(*) as allcount')->count();
+        $totalRecords = Kunjungan::count();
         $totalRecordswithFilter =  DB::table('kunjungan')->
-        leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')->select('count(*) as allcount')->where('nama_lengkap', 'like', '%' .$searchValue . '%')->count();
+        leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')->where('nama_lengkap', 'like', '%' .$searchValue . '%')->count();
 
         // Fetch records
         $records = DB::table('kunjungan')
@@ -1479,12 +1679,12 @@ class BukutamuController extends Controller
             $nama_lengkap = '<a href="#" class="text-info" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">'.$record->nama_lengkap.'</a>';
             $keperluan = $record->keperluan;
             $tanggal = $record->tanggal;
-           
+
             if ($record->jam_datang == "")
             {
                 $mulai = '<button type="button" class="btn btn-circle btn-success btn-sm mulailayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-hand-holding-heart"></i></button>';
             }
-            else 
+            else
             {
                 $mulai = '<span class="badge badge-info badge-pill">'.Carbon::parse($record->jam_datang)->format('H:i:s').'</span>';
             }
@@ -1494,13 +1694,13 @@ class BukutamuController extends Controller
                 {
                     $akhir = '<button type="button" class="btn btn-circle btn-danger btn-sm akhirlayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-sign-out-alt"></i></button>';
                 }
-                else 
+                else
                 {
                     $akhir = '';
                 }
-                
+
             }
-            else 
+            else
             {
                 $akhir = '<span class="badge badge-warning badge-pill">'.Carbon::parse($record->jam_pulang)->format('H:i:s').'</span>';
             }
@@ -1531,7 +1731,7 @@ class BukutamuController extends Controller
             {
                 $petugas = $record->name;
             }
-            else 
+            else
             {
                 $petugas = '<span class="badge badge-danger badge-pill">belum ada</span';
             }
@@ -1585,7 +1785,7 @@ class BukutamuController extends Controller
                 "tanggal"=>$tanggal,
                 "jam_datang"=>$mulai,
                 "jam_pulang"=>$akhir,
-                "petugas_id"=>$petugas,               
+                "petugas_id"=>$petugas,
                 "aksi"=>$aksi
             );
         }
@@ -1621,7 +1821,7 @@ class BukutamuController extends Controller
         $data = Kunjungan::where([['id',$request->id],['jam_pulang',NULL]])->first();
         $arr = array('hasil' => 'Data tidak tersedia', 'status' => false);
         if ($data) {
-            $kode_feedback = Generate::Kode(10);
+            $kode_feedback = Generate::Kode(7);
             $data->jam_pulang = \Carbon\Carbon::now();
             $data->kode_feedback = $kode_feedback;
             $data->update();
@@ -1638,7 +1838,7 @@ class BukutamuController extends Controller
     }
     public function ListTamuTerjadwal()
     {
-        $data = Kunjungan::where('flag_kunjungan','0')->get();
+        $data = Terjadwal::get();
         return view('terjadwal.index',[
             'data'=>$data,
         ]);
