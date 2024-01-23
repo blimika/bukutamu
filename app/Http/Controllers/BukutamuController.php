@@ -93,21 +93,19 @@ class BukutamuController extends Controller
         $Mjkunjungan = Mjkunjungan::orderBy('id','asc')->get();
         //$Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id','asc')->get();
+        if ($bulan_filter == NULL)
+        {
+            $bulan_filter= (int) date('m');
+        }
         $Kunjungan = Kunjungan::with('tamu')
-                        ->when($bulan_filter == NULL,function ($query){
-                            return $query->whereDate('tanggal', Carbon::today());
-                        })
                         ->when($bulan_filter > 0,function ($query) use ($bulan_filter,$tahun_filter){
                             return $query->whereMonth('tanggal',$bulan_filter)->whereYear('tanggal',$tahun_filter);
                         })
                         ->orderBy('created_at','desc')->get();
         //dd($data_tahun);
-        if ($bulan_filter == NULL)
-        {
-            $bulan_filter= (int) date('m');
-        }
-        //grafik
 
+        //grafik
+        //dd($Kunjungan);
         //batas grafik
         return view('new-depan',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Mjkunjungan'=>$Mjkunjungan,'Kunjungan'=> $Kunjungan,'Mfasilitas'=>$Mfasilitas,'dataTahun'=>$data_tahun,'tahun'=>$tahun_filter,'dataBulan'=>$data_bulan,'dataBulanPendek'=>$data_bulan_pendek,'bulan'=>$bulan_filter]);
     }

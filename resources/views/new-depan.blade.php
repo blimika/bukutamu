@@ -43,9 +43,16 @@
     <div class="col-lg-12 col-md-12">
         <div class="card">
             @if(!$Kunjungan->isEmpty())
-            <div class="card-body p-b-0">
-                <h3 class="card-title">Dashboard Bukutamu</h3>
-                @include('depan.filter')
+            <div class="card-body p-b-0 row">
+                <div class="col-lg-5 col-md-6 col-xs-12">
+                    <h3 class="card-title">Dashboard Bukutamu</h3>
+                </div>
+                <div class="col-lg-7 col-md-6 col-xs-12">
+                    @include('depan.filter')
+                </div>
+            </div>
+            <div class="card-body">
+                @include('depan.widget')
             </div>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs customtab" role="tablist">
@@ -64,9 +71,9 @@
                 </div>
             </div>
             @else
-            <div class="card-body p-b-0">
-                <h3 class="card-title text-center">Data kunjungan masih kosong</h3>
-            </div>
+                <div class="card-body p-b-0">
+                    <h3 class="card-title text-center">Data kunjungan masih kosong</h3>
+                </div>
             @endif
         </div>
     </div>
