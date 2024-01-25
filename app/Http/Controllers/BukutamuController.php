@@ -46,6 +46,10 @@ use App\Terjadwal;
 class BukutamuController extends Controller
 {
     //
+    public function DisplayAntrian()
+    {
+        return view('antrian.index');
+    }
     public function depan()
     {
         //filter

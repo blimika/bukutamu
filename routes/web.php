@@ -25,6 +25,7 @@ Auth::routes([
 Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::get('/daftar', 'BukutamuController@Daftar')->name('daftar');
 Route::get('/permintaan/data', 'BukutamuController@PermintaanData')->name('permintaan.data');
+Route::get('/diplay/antrian', 'BukutamuController@DisplayAntrian')->name('display.antrian');
 Route::post('/simpandaftar', 'BukutamuController@MemberDaftar')->name('member.daftar');
 Route::post('/lupapasswd', 'BukutamuController@LupaPasswd')->name('member.lupapasswd');
 Route::get('/member/aktivasi/{user}/{kode}', 'BukutamuController@MemberAktivasi')->name('member.aktivasi');

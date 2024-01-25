@@ -45,4 +45,8 @@ class Kunjungan extends Model
     {
         return $this->belongsTo('App\User', 'petugas_id', 'id');
     }
+    public function NomorAntrian()
+    {
+        return $this->belongsTo('App\Antrian', 'kunjungan_id', 'id')->where('is_pst',1);
+    }
 }

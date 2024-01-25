@@ -22,6 +22,7 @@ class TambahTamuIDUsers extends Migration
             $table->string('email_kodever',10)->default(0)->after('flag');
             $table->string('email_ganti',254)->nullable()->after('email');
             $table->timestamp('akun_verified_at')->nullable()->after('email_verified_at');
+            $table->boolean('petugas_antrian')->unsigned()->default(0)->after('akun_verified_at'); //nomor petugas hanya 1 dan 2
         });
     }
 

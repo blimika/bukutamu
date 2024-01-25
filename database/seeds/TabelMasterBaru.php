@@ -36,12 +36,18 @@ class TabelMasterBaru extends Seeder
             ['id'=>1,'ip' => '127.0.0.1', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
             ['id'=>2,'ip' => '::1', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
             ['id'=>3,'ip' => '10.52.6.31', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
-            ['id'=>4,'ip' => '202.46.65.114', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
+            ['id'=>4,'ip' => '36.95.114.173', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
         ]);
         DB::table('jtanggal')->insert([
             ['id'=>1,'kode' => 1, 'nama' => 'Kerja'],
             ['id'=>2,'kode' => 2, 'nama' => 'Sabtu/Minggu'],
             ['id'=>3,'kode' => 3, 'nama' => 'Libur'],
+        ]);
+        DB::table('mlayanan_utama')->insert([
+            ['id'=>1,'kode' => 1, 'nama' => 'Perpustakaan'],
+            ['id'=>2,'kode' => 2, 'nama' => 'Penjualan'],
+            ['id'=>3,'kode' => 3, 'nama' => 'Konsultasi'],
+            ['id'=>4,'kode' => 4, 'nama' => 'Rekomendasi'],
         ]);
         DB::table('users')->insert([
             ['name' => 'I Putu Dyatmika','username'=>'blimika', 'email' => 'mika@bpsntb.id', 'password' => bcrypt('1'), 'level' => '15'],
