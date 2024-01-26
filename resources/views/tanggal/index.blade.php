@@ -54,6 +54,8 @@
                                             <th>hari</th>
                                             <th>jtanggal_id</th>
                                             <th>deskripsi</th>
+                                            <th>petugas1</th>
+                                            <th>petugas2</th>
                                             <th>aksi</th>
                                         </tr>
                                     </thead>
@@ -64,6 +66,8 @@
                                             <th>hari</th>
                                             <th>jtanggal_id</th>
                                             <th>deskripsi</th>
+                                            <th>petugas1</th>
+                                            <th>petugas2</th>
                                             <th>aksi</th>
                                         </tr>
                                     </tfoot>
@@ -126,6 +130,8 @@
                 { data: 'hari' },
                 { data: 'jtanggal_id' },
                 { data: 'deskripsi' },
+                { data: 'petugas1' },
+                { data: 'petugas2' },
                 { data: 'aksi', orderable: false },
              ],
             dom: 'Bfrtip',

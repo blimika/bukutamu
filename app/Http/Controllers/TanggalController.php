@@ -23,7 +23,8 @@ class TanggalController extends Controller
     public function MasterTanggal()
     {
         $data_jtanggal = JTanggal::get();
-        return view('tanggal.index',['jtanggal'=>$data_jtanggal]);
+        $data_operator = User::where('level',10)->get();
+        return view('tanggal.index',['jtanggal'=>$data_jtanggal,'operator'=>$data_operator]);
     }
     public function CariTanggal($id)
     {
@@ -46,6 +47,11 @@ class TanggalController extends Controller
                 "created_at_nama"=>Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
                 "updated_at" =>$data->updated_at,
                 "updated_at_nama"=>Carbon::parse($data->updated_at)->isoFormat('dddd, D MMMM Y H:mm:ss'),
+                "petugas1_id"=> $data->petugas1_id,
+                "petugas1_username"=> $data->petugas1_username,
+                "petugas2_id"=> $data->petugas2_id,
+                "petugas2_username"=> $data->petugas2_username,
+
             );
             $arr = array(
                 'status'=>true,
@@ -104,7 +110,7 @@ class TanggalController extends Controller
             {
                 $deskripsi = "";
             }
-            else 
+            else
             {
                 $deskripsi = trim($request->deskripsi);
             }
@@ -115,6 +121,45 @@ class TanggalController extends Controller
                 'status'=>true,
                 'hasil'=>'Tanggal sudah di update'
             );
+        }
+        return Response()->json($arr);
+    }
+    public function UpdateJadwal(Request $request)
+    {
+        $data = MTanggal::where('id',$request->id)->first();
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Jadwal tidak ditemukan'
+        );
+        if ($data)
+        {
+            /*
+                id: id,
+                petugas1_id: petugas_1,
+                petugas2_id: petugas_2,
+            */
+            if ($request->petugas1_id == $request->petugas2_id )
+            {
+                $arr = array(
+                    'status'=>false,
+                    'hasil'=>'Petugas 1 dan Petugas 2 tidak boleh sama'
+                );
+            }
+            else
+            {
+                $data1 = User::where('id',$request->petugas1_id)->first();
+                $data2 = User::where('id',$request->petugas2_id)->first();
+                //update data
+                $data->petugas1_id = $request->petugas1_id;
+                $data->petugas1_username = $data1->username;
+                $data->petugas2_id = $request->petugas2_id;
+                $data->petugas2_username = $data2->username;
+                $data->update();
+                $arr = array(
+                    'status'=>true,
+                    'hasil'=>'Jadwal petugas sudah diupdate'
+                );
+            }
         }
         return Response()->json($arr);
     }
@@ -139,11 +184,15 @@ class TanggalController extends Controller
         $totalRecordswithFilter = MTanggal::select('count(*) as allcount')->where('tanggal', 'like', '%' .$searchValue . '%')->count();
 
         // Fetch records
-        $records = MTanggal::orderBy($columnName,$columnSortOrder)
+        $records = DB::table('mtanggal')
+            ->leftJoin('jtanggal','mtanggal.jtgl','=','jtanggal.kode')
+            ->leftJoin(DB::Raw("(select id as id_petugas1, name as nama_petugas1, username as username_petugas1 from users) as petugas1"),'mtanggal.petugas1_id','=','petugas1.id_petugas1')
+            ->leftJoin(DB::Raw("(select id as id_petugas2, name as nama_petugas2, username as username_petugas2 from users) as petugas2"),'mtanggal.petugas2_id','=','petugas2.id_petugas2')
             ->where('mtanggal.tanggal', 'like', '%' .$searchValue . '%')
-            ->select('mtanggal.*')
+            ->select('mtanggal.*','petugas1.*','petugas2.*','jtanggal.nama as jtgl_nama')
             ->skip($start)
             ->take($rowperpage)
+            ->orderBy($columnName,$columnSortOrder)
             ->get();
 
         $data_arr = array();
@@ -152,19 +201,30 @@ class TanggalController extends Controller
             $id = $record->id;
             $tanggal = $record->tanggal;
             $hari = $record->hari;
-            $jtanggal_id = $record->jTanggal->nama;
+            $jtanggal_id = $record->jtgl_nama;
             $deskripsi = $record->deskripsi;
+            $petugas1 = $record->nama_petugas1;
+            $petugas2 = $record->nama_petugas2;
             if (Auth::user()->level == 20)
                 {
+                    if ($record->jtgl < 2)
+                    {
+                        $link_edit_jadwal = '<a class="dropdown-item" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'" data-toggle="modal" data-target="#EditJadwal">Edit Jadwal</a>
+                        <div class="dropdown-divider"></div>';
+                    }
+                    else
+                    {
+                        $link_edit_jadwal = '';
+                    }
                     $aksi ='
                     <div class="btn-group">
                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="ti-settings"></i>
                     </button>
                     <div class="dropdown-menu">
-
-                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'" data-toggle="modal" data-target="#EditTanggal">Edit</a>
+                        <a class="dropdown-item" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'" data-toggle="modal" data-target="#EditTanggal">Edit Tanggal</a>
                         <div class="dropdown-divider"></div>
+                        '.$link_edit_jadwal.'
                         <a class="dropdown-item hapusakses" href="#" data-id="'.$record->id.'" data-tanggal="'.$record->tanggal.'">Ubah Flag</a>
                     </div>
                     </div>
@@ -180,6 +240,8 @@ class TanggalController extends Controller
                 "hari"=>$hari,
                 "jtanggal_id"=> $jtanggal_id,
                 "deskripsi"=>$deskripsi,
+                "petugas1"=>$petugas1,
+                "petugas2"=>$petugas2,
                 "aksi"=>$aksi
             );
         }

@@ -44,17 +44,27 @@ class TabelMasterBaru extends Seeder
             ['id'=>3,'kode' => 3, 'nama' => 'Libur'],
         ]);
         DB::table('mlayanan_utama')->insert([
-            ['id'=>1,'kode' => 1, 'nama' => 'Perpustakaan'],
-            ['id'=>2,'kode' => 2, 'nama' => 'Penjualan'],
-            ['id'=>3,'kode' => 3, 'nama' => 'Konsultasi'],
-            ['id'=>4,'kode' => 4, 'nama' => 'Rekomendasi'],
+            ['id'=>1,'kode' => 0, 'nama' => 'Kantor'],
+            ['id'=>2,'kode' => 1, 'nama' => 'Perpustakaan'],
+            ['id'=>3,'kode' => 2, 'nama' => 'Penjualan'],
+            ['id'=>4,'kode' => 3, 'nama' => 'Konsultasi'],
+            ['id'=>5,'kode' => 4, 'nama' => 'Rekomendasi'],
         ]);
         DB::table('users')->insert([
-            ['name' => 'I Putu Dyatmika','username'=>'blimika', 'email' => 'mika@bpsntb.id', 'password' => bcrypt('1'), 'level' => '15'],
+            ['name' => 'I Putu Dyatmika','username'=>'blimika', 'email' => 'mika@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
             ['name' => 'Yati Daryati Nurmalasari','username'=>'yatidar', 'email' => 'yatidar@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
             ['name' => 'Rimassatya Pawestri','username'=>'rimas', 'email' => 'rimas@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
             ['name' => 'Wahyudi Septiawan','username'=>'wahyudi', 'email' => 'wahyudi@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
             ['name' => 'Lalu Yuriade Mulana','username'=>'yuriade', 'email' => 'yuriade@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Shafa Rosea Surbakti ','username'=>'shafa', 'email' => 'shafa@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Indah Fitriana','username'=>'indah', 'email' => 'indah.fitriana@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Ria Kusumawati','username'=>'ria', 'email' => 'ria@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Nimas Ayu Florentyna','username'=>'nimas', 'email' => 'nimas.ayu@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Eka Marwitasari','username'=>'eka', 'email' => 'eka.marwitasari@bps.go.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Adlan Felardhi','username'=>'adlan', 'email' => 'a.felardhi@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Medhia Ratna PH','username'=>'medhia', 'email' => 'medhia.ratna@bps.go.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Isna Zuriatina','username'=>'isna', 'email' => 'isna_z@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Abdurrofi Robbani','username'=>'rofi', 'email' => 'rofi.robbani@bps.go.id', 'password' => bcrypt('1'), 'level' => '10'],
             ['name' => 'Isti','username'=>'isti', 'email' => 'isti@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
         ]);
     }

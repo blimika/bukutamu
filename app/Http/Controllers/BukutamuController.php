@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Antrian;
 use Illuminate\Http\Request;
 use App\Midentitas;
 use Illuminate\Support\Facades\Session;
@@ -42,6 +43,7 @@ use App\Mail\ResetPasswd;
 use App\MTanggal;
 use App\MFKunjungan;
 use App\Terjadwal;
+use App\LayananUtama;
 
 class BukutamuController extends Controller
 {
@@ -550,10 +552,12 @@ class BukutamuController extends Controller
         if ($request->tujuan_kedatangan==0) {
             $is_pst=0;
             $f_id = 0;
+            $layanan_id = 0;
         }
         else {
             $is_pst=$request->tujuan_kedatangan;
             $f_id = $request->id_manfaat;
+            $layanan_id = $request->layanan_id;
             //$f_id = 0;
         }
         //cek dulu apakah hari ini juga sudah mengisi
@@ -646,6 +650,17 @@ class BukutamuController extends Controller
                 $dataManfaat->manfaat_nama = $request->manfaat_nama;
                 $dataManfaat->manfaat_nama_new = $request->manfaat_nama;
                 $dataManfaat->save();
+                //jika tujuannya PST isikan tabel antrian
+
+                $nomor_max = DB::table('p_antrian')->where('tanggal',Carbon::today()->format('Y-m-d'))->max('nomor_antrian');;
+                $nomor_selanjutnya = $nomor_max + 1;
+
+                $dataAntrian = new Antrian();
+                $dataAntrian->kunjungan_id = $kunjungan_id;
+                $dataAntrian->nomor_antrian = $nomor_selanjutnya;
+                $dataAntrian->tanggal = Carbon::today()->format('Y-m-d');
+                $dataAntrian->layanan = $layanan_id;
+                $dataAntrian->save();
 
             }
             Session::flash('message_header', "<strong>Terimakasih</strong>");
@@ -1428,12 +1443,13 @@ class BukutamuController extends Controller
                 $MFas = MFas::orderBy('id','asc')->get();
                 $MManfaat = MManfaat::orderBy('id','asc')->get();
                 $MLay = MLay::orderBy('id','asc')->get();
+                $LayananUtama = LayananUtama::where('kode','>',0)->orderBy('kode','asc')->get();
             }
             else
             {
                 return redirect()->route('depan');
             }
-            return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat,'dataTamu'=>$dataTamu]);
+            return view('kunjungan.new',['Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat,'dataTamu'=>$dataTamu,'LayananUtama'=>$LayananUtama]);
         }
         else
         {
@@ -1636,7 +1652,188 @@ class BukutamuController extends Controller
     }
     public function ListTamu()
     {
-        return view('tamu.index');
+        $data_tahun = DB::table('kunjungan')
+                    ->selectRaw('year(tanggal) as tahun')
+                    ->groupBy('tahun')
+                    ->orderBy('tahun','asc')
+                      ->get();
+        return view('tamu.index',[
+            'dataTahun' => $data_tahun
+        ]);
+    }
+    public function AntrianTamu()
+    {
+        return view('antrian.tamu');
+    }
+    public function AntrianListTamu(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+         // Total records
+         $totalRecords = Antrian::count();
+         $totalRecordswithFilter =  DB::table('p_antrian')
+                                    ->leftJoin('kunjungan','kunjungan.id','=','p_antrian.kunjungan_id')
+                                    ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+                                    ->where('nama_lengkap', 'like', '%' .$searchValue . '%')->count();
+        $records = DB::table('p_antrian')
+            ->leftJoin('kunjungan','kunjungan.id','=','p_antrian.kunjungan_id')
+            ->leftJoin('mjkunjungan','mjkunjungan.id','=','kunjungan.jenis_kunjungan')
+            ->leftJoin('mtamu','kunjungan.tamu_id','=','mtamu.id')
+            ->leftJoin('mjk','mtamu.id_jk','=','mjk.id')
+            ->leftJoin('mtujuan','kunjungan.is_pst','=','mtujuan.kode')
+            ->leftJoin('users','kunjungan.petugas_id','=','users.id')
+            ->leftJoin('mlayanan_utama','p_antrian.layanan','=','mlayanan_utama.kode')
+            ->where('nama_lengkap', 'like', '%' .$searchValue . '%')
+            ->select('p_antrian.nomor_antrian','p_antrian.petugas_antrian', 'p_antrian.layanan','mlayanan_utama.nama as layanan_nama','kunjungan.*','mtamu.nama_lengkap','mtamu.kode_qr','mtamu.id_jk','mjk.inisial','mtujuan.nama_pendek','mtujuan.nama as tujuan_nama','users.name','users.username','mjkunjungan.nama as jkunjungan_nama')
+            ->skip($start)
+            ->take($rowperpage)
+            ->orderBy('kunjungan.tanggal','desc')
+            ->orderBy('nomor_antrian','asc')
+            ->orderBy($columnName,$columnSortOrder)
+            ->get();
+        //dd($records);
+            $data_arr = array();
+            $sno = $start+1;
+            foreach($records as $record){
+                $id = $record->id;
+                $nama_lengkap = '<a href="#" class="text-info" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">'.$record->nama_lengkap.'</a>';
+                $keperluan = $record->keperluan;
+                $tanggal = $record->tanggal;
+                $layanan = $record->layanan_nama;
+                $nomor_antrian = $record->nomor_antrian;
+                if ($record->jam_datang == "")
+                {
+                    $mulai = '<button type="button" class="btn btn-circle btn-success btn-sm mulailayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-hand-holding-heart"></i></button>';
+                }
+                else
+                {
+                    $mulai = '<span class="badge badge-info badge-pill">'.Carbon::parse($record->jam_datang)->format('H:i:s').'</span>';
+                }
+                if ($record->jam_pulang == "")
+                {
+                    if ($record->jam_datang != "")
+                    {
+                        $akhir = '<button type="button" class="btn btn-circle btn-danger btn-sm akhirlayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'"><i class="fas fa-sign-out-alt"></i></button>';
+                    }
+                    else
+                    {
+                        $akhir = '';
+                    }
+
+                }
+                else
+                {
+                    $akhir = '<span class="badge badge-warning badge-pill">'.Carbon::parse($record->jam_pulang)->format('H:i:s').'</span>';
+                }
+                //photo
+                if ($record->file_foto != NULL)
+                {
+                    if (Storage::disk('public')->exists($record->file_foto))
+                    {
+                        $photo = '<a class="image-popup" href="'.asset('storage/'.$record->file_foto).'" title="Nama : '.$record->nama_lengkap.'">
+                    <img src="'.asset('storage/'.$record->file_foto).'" class="img-circle" width="60" height="60" class="img-responsive" />
+                </a>';
+                    }
+                    else
+                    {
+                        $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
+                        <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                        </a>';
+                    }
+                }
+                else
+                {
+                    $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : '.$record->nama_lengkap.'">
+                    <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                    </a>';
+                }
+                //batas photo
+                if ($record->petugas_id != 0)
+                {
+                    $petugas = $record->name;
+                }
+                else
+                {
+                    $petugas = '<span class="badge badge-danger badge-pill">belum ada</span';
+                }
+                if ($record->inisial=='L')
+                {
+                    $jk = '<span class="badge badge-info badge-pill">'.$record->inisial.'</span>';
+                }
+                else
+                {
+                    $jk = '<span class="badge badge-danger badge-pill">'.$record->inisial.'</span>';
+                }
+
+                if ($record->is_pst == 0)
+                {
+                    $tujuan = '<span class="badge badge-danger badge-pill">'.$record->nama_pendek.'</span>';
+                }
+                else
+                {
+                    $tujuan = '<span class="badge badge-success badge-pill">'.$record->nama_pendek.'</span>';
+                }
+
+                if ($record->jenis_kunjungan == 1)
+                {
+                    $jkunjungan = '<span class="badge badge-info badge-pill">'.$record->jkunjungan_nama.'</span>';
+                }
+                else
+                {
+                    $jkunjungan = '<span class="badge badge-warning badge-pill">'.$record->jkunjungan_nama.' ('.$record->jumlah_tamu.' org)</span> <span class="badge badge-info badge-pill">L '.$record->tamu_m.'</span> <span class="badge badge-danger badge-pill">P '.$record->tamu_f.'</span>';
+                }
+
+                $aksi ='
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti-settings"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">View</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item hapuskunjungantamu" href="#" data-id="'.$record->id.'" data-nama="'.$record->nama_lengkap.'" data-tanggal="'.$record->tanggal.'" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus Kunjungan</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item hapuspengunjungmaster" href="#" data-id="'.$record->tamu_id.'" data-nama="'.$record->nama_lengkap.'">Hapus Pengunjung</a>
+
+                    </div>
+                </div>
+                ';
+                $data_arr[] = array(
+                    "id" => $id,
+                    "photo"=>$photo,
+                    "nama_lengkap"=>$nama_lengkap.'<br />'.$jk,
+                    "keperluan"=>$keperluan.'<br />'.$tujuan.' '.$jkunjungan,
+                    "tanggal"=>$tanggal,
+                    "nomor_antrian"=>$nomor_antrian,
+                    "layanan"=>$layanan,
+                    "jam_datang"=>$mulai,
+                    "jam_pulang"=>$akhir,
+                    "petugas_id"=>$petugas,
+                    "aksi"=>$aksi
+                );
+            }
+
+            $response = array(
+                "draw" => intval($draw),
+                "iTotalRecords" => $totalRecords,
+                "iTotalDisplayRecords" => $totalRecordswithFilter,
+                "aaData" => $data_arr
+            );
+
+            echo json_encode($response);
+            exit;
     }
     public function PageListTamu(Request $request)
     {
@@ -1666,8 +1863,9 @@ class BukutamuController extends Controller
         ->leftJoin('mtujuan','kunjungan.is_pst','=','mtujuan.kode')
         ->leftJoin('users','kunjungan.petugas_id','=','users.id')
         ->leftJoin('mjkunjungan','kunjungan.jenis_kunjungan','=','mjkunjungan.id')
+        ->leftJoin('mlayanan_utama','kunjungan.layanan_utama','=','mlayanan_utama.kode')
         ->where('nama_lengkap', 'like', '%' .$searchValue . '%')
-        ->select('kunjungan.*','mtamu.nama_lengkap','mtamu.kode_qr','mtamu.id_jk','mjk.inisial','mtujuan.nama_pendek','mtujuan.nama as tujuan_nama','users.name','users.username','mjkunjungan.nama as jkunjungan_nama')
+        ->select('kunjungan.*','mtamu.nama_lengkap','mtamu.kode_qr','mtamu.id_jk','mjk.inisial','mtujuan.nama_pendek','mtujuan.nama as tujuan_nama','users.name','users.username','mjkunjungan.nama as jkunjungan_nama','mlayanan_utama.nama as layanan_utama')
         ->skip($start)
         ->take($rowperpage)
         ->orderBy('tanggal','desc')
@@ -1681,6 +1879,7 @@ class BukutamuController extends Controller
             $nama_lengkap = '<a href="#" class="text-info" data-kodeqr="'.$record->kode_qr.'" data-toggle="modal" data-target="#ViewModal">'.$record->nama_lengkap.'</a>';
             $keperluan = $record->keperluan;
             $tanggal = $record->tanggal;
+            $layanan_utama = $record->layanan_utama;
 
             if ($record->jam_datang == "")
             {
@@ -1785,6 +1984,7 @@ class BukutamuController extends Controller
                 "nama_lengkap"=>$nama_lengkap.'<br />'.$jk,
                 "keperluan"=>$keperluan.'<br />'.$tujuan.' '.$jkunjungan,
                 "tanggal"=>$tanggal,
+                "layanan_utama"=>$layanan_utama,
                 "jam_datang"=>$mulai,
                 "jam_pulang"=>$akhir,
                 "petugas_id"=>$petugas,
@@ -1801,6 +2001,10 @@ class BukutamuController extends Controller
 
         echo json_encode($response);
         exit;
+    }
+    public function SyncLayananUtama(Request $request)
+    {
+
     }
     public function MulaiLayanan(Request $request)
     {

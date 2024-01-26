@@ -66,7 +66,7 @@
                     <div class="box bg-info text-center">
                         <h1 class="text-white">Nomor Antrian</h1>
                         <hr class="text-white">
-                        <span class="text-white nomorantrian">001</span>
+                        <span class="text-white nomorantrian">{!! sprintf("%03d", '45') !!}</span>
                         <hr class="text-white">
                         <span class="text-white namapetugas">ke Petugas 1</span>
                     </div>

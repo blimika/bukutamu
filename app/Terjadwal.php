@@ -27,4 +27,7 @@ class Terjadwal extends Model
     public function Flag(){
     	return $this->belongsTo('App\MFKunjungan', 'flag_kunjungan', 'kode');
     }
+    public function LayananUtama(){
+    	return $this->hasMany('App\LayananUtama', 'layanan_utama', 'kode');
+    }
 }

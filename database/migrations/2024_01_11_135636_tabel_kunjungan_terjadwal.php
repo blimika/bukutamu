@@ -27,6 +27,7 @@ class TabelKunjunganTerjadwal extends Migration
             $table->tinyInteger('tamu_m')->default(0); //tamu laki
             $table->tinyInteger('tamu_f')->default(0); //tamu wanita
             $table->boolean('flag_kunjungan')->default(1); //flag = 1 masih terjadwal, 2 = sudah datang, 3 = batal
+            $table->boolean('layanan_utama')->default(0);
             $table->timestamps();
         });
     }

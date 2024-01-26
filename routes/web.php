@@ -25,7 +25,7 @@ Auth::routes([
 Route::get('/', 'BukutamuController@depan')->name('depan');
 Route::get('/daftar', 'BukutamuController@Daftar')->name('daftar');
 Route::get('/permintaan/data', 'BukutamuController@PermintaanData')->name('permintaan.data');
-Route::get('/diplay/antrian', 'BukutamuController@DisplayAntrian')->name('display.antrian');
+Route::get('/display/antrian', 'BukutamuController@DisplayAntrian')->name('display.antrian');
 Route::post('/simpandaftar', 'BukutamuController@MemberDaftar')->name('member.daftar');
 Route::post('/lupapasswd', 'BukutamuController@LupaPasswd')->name('member.lupapasswd');
 Route::get('/member/aktivasi/{user}/{kode}', 'BukutamuController@MemberAktivasi')->name('member.aktivasi');
@@ -146,6 +146,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/master/listtanggal', 'TanggalController@PageListTanggal')->name('master.listtanggal');
     Route::post('/master/gen/tanggal', 'TanggalController@GenerateTanggal')->name('master.gentanggal');
     Route::post('/master/updatetgl', 'TanggalController@UpdateTanggal')->name('master.updatetgl');
+    Route::post('/master/updatejadwal', 'TanggalController@UpdateJadwal')->name('master.updatejadwal');
     Route::get('/master/cektgl/{tgl}', 'TanggalController@CekTanggal')->name('cek.tanggal');
     //tamu PageListTamuTerjadwal
     Route::get('/tamu/list', 'BukutamuController@ListTamu')->name('tamu.list');
@@ -154,7 +155,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/tamu/pagelistterjadwal', 'BukutamuController@PageListTamuTerjadwal')->name('tamu.pagelistterjadwal');
     Route::post('/tamu/mulailayanan', 'BukutamuController@MulaiLayanan')->name('tamu.mulailayanan');
     Route::post('/tamu/akhirlayanan', 'BukutamuController@AkhirLayanan')->name('tamu.akhirlayanan');
-
+    Route::post('/tamu/sync/layananutama', 'BukutamuController@SyncLayananUtama')->name('tamu.synclayananutama');
+    //Tamu Antrian
+    Route::get('/tamu/antrian', 'BukutamuController@AntrianTamu')->name('tamu.antrian');
+    Route::get('/tamu/list/antrian', 'BukutamuController@AntrianListTamu')->name('tamu.antrianlist');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

@@ -406,6 +406,7 @@
         {
             //check minimal 1 di chek untuk pst_layanan, pst_fasilitas
             var pst_manfaat = $('#id_manfaat').val();
+            var layanan_utama = $('#layanan_id').val();
             var count_layanan = $('.pst_layanan:checked').length;
             var count_fasilitas = $('.pst_fasilitas:checked').length;
             if (pst_manfaat == "")
@@ -429,6 +430,15 @@
                     });
                 return false;
                 }
+            }
+            if (layanan_utama == "")
+            {
+                Swal.fire({
+                    type: 'error',
+                    title: 'error',
+                    text: 'Pilih salah satu layanan utama'
+                    });
+                return false;
             }
             if (count_layanan <= 0)
             {

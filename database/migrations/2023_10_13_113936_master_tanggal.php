@@ -19,6 +19,10 @@ class MasterTanggal extends Migration
             $table->string('hari',6)->nullable();
             $table->tinyInteger('jtgl')->default(1); //flag kerja = 1, libur = 2
             $table->string('deskripsi',250)->nullable();
+            $table->bigInteger('petugas1_id')->unsigned()->default(0);
+            $table->string('petugas1_username',50)->nullable();
+            $table->bigInteger('petugas2_id')->unsigned()->default(0);
+            $table->string('petugas2_username',50)->nullable();
             $table->timestamps();
         });
     }

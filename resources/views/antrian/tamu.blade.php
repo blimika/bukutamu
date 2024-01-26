@@ -30,21 +30,8 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                    <h4 class="card-title">
-                        Data Kunjungan BPS Provinsi Nusa Tenggara Barat
-                        <a href="javascript:void(0)" class="btn btn-info d-lg-block m-l-15 float-right" data-toggle="modal" data-target="#syncLayananUtama"><i class="fas fa-sync"></i> Sync Layanan Utama</a>
-                    </h4>
-
-                    <center id="preloading">
-                        <button class="btn btn-success" type="button" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            Loading, Memproses data kunjungan...
-                          </button>
-                    </center>
-                    <center id="pesanerror">
-                        <div class="alert alert-success m-5"><span id="tekserror"></span></div>
-                    </center>
-                    <div class="table-responsive m-t-40 tabeldata">
+                    <h4 class="card-title">Data Kunjungan BPS Provinsi Nusa Tenggara Barat</h4>
+                    <div class="table-responsive m-t-40">
                         <table id="dTabel" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
@@ -53,7 +40,8 @@
                                     <th>Nama</th>
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
-                                    <th>Layanan Utama</th>
+                                    <th>Nomor Antrian</th>
+                                    <th>Layanan</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -67,7 +55,8 @@
                                     <th>Nama</th>
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
-                                    <th>Layanan Utama</th>
+                                    <th>Nomor Antrian</th>
+                                    <th>Layanan</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -84,7 +73,6 @@
     </div>
 </div>
 @include('modal-view')
-@include('tamu.modal')
 @endsection
 
 @section('css')
@@ -122,45 +110,19 @@
     <!-- end - This is for export functionality only -->
     <script type="text/javascript">
         $(document).ready(function(){
-            //script button
-            $(".sync_layanan_utama").click(function(e) {
-                e.preventDefault();
-                $('#preloading').toggle();
-                $('.tabeldata').toggle();
-                $.ajax({
-                    url: "{{route('tamu.synclayananutama')}}",
-                    method : 'get',
-                    cache: false,
-                    dataType: 'json',
-                    success: function(data) {
-                        $('#preloading').toggle();
-                        $('.tabeldata').toggle();
-                        if (data.status == true)
-                        {
-                            $('#pesanerror').toggle();
-                            $('#pesanerror #tekserror').text(data.pesan_error);
-                            $('#dTabel').DataTable().ajax.reload(null,false);
-                        }
-                    },
-                    error: function() {
-                        $('#preloading').toggle();
-                        $('.tabeldata').toggle();
-
-                    }
-                });
-            });
           // DataTable
           $('#dTabel').DataTable({
              processing: true,
              serverSide: true,
-             ajax: "{{route('tamu.pagelist')}}",
+             ajax: "{{route('tamu.antrianlist')}}",
              columns: [
                 { data: 'id' },
                 { data: 'photo', orderable: false  },
                 { data: 'nama_lengkap' },
                 { data: 'keperluan' },
                 { data: 'tanggal' },
-                { data: 'layanan_utama' },
+                { data: 'nomor_antrian' },
+                { data: 'layanan' },
                 { data: 'jam_datang' },
                 { data: 'jam_pulang' },
                 { data: 'petugas_id' },

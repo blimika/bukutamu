@@ -26,6 +26,20 @@
         <input type="text" name="manfaat_nama" id="manfaat_nama" class="form-control manfaat_nama" placeholder="Pemanfaatan hasil kunjungan lainnya"/>
     </div>
 </div>
+<div class="form-group row" id="LayananUtama">
+    <div class="col-md-3">
+    <label class="control-label text-right">Layanan Utama</label>
+    </div>
+    <div class="col-md-6">
+        <select class="form-control" id="layanan_id" name="layanan_id">
+            <option value="">Pilih salah satu</option>
+            @foreach ($LayananUtama as $i_layanan)
+                    <option value="{{$i_layanan->kode}}">{{$i_layanan->nama}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
 <div class="row">
         <div class="form-group col-md-6" id="PSTLayanan">
                 <h5>Layanan yang ingin diakses : <span class="text-danger">*</span></h5>

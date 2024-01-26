@@ -109,6 +109,7 @@ $( document ).ready(function() {
     $('#PSTLayanan').hide();
     $('#PSTManfaat').hide();
     $('#PSTFasilitas').hide();
+    $('#LayananUtama').hide();
     $('#manfaat_nama').hide();
     $('#fas_lainnya').hide();
     $('#jumlah_tamu').hide();
@@ -122,6 +123,7 @@ $('#pstcheck').change(function(){
         $('#PSTManfaat').show();
         $('#PSTLayanan').show();
         $('#PSTFasilitas').show();
+        $('#LayananUtama').show();
         $('.pst_fasilitas').prop('required',true);
         $('#keperluan_label').text("Data yang dicari");
 });
@@ -129,6 +131,7 @@ $('#kantorcheck').change(function(){
         $('#PSTLayanan').hide();
         $('#PSTManfaat').hide();
         $('#PSTFasilitas').hide();
+        $('#LayananUtama').hide();
         $('.pst_fasilitas').prop('required',false);
         $('#keperluan_label').text("Keperluan");
 });

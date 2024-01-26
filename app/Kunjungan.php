@@ -49,4 +49,7 @@ class Kunjungan extends Model
     {
         return $this->belongsTo('App\Antrian', 'kunjungan_id', 'id')->where('is_pst',1);
     }
+    public function LayananUtama(){
+    	return $this->hasMany('App\LayananUtama', 'layanan_utama', 'kode');
+    }
 }

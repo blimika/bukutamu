@@ -182,4 +182,110 @@ $('#EditTanggal .modal-footer #updatetgl').on('click', function(e) {
     }
 });
     //batas
+//edit Jadwal Petugas
+$('#EditJadwal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var id = button.data('id')
+    var tanggal = button.data('tanggal')
+    $.ajax({
+        url : '{{route("cari.tanggal","")}}/'+id,
+        method : 'get',
+        cache: false,
+        dataType: 'json',
+        success: function(data){
+            if (data.status == true)
+            {
+                $('#EditJadwal .modal-body #edit_id').text("#"+id);
+                $('#EditJadwal .modal-body #id_jadwal').val(id);
+                $('#EditJadwal .modal-body #edit_hari').text(data.hasil.hari);
+                $('#EditJadwal .modal-body #edit_tanggal').text(data.hasil.tanggal)
+                $('#EditJadwal .modal-body #edit_jenis').text(data.hasil.jtgl_nama)
+                $('#EditJadwal .modal-body #petugas1_id').val(data.hasil.petugas1_id)
+                $('#EditJadwal .modal-body #petugas2_id').val(data.hasil.petugas2_id)
+            }
+            else
+            {
+                alert(data.hasil);
+            }
+        },
+        error: function(){
+            alert("error load ajax");
+        }
+        });
+    });
+//batas edit petugas
+//simpan edit jadwal
+$('#EditJadwal .modal-footer #updatejadwal').on('click', function(e) {
+        e.preventDefault();
+        var id = $('#EditJadwal .modal-body #id_jadwal').val();
+        var petugas_1 = $('#EditJadwal .modal-body #petugas1_id').val();
+        var petugas_2 = $('#EditJadwal .modal-body #petugas2_id').val()
+
+        if (petugas_1 == 0)
+        {
+            $('#EditJadwal .modal-body #jadwal_error').text('pilih salah satu petugas 1');
+            return false;
+        }
+        else if (petugas_2 == 0)
+        {
+            $('#EditJadwal .modal-body #jadwal_error').text('pilih salah satu petugas 2');
+            return false;
+        }
+        else if (petugas_1 == petugas_2)
+        {
+            $('#EditJadwal .modal-body #jadwal_error').text('Petugas 1 dan Petugas 2 tidak boleh sama');
+            return false;
+        }
+        else
+        {
+            //ajax edit jadwal
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url : '{{route('master.updatejadwal')}}',
+                method : 'post',
+                data: {
+                    id: id,
+                    petugas1_id: petugas_1,
+                    petugas2_id: petugas_2,
+                },
+                cache: false,
+                dataType: 'json',
+                success: function(data){
+                    if (data.status == true)
+                    {
+                        Swal.fire(
+                            'Berhasil!',
+                            ''+data.hasil+'',
+                            'success'
+                        ).then(function() {
+                            $('#dTabel').DataTable().ajax.reload(null,false);
+                        });
+                    }
+                    else
+                    {
+                        Swal.fire(
+                            'Error!',
+                            ''+data.hasil+'',
+                            'error'
+                        );
+                    }
+
+                },
+                error: function(){
+                    Swal.fire(
+                        'Error',
+                        'Koneksi Error',
+                        'error'
+                    );
+                }
+
+            });
+            //batas ajax
+    }
+});
+//batas simpan jadwal
 </script>

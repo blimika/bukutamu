@@ -82,3 +82,59 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="EditJadwal" tabindex="-1" role="dialog" aria-labelledby="vcenter">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h4 class="modal-title text-white">Edit Jadwal Petugas</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal m-t-4" name="formEditJadwal" id="formEditJadwal" action="#"  method="POST">
+                    <dl class="row">
+                        <dt class="col-sm-4">ID</dt>
+                        <dd class="col-sm-8"><span id="edit_id"></span></dd>
+                        <dt class="col-sm-4">Hari</dt>
+                        <dd class="col-sm-8"><span id="edit_hari"></span></dd>
+                        <dt class="col-sm-4">Tanggal</dt>
+                        <dd class="col-sm-8"><span id="edit_tanggal"></span></dd>
+                        <dt class="col-sm-4">Jenis</dt>
+                        <dd class="col-sm-8"><span id="edit_jenis"></span></dd>
+                    </dl>
+                    <hr />
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Petugas 1</label>
+                        <div class="input-group col-md-9">
+                            <select class="form-control" id="petugas1_id" name="petugas1_id" required>
+                                <option value="0">Pilih Petugas 1</option>
+                                @foreach ($operator as $item1)
+                                    <option value="{{ $item1->id }}">{{ $item1->name }}</option>
+                                @endforeach
+                        </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Petugas 2</label>
+                        <div class="input-group col-md-9">
+                            <select class="form-control" id="petugas2_id" name="petugas2_id" required>
+                                <option value="0">Pilih Petugas 2</option>
+                                @foreach ($operator as $item2)
+                                    <option value="{{ $item2->id }}">{{ $item2->name }}</option>
+                                @endforeach
+                        </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span id="jadwal_error" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" id="id_jadwal" name="id_jadwal" value=""/>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success waves-effect" id="updatejadwal" data-dismiss="modal">UPDATE JADWAL</button>
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
