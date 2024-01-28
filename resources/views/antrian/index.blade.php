@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,17 +9,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/favicon.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
     <title>Display Antrian Pelayanan Statistik Terpadu</title>
 
     <!-- page css -->
-    <link href="{{asset('dist/css/pages/login-register-lock.css')}}" rel="stylesheet">
+    <link href="{{ asset('dist/css/pages/login-register-lock.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="{{asset('dist/css/style.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
     <style>
         .nomorantrian {
-            font-size: 210px;
+            font-size: 150px;
         }
+
         .namapetugas {
             font-size: 40px;
         }
@@ -53,29 +53,60 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <h1>Pelayanan Statistik Terpadu <br />
-                        Badan Pusat Statistik Provinsi Nusa Tenggara Barat</h1>
+                            Badan Pusat Statistik Provinsi Nusa Tenggara Barat</h1>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-1">
             </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="box bg-info text-center">
+            <div class="col-lg-5">
+                <div class="card bg-info text-center">
+                    <div class="card-header">
                         <h1 class="text-white">Nomor Antrian</h1>
+                    </div>
+                    <div class="card-body">
+                        <span class="text-white nomorantrian">
+                            {{ $data1['nomor_antrian'] }}
+                        </span>
                         <hr class="text-white">
-                        <span class="text-white nomorantrian">{!! sprintf("%03d", '45') !!}</span>
-                        <hr class="text-white">
-                        <span class="text-white namapetugas">ke Petugas 1</span>
+                        <span class="text-white namapetugas">
+                            @if ($data1['loket_status'] == true)
+                                Petugas {{ $data1['loket_petugas'] }}
+                            @else
+                                {{ $data1['loket_petugas'] }}
+                            @endif
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-5">
+
+                <div class="card bg-success text-center">
+                    <div class="card-header">
+                        <h1 class="text-white">Nomor Antrian</h1>
+                    </div>
+                    <div class="card-body">
+                        <span class="text-white nomorantrian">
+                            {{ $data2['nomor_antrian'] }}
+                        </span>
+                        <hr class="text-white">
+                        <span class="text-white namapetugas">
+                            @if ($data2['loket_status'] == true)
+                                Petugas {{ $data2['loket_petugas'] }}
+                            @else
+                                {{ $data2['loket_petugas'] }}
+                            @endif
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-lg-1">
             </div>
         </div>
-
     </section>
 
     <!-- ============================================================== -->
@@ -84,10 +115,10 @@
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="{{asset('assets/node_modules/jquery/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{ asset('assets/node_modules/jquery/jquery-3.2.1.min.js') }}"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="{{asset('assets/node_modules/popper/popper.min.js')}}"></script>
-    <script src="{{asset('assets/node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('assets/node_modules/popper/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!--Custom JavaScript -->
     <script type="text/javascript">
         $(function() {

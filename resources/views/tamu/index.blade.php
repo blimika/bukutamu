@@ -32,9 +32,10 @@
             <div class="card-body">
                     <h4 class="card-title">
                         Data Kunjungan BPS Provinsi Nusa Tenggara Barat
-                        <a href="javascript:void(0)" class="btn btn-info d-lg-block m-l-15 float-right" data-toggle="modal" data-target="#syncLayananUtama"><i class="fas fa-sync"></i> Sync Layanan Utama</a>
+                        @if (Auth::User()->level > 10)
+                                <a href="javascript:void(0)" class="btn btn-info d-lg-block m-l-15 float-right" data-toggle="modal" data-target="#syncLayananUtama"><i class="fas fa-sync"></i> Sync Layanan Utama</a>
+                        @endif                        
                     </h4>
-
                     <center id="preloading">
                         <button class="btn btn-success" type="button" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -54,6 +55,8 @@
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
                                     <th>Layanan Utama</th>
+                                    <th>Nomor Antrian</th>
+                                    <th>Flag Antrian</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -68,6 +71,8 @@
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
                                     <th>Layanan Utama</th>
+                                    <th>Nomor Antrian</th>
+                                    <th>Flag Antrian</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -156,11 +161,13 @@
              ajax: "{{route('tamu.pagelist')}}",
              columns: [
                 { data: 'id' },
-                { data: 'photo', orderable: false  },
+                { data: 'file_photo', orderable: false  },
                 { data: 'nama_lengkap' },
                 { data: 'keperluan' },
                 { data: 'tanggal' },
                 { data: 'layanan_utama' },
+                { data: 'nomor_antrian' },
+                { data: 'flag_antrian' },
                 { data: 'jam_datang' },
                 { data: 'jam_pulang' },
                 { data: 'petugas_id' },
@@ -171,7 +178,7 @@
             buttons: [
                 'copy','excel','print'
             ],
-            order: [3,'desc'],
+            order: [4,'desc'],
             responsive: true,
             "fnDrawCallback": function () {
                 $('.image-popup').magnificPopup({
@@ -235,7 +242,7 @@
                                             Swal.fire(
                                                 'Error!',
                                                 ''+data.hasil+'',
-                                                'danger'
+                                                'error'
                                             );
                                         }
 
@@ -244,7 +251,7 @@
                                         Swal.fire(
                                             'Error',
                                             'Koneksi Error',
-                                            'danger'
+                                            'error'
                                         );
                                     }
 
@@ -300,7 +307,7 @@
                                             Swal.fire(
                                                 'Error!',
                                                 ''+data.hasil+'',
-                                                'danger'
+                                                'error'
                                             );
                                         }
 
@@ -309,7 +316,7 @@
                                         Swal.fire(
                                             'Error',
                                             'Koneksi Error',
-                                            'danger'
+                                            'error'
                                         );
                                     }
 
@@ -470,5 +477,5 @@
     event.stopPropagation();
 });
 </script>
-
+    @include('tamu.js')
 @stop

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TabelLayananUtama extends Migration
+class MasterFlagAntrian extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class TabelLayananUtama extends Migration
      */
     public function up()
     {
-        Schema::create('mlayanan_utama', function (Blueprint $table) {
-            //
+        Schema::create('mf_antrian', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->boolean('kode'); // 0 = kantor, 1 perpus, 2 penjualan, 3 konsultasi, 4 rekomendasi
-            $table->string('inisial',2);
-            $table->string('nama',100);
+            $table->boolean('kode'); // 1 = Masuk Antrian, 2 Dalam Layanan, 3 Selesai
+            $table->string('nama',50);
         });
     }
 
@@ -29,8 +27,6 @@ class TabelLayananUtama extends Migration
      */
     public function down()
     {
-        Schema::table('mlayanan_utama', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('mf_antrian');
     }
 }

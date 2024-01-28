@@ -176,6 +176,7 @@
             buttons: [
                 'copy','excel','print'
             ],
+            order: [0,'desc'],
             responsive: true,
             "fnDrawCallback": function () {
                 $('.image-popup').magnificPopup({

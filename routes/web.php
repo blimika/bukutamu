@@ -155,7 +155,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/tamu/pagelistterjadwal', 'BukutamuController@PageListTamuTerjadwal')->name('tamu.pagelistterjadwal');
     Route::post('/tamu/mulailayanan', 'BukutamuController@MulaiLayanan')->name('tamu.mulailayanan');
     Route::post('/tamu/akhirlayanan', 'BukutamuController@AkhirLayanan')->name('tamu.akhirlayanan');
-    Route::post('/tamu/sync/layananutama', 'BukutamuController@SyncLayananUtama')->name('tamu.synclayananutama');
+    Route::post('/tamu/sinkron/layananutama', 'BukutamuController@SyncLayananUtama')->name('tamu.synclayananutama');
     //Tamu Antrian
     Route::get('/tamu/antrian', 'BukutamuController@AntrianTamu')->name('tamu.antrian');
     Route::get('/tamu/list/antrian', 'BukutamuController@AntrianListTamu')->name('tamu.antrianlist');

@@ -13,14 +13,16 @@ class TabelPstAntrian extends Migration
      */
     public function up()
     {
-        Schema::create('p_antrian', function (Blueprint $table) {
+        Schema::create('m_antrian', function (Blueprint $table) {
             //
             $table->bigIncrements('id');
             $table->bigInteger('kunjungan_id')->unsigned();
-            $table->date('tanggal');
+            $table->date('tanggal'); //untuk cek nomor antrian
+            $table->boolean('layanan_utama')->default(0); //untuk cek nomor antrian
             $table->tinyInteger('nomor_antrian')->unsigned()->default(0);
-            $table->tinyInteger('petugas_antrian')->unsigned()->default(0);
-            $table->boolean('layanan')->default(1);
+            $table->string('teks_antrian',15)->nullable();
+            $table->boolean('loket_petugas')->default(0);
+            $table->boolean('flag_antrian')->default(1); //flag: 1 = Masuk Antrian 2 = Dalam Layanan 3 = Selesai
             $table->timestamps();
         });
     }
@@ -32,7 +34,7 @@ class TabelPstAntrian extends Migration
      */
     public function down()
     {
-        Schema::table('p_antrian', function (Blueprint $table) {
+        Schema::table('m_antrian', function (Blueprint $table) {
             //
         });
     }

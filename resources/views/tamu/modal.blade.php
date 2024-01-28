@@ -10,7 +10,7 @@
                     <div class="form-group row">
                         <label class="control-label col-md-2">Tahun</label>
                         <div class="input-group col-md-10">
-                            <select class="form-control" id="gentahun" name="gentahun" required>
+                            <select class="form-control" id="tahun_kunjungan" name="tahun_kunjungan" required>
                                     <option value="">Pilih</option>
                                     @foreach ($dataTahun as $item)
                                         <option value="{{$item->tahun}}">{{$item->tahun}}</option>
@@ -19,12 +19,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <span id="gen_error" class="text-danger"></span>
+                        <span id="tahun_error" class="text-danger"></span>
                     </div>
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success waves-effect" id="syncdata" data-dismiss="modal">Sinkronisasi</button>
+                <button type="submit" class="btn btn-success waves-effect" id="sinkron_antrian" data-dismiss="modal">Sinkronisasi</button>
                 <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
             </div>
         </form>

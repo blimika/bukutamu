@@ -44,11 +44,16 @@ class TabelMasterBaru extends Seeder
             ['id'=>3,'kode' => 3, 'nama' => 'Libur'],
         ]);
         DB::table('mlayanan_utama')->insert([
-            ['id'=>1,'kode' => 0, 'nama' => 'Kantor'],
-            ['id'=>2,'kode' => 1, 'nama' => 'Perpustakaan'],
-            ['id'=>3,'kode' => 2, 'nama' => 'Penjualan'],
-            ['id'=>4,'kode' => 3, 'nama' => 'Konsultasi'],
-            ['id'=>5,'kode' => 4, 'nama' => 'Rekomendasi'],
+            ['id'=>1,'kode' => 0, 'inisial'=> 'KT', 'nama' => 'Kantor'],
+            ['id'=>2,'kode' => 1, 'inisial'=> 'PS', 'nama' => 'Perpustakaan'],
+            ['id'=>3,'kode' => 2, 'inisial'=> 'PJ', 'nama' => 'Penjualan'],
+            ['id'=>4,'kode' => 3, 'inisial'=> 'KS', 'nama' => 'Konsultasi'],
+            ['id'=>5,'kode' => 4, 'inisial'=> 'RS', 'nama' => 'Rekomendasi'],
+        ]);
+        DB::table('mf_antrian')->insert([
+            ['id'=>1,'kode' => 1, 'nama' => 'Ruang Tunggu'],
+            ['id'=>2,'kode' => 2, 'nama' => 'Dalam Layanan'],
+            ['id'=>3,'kode' => 3, 'nama' => 'Selesai'],
         ]);
         DB::table('users')->insert([
             ['name' => 'I Putu Dyatmika','username'=>'blimika', 'email' => 'mika@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],

@@ -35,10 +35,10 @@
                                 <ul aria-expanded="false" class="collapse">
                                     @if (Generate::CekAkses(\Request::getClientIp(true)))
                                         <li><a href="{{route('kunjungan.baru')}}">Kunjungan Baru</a></li>
-                                        <li><a href="{{route('kunjungan.konfirmasi')}}">Konfirmasi Kunjungan</a></li>
+                                        <!--<li><a href="{{route('kunjungan.konfirmasi')}}">Konfirmasi Kunjungan</a></li>-->
                                     @endif
                                     @if (Auth::user())
-                                    <li><a href="{{route('kunjungan.terjadwal')}}">Kunjungan Terjadwal</a></li>
+                                    <!--<li><a href="{{route('kunjungan.terjadwal')}}">Kunjungan Terjadwal</a></li>-->
                                     @endif
                                     <!--<li><a href="{{route('kunjungan.lama')}}">Kunjungan Lama</a></li>-->
                                     <!--<li><a href="{{route('kunjungan.scan')}}">SCAN QRCODE</a></li>--->
@@ -64,17 +64,18 @@
                                     <li><a href="{{route('lama')}}">List Data</a></li>
                                 </ul>
                             </li>
-                            <li>
+                            <!--<li>
                                 <a class="waves-effect waves-dark ml-auto" href="{{route('permintaan.data')}}"><i class="ti-layers"></i><span class="hide-menu">Permintaan Data</span></a>
-                            </li>
+                            </li> -->
                             @if (Auth::User())
                                 @if (Auth::User()->level > 1)
                                 <li>
                                     <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-layers"></i><span class="hide-menu">Tamu BPS</span></a>
                                     <ul aria-expanded="false" class="collapse">
-                                        <li><a href="{{route('tamu.terjadwal')}}">Terjadwal</a></li>
                                         <li><a href="{{route('tamu.list')}}">List</a></li>
-                                        <li><a href="{{route('tamu.antrian')}}">Antrian</a></li>
+                                        <!--<li><a href="{{route('tamu.terjadwal')}}">Terjadwal</a></li>
+                                        <li><a href="{{route('tamu.antrian')}}">Antrian</a></li> -->
+                                        <li><a href="{{route('display.antrian')}}" target="_blank">Display Antrian</a></li>
                                     </ul>
                                 </li>
                                 <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
@@ -87,13 +88,13 @@
                                 </li>
                                 @endif
                              @if (Auth::User()->level == 20)
-                             <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Menu Admin</span></a>
+                             <!--<li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Menu Admin</span></a>
                                 <ul aria-expanded="false" class="collapse">
                                     <li><a href="{{route('pengunjung.kode')}}">Generate QRCode</a></li>
                                     <li><a href="{{route('photo.sync')}}">Photo Sync</a></li>
                                     <li><a href="{{route('layanan.sync')}}">Layanan Sync</a></li>
                                 </ul>
-                            </li>
+                            </li> -->
 
                              @endif
                             @endif

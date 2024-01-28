@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Antrian extends Model
 {
     //
-    protected $table = 'p_antrian';
+    protected $table = 'm_antrian';
     public function kunjungan()
     {
         return $this->belongsTo('App\Kunjungan','kunjungan_id','id');
     }
-    public function Layanan(){
-    	return $this->hasMany('App\LayananUtama', 'layanan', 'kode');
+    public function FlagAntrian(){
+    	return $this->hasMany('App\FlagAntrian', 'flag_antrian', 'kode');
     }
 }

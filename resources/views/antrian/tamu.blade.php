@@ -40,8 +40,8 @@
                                     <th>Nama</th>
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
-                                    <th>Nomor Antrian</th>
                                     <th>Layanan</th>
+                                    <th>Nomor Antrian</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -55,8 +55,8 @@
                                     <th>Nama</th>
                                     <th>Keperluan</th>
                                     <th>Tanggal</th>
-                                    <th>Nomor Antrian</th>
                                     <th>Layanan</th>
+                                    <th>Nomor Antrian</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -121,8 +121,8 @@
                 { data: 'nama_lengkap' },
                 { data: 'keperluan' },
                 { data: 'tanggal' },
-                { data: 'nomor_antrian' },
                 { data: 'layanan' },
+                { data: 'nomor_antrian' },
                 { data: 'jam_datang' },
                 { data: 'jam_pulang' },
                 { data: 'petugas_id' },
