@@ -36,6 +36,21 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Master Tanggal Bukutamu</h4>
+                    <!--form upload jadwal petugas-->
+                    <div class="row">
+                        <div class="col-lg-8">
+                        </div>
+                        <div class="col-lg-4 text-right">
+                            @if (Auth::User()->level > 10)
+                                <a href="{{ route('tanggal.formatjadwal') }}" class="btn btn-info">
+                                    <i class="ti-export"></i> &nbsp;Format Import</a>
+                                <a href="javascript:void(0)" class="btn btn-success m-l-15" data-toggle="modal"
+                                    data-target="#ImportJadwalModal"><i class="ti-import"></i> Import Jadwal</a>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!--batas-->
                     <center id="preloading">
                         <button class="btn btn-success" type="button" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -205,7 +220,7 @@
                                                     .DataTable()
                                                     .ajax.reload(
                                                         null, false
-                                                        );
+                                                    );
                                             });
                                         } else {
                                             Swal.fire(

@@ -16,6 +16,8 @@ use App\MTanggal;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\JTanggal;
+use App\Exports\FormatJadwal;
+use Excel;
 
 class TanggalController extends Controller
 {
@@ -324,5 +326,23 @@ class TanggalController extends Controller
             );
         }
         return Response()->json($arr);
+    }
+    public function FormatJadwal()
+    {
+        $fileName = 'format-jadwal-';
+        $data = [
+            [
+                //'tahun_matrik' => null,
+                'tanggal' => 'Format : YYYY-MM-DD',
+                'petugas1_id' => 'hanya angka',
+                'petugas2_id' => 'hanya angka',
+            ]
+        ];
+        $namafile = $fileName . date('Y-m-d_H-i-s') . '.xlsx';
+        return Excel::download(new FormatJadwal($data), $namafile);
+    }
+    public function ImportJadwalPetugas(Request $request)
+    {
+
     }
 }

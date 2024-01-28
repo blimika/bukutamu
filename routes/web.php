@@ -148,6 +148,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/master/updatetgl', 'TanggalController@UpdateTanggal')->name('master.updatetgl');
     Route::post('/master/updatejadwal', 'TanggalController@UpdateJadwal')->name('master.updatejadwal');
     Route::get('/master/cektgl/{tgl}', 'TanggalController@CekTanggal')->name('cek.tanggal');
+    Route::get('/master/format/jadwal', 'TanggalController@FormatJadwal')->name('tanggal.formatjadwal');
+    Route::post('/master/import/jadwal', 'TanggalController@ImportJadwalPetugas')->name('master.importjadwal');
     //tamu PageListTamuTerjadwal
     Route::get('/tamu/list', 'BukutamuController@ListTamu')->name('tamu.list');
     Route::get('/tamu/pagelist', 'BukutamuController@PageListTamu')->name('tamu.pagelist');
