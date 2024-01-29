@@ -39,6 +39,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DaftarMember;
 use App\Mail\ResetPasswd;
+use App\Mail\KirimAntrian;
 use App\MTanggal;
 use App\MFKunjungan;
 use App\Terjadwal;
@@ -46,6 +47,7 @@ use App\LayananUtama;
 use App\Antrian;
 use App\FlagAntrian;
 use App\JTanggal;
+use PDF;
 
 class BukutamuController extends Controller
 {
@@ -1542,6 +1544,55 @@ class BukutamuController extends Controller
         Session::flash('message_type', $warna_error);
         return view('users.aktivasi');
     }
+    public function KirimNomorAntrian(Request $request)
+    {
+        /*
+        $body = new \stdClass();
+        $body->nama_lengkap = 'I Putu Dyatmika';
+        $body->email = 'mika@bpsntb.id';
+        $body->telepon = '0871272818213';
+        $body->tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+        $body->layanan_utama = 'Perpustakaan';
+        $body->nomor_antrian = 'PS-001';
+        */
+        $data = Kunjungan::where('id', $request->id)->first();
+        $arr = array(
+            'status' => false,
+            'hasil' => 'Nomor antrian tidak ditemukan'
+        );
+        if ($data) {
+            if (filter_var($data->tamu->email, FILTER_VALIDATE_EMAIL))
+            {
+                //kirim mail
+                $body = new \stdClass();
+                $body->nama_lengkap = $data->tamu->nama_lengkap;
+                $body->email = $data->tamu->email;
+                $body->telepon = $data->tamu->telepon;
+                $body->tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+                $body->layanan_utama = $data->LayananUtama->nama;
+                $body->nomor_antrian = $data->NomorAntrian->teks_antrian;
+
+                if (ENV('APP_KIRIM_MAIL') == true) {
+                    Mail::to($data->tamu->email)->send(new KirimAntrian($body));
+                }
+                //batas
+                $arr = array(
+                    'status' => true,
+                    'hasil' => 'Nomor Antrian an. '.$data->tamu->nama_lengkap.' sudah dikirim ke alamat email '.$data->tamu->email
+                );
+            }
+            else
+            {
+                $arr = array(
+                    'status' => false,
+                    'hasil' => 'Alamat email Kunjungan an. '.$data->tamu->nama_lengkap.' tidak sesuai format'
+                );
+            }
+        }
+            
+        #dd($request->all());
+        return Response()->json($arr);
+    }
     public function AntrianTamu()
     {
         return view('antrian.tamu');
@@ -1577,7 +1628,7 @@ class BukutamuController extends Controller
             ->leftJoin('users', 'kunjungan.petugas_id', '=', 'users.id')
             ->leftJoin('mlayanan_utama', 'p_antrian.layanan', '=', 'mlayanan_utama.kode')
             ->where('nama_lengkap', 'like', '%' . $searchValue . '%')
-            ->select('p_antrian.nomor_antrian', 'p_antrian.petugas_antrian', 'p_antrian.layanan', 'mlayanan_utama.nama as layanan_nama', 'kunjungan.*', 'mtamu.nama_lengkap', 'mtamu.kode_qr', 'mtamu.id_jk', 'mjk.inisial', 'mtujuan.nama_pendek', 'mtujuan.nama as tujuan_nama', 'users.name', 'users.username', 'mjkunjungan.nama as jkunjungan_nama')
+            ->select('p_antrian.nomor_antrian', 'p_antrian.petugas_antrian', 'p_antrian.layanan', 'mlayanan_utama.nama as layanan_nama', 'kunjungan.*', 'mtamu.nama_lengkap', 'mtamu.email', 'mtamu.kode_qr', 'mtamu.id_jk', 'mjk.inisial', 'mtujuan.nama_pendek', 'mtujuan.nama as tujuan_nama', 'users.name', 'users.username', 'mjkunjungan.nama as jkunjungan_nama')
             ->skip($start)
             ->take($rowperpage)
             ->orderBy('kunjungan.tanggal', 'desc')
@@ -1656,7 +1707,7 @@ class BukutamuController extends Controller
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" data-kodeqr="' . $record->kode_qr . '" data-toggle="modal" data-target="#ViewModal">View</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" data-kodeqr="' . $record->kode_qr . '" data-toggle="modal" data-target="#KirimNomor">Kirim Nomor Antrian</a>
+                        <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-email="' . $record->email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Nomor Antrian</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item hapuskunjungantamu" href="#" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-tanggal="' . $record->tanggal . '" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus Kunjungan</a>
                         <div class="dropdown-divider"></div>
@@ -1742,7 +1793,7 @@ class BukutamuController extends Controller
                          ->orWhere('mf_antrian.nama', 'like', '%' . $searchValue . '%')
                          ->orWhere('m_antrian.teks_antrian', 'like', '%' . $searchValue . '%');
             })
-            ->select('kunjungan.*', 'mtamu.nama_lengkap', 'mtamu.kode_qr', 'mtamu.id_jk', 'mjk.inisial', 'mtujuan.nama_pendek', 'mtujuan.nama as tujuan_nama', 'users.name', 'users.username', 'mjkunjungan.nama as jkunjungan_nama', 'mlayanan_utama.nama as layanan_utama_teks', 'm_antrian.nomor_antrian', 'm_antrian.teks_antrian', 'm_antrian.flag_antrian','mf_antrian.nama as flag_antrian_teks','m_antrian.loket_petugas')
+            ->select('kunjungan.*', 'mtamu.nama_lengkap', 'mtamu.kode_qr','mtamu.email', 'mtamu.id_jk', 'mjk.inisial', 'mtujuan.nama_pendek', 'mtujuan.nama as tujuan_nama', 'users.name', 'users.username', 'mjkunjungan.nama as jkunjungan_nama', 'mlayanan_utama.nama as layanan_utama_teks', 'm_antrian.nomor_antrian', 'm_antrian.teks_antrian', 'm_antrian.flag_antrian','mf_antrian.nama as flag_antrian_teks','m_antrian.loket_petugas')
             ->skip($start)
             ->take($rowperpage)
             ->orderBy($columnName, $columnSortOrder)
@@ -1871,6 +1922,9 @@ class BukutamuController extends Controller
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="#" data-kodeqr="' . $record->kode_qr . '" data-toggle="modal" data-target="#ViewModal">View</a>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="'.route("tamu.printantrian",$record->id).'" target="_blank" data-toggle="tooltip" title="Print Nomor Antrian">Print Nomor Antrian</a>
+                    <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-email="' . $record->email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Nomor Antrian</a>
+                        <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapuskunjungantamu" href="#" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-tanggal="' . $record->tanggal . '" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus Kunjungan</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapuspengunjungmaster" href="#" data-id="' . $record->tamu_id . '" data-nama="' . $record->nama_lengkap . '">Hapus Pengunjung</a>
@@ -2152,5 +2206,16 @@ class BukutamuController extends Controller
     }
     public function KonfirmasiKunjungan()
     {
+    }
+    public function PrintNomorAntrian($id)
+    {
+        $data = Kunjungan::where('id',$id)->first();
+        if ($data)
+        {
+            PDF::setOptions(['dpi' => 150, 'defaultFont' => 'Helvetica','isHtml5ParserEnabled'=>true]);
+            $pdf = PDF::loadView('antrian.print',compact('data'))->setPaper('A7');
+            $nama=strtoupper($data->tamu->nama_lengkap);
+            return $pdf->stream('Antrian'.$nama.'_Nomor_Antrian_'.$data->NomorAntrian->teks_antrian.'.pdf');
+        }
     }
 }

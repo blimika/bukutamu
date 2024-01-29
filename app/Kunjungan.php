@@ -47,9 +47,9 @@ class Kunjungan extends Model
     }
     public function NomorAntrian()
     {
-        return $this->belongsTo('App\Antrian', 'kunjungan_id', 'id');
+        return $this->belongsTo('App\Antrian', 'id', 'kunjungan_id');
     }
     public function LayananUtama(){
-    	return $this->hasMany('App\LayananUtama', 'layanan_utama', 'kode');
+    	return $this->belongsTo('App\LayananUtama', 'layanan_utama', 'kode');
     }
 }

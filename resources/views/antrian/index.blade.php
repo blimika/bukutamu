@@ -54,6 +54,7 @@
                     <div class="card-body text-center">
                         <h1>Pelayanan Statistik Terpadu <br />
                             Badan Pusat Statistik Provinsi Nusa Tenggara Barat</h1>
+                        <h2>{{ Tanggal::HariPanjang(\Carbon\Carbon::now()) }}</h2>
                     </div>
                 </div>
             </div>

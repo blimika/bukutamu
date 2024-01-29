@@ -72,6 +72,18 @@ Route::get('/cth3', function () {
 
    return new App\Mail\EmailVerifikasi($body);
 });
+Route::get('/cth4', function () {
+    //contoh mail dikirim
+    $body = new \stdClass();
+    $body->nama_lengkap = 'I Putu Dyatmika';
+    $body->email = 'mika@bpsntb.id';
+    $body->telepon = '0871272818213';
+    $body->tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+    $body->layanan_utama = 'Perpustakaan';
+    $body->nomor_antrian = 'PS-001';
+
+   return new App\Mail\KirimAntrian($body);
+});
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
 Route::get('/kunjungan/baru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');
@@ -160,7 +172,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/tamu/sinkron/layananutama', 'BukutamuController@SyncLayananUtama')->name('tamu.synclayananutama');
     //Tamu Antrian
     Route::get('/tamu/antrian', 'BukutamuController@AntrianTamu')->name('tamu.antrian');
+    Route::get('/tamu/print/antrian/{id}', 'BukutamuController@PrintNomorAntrian')->name('tamu.printantrian');
     Route::get('/tamu/list/antrian', 'BukutamuController@AntrianListTamu')->name('tamu.antrianlist');
+    Route::post('/tamu/kirim/nomor/antrian', 'BukutamuController@KirimNomorAntrian')->name('tamu.kirimnomorantrian');
+
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
