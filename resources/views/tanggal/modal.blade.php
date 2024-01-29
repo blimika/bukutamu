@@ -158,8 +158,9 @@
             <div class="modal-body">
                 <form class="form-horizontal m-t-4" name="formImportJadwal" id="formImportJadwal" action="#"
                     method="POST" enctype="multipart/form-data">
+                    @csrf
                     <div class="form-group row">
-                        <input type="file" class="form-control" id="file_import_jadwal" name="file_import_jadwal"
+                        <input type="file" class="form-control" id="file_import" name="file_import"
                             required="">
                     </div>
                     <div class="form-group">

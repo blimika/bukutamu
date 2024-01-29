@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\JTanggal;
 use App\Exports\FormatJadwal;
+use App\Imports\ImportJadwalPetugas;
 use Excel;
 
 class TanggalController extends Controller
@@ -343,6 +344,22 @@ class TanggalController extends Controller
     }
     public function ImportJadwalPetugas(Request $request)
     {
+        $arr = array(
+            'status'=>false,
+            'hasil'=>'Import jadwal petugas tidak berhasil',
+            'pesan_error'=>'Import jadwal petugas tidak berhasil',
+        );
 
+        if ($request->hasFile('file_import')) {
+            $file = $request->file('file_import'); //GET FILE
+            Excel::import(new ImportJadwalPetugas, $file); //IMPORT FILE
+            $arr = array(
+                'status'=>true,
+                'hasil'=>'Import jadwal petugas berhasil',
+                'pesan_error'=>'Import jadwal petugas berhasil',
+            );
+        }
+        return Response()->json($arr);
+        //return redirect()->back()->with(['error' => 'Please choose file before']);
     }
 }

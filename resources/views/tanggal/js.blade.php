@@ -261,8 +261,8 @@
         e.preventDefault();
         //var file_import_jadwal = $('#ImportJadwalModal .modal-body #file_import_jadwal')[0].files[0];
 
-        var file_import = new FormData();
-        file_import.append('file', $('#ImportJadwalModal .modal-body #file_import_jadwal')[0].files[0]);
+        var formData = new FormData();
+        formData.append('file_import', $('#ImportJadwalModal .modal-body #file_import')[0].files[0]);
         //ajax upload file
         $.ajaxSetup({
             headers: {
@@ -272,9 +272,11 @@
         $.ajax({
             url: '{{ route('master.importjadwal') }}',
             method: 'post',
-            data: file_import,
+            data: formData,
+            async: false,
             cache: false,
             contentType: false,
+            processData: false,
             success: function(data) {
                 if (data.status == true) {
                     Swal.fire(
@@ -291,7 +293,6 @@
                         'error'
                     );
                 }
-
             },
             error: function() {
                 Swal.fire(

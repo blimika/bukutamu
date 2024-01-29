@@ -69,7 +69,7 @@ class BukutamuController extends Controller
                     "nomor_antrian"=> $data_antrian[1]['teks_antrian'],
                 );
             }
-            else 
+            else
             {
                 $data2 = array(
                     "loket_status" => false,
@@ -78,7 +78,7 @@ class BukutamuController extends Controller
                 );
             }
         }
-        else 
+        else
         {
             $data1 = array(
                 "loket_status" => false,
@@ -91,7 +91,7 @@ class BukutamuController extends Controller
                 "nomor_antrian"=> '-',
             );
         }
-        
+
         //dd($data1, $data2);
         return view('antrian.index',['data1'=>$data1,'data2'=>$data2]);
     }
@@ -1656,6 +1656,8 @@ class BukutamuController extends Controller
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" data-kodeqr="' . $record->kode_qr . '" data-toggle="modal" data-target="#ViewModal">View</a>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" data-kodeqr="' . $record->kode_qr . '" data-toggle="modal" data-target="#KirimNomor">Kirim Nomor Antrian</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item hapuskunjungantamu" href="#" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-tanggal="' . $record->tanggal . '" data-toggle="tooltip" title="Hapus Kunjungan ini">Hapus Kunjungan</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item hapuspengunjungmaster" href="#" data-id="' . $record->tamu_id . '" data-nama="' . $record->nama_lengkap . '">Hapus Pengunjung</a>
@@ -1778,7 +1780,7 @@ class BukutamuController extends Controller
             {
                 $warna_layanan_utama = 'badge-info';
             }
-            else 
+            else
             {
                 $warna_layanan_utama = 'badge-primary';
             }
@@ -1793,7 +1795,7 @@ class BukutamuController extends Controller
             {
                 $warna_flag_antrian = 'badge-info';
             }
-            else 
+            else
             {
                 $warna_flag_antrian = 'badge-success';
             }
@@ -1804,11 +1806,11 @@ class BukutamuController extends Controller
                 {
                     $mulai = '<button type="button" class="btn btn-circle btn-success btn-sm mulailayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-tanggal="' . $record->tanggal . '"><i class="fas fa-hand-holding-heart"></i></button>';
                 }
-                else 
+                else
                 {
                     $mulai = '';
                 }
-            } 
+            }
             else {
                 $mulai = '<span class="badge badge-info badge-pill">' . Carbon::parse($record->jam_datang)->format('H:i:s') . '</span>';
             }
@@ -1973,8 +1975,8 @@ class BukutamuController extends Controller
                         $data_kunjungan->kode_feedback = $kode_feedback;
                         $data_kunjungan->update();
                     }
-                } 
-                else 
+                }
+                else
                 {
                     //selain kantor, pst ada 4 layanan
                     $cek_pst_layanan = PstLayanan::where('kunjungan_id', $item->id)->orderBy('layanan_id','asc')->first();
@@ -2006,7 +2008,7 @@ class BukutamuController extends Controller
                     //cek id dulu biar ngga double input
                     $cek_data = Antrian::where('kunjungan_id', $item->id)->first();
                     $data_layanan_utama = LayananUtama::where('kode', $layanan_utama)->first();
-                    if (!$cek_data) 
+                    if (!$cek_data)
                     {
                         $data_antrian = Antrian::where([['tanggal', $item->tanggal], ['layanan_utama', $layanan_utama]])->orderBy('nomor_antrian', 'desc')->first(); //ambil nomor terbesar
                         if ($data_antrian) {
@@ -2027,7 +2029,7 @@ class BukutamuController extends Controller
                         $data_baru->save();
                     }
                     //update data jam datang dan jam pulang sama petugas
-                    if ($item->jam_datang == NULL) 
+                    if ($item->jam_datang == NULL)
                     {
                         $jam_datang = $item->tanggal . ' 08:00:00';
                         $jam_pulang = $item->tanggal . ' 10:00:00';
@@ -2076,14 +2078,14 @@ class BukutamuController extends Controller
                         'status' => false
                     );
                 }
-                else 
+                else
                 {
                     //belum ada
                     if (Auth::user()->id == $petugas2_id)
                     {
                         $loket_petugas = 2;
                     }
-                    else 
+                    else
                     {
                         $loket_petugas = 1;
                     }
@@ -2103,13 +2105,13 @@ class BukutamuController extends Controller
                     );
                 }
             }
-            else 
+            else
             {
                 $arr = array(
                     'hasil' => 'Anda bukan petugas jaga hari ini',
                     'status' => false
                 );
-            }            
+            }
         }
         return Response()->json($arr);
     }
