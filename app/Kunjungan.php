@@ -19,7 +19,7 @@ class Kunjungan extends Model
         return $this->belongsTo('App\Mtamu', 'tamu_id', 'id');
     }
     public function pLayanan(){
-    	return $this->hasMany('App\Pstlayanan', 'kunjungan_id', 'id');
+    	return $this->belongsTo('App\Pstlayanan', 'id', 'kunjungan_id');
     }
     public function pManfaat(){
     	return $this->hasMany('App\Pstmanfaat', 'kunjungan_id', 'id');

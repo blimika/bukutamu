@@ -1568,7 +1568,7 @@ class BukutamuController extends Controller
                 $body->nama_lengkap = $data->tamu->nama_lengkap;
                 $body->email = $data->tamu->email;
                 $body->telepon = $data->tamu->telepon;
-                $body->tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+                $body->tanggal = \Carbon\Carbon::parse($data->tanggal)->isoFormat('dddd, D MMMM Y');
                 $body->layanan_utama = $data->LayananUtama->nama;
                 $body->nomor_antrian = $data->NomorAntrian->teks_antrian;
 
@@ -1589,7 +1589,7 @@ class BukutamuController extends Controller
                 );
             }
         }
-            
+
         #dd($request->all());
         return Response()->json($arr);
     }
@@ -2217,5 +2217,139 @@ class BukutamuController extends Controller
             $nama=strtoupper($data->tamu->nama_lengkap);
             return $pdf->stream('Antrian'.$nama.'_Nomor_Antrian_'.$data->NomorAntrian->teks_antrian.'.pdf');
         }
+    }
+    public function PstLayanan()
+    {
+        if (request('tahun') == NULL) {
+            $tahun_filter = date('Y');
+        } else {
+            $tahun_filter = request('tahun');
+        }
+        $data_tahun = DB::table('kunjungan')
+            ->selectRaw('year(tanggal) as tahun')
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'asc')
+            ->get();
+        $data = Pstlayanan::leftJoin('kunjungan','pst_layanan.kunjungan_id','=','kunjungan.id')->whereYear('tanggal',$tahun_filter)
+                ->get();
+        //dd($data);
+        return view('pst.layanan',['tahun'=>$data_tahun,'tahun_filter'=>$tahun_filter,'data'=>$data]);
+    }
+    public function SinkronPstLayanan(Request $request)
+    {
+        //sinkron PSTLayanan
+        //$request->tabel_master 1 = mlay (terbaru), 2 = mlayanan (lama)
+        /*
+        DB::table('mlayanan')->insert([
+            ['id' => 1, 'nama' => 'Pustaka Tercetak', 'flag' => 1], --> 1 1
+            ['id' => 2, 'nama' => 'Pustaka Digital', 'flag' => 1], --> 1 1
+            ['id' => 4, 'nama' => 'Penjualan Publikasi', 'flag' => 1], --> 2 2
+            ['id' => 8, 'nama' => 'Data Mikro', 'flag' => 1], --> 4 2
+            ['id' => 16, 'nama' => 'Konsultasi Statistik', 'flag' => 1], --> 16 3
+            ['id' => 32, 'nama' => 'Rekomendasi Kegiatan Statistik', 'flag' => 1], --> 32 4
+        ]);
+
+         DB::table('mlay')->insert([
+            ['id' => 1, 'nama' => 'Perpustakaan', 'flag' => 1],
+            ['id' => 2, 'nama' => 'Pembelian Publikasi BPS', 'flag' => 1],
+            ['id' => 4, 'nama' => 'Pembelian Data Mikro/Peta Wilayah Kerja Statistik', 'flag' => 1],
+            ['id' => 8, 'nama' => 'Akses Produk Statistik Pada Website BPS', 'flag' => 1],
+            ['id' => 16, 'nama' => 'Konsultasi Statistik', 'flag' => 1],
+            ['id' => 32, 'nama' => 'Rekomendasi Kegiatan Statistik', 'flag' => 1],
+        ]);
+        DB::table('mlayanan_utama')->insert([
+            ['id'=>1,'kode' => 0, 'inisial'=> 'KT', 'nama' => 'Kantor'],
+            ['id'=>2,'kode' => 1, 'inisial'=> 'PS', 'nama' => 'Perpustakaan'],
+            ['id'=>3,'kode' => 2, 'inisial'=> 'PJ', 'nama' => 'Penjualan'],
+            ['id'=>4,'kode' => 3, 'inisial'=> 'KS', 'nama' => 'Konsultasi'],
+            ['id'=>5,'kode' => 4, 'inisial'=> 'RS', 'nama' => 'Rekomendasi'],
+        ]);
+         "sinkron_tahun" => "2024"
+        "tabel_master" => "1"
+        */
+        //dd($request->all());
+        $data = Pstlayanan::leftJoin('kunjungan','pst_layanan.kunjungan_id','=','kunjungan.id')
+            ->whereYear('tanggal',$request->sinkron_tahun)
+            ->select('pst_layanan.*','kunjungan.*','pst_layanan.id as id_pstlayanan')
+            ->get();
+        $pesan_error = "Data tidak tersedia";
+        $warna_error = "danger";
+        //dd($data);
+        if ($data)
+        {
+            if ($request->tabel_master == 1)
+            {
+                //tabel mlay
+            }
+            else
+            {
+                //tabel mlayanan
+                //convert ke mlay
+                foreach ($data as $item) {
+
+                    //untuk kolom layanan_utama
+                    $cek_pst_layanan = Pstlayanan::where('kunjungan_id',$item->kunjungan_id)->orderBy('layanan_id','asc')->first();
+                    if ($cek_pst_layanan)
+                    {
+                        if ($cek_pst_layanan->layanan_id == '1' or $cek_pst_layanan->layanan_id == '8' )
+                        {
+                            $layanan_utama = '1';
+                        }
+                        elseif ( $cek_pst_layanan->layanan_id == '2' or $cek_pst_layanan->layanan_id == '4' )
+                        {
+                            $layanan_utama = '2';
+                        }
+                        elseif ( $cek_pst_layanan->layanan_id == '16 ')
+                        {
+                            $layanan_utama = '3';
+                        }
+                        else
+                        {
+                            $layanan_utama = '4';
+                        }
+                    }
+
+                    //untuk tabel PST Layanan
+                    if ($item->layanan_id == 1 or $item->layanan_id == 2)
+                    {
+                        $layanan_id = 1;
+                    }
+                    elseif ($item->layanan_id == 4)
+                    {
+                        $layanan_id = 2;
+                    }
+                    elseif ($item->layanan_id == 8)
+                    {
+                        $layanan_id = 4;
+                    }
+                    elseif ($item->layanan_id == 16)
+                    {
+                        $layanan_id = 16;
+                    }
+                    else
+                    {
+                        $layanan_id = 32;
+                    }
+                    //$id_pstlayanan = $item->pst_layanan.id;
+                    $mlay = MLay::where('id',$layanan_id)->first();
+                    $data_layanan = Pstlayanan::where('id',$item->id_pstlayanan)->first();
+                    $data_layanan->layanan_id = $layanan_id;
+                    $data_layanan->layanan_nama = $mlay->nama;
+                    $data_layanan->layanan_nama_new = $mlay->nama;
+                    $data_layanan->update();
+
+                    //update kunjungan
+                    $data_kunjungan = Kunjungan::where('id',$item->kunjungan_id)->first();
+                    $data_kunjungan->layanan_utama = $layanan_utama;
+                    $data_kunjungan->update();
+                }
+            }
+            $pesan_error = "Layanan utama sudah disinkronisasi";
+            $warna_error = "success";
+        }
+
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('pst.layanan');
     }
 }

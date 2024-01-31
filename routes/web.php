@@ -175,6 +175,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/tamu/print/antrian/{id}', 'BukutamuController@PrintNomorAntrian')->name('tamu.printantrian');
     Route::get('/tamu/list/antrian', 'BukutamuController@AntrianListTamu')->name('tamu.antrianlist');
     Route::post('/tamu/kirim/nomor/antrian', 'BukutamuController@KirimNomorAntrian')->name('tamu.kirimnomorantrian');
+    //PST Layanan, Manfaat dan Fasilitas
+    Route::get('/pst/layanan', 'BukutamuController@PstLayanan')->name('pst.layanan');
+    Route::post('/pst/sinkron/layanan', 'BukutamuController@SinkronPstLayanan')->name('pst.sinkronlayanan');
 
 });
 

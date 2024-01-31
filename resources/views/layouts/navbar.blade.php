@@ -101,7 +101,7 @@
                                 aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Menu
                                     Admin</span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li><a href="#">PST Layanan</a></li>
+                                <li><a href="{{route('pst.layanan')}}">PST Layanan</a></li>
                                 <li><a href="#">PST Manfaat</a></li>
                                 <li><a href="#">PST Fasilitas</a></li>
                             </ul>
