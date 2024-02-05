@@ -117,9 +117,9 @@ class BukutamuController extends Controller
             $tahun_filter = request('tahun');
         }
         if (request('bulan') == NULL) {
-            $bulan_filter = NULL;
+            $bulan_filter = 0;
         } elseif (request('bulan') == 0) {
-            $bulan_filter = NULL;
+            $bulan_filter = 0;
         } else {
             $bulan_filter = request('bulan');
         }
@@ -136,10 +136,15 @@ class BukutamuController extends Controller
         $Mjkunjungan = Mjkunjungan::orderBy('id', 'asc')->get();
         //$Kunjungan = Kunjungan::with('tamu')->whereDate('tanggal', Carbon::today())->orderBy('id','desc')->get();
         $Mtamu = Mtamu::orderBy('id', 'asc')->get();
+        /*
         if ($bulan_filter == NULL) {
             $bulan_filter = (int) date('m');
         }
+        */
         $Kunjungan = Kunjungan::with('tamu')
+            ->when($bulan_filter = 0, function ($query) use ($bulan_filter, $tahun_filter) {
+                return $query->whereYear('tanggal', $tahun_filter);
+            })
             ->when($bulan_filter > 0, function ($query) use ($bulan_filter, $tahun_filter) {
                 return $query->whereMonth('tanggal', $bulan_filter)->whereYear('tanggal', $tahun_filter);
             })
@@ -149,6 +154,9 @@ class BukutamuController extends Controller
         //grafik
         //dd($Kunjungan);
         //batas grafik
+        if ($bulan_filter == 0) {
+            $bulan_filter = (int) date('m');
+        }
         return view('new-depan', ['Midentitas' => $Midentitas, 'Mpekerjaan' => $Mpekerjaan, 'Mjk' => $Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan' => $Mkatpekerjaan, 'Mwarga' => $Mwarga, 'MKunjungan' => $MKunjungan, 'Mlayanan' => $Mlayanan, 'Mtamu' => $Mtamu, 'Mjkunjungan' => $Mjkunjungan, 'Kunjungan' => $Kunjungan, 'Mfasilitas' => $Mfasilitas, 'dataTahun' => $data_tahun, 'tahun' => $tahun_filter, 'dataBulan' => $data_bulan, 'dataBulanPendek' => $data_bulan_pendek, 'bulan' => $bulan_filter]);
     }
 
@@ -661,6 +669,23 @@ class BukutamuController extends Controller
             $dataAntrian->save();
             //notifikasi kirim ke email untuk nomor antrian
             //masih pending
+            if (filter_var($dataKunjungan->tamu->email, FILTER_VALIDATE_EMAIL))
+            {
+                //kirim mail
+                $body = new \stdClass();
+                $body->nama_lengkap = $dataKunjungan->tamu->nama_lengkap;
+                $body->email = $dataKunjungan->tamu->email;
+                $body->telepon = $dataKunjungan->tamu->telepon;
+                $body->tanggal = \Carbon\Carbon::parse($dataKunjungan->tanggal)->isoFormat('dddd, D MMMM Y');
+                $body->layanan_utama = $dataKunjungan->LayananUtama->nama;
+                $body->nomor_antrian = $dataKunjungan->NomorAntrian->teks_antrian;
+
+                if (ENV('APP_KIRIM_MAIL') == true) {
+                    Mail::to($dataKunjungan->tamu->email)->send(new KirimAntrian($body));
+                }
+                //batas
+            }
+            //batas
 
             Session::flash('message_header', "<strong>Terimakasih</strong>");
             $pesan_error = "Data Pengunjung <strong><i>" . trim($request->nama_lengkap) . "</i></strong> berhasil ditambahkan";
@@ -1892,13 +1917,23 @@ class BukutamuController extends Controller
             }
             //batas photo
             if ($record->petugas_id != 0) {
-                $petugas = $record->name;
-            } else {
+                if ($record->loket_petugas == 1)
+                {
+                    $loket_petugas = '<span class="badge badge-success badge-pill">Petugas '.$record->loket_petugas.'</span>';
+                }
+                else
+                {
+                    $loket_petugas = '<span class="badge badge-info badge-pill">Petugas '.$record->loket_petugas.'</span>';
+                }
+                $petugas = $record->name .'<br />'. $loket_petugas;
+            }
+            else {
                 $petugas = '<span class="badge badge-danger badge-pill">belum ada</span';
             }
             if ($record->inisial == 'L') {
                 $jk = '<span class="badge badge-info badge-pill">' . $record->inisial . '</span>';
-            } else {
+            }
+            else {
                 $jk = '<span class="badge badge-danger badge-pill">' . $record->inisial . '</span>';
             }
 
