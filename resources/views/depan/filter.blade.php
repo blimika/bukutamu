@@ -1,7 +1,7 @@
 <form class="form-horizontal">
     <div class="form-group row">
       <label for="bulan" class="col-sm-1 control-label">Filter</label>
-      <div class="col-md-2">
+      <div class="col-md-3">
            <select name="bulan" id="bulan" class="form-control">
            @for ($i = 1; $i <= 12; $i++)
                <option value="{{$i}}" @if (request('bulan')==$i or $bulan==$i)

@@ -142,9 +142,11 @@ class BukutamuController extends Controller
         }
         */
         $Kunjungan = Kunjungan::with('tamu')
+            /*
             ->when($bulan_filter = 0, function ($query) use ($bulan_filter, $tahun_filter) {
                 return $query->whereYear('tanggal', $tahun_filter);
             })
+            */
             ->when($bulan_filter > 0, function ($query) use ($bulan_filter, $tahun_filter) {
                 return $query->whereMonth('tanggal', $bulan_filter)->whereYear('tanggal', $tahun_filter);
             })
