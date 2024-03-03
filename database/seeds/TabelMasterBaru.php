@@ -37,6 +37,7 @@ class TabelMasterBaru extends Seeder
             ['id'=>2,'ip' => '::1', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
             ['id'=>3,'ip' => '10.52.6.31', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
             ['id'=>4,'ip' => '36.95.114.173', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
+            ['id'=>5,'ip' => '36.95.114.170', 'flag' => '1','created_at' => Carbon::now()->format('Y-m-d H:i:s'),'updated_at' => Carbon::now()->format('Y-m-d H:i:s')],
         ]);
         DB::table('jtanggal')->insert([
             ['id'=>1,'kode' => 1, 'nama' => 'Kerja'],
@@ -70,7 +71,7 @@ class TabelMasterBaru extends Seeder
             ['name' => 'Medhia Ratna PH','username'=>'medhia', 'email' => 'medhia.ratna@bps.go.id', 'password' => bcrypt('1'), 'level' => '10'],
             ['name' => 'Isna Zuriatina','username'=>'isna', 'email' => 'isna_z@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
             ['name' => 'Abdurrofi Robbani','username'=>'rofi', 'email' => 'rofi.robbani@bps.go.id', 'password' => bcrypt('1'), 'level' => '10'],
-            ['name' => 'Isti','username'=>'isti', 'email' => 'isti@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
+            ['name' => 'Yhisty Ismayawati','username'=>'yesti', 'email' => 'yesti@bpsntb.id', 'password' => bcrypt('1'), 'level' => '10'],
         ]);
     }
 }

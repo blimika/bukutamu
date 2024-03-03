@@ -29,9 +29,10 @@
 <body>
     <strong>BADAN PUSAT STATISTIK <br />PROVINSI NUSA TENGGARA BARAT</strong>
     <hr>
-    Nama : {{ $data->tamu->nama_lengkap }} <br />
-    Nomor Telepon : {{ $data->tamu->telepon }} <br />
-    Tanggal : {{ $data->tanggal }} <br />
+    Nama : <b>{{ $data->tamu->nama_lengkap }}</b> <br />
+    Nomor Telepon : <b>{{ $data->tamu->telepon }}</b> <br />
+    E-mail : <b>{{ $data->tamu->email }}</b> <br />
+    Tanggal kunjungan : <b>{{ $data->tanggal }} </b> <br />
     Nomor Antrian :
     <center>
         <h1>{{ $data->NomorAntrian->teks_antrian }} </h1>
