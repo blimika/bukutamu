@@ -1880,7 +1880,7 @@ class BukutamuController extends Controller
             $flag_antrian_teks = '<span class="badge '.$warna_flag_antrian.' badge-pill">'.$record->flag_antrian_teks.'</span>';
             //batas flag antrian
             if ($record->jam_datang == "") {
-                if (Auth::user()->id == $petugas1_id or Auth::user()->id == $petugas2_id or Auth::user()->level == 20)
+                if (Auth::user()->id == $petugas1_id or Auth::user()->id == $petugas2_id or Auth::user()->level == 20 or $record->layanan_utama == 0 )
                 {
                     $mulai = '<button type="button" class="btn btn-circle btn-success btn-sm mulailayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-tanggal="' . $record->tanggal . '"><i class="fas fa-hand-holding-heart"></i></button>';
                 }
@@ -1894,7 +1894,7 @@ class BukutamuController extends Controller
             }
             if ($record->jam_pulang == "") {
                 if ($record->jam_datang != "") {
-                    $akhir = '<button type="button" class="btn btn-circle btn-danger btn-sm akhirlayanan" data-toggle="tooltip" data-placement="top" title="Mulai memberikan layanan" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-tanggal="' . $record->tanggal . '"><i class="fas fa-sign-out-alt"></i></button>';
+                    $akhir = '<button type="button" class="btn btn-circle btn-danger btn-sm akhirlayanan" data-toggle="tooltip" data-placement="top" title="Mengakhiri pemberian layanan" data-id="' . $record->id . '" data-nama="' . $record->nama_lengkap . '" data-tanggal="' . $record->tanggal . '"><i class="fas fa-sign-out-alt"></i></button>';
                 } else {
                     $akhir = '';
                 }
@@ -2156,7 +2156,7 @@ class BukutamuController extends Controller
             $petugas1_username = $data_petugas_jaga->petugas1_username;
             $petugas2_id = $data_petugas_jaga->petugas2_id;
             $petugas2_username = $data_petugas_jaga->petugas2_username;
-            if (Auth::user()->id == $petugas1_id or Auth::user()->id == $petugas2_id or Auth::user()->level == 20)
+            if (Auth::user()->id == $petugas1_id or Auth::user()->id == $petugas2_id or Auth::user()->level == 20 or $data->layanan_utama == 0)
             {
                 $cek_antrian = DB::table('kunjungan')
                                 ->leftJoin('m_antrian','m_antrian.kunjungan_id','=','kunjungan.id')
@@ -2178,7 +2178,14 @@ class BukutamuController extends Controller
                     }
                     else
                     {
-                        $loket_petugas = 1;
+                        if ($data->layanan_utama == 0)
+                        {
+                            $loket_petugas = 3;
+                        }
+                        else
+                        {
+                            $loket_petugas = 1;
+                        }
                     }
                     $data->petugas_id = Auth::user()->id;
                     $data->petugas_username = Auth::user()->username;
