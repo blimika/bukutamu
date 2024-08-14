@@ -46,9 +46,11 @@
                 <div class="col-lg-5 col-md-6 col-xs-12">
                     <h3 class="card-title">Dashboard Bukutamu</h3>
                 </div>
+                @if (Generate::CekAkses(\Request::getClientIp(true)))
                 <div class="col-lg-7 col-md-6 col-xs-12">
                     @include('depan.filter')
                 </div>
+                @endif
             </div>
             @if(!$Kunjungan->isEmpty())
             <div class="card-body">
@@ -57,7 +59,9 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs customtab" role="tablist">
                 <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#grafik" role="tab"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">Grafik Pengunjung</span></a> </li>
+                @if (Generate::CekAkses(\Request::getClientIp(true)))
                 <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#data" role="tab"><span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">Data Pengunjung</span></a> </li>
+                @endif
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -66,9 +70,11 @@
                         @include('depan.tabgrafik')
                     </div>
                 </div>
+                @if (Generate::CekAkses(\Request::getClientIp(true)))
                 <div class="tab-pane p-20" id="data" role="tabpanel">
                     @include('depan.tabpengunjung')
                 </div>
+                @endif
             </div>
             @else
                 <div class="card-body p-b-0">
