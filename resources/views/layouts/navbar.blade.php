@@ -66,7 +66,9 @@
                             class="ti-align-left"></i><span class="hide-menu">Pengunjung</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ route('laporan.newpengunjung') }}">Laporan</a></li>
+                        @if (Generate::CekAkses(\Request::getClientIp(true)))
                         <li><a href="{{ route('lama') }}">List Data</a></li>
+                        @endif
                     </ul>
                 </li>
                 <!--<li>
