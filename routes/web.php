@@ -84,6 +84,9 @@ Route::get('/cth4', function () {
 
    return new App\Mail\KirimAntrian($body);
 });
+//newbukutamu
+Route::get('/newkunjungan', 'NewBukutamuController@Kunjungan')->name('newkunjungan');
+//batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
 Route::get('/kunjungan/baru', 'BukutamuController@NewKunjungan')->name('kunjungan.baru');

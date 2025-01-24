@@ -214,12 +214,24 @@ class Generate {
                     ->whereYear('tanggal',$tahun)
                     ->groupBy('mtamu.id_mkerja')
                     ->get();
-        foreach ($data_didik as $item)
+        //dd($data_didik);
+        $item_jumlah = 0;
+        if ($data_didik->isEmpty())
         {
             $arr[]=array(
-                'label'=> $item->nama,
-                'value'=> $item->jumlah
+                'label'=> null,
+                'value'=> $item_jumlah
             );
+        }
+        else
+        {
+            foreach ($data_didik as $item)
+            {
+                $arr[]=array(
+                    'label'=> $item->nama,
+                    'value'=> $item->jumlah
+                );
+            }
         }
         $data = json_encode($arr);
         return $data;
@@ -236,7 +248,7 @@ class Generate {
         $item_jumlah = 0;
         foreach ($data_didik as $item)
         {
-            
+
             if ($item->id < 4)
             {
                 $arr[]=array(
@@ -244,12 +256,12 @@ class Generate {
                     'value'=> $item->jumlah
                 );
             }
-            else 
+            else
             {
 
                 $item_jumlah = $item_jumlah + $item->jumlah ;
             }
-           
+
         }
         $label_akhir = 'S2/S3';
         $arr[]=array(
