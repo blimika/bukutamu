@@ -175,7 +175,7 @@ $('#perorangan').change(function(){
 });
 
 </script>
-@include('newbukutamu.js')
+@include('newbukutamu.js-tambah')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>

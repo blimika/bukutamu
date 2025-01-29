@@ -23,7 +23,24 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <style type="text/css">
+        .starfeedback > input {display: none;}  /* Remove radio buttons */
+        .starfeedback > label:before {
+        content: "\f005"; /* Star */
+        margin: 2px;
+        font-size: 3em;
+        font-family: FontAwesome;
+        display: inline-block;
+        }
+        .starfeedback > label
+        {
+        color: #222222; /* Start color when not clicked */
+        }
+        .starfeedback > input:checked ~ label
+        { color: #ffca08 ; } /* Set yellow color when star checked */
+        .starfeedback > input:hover ~ label
+        { color: #ffca08 ;  } /* Set yellow color when star hover */
+    </style>
 </head>
 
 <body class="horizontal-nav boxed skin-megna fixed-layout">

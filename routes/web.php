@@ -85,7 +85,12 @@ Route::get('/cth4', function () {
    return new App\Mail\KirimAntrian($body);
 });
 //newbukutamu
+Route::get('/listdata', 'NewBukutamuController@DataKunjungan')->name('listdata');
+Route::get('/webapi', 'NewBukutamuController@NewWebApi')->name('webapi');
+Route::get('/cekhp/{nomor_hp}', 'NewBukutamuController@CekHP')->name('cekhp');
 Route::get('/newkunjungan', 'NewBukutamuController@Kunjungan')->name('newkunjungan');
+Route::get('/kunjungan/pagelist', 'NewBukutamuController@PageListKunjungan')->name('kunjungan.pagelist');
+Route::post('/feedbacksave', 'NewBukutamuController@FeedbackSave')->name('feedbacksave');
 //batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
@@ -181,7 +186,17 @@ Route::group(['middleware' => ['auth']], function () {
     //PST Layanan, Manfaat dan Fasilitas
     Route::get('/pst/layanan', 'BukutamuController@PstLayanan')->name('pst.layanan');
     Route::post('/pst/sinkron/layanan', 'BukutamuController@SinkronPstLayanan')->name('pst.sinkronlayanan');
-
+    //master Database baru
+    //code baru
+    Route::get('/master/database', 'NewBukutamuController@Database')->name('master.database');
+    Route::get('/master/sinkron/database', 'NewBukutamuController@Sinkron')->name('database.sinkron');
+    Route::get('/pengunjung/newlist', 'NewBukutamuController@DataPengunjung')->name('pengunjung.newlist');
+    Route::get('/pengunjung/pagelist', 'NewBukutamuController@PengunjungPageList')->name('pengunjung.pagelist');
+    //hapus kunjungan
+    Route::post('/kunjungan/hapus', 'NewBukutamuController@HapusKunjungan')->name('kunjungan.hapus');
+    Route::post('/kunjungan/flagantrian', 'NewBukutamuController@FlagAntrianUpdate')->name('flagantrian.update');
+    Route::post('/kunjungan/mulai', 'NewBukutamuController@MulaiLayanan')->name('kunjungan.mulai');
+    Route::post('/kunjungan/akhir', 'NewBukutamuController@AkhirLayanan')->name('kunjungan.akhir');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

@@ -18,8 +18,8 @@ class NewBukutamu extends Seeder
             ['id'=>1,'kode' => 1, 'tipe' => 1, 'inisial'=>'KTR', 'nama' => 'Kantor'],
             ['id'=>2,'kode' => 2, 'tipe' => 1, 'inisial'=>'PST', 'nama' => 'Pelayanan Statistik Terpadu'],
             ['id'=>3,'kode' => 3, 'tipe' => 2, 'inisial'=>'POT', 'nama' => 'Pojok Statistik'],
-            ['id'=>4,'kode' => 4, 'tipe' => 2, 'inisial'=>'EM', 'nama' => 'E-Mail'],
-            ['id'=>5,'kode' => 5, 'tipe' => 2, 'inisial'=>'WA', 'nama' => 'WhatsApp'],
+            ['id'=>4,'kode' => 4, 'tipe' => 2, 'inisial'=>'EML', 'nama' => 'E-Mail'],
+            ['id'=>5,'kode' => 5, 'tipe' => 2, 'inisial'=>'WAP', 'nama' => 'WhatsApp'],
             ['id'=>6,'kode' => 6, 'tipe' => 2, 'inisial'=>'TEL', 'nama' => 'Telepon/Lainnya'],
         ]);
 
@@ -36,10 +36,11 @@ class NewBukutamu extends Seeder
             ['id'=>5,'kode' => 5, 'nama' => 'Doktor'],
         ]);
         DB::table('m_layanan_pst')->insert([
-            ['id'=>1,'kode' => 1, 'inisial'=>'PS', 'nama' => 'Perpustakaan'],
-            ['id'=>2,'kode' => 2, 'inisial'=>'PJ', 'nama' => 'Penjualan Produk Statistik'],
-            ['id'=>3,'kode' => 3,  'inisial'=>'KS', 'nama' => 'Konsultasi Statistik'],
-            ['id'=>4,'kode' => 4,  'inisial'=>'RS', 'nama' => 'Rekomendasi Kegiatan Statistik'],
+            ['id'=>1,'kode' => 0, 'inisial'=>'LA', 'nama' => 'Lainnya'],
+            ['id'=>2,'kode' => 1, 'inisial'=>'PS', 'nama' => 'Perpustakaan'],
+            ['id'=>3,'kode' => 2, 'inisial'=>'PJ', 'nama' => 'Penjualan Produk Statistik'],
+            ['id'=>4,'kode' => 3,  'inisial'=>'KS', 'nama' => 'Konsultasi Statistik'],
+            ['id'=>5,'kode' => 4,  'inisial'=>'RS', 'nama' => 'Rekomendasi Kegiatan Statistik'],
         ]);
     }
 }

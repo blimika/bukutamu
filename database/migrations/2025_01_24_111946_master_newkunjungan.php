@@ -16,7 +16,7 @@ class MasterNewkunjungan extends Migration
         Schema::create('m_new_kunjungan', function (Blueprint $table) {
             $table->bigIncrements('kunjungan_id');
             $table->string('pengunjung_uid',6)->nullable();
-            $table->string('kunjungan_uid',6)->nullable();
+            $table->string('kunjungan_uid',7)->nullable();
             $table->date('kunjungan_tanggal');
             $table->text('kunjungan_keperluan')->nullable();
             $table->text('kunjungan_tindak_lanjut')->nullable();
@@ -31,8 +31,8 @@ class MasterNewkunjungan extends Migration
             $table->tinyInteger('kunjungan_nilai_feedback')->default(6); // skala 1 - 6
             $table->text('kunjungan_komentar_feedback')->nullable();
             //antrian
-            $table->tinyInteger('Kunjungan_nomor_antrian')->unsigned()->default(0);
-            $table->string('Kunjungan_teks_antrian',15)->nullable();
+            $table->tinyInteger('kunjungan_nomor_antrian')->unsigned()->default(0);
+            $table->string('kunjungan_teks_antrian',15)->nullable();
             $table->boolean('kunjungan_loket_petugas')->default(0);
             $table->boolean('kunjungan_flag_antrian')->default(1); //flag: 1 = Masuk Antrian 2 = Dalam Layanan 3 = Selesai
             $table->dateTime('kunjungan_jam_datang')->nullable();

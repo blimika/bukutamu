@@ -150,23 +150,6 @@
         #PSTlayanan, #PSTmanfaat, #PSTlayanan_lama, #PSTmanfaat_lama, #PSTFasilitas, #PSTFasilitas_lama, #canvas {
             display: none;
         }
-        .starrating > input {display: none;}  /* Remove radio buttons */
-        .starrating > label:before {
-        content: "\f005"; /* Star */
-        margin: 2px;
-        font-size: 4em;
-        font-family: FontAwesome;
-        display: inline-block;
-        }
-        .starrating > label
-        {
-        color: #222222; /* Start color when not clicked */
-        }
-
-        .starrating > input:checked ~ label
-        { color: #ffca08 ; } /* Set yellow color when star checked */
-        .starrating > input:hover ~ label
-        { color: #ffca08 ;  } /* Set yellow color when star hover */
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--alerts CSS -->
