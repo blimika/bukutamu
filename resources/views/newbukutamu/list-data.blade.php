@@ -88,6 +88,9 @@
     </div>
     @include('newbukutamu.modal-kunjungan')
     @include('newbukutamu.modal-feedback')
+    @include('newbukutamu.modal-tindaklanjut')
+    @include('newbukutamu.modal-tujuan')
+    @include('newbukutamu.modal-jenis')
 @endsection
 
 @section('css')

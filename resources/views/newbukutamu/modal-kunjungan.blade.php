@@ -46,8 +46,8 @@
                     <dd class="col-sm-8"><span id="kunjungan_jam_pulang"></span></dd>
                     <dt class="col-sm-12">Keperluan/Data dicari</dt>
                     <dd class="col-sm-12"><span id="kunjungan_keperluan"></span></dd>
-                    <dt class="col-sm-4">Tindak Lanjut</dt>
-                    <dd class="col-sm-8"><span id="kunjungan_tindak_lanjut"></span></dd>
+                    <dt class="col-sm-12">Tindak Lanjut</dt>
+                    <dd class="col-sm-12"><span id="kunjungan_tindak_lanjut"></span></dd>
                 </dl>
 
             </div>

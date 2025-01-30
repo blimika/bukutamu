@@ -32,6 +32,7 @@ use App\MasterPendidikan;
 use App\Mtamu;
 use App\Kunjungan;
 use App\FlagAntrian;
+use App\Mjkunjungan;
 use Svg\Tag\Rect;
 
 class NewBukutamuController extends Controller
@@ -176,8 +177,11 @@ class NewBukutamuController extends Controller
     public function DataKunjungan()
     {
         //$data = NewKunjungan::orderBy('kunjungan_id','desc')->get();
+        $MasterTujuan = MasterTujuan::orderBy('id', 'asc')->get();
+        $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
+        $MasterJenisKunjungan = Mjkunjungan::orderBy('id', 'asc')->get();
         $flag_antrian = FlagAntrian::get();
-        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian]);
+        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian,'MasterTujuan'=>$MasterTujuan,'MasterLayananPST'=>$MasterLayananPST,'MasterJenisKunjungan'=>$MasterJenisKunjungan]);
     }
     public function MulaiLayanan(Request $request)
     {
@@ -323,6 +327,61 @@ class NewBukutamuController extends Controller
         }
         return Response()->json($arr);
     }
+    public function TindakLanjutSave(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'message'=>'Data tidak di simpan'
+        );
+        if (Auth::user()->level > 5)
+        {
+            $data = NewKunjungan::where('kunjungan_uid',$request->kunjungan_uid)->first();
+            if ($data)
+            {
+                $data->kunjungan_tindak_lanjut = $request->kunjungan_tindak_lanjut;
+                $data->update();
+
+                $arr = array(
+                    'status'=>true,
+                    'message'=>'Tindak lanjut untuk kunjungan an. '.$data->Pengunjung->pengunjung_nama.' sudah tersimpan',
+                    'data'=>true
+                );
+            }
+        }
+        return Response()->json($arr);
+    }
+    public function TujuanBaruSave(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'message'=>'Data tidak di simpan'
+        );
+        if (Auth::user()->level > 5)
+        {
+            $data = NewKunjungan::where('kunjungan_uid',$request->kunjungan_uid)->first();
+            if ($data)
+            {
+                if ($request->kunjungan_tujuan_baru == 2)
+                {
+                    $layanan_pst_baru = $request->kunjungan_layanan_pst_baru;
+                }
+                else
+                {
+                    $layanan_pst_baru = 0;
+                }
+                $data->kunjungan_tujuan = $request->kunjungan_tujuan_baru;
+                $data->kunjungan_pst = $layanan_pst_baru;
+                $data->update();
+
+                $arr = array(
+                    'status'=>true,
+                    'message'=>'Tujuan untuk kunjungan an. '.$data->Pengunjung->pengunjung_nama.' sudah diperbarui',
+                    'data'=>true
+                );
+            }
+        }
+        return Response()->json($arr);
+    }
     public function PageListKunjungan(Request $request)
     {
         $draw = $request->get('draw');
@@ -405,10 +464,10 @@ class NewBukutamuController extends Controller
                 <a class="dropdown-item" href="'.route("tamu.printantrian",$item->kunjungan_id).'" target="_blank" data-toggle="tooltip" title="Print Nomor Antrian">Print Antrian</a>
                     <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $item->kunjungan_id . '" data-nama="' . $item->pengunjung_nama . '" data-email="' . $item->pengunjung_email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Antrian</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-uid="' . $item->pengunjung_uid . '" data-toggle="modal" data-target="#EditTindakLanjutModal"><span data-toggle="tooltip" title="Edit tindak lanjut kunjungan an. '.$item->pengunjung_nama.'">Edit Tindak Lanjut</span></a>
+                <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditTindakLanjutModal"><span data-toggle="tooltip" title="Edit tindak lanjut kunjungan an. '.$item->pengunjung_nama.'">Edit Tindak Lanjut</span></a>
                 <a class="dropdown-item" href="#" data-uid="' . $item->pengunjung_uid . '" data-toggle="modal" data-target="#EditModal"><span data-toggle="tooltip" title="Edit Kunjungan an. '.$item->pengunjung_nama.'">Edit Kunjungan</span></a>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#EditTujuanModal" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '">Ubah Tujuan</a>
-                <a class="dropdown-item ubahjeniskunjungan" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-jenis="'.$item->kunjungan_jenis.'" data-nama="' . $item->pengunjung_nama . '">Ubah Jenis</a>
+                <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-jenis="'.$item->kunjungan_jenis.'" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditJenisKunjunganModal">Ubah Jenis</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditFlagAntrianModal">Flag Antrian</a>
                 <div class="dropdown-divider"></div>
