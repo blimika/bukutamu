@@ -907,7 +907,113 @@ $('#EditJenisKunjunganModal').on('show.bs.modal', function (event) {
         $('#EditJenisKunjunganModal .modal-body #row_kelompok').hide();
     }
 
+    });
 });
+
+$('#EditJenisKunjunganModal .modal-footer #simpanJenisKunjungan').on('click', function(e) {
+    e.preventDefault();
+    var kunjungan_id = $('#EditJenisKunjunganModal .modal-body #edit_id').val();
+    var kunjungan_uid = $('#EditJenisKunjunganModal .modal-body #edit_uid').val();
+    var kunjungan_jenis = $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis_baru').val();
+    var jumlah_orang = $('#EditJenisKunjunganModal .modal-body #jumlah_orang').val();
+    var jumlah_pria = $('#EditJenisKunjunganModal .modal-body #jumlah_pria').val();
+    var jumlah_wanita = $('#EditJenisKunjunganModal .modal-body #jumlah_wanita').val();
+    if (kunjungan_jenis == "")
+    {
+        $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis_error').text('Pilih salah satu jenis kunjungan');
+        return false;
+    }
+    else if (kunjungan_jenis == 2)
+    {
+        if (jumlah_orang == "")
+        {
+            $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis_error').text('karena terpilih kelompok, jumlah pengunjung tidak boleh kosong');
+            return false;
+        }
+        else if (jumlah_orang < 2)
+        {
+            $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis_error').text('karena terpilih kelompok, jumlah pengunjung minimal 2 orang');
+            return false;
+        }
+        else if (jumlah_pria == "")
+        {
+            $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis_error').text('karena terpilih kelompok, jumlah pengunjung laki-laki minimal 0');
+            return false;
+        }
+        else if (jumlah_wanita == "")
+        {
+            $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis_error').text('karena terpilih kelompok, jumlah pengunjung perempuan minimal 0');
+            return false;
+        }
+        else if (jumlah_orang != (parseInt(jumlah_pria)+parseInt(jumlah_wanita)))
+        {
+            $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis_error').text('Jumlah pengunjung total ('+jumlah_orang+') tidak sama dengan jumlah pengunjung laki-laki ('+jumlah_pria+') + jumlah pengunjung perempuan ('+jumlah_wanita+')');
+            return false;
+        }
+        else
+        {
+            var isian_clear = true;
+        }
+    }
+    else
+    {
+        var isian_clear = true;
+    }
+
+    if (isian_clear)
+    {
+        //ajax responsen
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url : '{{route("jeniskunjungan.save")}}',
+            method : 'post',
+            data: {
+                kunjungan_id: kunjungan_id,
+                kunjungan_uid: kunjungan_uid,
+                kunjungan_jenis : kunjungan_jenis,
+                jumlah_orang: jumlah_orang,
+                jumlah_pria: jumlah_pria,
+                jumlah_wanita: jumlah_wanita
+            },
+            cache: false,
+            dataType: 'json',
+            success: function(data){
+                if (data.status == true)
+                {
+                    Swal.fire(
+                        'Berhasil!',
+                        ''+data.message+'',
+                        'success'
+                    ).then(function() {
+                        $('#dTabel').DataTable().ajax.reload(null,false);
+                    });
+                }
+                else
+                {
+                    Swal.fire(
+                        'Error!',
+                        ''+data.message+'',
+                        'error'
+                    );
+                }
+
+            },
+            error: function(){
+                Swal.fire(
+                    'Error',
+                    'Koneksi Error',
+                    'error'
+                );
+            }
+
+        });
+        //batas
+    }
+
 });
 //batas jenis
 </script>

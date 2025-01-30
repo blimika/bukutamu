@@ -22,7 +22,7 @@
 <div class="form-group row">
     <label class="control-label text-right col-md-3">Jenis Kelamin</label>
     <div class="col-md-4" id="id_jk_error">
-        <select class="form-control" id="id_jk" name="id_jk" required disabled>
+        <select class="form-control" id="pengunjung_jk" name="pengunjung_jk" required disabled>
             <option value=""></option>
             @foreach ($Mjk as $item_jk)
                     <option value="{{$item_jk->id}}">{{$item_jk->nama}}</option>

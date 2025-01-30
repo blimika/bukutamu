@@ -1,15 +1,112 @@
 <script>
-    function cekUmur(birthDateString) {
-        var today = new Date();
-        var birthDate = new Date(birthDateString);
-        var age = today.getFullYear() - birthDate.getFullYear();
-        var m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
-    }
+function GetUmur(birthDateString) {
+    var today = new Date();
+    var age = today.getFullYear() - birthDateString;
+    return age;
+}
+//cek nomor hp
+$('#cek_hp').click(function(){
 
+var nomor = $("#nomor_hp").val();
+if (nomor == "")
+{
+    $('#nomor_hp_error').removeClass("has-danger");
+    $('#nomor_hp_error').addClass("has-danger");
+    Swal.fire({
+        type: 'error',
+        title: 'error',
+        text: 'Silakan isi nomor hp pengunjung'
+        });
+    return false;
+}
+else
+{
+    $('#nomor_hp_error').removeClass("has-danger");
+    $('#nomor_hp_error').addClass("has-success");
+}
+$.ajax({
+url : '{{route("webapi")}}/',
+method : 'get',
+data: {
+    model: 'hp',
+    nomor: nomor
+},
+cache: false,
+dataType: 'json',
+success: function(data){
+
+    if (data.status==false) {
+        //buka semua inputan
+        $('#nama_lengkap').prop('readonly', false);
+        $('#id_jk').prop('disabled', false);
+        $('#tgl_lahir').prop('readonly', false);
+        $('#id_kerja').prop('disabled', false);
+        $('#kat_kerja').prop('disabled', false);
+        $('#pekerjaan_detil').prop('readonly', false);
+        $('#id_mdidik').prop('disabled', false);
+        $('#mwarga').prop('disabled', false);
+        $('#email').prop('readonly', false);
+        $('#telepon').prop('readonly', false);
+        $('#alamat').prop('readonly', false);
+        $('#edit_id').prop('disabled', true);
+
+        //kosongan isian
+        $('#tamu_id').val("");
+        $('#nama_lengkap').val("");
+        $('#id_jk').val("");
+        $('#tgl_lahir').val("");
+        $('#id_kerja').val("");
+        $('#kat_kerja').val("");
+        $('#pekerjaan_detil').val("");
+        $('#id_mdidik').val("");
+        $('#mwarga').val("");
+        $('#email').val("");
+        $('#telepon').val("");
+        $('#alamat').val("");
+        $('#edit_tamu').val(0);
+        $('#tamu_baru').prop('value','1');
+    }
+    else {
+        //success / ada tamu_id
+        //inputan dia set readonly dulu
+        $('#nama_lengkap').prop('readonly', true);
+        $('#id_jk').prop('disabled', true);
+        $('#tgl_lahir').prop('readonly', true);
+        $('#id_kerja').prop('disabled', true);
+        $('#kat_kerja').prop('disabled', true);
+        $('#pekerjaan_detil').prop('readonly', true);
+        $('#id_mdidik').prop('disabled', true);
+        $('#mwarga').prop('disabled', true);
+        $('#email').prop('readonly', true);
+        $('#telepon').prop('readonly', true);
+        $('#alamat').prop('readonly', true);
+        $('#edit_id').prop('disabled', false);
+
+        //data di isikan di inputan
+        $('#tamu_id').val(data.hasil.tamu_id);
+        $('#nama_lengkap').val(data.hasil.nama_lengkap);
+        $('#tgl_lahir').val(data.hasil.tgl_lahir);
+        $('#id_kerja').val(data.hasil.id_kerja);
+        $('#kat_kerja').val(data.hasil.kat_kerja);
+        $('#pekerjaan_detil').val(data.hasil.pekerjaan_detil);
+        $('#id_mdidik').val(data.hasil.id_mdidik);
+        $('#mwarga').val(data.hasil.mwarga);
+        $('#email').val(data.hasil.email);
+        $('#telepon').val(data.hasil.telepon);
+        $('#alamat').val(data.hasil.alamat);
+        $('#id_jk').val(data.hasil.id_jk);
+        $('#edit_tamu').val(0);
+        $('#tamu_baru').prop('value','0');
+
+    }
+},
+error: function(){
+    alert("error");
+}
+
+});
+});
+//batas
     //foto baru
     $('#reset_foto').click(function(){
         $('#canvas').hide();

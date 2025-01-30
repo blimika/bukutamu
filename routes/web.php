@@ -199,6 +199,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/kunjungan/akhir', 'NewBukutamuController@AkhirLayanan')->name('kunjungan.akhir');
     Route::post('/tindaklanjut/save', 'NewBukutamuController@TindakLanjutSave')->name('tindaklanjut.save');
     Route::post('/tujuanbaru/save', 'NewBukutamuController@TujuanBaruSave')->name('tujuanbaru.save');
+    Route::post('/jeniskunjungansave', 'NewBukutamuController@JenisKunjunganSave')->name('jeniskunjungan.save');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

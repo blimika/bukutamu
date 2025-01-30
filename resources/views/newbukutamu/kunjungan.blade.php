@@ -44,7 +44,7 @@
                         <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="pengunjung_id" id="pengunjung_id" value="" />
-                            <input type="hidden" name="edit_tamu" id="edit_tamu" value="0" />
+                            <input type="hidden" name="edit_pengunjung" id="edit_pengunjung" value="0" />
                             <input type="hidden" name="pengunjung_baru" id="pengunjung_baru" value="0" />
                             <h3 class="card-title">Jenis Kunjungan</h3>
                             <h6 class="card-subtitle">silakan isikan sesuai jenis kunjungan </h6>
@@ -106,12 +106,6 @@
 @section('js')
 <script>
 $( document ).ready(function() {
-    $('#PSTLayanan').hide();
-    $('#PSTManfaat').hide();
-    $('#PSTFasilitas').hide();
-    $('#LayananUtama').hide();
-    $('#manfaat_nama').hide();
-    $('#fas_lainnya').hide();
     $('#jumlah_tamu').hide();
     $('#jumlah_tamu_teks').hide();
     $('#tamu_laki').hide();

@@ -382,6 +382,54 @@ class NewBukutamuController extends Controller
         }
         return Response()->json($arr);
     }
+    public function JenisKunjunganSave(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'message'=>'Data tidak di simpan'
+        );
+        if (Auth::user()->level > 5)
+        {
+            $data = NewKunjungan::where('kunjungan_uid',$request->kunjungan_uid)->first();
+            if ($data)
+            {
+                if ($request->kunjungan_jenis == 1)
+                {
+                    //perorangan
+                    if ($data->Pengunjung->pengunjung_jk == 1)
+                    {
+                        $jumlah_orang = 1;
+                        $jumlah_pria = 1;
+                        $jumlah_wanita = 0;
+                    }
+                    else
+                    {
+                        $jumlah_orang = 1;
+                        $jumlah_pria = 0;
+                        $jumlah_wanita = 1;
+                    }
+                }
+                else
+                {
+                    $jumlah_orang = $request->jumlah_orang;
+                    $jumlah_pria = $request->jumlah_pria;
+                    $jumlah_wanita = $request->jumlah_wanita;
+                }
+                $data->kunjungan_jenis = $request->kunjungan_jenis;
+                $data->kunjungan_jumlah_orang = $jumlah_orang;
+                $data->kunjungan_jumlah_pria = $jumlah_pria;
+                $data->kunjungan_jumlah_wanita = $jumlah_wanita;
+                $data->update();
+
+                $arr = array(
+                    'status'=>true,
+                    'message'=>'Jenis kunjungan an. '.$data->Pengunjung->pengunjung_nama.' sudah diperbarui',
+                    'data'=>true
+                );
+            }
+        }
+        return Response()->json($arr);
+    }
     public function PageListKunjungan(Request $request)
     {
         $draw = $request->get('draw');
@@ -888,7 +936,7 @@ class NewBukutamuController extends Controller
         if ($request->model == "hp")
         {
             //cari nomor hp
-            $data = Pengunjung::where('pengunjung_nomor_hp',$request->nomor)->first();
+            $data = Pengunjung::with('Pendidikan','JenisKelamin','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_nomor_hp',$request->nomor)->first();
             if ($data)
             {
                 $arr = array(
