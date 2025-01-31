@@ -41,9 +41,10 @@
                 <div class="row">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-8 col-sm-12">
-                        <form id="form_baru" class="form-horizontal m-t-20" action="{{route('simpan')}}" method="POST" enctype="multipart/form-data">
+                        <form id="formNewKunjungan" class="form-horizontal m-t-20" action="{{route('newsimpan')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="pengunjung_id" id="pengunjung_id" value="" />
+                            <input type="hidden" name="pengunjung_uid" id="pengunjung_uid" value="" />
                             <input type="hidden" name="edit_pengunjung" id="edit_pengunjung" value="0" />
                             <input type="hidden" name="pengunjung_baru" id="pengunjung_baru" value="0" />
                             <h3 class="card-title">Jenis Kunjungan</h3>
@@ -67,7 +68,7 @@
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-offset-3 col-md-9">
-                                                <button type="submit" id="tambah_data" class="btn btn-success waves-effect waves-light" disabled>Simpan</button>
+                                                <button type="submit" id="newKunjunganSave" class="btn btn-success waves-effect waves-light" disabled>Simpan</button>
                             <button type="reset" class="btn btn-danger waves-effect waves-light">Reset</button>
                                             </div>
                                         </div>
@@ -106,6 +107,7 @@
 @section('js')
 <script>
 $( document ).ready(function() {
+    $('#PSTLayanan').hide();
     $('#jumlah_tamu').hide();
     $('#jumlah_tamu_teks').hide();
     $('#tamu_laki').hide();

@@ -15,13 +15,13 @@
 </div>
 <div class="form-group row">
     <label class="control-label text-right col-md-3">Nama lengkap</label>
-    <div class="col-md-9" id="nama_lengkap_error">
-        <input type="text" class="form-control border-black" id="nama_lengkap" name="nama_lengkap" required readonly>
+    <div class="col-md-9" id="pengunjung_nama_error">
+        <input type="text" class="form-control border-black" id="pengunjung_nama" name="pengunjung_nama" required readonly>
     </div>
 </div>
 <div class="form-group row">
     <label class="control-label text-right col-md-3">Jenis Kelamin</label>
-    <div class="col-md-4" id="id_jk_error">
+    <div class="col-md-4" id="pengunjung_jk_error">
         <select class="form-control" id="pengunjung_jk" name="pengunjung_jk" required disabled>
             <option value=""></option>
             @foreach ($Mjk as $item_jk)
@@ -32,20 +32,20 @@
 </div>
 <div class="form-group row">
     <label class="control-label text-right col-md-3">Tahun lahir</label>
-    <div class="col-md-4" id="tgl_lahir_error">
-        <input type="text" class="form-control" id="tahun_lahir" name="tahun_lahir" autocomplete="off" required readonly>
+    <div class="col-md-4" id="pengunjung_tahun_lahir_error">
+        <input type="text" class="form-control" id="pengunjung_tahun_lahir" name="pengunjung_tahun_lahir" required readonly>
     </div>
 </div>
 <div class="form-group row">
     <label class="control-label text-right col-md-3">Pekerjaan</label>
-    <div class="col-md-9" id="pekerjaan_error">
-        <input type="text" class="form-control border-black" id="pekerjaan" name="pekerjaan" required readonly>
+    <div class="col-md-9" id="pengunjung_pekerjaan_error">
+        <input type="text" class="form-control border-black" id="pengunjung_pekerjaan" name="pengunjung_pekerjaan" required readonly>
     </div>
 </div>
 <div class="form-group row">
     <label class="control-label text-right col-md-3">Pendidikan terakhir</label>
-    <div class="col-md-4" id="pendidikan_id_error">
-        <select class="form-control" id="pendidikan_id" name="pendidikan_id" required disabled>
+    <div class="col-md-4" id="pengunjung_pendidikan_error">
+        <select class="form-control" id="pengunjung_pendidikan" name="pengunjung_pendidikan" required disabled>
             <option value=""></option>
             @foreach ($MasterPendidikan as $item_didik)
                     <option value="{{$item_didik->id}}">{{$item_didik->nama}}</option>
@@ -55,7 +55,13 @@
 </div>
 <div class="form-group row">
     <label class="control-label text-right col-md-3">E-Mail</label>
-    <div class="col-md-9" id="email_error">
-        <input type="text" class="form-control" id="email" name="email" readonly>
+    <div class="col-md-9" id="pengunjung_email_error">
+        <input type="text" class="form-control" id="pengunjung_email" name="pengunjung_email" readonly>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="control-label text-right col-md-3">Alamat</label>
+    <div class="col-md-9" id="pengunjung_alamat_error">
+        <textarea class="form-control" rows="4" name="pengunjung_alamat" id="pengunjung_alamat" readonly></textarea>
     </div>
 </div>

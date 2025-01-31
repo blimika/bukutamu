@@ -19,6 +19,15 @@ if (nomor == "")
         });
     return false;
 }
+else if (nomor.match(/[^\d+]/))
+    {
+        Swal.fire({
+            type: 'error',
+            title: 'error',
+            text: 'Silakan masukkan nomor handphone hanya angka'
+            });
+        return false;
+    }
 else
 {
     $('#nomor_hp_error').removeClass("has-danger");
@@ -33,98 +42,93 @@ data: {
 },
 cache: false,
 dataType: 'json',
-success: function(data){
+success: function(d){
 
-    if (data.status==false) {
+    if (d.status==false) {
         //buka semua inputan
-        $('#nama_lengkap').prop('readonly', false);
-        $('#id_jk').prop('disabled', false);
-        $('#tgl_lahir').prop('readonly', false);
-        $('#id_kerja').prop('disabled', false);
-        $('#kat_kerja').prop('disabled', false);
-        $('#pekerjaan_detil').prop('readonly', false);
-        $('#id_mdidik').prop('disabled', false);
-        $('#mwarga').prop('disabled', false);
-        $('#email').prop('readonly', false);
-        $('#telepon').prop('readonly', false);
-        $('#alamat').prop('readonly', false);
-        $('#edit_id').prop('disabled', true);
+        $('#pengunjung_nama').prop('readonly', false);
+        $('#pengunjung_jk').prop('disabled', false);
+        $('#pengunjung_tahun_lahir').prop('readonly', false);
+        $('#pengunjung_pekerjaan').prop('readonly', false);
+        $('#pengunjung_pendidikan').prop('disabled', false);
+        $('#pengunjung_email').prop('readonly', false);
+        $('#pengunjung_alamat').prop('readonly', false);
+        $('#edit_hp').prop('disabled', true);
 
         //kosongan isian
-        $('#tamu_id').val("");
-        $('#nama_lengkap').val("");
-        $('#id_jk').val("");
-        $('#tgl_lahir').val("");
-        $('#id_kerja').val("");
-        $('#kat_kerja').val("");
-        $('#pekerjaan_detil').val("");
-        $('#id_mdidik').val("");
-        $('#mwarga').val("");
-        $('#email').val("");
-        $('#telepon').val("");
-        $('#alamat').val("");
-        $('#edit_tamu').val(0);
-        $('#tamu_baru').prop('value','1');
+        $('#pengunjung_uid').val("");
+        $('#pengunjung_nama').val("");
+        $('#pengunjung_jk').val("");
+        $('#pengunjung_tahun_lahir').val("");
+        $('#pengunjung_pekerjaan').val("");
+        $('#pengunjung_pendidikan').val("");
+        $('#pengunjung_email').val("");
+        $('#pengunjung_alamat').val("");
+        $('#edit_pengunjung').val(0);
+        $('#pengunjung_baru').prop('value','1');
     }
     else {
-        //success / ada tamu_id
+        //success / ada pengunjung
         //inputan dia set readonly dulu
-        $('#nama_lengkap').prop('readonly', true);
-        $('#id_jk').prop('disabled', true);
-        $('#tgl_lahir').prop('readonly', true);
-        $('#id_kerja').prop('disabled', true);
-        $('#kat_kerja').prop('disabled', true);
-        $('#pekerjaan_detil').prop('readonly', true);
-        $('#id_mdidik').prop('disabled', true);
-        $('#mwarga').prop('disabled', true);
-        $('#email').prop('readonly', true);
-        $('#telepon').prop('readonly', true);
-        $('#alamat').prop('readonly', true);
-        $('#edit_id').prop('disabled', false);
+        $('#pengunjung_nama').prop('readonly', true);
+        $('#pengunjung_jk').prop('disabled', true);
+        $('#pengunjung_tahun_lahir').prop('readonly', true);
+        $('#pengunjung_pekerjaan').prop('readonly', true);
+        $('#pengunjung_pendidikan').prop('disabled', true);
+        $('#pengunjung_email').prop('readonly', true);
+        $('#pengunjung_alamat').prop('readonly', true);
+        $('#edit_hp').prop('disabled', false);
 
         //data di isikan di inputan
-        $('#tamu_id').val(data.hasil.tamu_id);
-        $('#nama_lengkap').val(data.hasil.nama_lengkap);
-        $('#tgl_lahir').val(data.hasil.tgl_lahir);
-        $('#id_kerja').val(data.hasil.id_kerja);
-        $('#kat_kerja').val(data.hasil.kat_kerja);
-        $('#pekerjaan_detil').val(data.hasil.pekerjaan_detil);
-        $('#id_mdidik').val(data.hasil.id_mdidik);
-        $('#mwarga').val(data.hasil.mwarga);
-        $('#email').val(data.hasil.email);
-        $('#telepon').val(data.hasil.telepon);
-        $('#alamat').val(data.hasil.alamat);
-        $('#id_jk').val(data.hasil.id_jk);
-        $('#edit_tamu').val(0);
-        $('#tamu_baru').prop('value','0');
+        $('#pengunjung_id').val(d.data.pengunjung_id);
+        $('#pengunjung_uid').val(d.data.pengunjung_uid);
+        $('#pengunjung_nama').val(d.data.pengunjung_nama);
+        $('#pengunjung_jk').val(d.data.pengunjung_jk);
+        $('#pengunjung_tahun_lahir').val(d.data.pengunjung_tahun_lahir);
+        $('#pengunjung_pekerjaan').val(d.data.pengunjung_pekerjaan);
+        $('#pengunjung_pendidikan').val(d.data.pengunjung_pendidikan);
+        $('#pengunjung_email').val(d.data.pengunjung_email);
+        $('#pengunjung_alamat').val(d.data.pengunjung_alamat);
+        $('#edit_pengunjung').val(0);
+        $('#pengunjung_baru').prop('value','0');
 
     }
 },
 error: function(){
-    alert("error");
+    alert("error koneksi");
 }
 
 });
 });
 //batas
+//edit data pengunjung
+$('#edit_hp').click(function(){
+    //buka semua inputan
+    $('#pengunjung_nama').prop('readonly', false);
+    $('#pengunjung_jk').prop('disabled', false);
+    $('#pengunjung_tahun_lahir').prop('readonly', false);
+    $('#pengunjung_pekerjaan').prop('readonly', false);
+    $('#pengunjung_pendidikan').prop('disabled', false);
+    $('#pengunjung_email').prop('readonly', false);
+    $('#pengunjung_alamat').prop('readonly', false);
+    $('#edit_hp').prop('disabled', true);
+});
+    //batas edit
     //foto baru
     $('#reset_foto').click(function(){
         $('#canvas').hide();
         $('#video').toggle();
         $('#reset_foto').prop('disabled', true);
         $('#ambil_foto').prop('disabled', false);
-        $('#tambah_data').prop('disabled', true);
+        $('#newKunjunganSave').prop('disabled', true);
     });
     //tanpa webcam
     $('#tanpa_webcam').click(function(){
         $('#canvas').hide();
         $('#video').hide();
-        //$('#reset_foto').prop('disabled', true);
-        //$('#ambil_foto').prop('disabled', true);
-        //$('#tambah_data').prop('disabled', false);
         $('#reset_foto').hide();
         $('#ambil_foto').hide();
-        $('#tambah_data').prop('disabled', false);
+        $('#newKunjunganSave').prop('disabled', false);
         $('#dengan_webcam').show();
         $('#tanpa_webcam').hide();
         $('#foto').prop('value',null);
@@ -139,36 +143,34 @@ error: function(){
         $('#tanpa_webcam').show();
         $('#reset_foto').prop('disabled', true);
         $('#ambil_foto').prop('disabled', false);
-        $('#tambah_data').prop('disabled', true);
+        $('#newKunjunganSave').prop('disabled', true);
         $('#dengan_webcam').hide();
     });
     //cek form sebelum submit untuk checkbox
-    $('#tambah_data').on('click', function(e) {
+    $('#newKunjunganSave').on('click', function(e) {
         e.preventDefault();
-        var keperluan = $('#keperluan').val();
+        var pengunjung_keperluan = $('#pengunjung_keperluan').val();
+        var pengunjung_baru = $('#pengunjung_baru').val();
         //cek isian bila ada tamu baru / tamu di edit
-        if (tamu_baru == 1)
+        if (pengunjung_baru == 1)
         {
-            var nama_lengkap = $('#nama_lengkap').val();
-            var id_jk = $('#id_jk').val();
-            var tgl_lahir = $('#tgl_lahir').val();
-            var id_mdidik = $('#id_mdidik').val();
-            var id_kerja = $('#id_kerja').val();
-            var telepon = $('#telepon').val();
-            var kat_kerja = $('#kat_kerja').val();
-            var pekerjaan_detil = $('#pekerjaan_detil').val();
-            var mwarga = $('#mwarga').val();
-            var alamat = $('#alamat').val();
-            if (nama_lengkap == "")
+            var pengunjung_nama = $('#pengunjung_nama').val();
+            var pengunjung_jk = $('#pengunjung_jk').val();
+            var pengunjung_tahun_lahir = $('#pengunjung_tahun_lahir').val();
+            var pengunjung_pekerjaan = $('#pengunjung_pekerjaan').val();
+            var pengunjung_pendidikan = $('#pengunjung_pendidikan').val();
+            var penunjung_alamat = $('#penunjung_alamat').val();
+            var nomor_hp = $('#nomor_hp').val();
+            if (pengunjung_nama == "")
             {
                 Swal.fire({
                     type: 'error',
                     title: 'error',
-                    text: 'Nama lengkap harus terisi'
+                    text: 'Nama pengunjung harus terisi'
                     });
                 return false;
             }
-            if (id_jk == "")
+            if (pengunjung_jk == "")
             {
                 Swal.fire({
                     type: 'error',
@@ -177,16 +179,16 @@ error: function(){
                     });
                 return false;
             }
-            if (tgl_lahir == "")
+            if (pengunjung_tahun_lahir == "")
             {
                 Swal.fire({
                     type: 'error',
                     title: 'error',
-                    text: 'Tanggal lahir harus terisi'
+                    text: 'Tahun lahir harus terisi'
                     });
                 return false;
             }
-            if (cekUmur(tgl_lahir) <= 13)
+            if (GetUmur(pengunjung_tahun_lahir) <= 13)
             {
                 Swal.fire({
                     type: 'error',
@@ -196,7 +198,7 @@ error: function(){
                 return false;
             }
 
-            if (id_mdidik == "")
+            if (pengunjung_pendidikan == "")
             {
                 Swal.fire({
                     type: 'error',
@@ -205,62 +207,16 @@ error: function(){
                     });
                 return false;
             }
-            if (id_kerja == "")
+            if (pengunjung_pekerjaan == "")
             {
                 Swal.fire({
                     type: 'error',
                     title: 'error',
-                    text: 'Pilih salah satu pekerjaan'
+                    text: 'isian pekerjaan harus terisi'
                     });
                 return false;
             }
-            if (telepon == "")
-            {
-                Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Silakan masukkan nomor telepon'
-                    });
-                return false;
-            }
-
-            if (telepon.match(/[^\d+]/))
-            {
-                Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Silakan masukkan nomor telepon hanya angka'
-                    });
-                return false;
-            }
-            if (kat_kerja == "")
-            {
-                Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Pilih salah satu kategori pekerjaan'
-                    });
-                return false;
-            }
-            if (pekerjaan_detil == "")
-            {
-                Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Silakan masukkan Sekolah/Univ/Instansi/Detil Pekerjaan'
-                    });
-                return false;
-            }
-            if (mwarga == "")
-            {
-                Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Silakan pilih salah satu kewarganegaraan'
-                    });
-                return false;
-            }
-            if (alamat == "")
+            if (pengunjung_alamat == "")
             {
                 Swal.fire({
                     type: 'error',
@@ -271,44 +227,6 @@ error: function(){
             }
         }
         //batasnya
-
-        if (jenis_identitas == "")
-        {
-            Swal.fire({
-                type: 'error',
-                title: 'error',
-                text: 'Pilih salah satu Jenis Identitas'
-                });
-            return false;
-        }
-
-        if (nomor_identitas == "")
-        {
-            Swal.fire({
-                type: 'error',
-                title: 'error',
-                text: 'Nomor Identitas tidak boleh kosong'
-                });
-            return false;
-        }
-
-        if (keperluan == "")
-        {
-            $('#keperluan_error').removeClass("has-danger");
-            $('#keperluan_error').addClass("has-danger");
-            Swal.fire({
-                type: 'error',
-                title: 'error',
-                text: 'Keperluan/Data yang dicari tidak boleh kosong'
-                });
-            return false;
-        }
-        else
-        {
-            $('#keperluan_error').removeClass("has-danger");
-            $('#keperluan_error').addClass("has-success");
-
-        }
         var jenis_kunjungan = $('input[name="jenis_kunjungan"]:checked').val();
         if (jenis_kunjungan == 2)
         {
@@ -362,106 +280,86 @@ error: function(){
             }
 
         }
-        var tujuan_kedatangan = $('input[name="tujuan_kedatangan"]:checked').val();
-        if (tujuan_kedatangan == 1)
+        var kunjungan_tujuan = $('#kunjungan_tujuan').val();
+        if (kunjungan_tujuan == "")
         {
-            //check minimal 1 di chek untuk pst_layanan, pst_fasilitas
-            var pst_manfaat = $('#id_manfaat').val();
-            var layanan_utama = $('#layanan_id').val();
-            var count_layanan = $('.pst_layanan:checked').length;
-            var count_fasilitas = $('.pst_fasilitas:checked').length;
-            if (pst_manfaat == "")
+            Swal.fire({
+                    type: 'error',
+                    title: 'error',
+                    text: 'Pilih salah satu tujuan kunjungan'
+                    });
+                return false;
+        }
+        else if (kunjungan_tujuan == 2)
+        {
+            var layanan_pst = $('#layananpst_kode').val();
+            if (layanan_pst < 1)
             {
                 Swal.fire({
                     type: 'error',
                     title: 'error',
-                    text: 'Pilih salah satu manfaat kunjungan'
+                    text: 'Karena tujuan PST maka Pilih salah satu layanan yang digunakan selain lainnya'
                     });
                 return false;
             }
-            if (pst_manfaat == 5)
-            {
-                var manfaat_nama = $('#manfaat_nama').val();
-                if (manfaat_nama == "")
-                {
-                    Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Karena terpilih Lainnya, manfaat kunjungan lainnya harus terisi'
-                    });
-                return false;
-                }
-            }
-            if (layanan_utama == "")
-            {
-                Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Pilih salah satu layanan utama'
-                    });
-                return false;
-            }
-            if (count_layanan <= 0)
-            {
-                Swal.fire({
+        }
+        //cek keperluan sebelum submit
+        if (pengunjung_keperluan == "")
+        {
+            $('#kunjungan_keperluan_error').removeClass("has-danger");
+            $('#kunjungan_keperluan_error').addClass("has-danger");
+            Swal.fire({
                 type: 'error',
                 title: 'error',
-                text: 'Minimal pilih satu Layanan yang dipilih'
+                text: 'Keperluan/Data yang dicari tidak boleh kosong'
                 });
-                 return false;
-            }
-            else if (count_fasilitas <= 0)
-            {
-                Swal.fire({
-                type: 'error',
-                title: 'error',
-                text: 'Minimal pilih satu Tujuan kedatangan yang dipilih'
-                });
-                 return false;
-            }
-            else if ($('#fasilitas_32').is(":checked"))
-            {
-                if ($('#fas_lainnya').val() == "")
-                {
-                    Swal.fire({
-                    type: 'error',
-                    title: 'error',
-                    text: 'Karena terpilih Lainnya, fasilitas lainnya harus terisi'
-                    });
-                return false;
-                }
-                else
-                {
-                    $('#form_baru').submit();
-                }
-            }
-            else
-            {
-                $('#form_baru').submit();
-            }
+            return false;
         }
         else
         {
-            $('#form_baru').submit();
+            $('#kunjungan_keperluan_error').removeClass("has-danger");
+            $('#kunjungan_keperluan_error').addClass("has-success");
+
+            Swal.fire({
+                title: 'Anda yakin?',
+                text: "Data pengunjung akan disimpan",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'YA, SIMPAN',
+                cancelBUttonText: 'BATAL'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire(
+                        'Berhasil!',
+                        'Data pengunjung sudah disimpan',
+                        'success'
+                    ).then(function(submit) {
+                        $('#formNewKunjungan').submit();
+                    });
+                }
+            })
         }
+
     });
     //script merubah warna hijau dan merah
-        $('#keperluan').on('change paste keyup', function(e) {
-        var nomor_nilai = e.target.value;
-        if (nomor_nilai == "")
+        $('#pengunjung_keperluan').on('change paste keyup', function(e) {
+        var keperluan = e.target.value;
+        if (keperluan == "")
         {
-            $('#keperluan_error').removeClass("has-danger");
-            $('#keperluan_error').addClass("has-danger");
+            $('#pengunjung_keperluan_error').removeClass("has-danger");
+            $('#pengunjung_keperluan_error').addClass("has-danger");
         }
-        else if (nomor_nilai.length < 6)
+        else if (keperluan.length < 6)
         {
-            $('#keperluan_error').removeClass("has-danger");
-            $('#keperluan_error').addClass("has-danger");
+            $('#pengunjung_keperluan_error').removeClass("has-danger");
+            $('#pengunjung_keperluan_error').addClass("has-danger");
         }
         else
         {
-            $('#keperluan_error').removeClass("has-danger");
-            $('#keperluan_error').addClass("has-success");
+            $('#pengunjung_keperluan_error').removeClass("has-danger");
+            $('#pengunjung_keperluan_error').addClass("has-success");
         }
     });
     //batas
@@ -518,7 +416,7 @@ error: function(){
                     $('#canvas').toggle();
                     $('#reset_foto').prop('disabled', false);
                     $('#ambil_foto').prop('disabled', true);
-                    $('#tambah_data').prop('disabled', false);
+                    $('#newKunjunganSave').prop('disabled', false);
 
                     context.drawImage(video, 0, 0, w,h);
                     //$('#video').hide();

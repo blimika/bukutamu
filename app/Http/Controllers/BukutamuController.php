@@ -454,7 +454,7 @@ class BukutamuController extends Controller
         */
 
         //dd($waktu_hari_ini,$request->all());
-
+        $waktu_hari_ini = date('Ymd_His');
         if ($request->tamu_id == NULL) {
             $qrcode = Generate::Kode(6);
             $data = new Mtamu();
@@ -476,7 +476,6 @@ class BukutamuController extends Controller
             $data->total_kunjungan = 0;
             $data->save();
             $id_tamu = $data->id;
-            $waktu_hari_ini = date('Ymd_His');
             if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
                 $namafile_kunjungan = '/img/kunjungan/tamu_' . $id_tamu . '_' . $waktu_hari_ini . '.png';
                 $namafile_profil = '/img/profil/tamu_profil_' . $id_tamu . '.png';

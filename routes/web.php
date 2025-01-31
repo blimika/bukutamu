@@ -91,6 +91,7 @@ Route::get('/cekhp/{nomor_hp}', 'NewBukutamuController@CekHP')->name('cekhp');
 Route::get('/newkunjungan', 'NewBukutamuController@Kunjungan')->name('newkunjungan');
 Route::get('/kunjungan/pagelist', 'NewBukutamuController@PageListKunjungan')->name('kunjungan.pagelist');
 Route::post('/feedbacksave', 'NewBukutamuController@FeedbackSave')->name('feedbacksave');
+Route::post('/newsimpan', 'NewBukutamuController@NewSimpan')->name('newsimpan');
 //batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
