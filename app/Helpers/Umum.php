@@ -2,6 +2,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Arr;
+use MasterPendidikan;
 
 class Tanggal {
     public static function Panjang($tgl) {
@@ -517,6 +518,229 @@ class Generate {
             'data_final'=>$data,
             'cat_final'=>$cat_tgl
         );
+        //dd($arr);
+        return $arr;
+    }
+    public static function NewGrafikBulanan($bulan,$tahun)
+    {
+        $tgl_cek = $tahun.'-'.$bulan.'-01';
+        $jumlah_hari = \Carbon\Carbon::parse($tgl_cek)->daysInMonth;
+        $kunjungan = array();
+        $tamu_laki= array();
+        $tamu_wanita = array();
+        $jumlah_tamu = array();
+        $cat_tgl = array();
+
+        for ($i=1;$i<=$jumlah_hari;$i++)
+        {
+
+            $item="";
+            $tgl_i = $tahun.'-'.$bulan.'-'.$i;
+            //if (\Carbon\Carbon::parse($tgl_i)->format('w') > 0 and \Carbon\Carbon::parse($tgl_i)->format('w') < 6)
+            //{
+                $item = \App\NewKunjungan::where('kunjungan_tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))
+                    ->select(\DB::Raw('kunjungan_tanggal, COALESCE(count(*),0) as jumlah_kunjungan, COALESCE(sum(kunjungan_jumlah_orang),0) as jumlah_total, COALESCE(sum(kunjungan_jumlah_pria),0) as jumlah_laki, COALESCE(sum(kunjungan_jumlah_wanita),0) as jumlah_wanita'))->groupBy('kunjungan_tanggal')->first();
+                if ($item)
+                {
+                    $jumlah_kunjungan[] = (int) $item->jumlah_kunjungan;
+                    $jumlah_total[]= (int) $item->jumlah_total;
+                    $jumlah_laki[] = (int) $item->jumlah_laki;
+                    $jumlah_wanita[] = (int) $item->jumlah_wanita;
+                }
+                else
+                {
+                    $jumlah_kunjungan[] = 0;
+                    $jumlah_laki[] = 0;
+                    $jumlah_wanita[] = 0;
+                    $jumlah_total[]= 0;
+                }
+                //ambil info tanggal
+                $info_tanggal = \App\MTanggal::where('tanggal',\Carbon\Carbon::parse($tgl_i)->format('Y-m-d'))->first();
+                if ($info_tanggal)
+                {
+                    if ($info_tanggal->jtgl > 1)
+                    {
+                        $cat_tgl[]=$i.'-'.$info_tanggal->deskripsi;
+                    }
+                    else
+                    {
+                        $cat_tgl[]=$i.'-'.$info_tanggal->hari;
+                    }
+                }
+                else
+                {
+                    $cat_tgl[]=$i;
+                }
+
+           // }
+        }
+        $data[] = array(
+            'name'=>'Kunjungan',
+            'data'=>$jumlah_kunjungan,
+        );
+        $data[] = array(
+            'name'=>'Jumlah Pengunjung',
+            'data'=>$jumlah_total,
+        );
+        $data[] = array(
+            'name'=>'Pengunjung Laki-laki',
+            'data'=>$jumlah_laki,
+        );
+        $data[] = array(
+            'name'=>'Pengunjung Perempuan',
+            'data'=>$jumlah_wanita,
+        );
+        $data = json_encode($data);
+        //dd($data);
+        $cat_tgl = json_encode($cat_tgl);
+        $arr = array(
+            'data_final'=>$data,
+            'cat_final'=>$cat_tgl
+        );
+        //dd($arr);
+        return $arr;
+    }
+    public static function NewGrafikTahunan($tahun)
+    {
+        /*
+        $Data = \DB::table('bulan')->
+                leftJoin(\DB::Raw("(select month(tgl_brkt) as bln, count(*) as jumlah,format((sum(kuitansi.total_biaya)/1000000),2) as totalbiaya from transaksi left join kuitansi on kuitansi.trx_id=transaksi.trx_id where flag_trx > 3 and year(tgl_brkt)='".$tahun."' GROUP by bln) as trx"),'bulan.id_bulan','=','trx.bln')->select(\DB::Raw('nama_bulan as y,  COALESCE(jumlah,0) as a,COALESCE(totalbiaya,0) as b'))->get()->toJson();
+        */
+        $data_total = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(kunjungan_tanggal) as bln_total, count(*) as jumlah_kunjungan, sum(kunjungan_jumlah_orang) as jumlah_total, sum(kunjungan_jumlah_pria) as jumlah_laki, sum(kunjungan_jumlah_wanita) as jumlah_wanita from m_new_kunjungan where year(kunjungan_tanggal)='".$tahun."' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->select(\DB::Raw('COALESCE(jumlah_kunjungan,0) as jumlah_kunjungan, COALESCE(jumlah_total,0) as jumlah_total, COALESCE(jumlah_laki,0) as jumlah_laki, COALESCE(jumlah_wanita,0) as jumlah_wanita'))->get();
+        $data_bulan = \DB::table('bulan')->select(\DB::Raw('nama_bulan_pendek'))->get();
+        foreach ($data_total as $item)
+        {
+            $jumlah_kunjungan[] = $item->jumlah_kunjungan;
+            $jumlah_total[] = (int) $item->jumlah_total;
+            $jumlah_laki[] = (int) $item->jumlah_laki;
+            $jumlah_wanita[] = (int) $item->jumlah_wanita;
+        }
+        $data[] = array(
+            'name'=>'Kunjungan',
+            'data'=>$jumlah_kunjungan,
+        );
+        $data[] = array(
+            'name'=>'Jumlah Pengunjung',
+            'data'=>$jumlah_total,
+        );
+        $data[] = array(
+            'name'=>'Pengunjung Laki-laki',
+            'data'=>$jumlah_laki,
+        );
+        $data[] = array(
+            'name'=>'Pengunjung Perempuan',
+            'data'=>$jumlah_wanita,
+        );
+        //dd($data);
+        $data = json_encode($data);
+        foreach ($data_bulan as $item)
+        {
+            $data_bln[]=$item->nama_bulan_pendek;
+        }
+        $cat_tgl = json_encode($data_bln);
+        $arr = array(
+            'data_final'=> $data,
+            'cat_final'=> $cat_tgl
+        );
+        //dd($arr);
+        return $arr;
+    }
+    public static function NewDonatPendidikan()
+    {
+        /*
+        $data_didik = \DB::table('m_new_kunjungan')
+                    ->leftJoin('m_pengunjung','m_pengunjung.pengunjung_uid','=','m_new_kunjungan.pengunjung_uid')
+                    ->leftJoin('m_pendidikan','m_pendidikan.kode','=','m_pengunjung.pengunjung_pendidikan')
+                    ->select(\DB::Raw('m_pengunjung.pengunjung_pendidikan, count(*) as jumlah_kunjungan'))
+                    ->groupBy('m_pengunjung.pengunjung_pendidikan')
+                    ->get();
+        /*
+        name: 'Hybrids',
+            y: 12.6
+        (select m_pengunjung.pengunjung_pendidikan, count(*) as jumlah_kunjungan, sum(kunjungan_jumlah_orang) as jumlah_total, sum(kunjungan_jumlah_pria) as jumlah_laki, sum(kunjungan_jumlah_wanita) as jumlah_wanita from m_new_kunjungan left join m_pengunjung on m_pengunjung.pengunjung_uid=m_new_kunjungan.pengunjung_uid GROUP by pengunjung_pendidikan) as kunjungan
+            */
+        $data_didik = \DB::table('m_pendidikan')
+        ->leftJoin(\DB::Raw("(select m_pengunjung.pengunjung_pendidikan, count(*) as jumlah_kunjungan, sum(kunjungan_jumlah_orang) as jumlah_total, sum(kunjungan_jumlah_pria) as jumlah_laki, sum(kunjungan_jumlah_wanita) as jumlah_wanita from m_new_kunjungan left join m_pengunjung on m_pengunjung.pengunjung_uid=m_new_kunjungan.pengunjung_uid GROUP by pengunjung_pendidikan) as kunjungan"),'kunjungan.pengunjung_pendidikan','=','m_pendidikan.kode')
+        ->select(\DB::Raw('m_pendidikan.kode, nama, jumlah_kunjungan, jumlah_total, jumlah_laki, jumlah_wanita'))
+        ->get();
+        //dd($data_didik);
+        $jumlah_total = 0;
+        foreach ($data_didik as $item)
+        {
+            $data[]=array(
+                'name'=>$item->nama,
+                'y'=>(int) $item->jumlah_total
+            );
+            $jumlah_total = $jumlah_total + (int) $item->jumlah_total;
+        }
+        $data = json_encode($data);
+        $jumlah_total = json_encode($jumlah_total);
+        $arr = array(
+            'jumlah_total' => $jumlah_total,
+            'data'=>$data
+        );
+        //$arr = json_encode($arr);
+        //dd($arr);
+        return $arr;
+    }
+    public static function NewDonatJenisKelamin()
+    {
+        $data_jk = \DB::table('m_new_kunjungan')
+                    ->leftJoin('m_pengunjung','m_pengunjung.pengunjung_uid','=','m_new_kunjungan.pengunjung_uid')
+                    ->select(\DB::Raw('count(*) as jumlah_kunjungan, sum(kunjungan_jumlah_orang) as jumlah_total, sum(kunjungan_jumlah_pria) as jumlah_laki, sum(kunjungan_jumlah_wanita) as jumlah_wanita'))
+                    ->first();
+        /*
+        name: 'Hybrids',
+            y: 12.6
+            */
+        //dd($data_jk);
+        $data[]=array(
+            'name'=>'Laki-Laki',
+            'y'=>(int) $data_jk->jumlah_laki
+        );
+        $data[]=array(
+            'name'=>'Perempuan',
+            'y'=>(int) $data_jk->jumlah_wanita
+        );
+        $jumlah_total = (int) $data_jk->jumlah_total;
+        $data = json_encode($data);
+        $jumlah_total = json_encode($jumlah_total);
+        $arr = array(
+            'jumlah_total' => $jumlah_total,
+            'data'=>$data
+        );
+        //$arr = json_encode($arr);
+        //dd($arr);
+        return $arr;
+    }
+    public static function NewDonatLayananUtama()
+    {
+        $data_tujuan = \DB::table('m_tujuan')
+                    ->leftJoin(\DB::Raw("(select kunjungan_tujuan, count(*) as jumlah_kunjungan, sum(kunjungan_jumlah_orang) as jumlah_total, sum(kunjungan_jumlah_pria) as jumlah_laki, sum(kunjungan_jumlah_wanita) as jumlah_wanita from m_new_kunjungan GROUP by kunjungan_tujuan) as kunjungan"),'m_tujuan.kode','=','kunjungan.kunjungan_tujuan')
+                    ->select(\DB::Raw('kode, nama, jumlah_kunjungan, jumlah_total, jumlah_laki, jumlah_wanita'))
+                    ->get();
+        /*
+        name: 'Hybrids',
+            y: 12.6
+            */
+        $jumlah_total = 0;
+        foreach ($data_tujuan as $item)
+        {
+            $data[]=array(
+                'name'=>$item->nama,
+                'y'=>(int) $item->jumlah_total
+            );
+            $jumlah_total = $jumlah_total + (int) $item->jumlah_total;
+        }
+        $data = json_encode($data);
+        $jumlah_total = json_encode($jumlah_total);
+        $arr = array(
+            'jumlah_total' => $jumlah_total,
+            'data'=>$data
+        );
+        //$arr = json_encode($arr);
         //dd($arr);
         return $arr;
     }

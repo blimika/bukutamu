@@ -149,7 +149,6 @@ $('#edit_hp').click(function(){
     //cek form sebelum submit untuk checkbox
     $('#newKunjunganSave').on('click', function(e) {
         e.preventDefault();
-        var pengunjung_keperluan = $('#pengunjung_keperluan').val();
         var pengunjung_baru = $('#pengunjung_baru').val();
         //cek isian bila ada tamu baru / tamu di edit
         if (pengunjung_baru == 1)
@@ -304,7 +303,8 @@ $('#edit_hp').click(function(){
             }
         }
         //cek keperluan sebelum submit
-        if (pengunjung_keperluan == "")
+        var kunjungan_keperluan = $('#kunjungan_keperluan').val();
+        if (kunjungan_keperluan == "")
         {
             $('#kunjungan_keperluan_error').removeClass("has-danger");
             $('#kunjungan_keperluan_error').addClass("has-danger");

@@ -27,7 +27,7 @@
                     </ul>
                 </li>
                 <li class="nav-small-cap">--- PERSONAL</li>
-                <li> <a class="waves-effect waves-dark" href="{{ url('') }}" aria-expanded="false"><i
+                <li> <a class="waves-effect waves-dark" href="{{route('newdepan')}}" aria-expanded="false"><i
                             class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
 
                 </li>
@@ -37,7 +37,7 @@
                                 class="ti-plus"></i><span class="hide-menu">Tambah Data</span></a>
                         <ul aria-expanded="false" class="collapse">
                             @if (Generate::CekAkses(\Request::getClientIp(true)))
-                                <li><a href="{{ route('kunjungan.baru') }}">Kunjungan Baru</a></li>
+                                <!--<li><a href="{{ route('kunjungan.baru') }}">Kunjungan Baru</a></li>-->
                                 <li><a href="{{ route('newkunjungan') }}">New Kunjungan</a></li>
                             @endif
 

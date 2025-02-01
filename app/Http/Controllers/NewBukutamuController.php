@@ -33,10 +33,45 @@ use App\Mtamu;
 use App\Kunjungan;
 use App\FlagAntrian;
 use App\Mjkunjungan;
-use Svg\Tag\Rect;
 
 class NewBukutamuController extends Controller
 {
+    public function newdepan(Request $request)
+    {
+        $data_bulan = array(
+            1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        );
+        $data_bulan_pendek = array(
+            1 => 'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGU', 'SEP', 'OKT', 'NOV', 'DES'
+        );
+        $tahun=Carbon::today()->format('Y');
+        $bulan=(int) Carbon::today()->format('m');
+        $nama_bulan_pendek=$data_bulan_pendek[$bulan];
+        $nama_bulan=$data_bulan[$bulan];
+        $kunjungan_hari_ini = NewKunjungan::whereDate('kunjungan_tanggal',Carbon::today()->format('Y-m-d'))->count();
+        $pengunjung_hari_ini = NewKunjungan::whereDate('kunjungan_tanggal',Carbon::today()->format('Y-m-d'))->sum('kunjungan_jumlah_orang');
+        //bulan
+        $kunjungan_bulan_ini = NewKunjungan::whereYear('kunjungan_tanggal',Carbon::today()->format('Y'))->whereMonth('kunjungan_tanggal',Carbon::today()->format('m'))->count();
+        $pengunjung_bulan_ini = NewKunjungan::whereYear('kunjungan_tanggal',Carbon::today()->format('Y'))->whereMonth('kunjungan_tanggal',Carbon::today()->format('m'))->sum('kunjungan_jumlah_orang');
+        //tahun
+        $kunjungan_tahun_ini = NewKunjungan::whereYear('kunjungan_tanggal',Carbon::today()->format('Y'))->count();
+        $pengunjung_tahun_ini = NewKunjungan::whereYear('kunjungan_tanggal',Carbon::today()->format('Y'))->sum('kunjungan_jumlah_orang');
+        $NewKunjungan = NewKunjungan::orderBy('kunjungan_tanggal','desc')->take(10)->get();
+        return view('newdepan',[
+            'NewKunjungan'=>$NewKunjungan,
+            'tahun'=>$tahun,
+            'nama_bulan_pendek'=>$nama_bulan_pendek,
+            'nama_bulan'=>$nama_bulan,
+            'bulan'=>$bulan,
+            'kunjungan_hari_ini'=>$kunjungan_hari_ini,
+            'pengunjung_hari_ini'=>$pengunjung_hari_ini,
+            'kunjungan_bulan_ini'=>$kunjungan_bulan_ini,
+            'pengunjung_bulan_ini'=>$pengunjung_bulan_ini,
+            'kunjungan_tahun_ini'=>$kunjungan_tahun_ini,
+            'pengunjung_tahun_ini'=>$pengunjung_tahun_ini,
+
+        ]);
+    }
     public function Kunjungan()
     {
         //cek tanggal dulu
@@ -63,7 +98,7 @@ class NewBukutamuController extends Controller
                 $MasterTujuan = MasterTujuan::orderBy('id', 'asc')->get();
                 $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
             } else {
-                return redirect()->route('depan');
+                return redirect()->route('newdepan');
             }
             return view('newbukutamu.kunjungan', ['Mjk' => $Mjk, 'MasterPendidikan' => $MasterPendidikan, 'dataTamu' => $dataTamu,
         'MasterLayananPST'=>$MasterLayananPST,'MasterTujuan'=>$MasterTujuan]);
@@ -461,6 +496,7 @@ class NewBukutamuController extends Controller
         ->when($searchValue, function ($q) use ($searchValue) {
             return $q->where('pengunjung_nama', 'like', '%' . $searchValue . '%')
                      ->orWhere('kunjungan_keperluan', 'like', '%' . $searchValue . '%')
+                     ->orWhere('kunjungan_uid', 'like', '%' . $searchValue . '%')
                      ->orWhere('kunjungan_tanggal', 'like', '%' . $searchValue . '%')
                      ->orWhere('users.name', 'like', '%' . $searchValue . '%')
                      ->orWhere('mf_antrian.nama', 'like', '%' . $searchValue . '%')
@@ -482,6 +518,7 @@ class NewBukutamuController extends Controller
             ->when($searchValue, function ($q) use ($searchValue) {
                 return $q->where('pengunjung_nama', 'like', '%' . $searchValue . '%')
                          ->orWhere('kunjungan_keperluan', 'like', '%' . $searchValue . '%')
+                         ->orWhere('kunjungan_uid', 'like', '%' . $searchValue . '%')
                          ->orWhere('kunjungan_tanggal', 'like', '%' . $searchValue . '%')
                          ->orWhere('users.name', 'like', '%' . $searchValue . '%')
                          ->orWhere('mf_antrian.nama', 'like', '%' . $searchValue . '%')
@@ -945,7 +982,7 @@ class NewBukutamuController extends Controller
         "kunjungan_keperluan" => "adfdasfd  adfsafas"
         ]
         */
-        dd($request->all());
+        //dd($request->all());
         //cek sudah ada pengunjugn_baru kode 1
         $waktu_hari_ini = date('Ymd_His');
         if ($request->pengunjung_baru == 1)
@@ -1037,27 +1074,91 @@ class NewBukutamuController extends Controller
         else
         {
             //masukkan ke tabel kunjungan
+            //cek dulu antrian ada sesuai layanan
+            //kalo pst cek layanan pst juga
+            if ($request->kunjungan_tujuan == 2)
+            {
+                //pst
+                $data_antrian = NewKunjungan::where([['kunjungan_tanggal', Carbon::today()->format('Y-m-d')],['kunjungan_tujuan',$request->kunjungan_tujuan], ['kunjungan_pst', $request->layananpst_kode]])->orderBy('kunjungan_nomor_antrian', 'desc')->first();
+                $data_layanan_utama = MasterLayananPST::where('kode',$request->layananpst_kode)->first();
+                $nomor_antrian_inisial = $data_layanan_utama->inisial;
+                $layanan_pst = $request->layananpst_kode;
+            }
+            else
+            {
+                $data_antrian = NewKunjungan::where([['kunjungan_tanggal', Carbon::today()->format('Y-m-d')], ['kunjungan_tujuan',$request->kunjungan_tujuan]])->orderBy('kunjungan_nomor_antrian', 'desc')->first();
+                $layanan_pst = 0;
+                $data_layanan_utama = MasterTujuan::where('kode',$request->kunjungan_tujuan)->first();
+                $nomor_antrian_inisial = $data_layanan_utama->inisial;
+            }
+            if ($data_antrian) {
+                //kalo sudah ada antrian
+                $nomor_selanjutnya = $data_antrian->kunjungan_nomor_antrian + 1;
+            }
+            else {
+                //belum ada sama sekali
+                $nomor_selanjutnya = 1;
+            }
+            if ($request->jenis_kunjungan == 2) {
+                $jumlah_tamu = $request->jumlah_tamu;
+                $laki = $request->tamu_laki;
+                $wanita = $request->tamu_wanita;
+            } else {
+                $jumlah_tamu = 1;
+                //cek jenis kelamin ambil dari query data diatas
+                if ($data->pengunjung_jk == 1) {
+                    $laki = 1;
+                    $wanita = 0;
+                } else {
+                    $laki = 0;
+                    $wanita = 1;
+                }
+            }
             $newdata = new NewKunjungan();
             $newdata->pengunjung_uid = $data->pengunjung_uid;
             $newdata->kunjungan_uid = Generate::Kode(7);
             $newdata->kunjungan_tanggal = Carbon::today()->format('Y-m-d');
             $newdata->kunjungan_keperluan = $request->kunjungan_keperluan;
-            $newdata->kunjungan_jenis = $request->kunjungan_jenis;
+            $newdata->kunjungan_jenis = $request->jenis_kunjungan;
             $newdata->kunjungan_tujuan = $request->kunjungan_tujuan;
-            $newdata->kunjungan_pst = $request->layananpst_kode;
-            $newdata->kunjungan_foto = $request->$namafile_kunjungan;
-            $newdata->kunjungan_jumlah_orang = $request->jumlah_tamu;
-            $newdata->kunjungan_jumlah_pria = $request->kunjungan_keperluan;
-            $newdata->kunjungan_jumlah_wanita = $request->kunjungan_keperluan;
-            $newdata->kunjungan_keperluan = $request->kunjungan_keperluan;
+            $newdata->kunjungan_pst = $layanan_pst;
+            if ($namafile_kunjungan != NULL) {
+                $newdata->kunjungan_foto = $namafile_kunjungan;
+            }
+            $newdata->kunjungan_jumlah_orang = $jumlah_tamu;
+            $newdata->kunjungan_jumlah_pria = $laki;
+            $newdata->kunjungan_jumlah_wanita = $wanita;
+            $newdata->kunjungan_nomor_antrian = $nomor_selanjutnya;
+            $newdata->kunjungan_teks_antrian = $nomor_antrian_inisial . '-' . sprintf("%03d", $nomor_selanjutnya);
+            $newdata->save();
+
+            //kirim email nomor antrian
+            if (filter_var($newdata->Pengunjung->pengunjung_email, FILTER_VALIDATE_EMAIL))
+            {
+                //kirim mail
+                $body = new \stdClass();
+                $body->nama_lengkap = $newdata->Pengunjung->pengunjung_nama;
+                $body->email = $newdata->Pengunjung->pengunjung_email;
+                $body->telepon = $newdata->Pengunjung->pengunjung_nomor_hp;
+                $body->tanggal = \Carbon\Carbon::parse($newdata->kunjungan_tanggal)->isoFormat('dddd, D MMMM Y');
+                $body->layanan_utama = $newdata->Tujuan->nama;
+                $body->nomor_antrian = $newdata->kunjungan_teks_antrian;
+
+                if (ENV('APP_KIRIM_MAIL') == true) {
+                    Mail::to($newdata->Pengunjung->pengunjung_email)->send(new KirimAntrian($body));
+                }
+                //batas
+            }
+            //batas
+            Session::flash('message_header', "<strong>Terimakasih</strong>");
+            $pesan_error = "Data Pengunjung <strong><i>" . trim($request->pengunjung_nama) . "</i></strong> berhasil ditambahkan";
+            $warna_error = "success";
         }
-        Session::flash('message_header', "<strong>Terimakasih</strong>");
-        $pesan_error = "Data Pengunjung <strong><i>" . trim($request->pengunjung_nama) . "</i></strong> berhasil ditambahkan";
-        $warna_error = "success";
+
 
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
-        return redirect()->route('depan');
+        return redirect()->route('newdepan');
     }
     public function NewWebApi(Request $request)
     {
@@ -1134,5 +1235,50 @@ class NewBukutamuController extends Controller
         }
 
         return Response()->json($arr);
+    }
+    public function DisplayAntrian()
+    {
+        $data_antrian = NewKunjungan::where([['kunjungan_tanggal',Carbon::now()->format('Y-m-d')],['kunjungan_flag_antrian',2]])->orderBy('kunjungan_loket_petugas','asc')->take(2)->get();
+        //dd($data_antrian_terakhir);
+        if (count($data_antrian) > 0)
+        {
+            $data1 = array(
+                "loket_status" => true,
+                "loket_petugas" => $data_antrian[0]['kunjungan_loket_petugas'],
+                "nomor_antrian"=> $data_antrian[0]['kunjungan_teks_antrian'],
+            );
+            if (count($data_antrian) > 1)
+            {
+                $data2 = array(
+                    "loket_status" => true,
+                    "loket_petugas" => $data_antrian[1]['kunjungan_loket_petugas'],
+                    "nomor_antrian"=> $data_antrian[1]['kunjungan_teks_antrian'],
+                );
+            }
+            else
+            {
+                $data2 = array(
+                    "loket_status" => false,
+                    "loket_petugas" => '-',
+                    "nomor_antrian"=> '-',
+                );
+            }
+        }
+        else
+        {
+            $data1 = array(
+                "loket_status" => false,
+                "loket_petugas" => '-',
+                "nomor_antrian"=> '-',
+            );
+            $data2 = array(
+                "loket_status" => false,
+                "loket_petugas" => '-',
+                "nomor_antrian"=> '-',
+            );
+        }
+
+        //dd($data1, $data2);
+        return view('newbukutamu.display',['data1'=>$data1,'data2'=>$data2]);
     }
 }

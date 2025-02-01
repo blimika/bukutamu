@@ -20,9 +20,9 @@ Auth::routes([
     'register' => false, // Registration Routes...
     'reset' => false, // Password Reset Routes...
     'verify' => false, // Email Verification Routes...
-  ]);
-
-Route::get('/', 'BukutamuController@depan')->name('depan');
+]);
+Route::get('/', 'NewBukutamuController@NewDepan')->name('newdepan');
+Route::get('/depan', 'BukutamuController@depan')->name('depan');
 Route::get('/daftar', 'BukutamuController@Daftar')->name('daftar');
 Route::get('/permintaan/data', 'BukutamuController@PermintaanData')->name('permintaan.data');
 Route::get('/display/antrian', 'BukutamuController@DisplayAntrian')->name('display.antrian');
@@ -92,6 +92,8 @@ Route::get('/newkunjungan', 'NewBukutamuController@Kunjungan')->name('newkunjung
 Route::get('/kunjungan/pagelist', 'NewBukutamuController@PageListKunjungan')->name('kunjungan.pagelist');
 Route::post('/feedbacksave', 'NewBukutamuController@FeedbackSave')->name('feedbacksave');
 Route::post('/newsimpan', 'NewBukutamuController@NewSimpan')->name('newsimpan');
+Route::get('/newdisplay', 'NewBukutamuController@DisplayAntrian')->name('newdisplay');
+Route::get('/newdepan', 'NewBukutamuController@NewDepan')->name('newdepan');
 //batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
