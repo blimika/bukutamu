@@ -58,11 +58,11 @@ $('#ViewPengunjungModal').on('show.bs.modal', function (event) {
                     if (d.data.kunjungan.length > 10)
                     {
                         //mulai dari 0 , max list 10 record jadi tmax 9
-                        var tmax = 9;
+                        var tmax = 10;
                     }
                     else
                     {
-                        var tmax = d.data.kunjungan.length - 1;
+                        var tmax = d.data.kunjungan.length;
                     }
                     var i;
                     var kunjungan = d.data.kunjungan;
