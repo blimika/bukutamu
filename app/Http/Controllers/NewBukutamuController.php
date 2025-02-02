@@ -778,6 +778,7 @@ class NewBukutamuController extends Controller
             ->leftJoin('users', 'm_pengunjung.pengunjung_user_id', '=', 'users.id')
             ->when($searchValue, function ($q) use ($searchValue) {
                 return $q->where('pengunjung_nama', 'like', '%' . $searchValue . '%')
+                         ->orWhere('pengunjung_uid', 'like', '%' . $searchValue . '%')
                          ->orWhere('pengunjung_nomor_hp', 'like', '%' . $searchValue . '%')
                          ->orWhere('pengunjung_pekerjaan', 'like', '%' . $searchValue . '%')
                          ->orWhere('users.name', 'like', '%' . $searchValue . '%')
@@ -814,7 +815,6 @@ class NewBukutamuController extends Controller
                     "pengunjung_nama" => $item->pengunjung_nama,
                     "pengunjung_nomor_hp" => $item->pengunjung_nomor_hp,
                     "pengunjung_tahun_lahir" => $item->pengunjung_tahun_lahir .'<br />('.(Carbon::now()->format('Y')-$item->pengunjung_tahun_lahir).' tahun)',
-                    "pengunjung_jk" => $item->inisial,
                     "pengunjung_pekerjaan" => $item->pengunjung_pekerjaan,
                     "pengunjung_pendidikan" => $item->nama_pendidikan,
                     "pengunjung_email" => $item->pengunjung_email,
@@ -853,7 +853,7 @@ class NewBukutamuController extends Controller
         if (Auth::user()->level == 20)
         {
             //ambil data pengunjung
-            $pengunjung_lama = Mtamu::get();
+            $pengunjung_lama = Mtamu::orderBy('created_at','desc')->get();
             $kunjungan_lama = Kunjungan::get();
 
             //pengunjung
@@ -1151,7 +1151,7 @@ class NewBukutamuController extends Controller
             }
             //batas
             Session::flash('message_header', "<strong>Terimakasih</strong>");
-            $pesan_error = "Data Pengunjung <strong><i>" . trim($request->pengunjung_nama) . "</i></strong> berhasil ditambahkan";
+            $pesan_error = "Data kunjungan an. <strong><i>" . trim($request->pengunjung_nama) . "</i></strong> berhasil ditambahkan";
             $warna_error = "success";
         }
 
@@ -1280,5 +1280,61 @@ class NewBukutamuController extends Controller
 
         //dd($data1, $data2);
         return view('newbukutamu.display',['data1'=>$data1,'data2'=>$data2]);
+    }
+    public function HapusPengunjung(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'message'=>'Data pengunjung tidak tersedia'
+        );
+        $data = Pengunjung::where('pengunjung_uid',$request->uid)->first();
+        if ($data)
+        {
+            //hapus semua foto2
+            if ($data->pengunjung_foto_profil != "")
+            {
+                if (Storage::disk('public')->exists($data->pengunjung_foto_profil))
+                {
+                    Storage::disk('public')->delete($data->pengunjung_foto_profil);
+                }
+            }
+            //hapus user yang terhubung
+            if ($data->pengunjung_user_id != 0)
+            {
+                $data_user = User::where('user_id',$data->pengunjung_user_id)->first();
+                if ($data_user->user_foto != "")
+                {
+                    if (Storage::disk('public')->exists($data_user->user_foto))
+                    {
+                        Storage::disk('public')->delete($data_user->user_foto);
+                    }
+                }
+                $data_user->delete();
+            }
+            //hapus data pengunjung
+            $data->delete();
+            ///cari kunjungan dah hapus foto2
+            $data_visit = NewKunjungan::where('pengunjung_uid',$request->uid)->get();
+            if ($data_visit)
+            {
+                foreach ($data_visit as $item) {
+                    if ($item->kunjungan_foto != "")
+                    {
+                        if (Storage::disk('public')->exists($item->kunjungan_foto))
+                        {
+                            Storage::disk('public')->delete($item->kunjungan_foto);
+                        }
+                    }
+                }
+                NewKunjungan::where('pengunjung_uid',$request->uid)->delete();
+
+                $arr = array(
+                    'status'=>true,
+                    'message'=>'Data pengunjung an '. $request->nama .' beserta data kunjungan berhasil dihapus',
+                    'data'=>true
+                );
+            }
+        }
+        return Response()->json($arr);
     }
 }

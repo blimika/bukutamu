@@ -65,7 +65,7 @@
                                 <li><a href="{{ route('listdata') }}">New List</a></li>
                                 @endif
                             @endif
-                            <li><a href="{{ route('display.antrian') }}" target="_blank">Display Antrian</a></li>
+                            <li><a href="{{ route('newdisplay') }}" target="_blank">Display Antrian</a></li>
                         @endif
                     </ul>
                 </li>

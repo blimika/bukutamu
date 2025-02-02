@@ -112,6 +112,8 @@ $('#edit_hp').click(function(){
     $('#pengunjung_email').prop('readonly', false);
     $('#pengunjung_alamat').prop('readonly', false);
     $('#edit_hp').prop('disabled', true);
+    $('#edit_pengunjung').prop('value','1');
+    $('#pengunjung_baru').prop('value','1');
 });
     //batas edit
     //foto baru

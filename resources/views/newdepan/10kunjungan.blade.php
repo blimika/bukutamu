@@ -10,7 +10,7 @@
                 @endif
             </div>
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table id="dTabel" class="table table-striped">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -19,6 +19,7 @@
                             <th>Kunjungan</th>
                             <th>Layanan Utama</th>
                             <th>Keperluan</th>
+                            <th class="text-center">Feedback</th>
                             <th class="text-center">Status</th>
                             <th>Petugas</th>
                         </tr>
@@ -94,6 +95,19 @@
                                         @endif
                                     </td>
                                     <td>{{$item->kunjungan_keperluan}}</td>
+                                    <td class="text-center">
+                                        @if ($item->kunjungan_flag_antrian == 3)
+                                            @if ($item->kunjungan_flag_feedback == 1)
+                                            <button type="button" class="btn btn-rounded btn-danger btn-xs tombolfeedback" data-id="{{$item->kunjungan_id}}" data-uid="{{$item->kunjungan_uid}}" data-nama="{{$item->pengunjung_nama}}" data-tanggal="{{$item->kunjungan_tanggal}}" data-toggle="modal" data-target="#BeriFeebackModal"><span data-toggle="tooltip" data-placement="top" title="Belum memberikan feedback"><i class="fas fa-question"></i> belum</span></button>
+                                            @else
+                                                @if ($item->kunjungan_komentar_feedback=="")
+                                                <button type="button" class="btn btn-rounded btn-info btn-xs" data-id="{{ $item->kunjungan_id}}" data-uid="{{$item->kunjungan_uid}}" data-nama="{{$item->pengunjung_nama}}" data-tanggal="{{$item->kunjungan_tanggal}}" data-toggle="modal" data-target="#ViewFeedbackModal"><span data-toggle="tooltip" data-placement="top" title="Sudah memberikan feedback"><i class="fas fa-check-circle"></i> sudah</span></button>
+                                                @else
+                                                <button type="button" class="btn btn-rounded btn-success btn-xs" data-id="{{ $item->kunjungan_id}}" data-uid="{{$item->kunjungan_uid}}" data-nama="{{$item->pengunjung_nama}}" data-tanggal="{{$item->kunjungan_tanggal}}" data-toggle="modal" data-target="#ViewFeedbackModal"><span data-toggle="tooltip" data-placement="top" title="Sudah memberikan feedback"><i class="fas fa-check-circle"></i> sudah</span></button>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         @if ($item->kunjungan_flag_antrian == 1)
                                             <span class="badge badge-danger badge-pill">

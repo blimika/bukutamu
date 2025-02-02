@@ -374,7 +374,7 @@
                                             Swal.fire(
                                                 'Error!',
                                                 '' + data.message + '',
-                                                'danger'
+                                                'error'
                                             );
                                         }
 
@@ -383,7 +383,7 @@
                                         Swal.fire(
                                             'Error',
                                             'Koneksi Error',
-                                            'danger'
+                                            'error'
                                         );
                                     }
 
@@ -399,4 +399,5 @@
         });
     </script>
     @include('newbukutamu.js-kunjungan')
+    @include('newbukutamu.js-feedback')
 @stop

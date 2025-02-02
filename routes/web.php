@@ -203,6 +203,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/tindaklanjut/save', 'NewBukutamuController@TindakLanjutSave')->name('tindaklanjut.save');
     Route::post('/tujuanbaru/save', 'NewBukutamuController@TujuanBaruSave')->name('tujuanbaru.save');
     Route::post('/jeniskunjungansave', 'NewBukutamuController@JenisKunjunganSave')->name('jeniskunjungan.save');
+    //hapus pengunjung
+    Route::post('/pengunjung/hapus', 'NewBukutamuController@HapusPengunjung')->name('pengunjung.delete');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

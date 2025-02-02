@@ -46,30 +46,14 @@
                                     <th>Nama</th>
                                     <th>Nomor HP</th>
                                     <th>Tahun Lahir</th>
-                                    <th>Jenis Kelamin</th>
                                     <th>Pekerjaan</th>
                                     <th>Pendidikan</th>
-                                    <th>Total Kunjungan</th>
                                     <th>Alamat</th>
                                     <th>Email</th>
+                                    <th>Total Kunjungan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>UID</th>
-                                    <th>Nama</th>
-                                    <th>Nomor HP</th>
-                                    <th>Tahun Lahir</th>
-                                    <th>Jenis Kelamin</th>
-                                    <th>Pekerjaan</th>
-                                    <th>Pendidikan</th>
-                                    <th>Total Kunjungan</th>
-                                    <th>Alamat</th>
-                                    <th>Email</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </tfoot>
                             <tbody>
 
                             </tbody>
@@ -131,17 +115,16 @@
                 serverSide: true,
                 ajax: "{{ route('pengunjung.pagelist') }}",
                 columns: [
-                    {data: 'pengunjung_uid'},
+                    {data: 'pengunjung_uid', orderable: false},
                     {data: 'pengunjung_nama'},
                     {data: 'pengunjung_nomor_hp'},
                     {data: 'pengunjung_tahun_lahir'},
-                    {data: 'pengunjung_jk'},
                     {data: 'pengunjung_pekerjaan'},
                     {data: 'pengunjung_pendidikan'},
-                    {data: 'pengunjung_total_kunjungan'},
                     {data: 'pengunjung_alamat'},
                     {data: 'pengunjung_email'},
-                    {data: 'aksi',orderable: false},
+                    {data: 'pengunjung_total_kunjungan'},
+                    {data: 'aksi', orderable: false},
                 ],
                 dom: 'Bfrtip',
                 iDisplayLength: 20,
@@ -169,10 +152,11 @@
                     $('.tabeldata').on('click','.hapuspengunjung',function(e) {
                         e.preventDefault();
                         var id = $(this).data('id');
+                        var uid = $(this).data('uid');
                         var nama = $(this).data('nama');
                         Swal.fire({
                             title: 'Akan dihapus?',
-                            text: "Data pengunjung " + nama + " akan dihapus permanen",
+                            text: "Data pengunjung " + nama + " beserta data kunjungan dan member akan dihapus permanen",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#3085d6',
@@ -189,10 +173,12 @@
                                     }
                                 });
                                 $.ajax({
-                                    url: '{{ route('pengunjung.hapus') }}',
+                                    url: '{{ route('pengunjung.delete') }}',
                                     method: 'post',
                                     data: {
-                                        id: id
+                                        id: id,
+                                        uid: uid,
+                                        nama: nama
                                     },
                                     cache: false,
                                     dataType: 'json',
@@ -200,7 +186,7 @@
                                         if (data.status == true) {
                                             Swal.fire(
                                                 'Berhasil!',
-                                                '' + data.hasil + '',
+                                                '' + data.message + '',
                                                 'success'
                                             ).then(function() {
                                                 $('#dTabel')
@@ -212,8 +198,8 @@
                                         } else {
                                             Swal.fire(
                                                 'Error!',
-                                                '' + data.hasil + '',
-                                                'danger'
+                                                '' + data.message + '',
+                                                'error'
                                             );
                                         }
 
@@ -222,7 +208,7 @@
                                         Swal.fire(
                                             'Error',
                                             'Koneksi Error',
-                                            'danger'
+                                            'error'
                                         );
                                     }
 
@@ -237,4 +223,5 @@
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
         });
     </script>
+    @include('newbukutamu.js-pengunjung')
 @stop

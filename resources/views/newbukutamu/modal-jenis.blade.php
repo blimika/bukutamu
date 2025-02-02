@@ -14,7 +14,7 @@
                     <dd class="col-sm-8"><span id="kunjungan_id"></span></dd>
                     <dt class="col-sm-4">UID</dt>
                     <dd class="col-sm-8"><span id="kunjungan_uid"></span></dd>
-                    <dt class="col-sm-4">Nama Lengkap</dt>
+                    <dt class="col-sm-4">Nama</dt>
                     <dd class="col-sm-8"><span id="pengunjung_nama"></span></dd>
                     <hr style="width: 100%; color: black; height: 1px;" />
                     <dt class="col-sm-4">Tanggal</dt>
