@@ -980,11 +980,13 @@ class NewBukutamuController extends Controller
         $kunjungan_lama = Kunjungan::count();
         $pengunjung_baru = Pengunjung::count();
         $kunjungan_baru = NewKunjungan::count();
+        $kunjungan_antrian = NewKunjungan::where('kunjungan_flag_antrian','<','3')->count();
         return view('master.database',[
             'pengunjung_lama'=>$pengunjung_lama,
             'kunjungan_lama'=>$kunjungan_lama,
             'pengunjung_baru'=>$pengunjung_baru,
-            'kunjungan_baru'=>$kunjungan_baru
+            'kunjungan_baru'=>$kunjungan_baru,
+            'kunjungan_antrian'=>$kunjungan_antrian
         ]);
     }
     public function Sinkron()
@@ -1090,6 +1092,40 @@ class NewBukutamuController extends Controller
         else
         {
             $pesan_error="tidak mempunyai hak untuk sinkoronisasi";
+            $pesan_warna="danger";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $pesan_warna);
+        return redirect()->route('master.database');
+    }
+    public function SinkronAntrian()
+    {
+        if (Auth::user()->level == 20)
+        {
+            $data = NewKunjungan::where('kunjungan_flag_antrian','<',3)->get();
+            if ($data)
+            {
+                $i=0;
+                foreach ($data as $item) {
+                    $jam_datang = $item->kunjungan_tanggal . ' 08:00:00';
+                    $jam_pulang = $item->kunjungan_tanggal . ' 10:00:00';
+                    $data_kunjungan = NewKunjungan::where('kunjungan_uid', $item->kunjungan_uid)->first();
+                    $data_kunjungan->kunjungan_petugas_id = 1;
+                    $data_kunjungan->kunjungan_petugas_username = 'admin';
+                    $data_kunjungan->kunjungan_jam_datang = Carbon::parse($jam_datang)->format('Y-m-d H:i:s');
+                    $data_kunjungan->kunjungan_jam_pulang = Carbon::parse($jam_pulang)->format('Y-m-d H:i:s');
+                    $data_kunjungan->kunjungan_flag_antrian = 3;
+                    $data_kunjungan->update();
+                    $i++;
+                }
+
+                $pesan_error="data pengunjung sebanyak ".$i." sudah di sinkronisasi antrian";
+                $pesan_warna="success";
+            }
+        }
+        else
+        {
+            $pesan_error="tidak mempunyai hak untuk sinkronisasi antrian";
             $pesan_warna="danger";
         }
         Session::flash('message', $pesan_error);
@@ -1270,7 +1306,11 @@ class NewBukutamuController extends Controller
             $newdata->kunjungan_nomor_antrian = $nomor_selanjutnya;
             $newdata->kunjungan_teks_antrian = $nomor_antrian_inisial . '-' . sprintf("%03d", $nomor_selanjutnya);
             $newdata->save();
+            //tambah total kunjungan di tabel pengunjung
 
+            $total_kunjungan = $data->pengunjung_total_kunjungan;
+            $data->pengunjung_total_kunjungan = $total_kunjungan + 1;
+            $data->update();
             //kirim email nomor antrian
             if (filter_var($newdata->Pengunjung->pengunjung_email, FILTER_VALIDATE_EMAIL))
             {
@@ -1284,7 +1324,7 @@ class NewBukutamuController extends Controller
                     $layanan = $newdata->Tujuan->nama;
                 }
                 $body = new \stdClass();
-                $body->kunjungan_uid = $newdata->Pengunjung->pengunjung_nama;
+                $body->kunjungan_uid = $newdata->kunjungan_uid;
                 $body->pengunjung_nama = $newdata->Pengunjung->pengunjung_nama;
                 $body->pengunjung_email = $newdata->Pengunjung->pengunjung_email;
                 $body->pengunjung_nomor_hp = $newdata->Pengunjung->pengunjung_nomor_hp;
@@ -1307,6 +1347,11 @@ class NewBukutamuController extends Controller
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $warna_error);
         return redirect()->route('newdepan');
+    }
+    public function Timeline($uid)
+    {
+        $data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_uid',$uid)->first();
+        return view('newbukutamu.timeline',['data'=>$data]);
     }
     public function NewWebApi(Request $request)
     {

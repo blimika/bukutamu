@@ -1692,13 +1692,13 @@ class BukutamuController extends Controller
                     <img src="' . asset('storage/' . $record->file_foto) . '" class="img-circle" width="60" height="60" class="img-responsive" />
                 </a>';
                 } else {
-                    $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
-                        <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                    $photo = '<a class="image-popup" href="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
+                        <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                         </a>';
                 }
             } else {
-                $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
-                    <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                $photo = '<a class="image-popup" href="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
+                    <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                     </a>';
             }
             //batas photo
@@ -1907,13 +1907,13 @@ class BukutamuController extends Controller
                 <img src="' . asset('storage/' . $record->file_foto) . '" class="img-circle" width="60" height="60" class="img-responsive" />
             </a>';
                 } else {
-                    $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
-                    <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                    $photo = '<a class="image-popup" href="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
+                    <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                     </a>';
                 }
             } else {
-                $photo = '<a class="image-popup" href="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
-                <img src="https://via.placeholder.com/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
+                $photo = '<a class="image-popup" href="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" title="Nama : ' . $record->nama_lengkap . '">
+                <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image"  class="img-circle" width="60" height="60" />
                 </a>';
             }
             //batas photo

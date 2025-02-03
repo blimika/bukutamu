@@ -76,7 +76,13 @@
                             </p>
                             <p>
                                 Sekali lagi, terima kasih atas kunjungan Anda dan kami berharap dapat menyambut Anda kembali di masa depan.
-                                Salam hangat,
+                            </p>
+                            <p>
+                                Salam hangat,<br />
+                                Pelayanan Statistik Terpadu <br />
+                                Badan Pusat Statistik <br />
+                                Provinsi Nusa Tenggara Barat
+
                             </p>
                         @else
                             Data kunjungan tidak valid

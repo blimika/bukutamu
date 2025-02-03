@@ -41,7 +41,7 @@ $('#ViewPengunjungModal').on('show.bs.modal', function (event) {
             }
             $('#ViewPengunjungModal .modal-body #pengunjung_wa').attr("href",pengunjung_wa)
             $('#ViewPengunjungModal .modal-body #pengunjung_alamat').text(d.data.pengunjung_alamat)
-            $('#ViewPengunjungModal .modal-footer #kunjungan_timeline').attr("href","{{route('tamu.detil','')}}/"+d.data.kunjungan_uid)
+            $('#ViewPengunjungModal .modal-footer #pengunjung_timeline').attr("href","{{route('timeline','')}}/"+d.data.pengunjung_uid)
             $('#ViewPengunjungModal .modal-body #kunjungan_tanggal').text(d.data.kunjungan_tanggal)
             if (d.data.pengunjung_foto_profil != null)
             {

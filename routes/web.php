@@ -104,6 +104,7 @@ Route::get('/webapi', 'NewBukutamuController@NewWebApi')->name('webapi');
 Route::get('/cekhp/{nomor_hp}', 'NewBukutamuController@CekHP')->name('cekhp');
 Route::get('/newkunjungan', 'NewBukutamuController@Kunjungan')->name('newkunjungan');
 Route::get('/kunjungan/pagelist', 'NewBukutamuController@PageListKunjungan')->name('kunjungan.pagelist');
+Route::get('/timeline/{uid}', 'NewBukutamuController@Timeline')->name('timeline');
 Route::post('/feedbacksave', 'NewBukutamuController@FeedbackSave')->name('feedbacksave');
 Route::post('/newsimpan', 'NewBukutamuController@NewSimpan')->name('newsimpan');
 Route::get('/newdisplay', 'NewBukutamuController@DisplayAntrian')->name('newdisplay');
@@ -208,6 +209,7 @@ Route::group(['middleware' => ['auth']], function () {
     //code baru
     Route::get('/master/database', 'NewBukutamuController@Database')->name('master.database');
     Route::get('/master/sinkron/database', 'NewBukutamuController@Sinkron')->name('database.sinkron');
+    Route::get('/master/sinkron/antrian', 'NewBukutamuController@SinkronAntrian')->name('database.antrian');
     Route::get('/pengunjung/newlist', 'NewBukutamuController@DataPengunjung')->name('pengunjung.newlist');
     Route::get('/pengunjung/pagelist', 'NewBukutamuController@PengunjungPageList')->name('pengunjung.pagelist');
     Route::get('/kunjungan/print/antrian/{uid}', 'NewBukutamuController@PrintNomorAntrian')->name('kunjungan.printantrian');

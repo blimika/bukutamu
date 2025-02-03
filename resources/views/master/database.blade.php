@@ -55,7 +55,13 @@
                                     <td>{{$kunjungan_baru}}</td>
                                 </tr>
                                 <tr>
+                                    <td>Ruang Tunggu</td>
+                                    <td></td>
+                                    <td>{{$kunjungan_antrian}}</td>
+                                </tr>
+                                <tr>
                                     <td colspan="3" class="text-right">
+                                        <a href="{{route('database.antrian')}}" class="btn btn-danger">SINKRON ANTRIAN</a>
                                         <a href="{{route('database.sinkron')}}" class="btn btn-info">SINKRON</a>
                                     </td>
                                 </tr>

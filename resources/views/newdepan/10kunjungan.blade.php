@@ -27,7 +27,7 @@
                     <tbody>
                         @if($NewKunjungan->isEmpty())
                             <tr>
-                                <td colspan="6" class="text-center">Data tidak tersedia</td>
+                                <td colspan="9" class="text-center">Data tidak tersedia</td>
                             </tr>
                         @else
                             @foreach ($NewKunjungan as $item)

@@ -27,7 +27,7 @@
                     </ul>
                 </li>
                 <li class="nav-small-cap">--- PERSONAL</li>
-                <li> <a class="waves-effect waves-dark" href="{{route('newdepan')}}" aria-expanded="false"><i
+                <li> <a class="waves-effect waves-dark" href="{{url('')}}" aria-expanded="false"><i
                             class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
 
                 </li>
@@ -75,8 +75,8 @@
                     <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i
                             class="ti-align-left"></i><span class="hide-menu">Pengunjung</span></a>
                     <ul aria-expanded="false" class="collapse">
-                            <li><a href="{{ route('lama') }}">List Data</a></li>
-                            <li><a href="{{ route('tamu.list') }}">List</a></li>
+                            <!---<li><a href="{{ route('lama') }}">List Data</a></li>--->
+                            <li><a href="{{ route('tamu.list') }}">List Lama</a></li>
                             <li><a href="{{ route('pengunjung.newlist') }}">New List</a></li>
                     </ul>
                 </li>

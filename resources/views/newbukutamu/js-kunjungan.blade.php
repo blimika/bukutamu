@@ -49,7 +49,7 @@ $('#ViewKunjunganModal').on('show.bs.modal', function (event) {
             }
             $('#ViewKunjunganModal .modal-body #pengunjung_wa').attr("href",pengunjung_wa)
             $('#ViewKunjunganModal .modal-body #pengunjung_alamat').text(d.data.pengunjung.pengunjung_alamat)
-            $('#ViewKunjunganModal .modal-footer #kunjungan_timeline').attr("href","{{route('tamu.detil','')}}/"+d.data.kunjungan_uid)
+            $('#ViewKunjunganModal .modal-footer #pengunjung_timeline').attr("href","{{route('timeline','')}}/"+d.data.pengunjung.pengunjung_uid)
             $('#ViewKunjunganModal .modal-body #kunjungan_tanggal').text(d.data.kunjungan_tanggal)
             if (d.data.kunjungan_foto != null)
                 {
@@ -132,7 +132,7 @@ $('#EditFlagAntrianModal').on('show.bs.modal', function (event) {
             $('#EditFlagAntrianModal .modal-body #kunjungan_uid').text(d.data.kunjungan_uid)
             $('#EditFlagAntrianModal .modal-body #pengunjung_nama').text(d.data.pengunjung.pengunjung_nama)
             $('#EditFlagAntrianModal .modal-body #pengunjung_jk').text(d.data.pengunjung.jenis_kelamin.nama)
-            $('#EditFlagAntrianModal .modal-footer #kunjungan_timeline').attr("href","{{route('tamu.detil','')}}/"+d.data.kunjungan_uid)
+            $('#EditFlagAntrianModal .modal-footer #pengunjung_timeline').attr("href","{{route('tamu.detil','')}}/"+d.data.pengunjung.pengunjung_uid)
             $('#EditFlagAntrianModal .modal-body #kunjungan_tanggal').text(d.data.kunjungan_tanggal)
 
             $('#EditFlagAntrianModal .modal-body #kunjungan_nomor_antrian').text(d.data.kunjungan_teks_antrian)
