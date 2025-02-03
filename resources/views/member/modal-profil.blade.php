@@ -21,18 +21,11 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="control-label col-md-2">Identitas</label>
-                        <div class="input-group col-md-10">
-                            <select class="form-control" id="jenis_identitas" name="jenis_identitas" required>
-                                    <option value="">Jenis</option>
-                                    @foreach ($j_identitas as $item)
-                                        <option value="{{$item->id}}">{{$item->nama}}</option>
-                                    @endforeach
-                            </select>
-                            <span class="input-group-addon bg-info b-0 text-white">&nbsp;</span>
-                            <input type="text" class="form-control" placeholder="Nomor Identitas" id="nomor_identitas" name="nomor_identitas" required>
+                        <label class="control-label col-md-4">Nomor HP</label>
+                        <div class="input-group col-md-8">
+                            <input type="text" class="form-control" placeholder="Nomor HP" id="nomor_hp" name="nomor_hp" required>
                             <span class="input-group-addon b-0">&nbsp;</span>
-                            <button type="button" name="cek_identitas" id="cek_identitas" class="btn btn-info"><i class="fas fa-search"></i></button>
+                            <button type="button" name="cek_hp" id="cek_hp" class="btn btn-info"><i class="fas fa-search"></i></button>
 
                         </div>
                     </div>

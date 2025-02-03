@@ -7,10 +7,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class KirimAntrian extends Mailable implements ShouldQueue
+class KirimFeedback extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
     public $body;
+
     /**
      * Create a new message instance.
      *
@@ -21,6 +22,7 @@ class KirimAntrian extends Mailable implements ShouldQueue
         //
         $this->body = $body;
     }
+
     /**
      * Build the message.
      *
@@ -29,8 +31,8 @@ class KirimAntrian extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->from('noreply@statsntb.id','BUKUTAMU')
-                    ->subject('[NOREPLY] Nomor Antrian')
-                    ->markdown('emails.newantrian')->with('body',$this->body);
+                    ->subject('[NOREPLY] Terima Kasih atas Kunjungan Anda!')
+                    ->markdown('emails.feedback')->with('body',$this->body);
         //return $this->markdown('emails.KirimAntrian');
     }
 }

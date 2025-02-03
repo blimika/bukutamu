@@ -46,4 +46,7 @@ class User extends Authenticatable
     public function mtamu(){
     	return $this->belongsTo('App\Mtamu', 'tamu_id', 'id');
     }
+    public function Pengunjung(){
+    	return $this->belongsTo('App\Pengunjung', 'tamu_id', 'pengunjung_id');
+    }
 }

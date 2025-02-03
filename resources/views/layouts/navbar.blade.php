@@ -83,12 +83,14 @@
                 @endif
                 @endif
                 @if (Auth::User())
-                    @if (Auth::User()->level > 1)
+                    @if (Auth::User()->level > 5)
                         <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"
                                 aria-expanded="false"><i class="ti-settings"></i><span
                                     class="hide-menu">Master</span></a>
                             <ul aria-expanded="false" class="collapse">
+                                @if (Auth::User()->level > 10)
                                 <li><a href="{{ route('pengunjung.list') }}">Pengunjung</a></li>
+                                @endif
                                 <li><a href="{{ route('member.list') }}">Member</a></li>
                                 <li><a href="{{ route('layanan.akses') }}">Layanan Akses</a></li>
                                 <li><a href="{{ route('master.tanggal') }}">Tanggal</a></li>

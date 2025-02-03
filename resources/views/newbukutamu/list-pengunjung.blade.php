@@ -48,9 +48,9 @@
                                     <th>Tahun Lahir</th>
                                     <th>Pekerjaan</th>
                                     <th>Pendidikan</th>
-                                    <th>Alamat</th>
                                     <th>Email</th>
                                     <th>Total Kunjungan</th>
+                                    <th>Register</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -64,6 +64,7 @@
         </div>
     </div>
     @include('newbukutamu.modal-pengunjung')
+    @include('newbukutamu.modal-editpengunjung')
 @endsection
 
 @section('css')
@@ -121,11 +122,12 @@
                     {data: 'pengunjung_tahun_lahir'},
                     {data: 'pengunjung_pekerjaan'},
                     {data: 'pengunjung_pendidikan'},
-                    {data: 'pengunjung_alamat'},
                     {data: 'pengunjung_email'},
                     {data: 'pengunjung_total_kunjungan'},
+                    {data: 'created_at'},
                     {data: 'aksi', orderable: false},
                 ],
+                order: [[8, 'desc']],
                 dom: 'Bfrtip',
                 iDisplayLength: 20,
                 buttons: [
@@ -224,4 +226,5 @@
         });
     </script>
     @include('newbukutamu.js-pengunjung')
+    @include('newbukutamu.js-editpengunjung')
 @stop

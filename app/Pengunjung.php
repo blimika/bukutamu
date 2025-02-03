@@ -17,7 +17,7 @@ class Pengunjung extends Model
     }
     public function Member()
     {
-        return $this->belongsTo('App\User', 'pengunjung_user_id', 'id')->where('pengunjung_user_id','>',0);
+        return $this->belongsTo('App\User', 'pengunjung_user_id', 'id');
     }
     public function Kunjungan()
     {

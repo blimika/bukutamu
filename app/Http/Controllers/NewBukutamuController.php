@@ -32,6 +32,7 @@ use App\MasterPendidikan;
 use App\Mtamu;
 use App\Kunjungan;
 use App\FlagAntrian;
+use App\Mail\KirimFeedback;
 use App\Mjkunjungan;
 
 class NewBukutamuController extends Controller
@@ -321,6 +322,31 @@ class NewBukutamuController extends Controller
             $data->kunjungan_flag_feedback = 1;
             $data->update();
             //kirim email untuk isi feedback
+            if (filter_var($data->Pengunjung->pengunjung_email, FILTER_VALIDATE_EMAIL))
+            {
+                //kirim mail
+                if ($data->kunjungan_tujuan == 2)
+                {
+                    $layanan = $data->LayananUtama->nama;
+                }
+                else
+                {
+                    $layanan = $data->Tujuan->nama;
+                }
+                $body = new \stdClass();
+                $body->kunjungan_uid = $data->kunjungan_uid;
+                $body->pengunjung_nama = $data->Pengunjung->pengunjung_nama;
+                $body->pengunjung_email = $data->Pengunjung->pengunjung_email;
+                $body->pengunjung_nomor_hp = $data->Pengunjung->pengunjung_nomor_hp;
+                $body->kunjungan_tanggal = \Carbon\Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y');
+                $body->layanan = $layanan;
+                $body->link_feedback = route('kunjungan.feedback',$data->kunjungan_uid);
+                $body->petugas = $data->Petugas->name;
+                if (ENV('APP_KIRIM_MAIL') == true) {
+                    Mail::to($data->Pengunjung->pengunjung_email)->send(new KirimFeedback($body));
+                }
+                //batas
+            }
 
             $arr = array(
                 'status' => true,
@@ -465,6 +491,85 @@ class NewBukutamuController extends Controller
         }
         return Response()->json($arr);
     }
+    public function PrintNomorAntrian($uid)
+    {
+        $data = NewKunjungan::where('kunjungan_uid',$uid)->first();
+        if ($data)
+        {
+            PDF::setOptions(['dpi' => 150, 'defaultFont' => 'Helvetica','isHtml5ParserEnabled'=>true]);
+            $pdf = PDF::loadView('newbukutamu.print',compact('data'))->setPaper('A7');
+            $nama=strtoupper($data->Pengunjung->pengunjung_nama);
+            return $pdf->stream('Antrian'.$nama.'_Nomor_Antrian_'.$data->kunjungan_teks_antrian.'.pdf');
+        }
+    }
+    public function KirimNomorAntrian(Request $request)
+    {
+        /*
+        $body = new \stdClass();
+        $body->kunjungan_uid = 'DADADA';
+        $body->pengunjung_nama = 'I Putu Dyatmika';
+        $body->pengunjung_email = 'mika@bpsntb.id';
+        $body->pengunjung_nomor_hp = '0871272818213';
+        $body->kunjungan_tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+        $body->layanan = 'Perpustakaan';
+        $body->nomor_antrian = 'PS-001';
+        */
+        $data = NewKunjungan::where('kunjungan_uid', $request->uid)->first();
+        $arr = array(
+            'status' => false,
+            'message' => 'Nomor antrian tidak ditemukan'
+        );
+        if ($data) {
+            if (filter_var($data->Pengunjung->pengunjung_email, FILTER_VALIDATE_EMAIL))
+            {
+                //kirim mail
+                if ($data->kunjungan_tujuan == 2)
+                {
+                    $layanan = $data->LayananUtama->nama;
+                }
+                else
+                {
+                    $layanan = $data->Tujuan->nama;
+                }
+                $body = new \stdClass();
+                $body->kunjungan_uid = $data->kunjungan_uid;
+                $body->pengunjung_nama = $data->Pengunjung->pengunjung_nama;
+                $body->pengunjung_email = $data->Pengunjung->pengunjung_email;
+                $body->pengunjung_nomor_hp = $data->Pengunjung->pengunjung_nomor_hp;
+                $body->kunjungan_tanggal = \Carbon\Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y');
+                $body->layanan = $layanan;
+                $body->nomor_antrian = $data->kunjungan_teks_antrian;
+
+                if (ENV('APP_KIRIM_MAIL') == true) {
+                    Mail::to($data->Pengunjung->pengunjung_email)->send(new KirimAntrian($body));
+
+                    $arr = array(
+                        'status' => true,
+                        'message' => 'Nomor Antrian an. '.$data->Pengunjung->pengunjung_nama.' sudah dikirim ke alamat email '.$data->Pengunjung->pengunjung_email
+                    );
+                }
+                else
+                {
+                    $arr = array(
+                        'status' => false,
+                        'message' => 'APP_KIRIM_MAIL bernilai False di .env'
+                    );
+                }
+                //batas
+
+            }
+            else
+            {
+                $arr = array(
+                    'status' => false,
+                    'hasil' => 'Alamat email Kunjungan an. '.$data->tamu->nama_lengkap.' tidak sesuai format'
+                );
+            }
+        }
+
+        #dd($request->all());
+        return Response()->json($arr);
+    }
     public function PageListKunjungan(Request $request)
     {
         $draw = $request->get('draw');
@@ -546,8 +651,8 @@ class NewBukutamuController extends Controller
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="#" data-uid="' . $item->kunjungan_uid . '" data-toggle="modal" data-target="#ViewKunjunganModal">View</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="'.route("tamu.printantrian",$item->kunjungan_id).'" target="_blank" data-toggle="tooltip" title="Print Nomor Antrian">Print Antrian</a>
-                    <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $item->kunjungan_id . '" data-nama="' . $item->pengunjung_nama . '" data-email="' . $item->pengunjung_email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Antrian</a>
+                <a class="dropdown-item" href="'.route("kunjungan.printantrian",$item->kunjungan_uid).'" target="_blank" data-toggle="tooltip" title="Print Nomor Antrian">Print Antrian</a>
+                    <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-email="' . $item->pengunjung_email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Antrian</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditTindakLanjutModal"><span data-toggle="tooltip" title="Edit tindak lanjut kunjungan an. '.$item->pengunjung_nama.'">Edit Tindak Lanjut</span></a>
                 <a class="dropdown-item" href="#" data-uid="' . $item->pengunjung_uid . '" data-toggle="modal" data-target="#EditModal"><span data-toggle="tooltip" title="Edit Kunjungan an. '.$item->pengunjung_nama.'">Edit Kunjungan</span></a>
@@ -749,7 +854,12 @@ class NewBukutamuController extends Controller
     public function DataPengunjung()
     {
         //$data = Pengunjung::orderBy('pengunjung_id','desc')->get();
-        return view('newbukutamu.list-pengunjung');
+        $Mjk = Mjk::orderBy('id', 'asc')->get();
+        $MasterPendidikan = MasterPendidikan::orderBy('id', 'asc')->get();
+        return view('newbukutamu.list-pengunjung',[
+            'Mjk' => $Mjk,
+            'MasterPendidikan' => $MasterPendidikan
+        ]);
     }
     public function PengunjungPageList(Request $request)
     {
@@ -783,6 +893,7 @@ class NewBukutamuController extends Controller
                          ->orWhere('pengunjung_pekerjaan', 'like', '%' . $searchValue . '%')
                          ->orWhere('users.name', 'like', '%' . $searchValue . '%')
                          ->orWhere('m_pendidikan.nama', 'like', '%' . $searchValue . '%')
+                         ->orWhere('m_pengunjung.created_at', 'like', '%' . $searchValue . '%')
                          ->orWhere('pengunjung_email', 'like', '%' . $searchValue . '%');
             })
             ->select('m_pengunjung.*', 'm_pendidikan.nama as nama_pendidikan', 'mjk.inisial','mjk.nama as jk_nama', 'users.name', 'users.username')
@@ -803,23 +914,51 @@ class NewBukutamuController extends Controller
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="#" data-uid="' . $item->pengunjung_uid . '" data-toggle="modal" data-target="#ViewPengunjungModal">View</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#" data-uid="' . $item->pengunjung_uid . '" data-toggle="modal" data-target="#EditModal">Edit</a>
+                    <a class="dropdown-item" href="#" data-uid="' . $item->pengunjung_uid . '" data-toggle="modal" data-target="#EditPengunjungModal">Edit</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item hapuspengunjung" href="#" data-id="' . $item->pengunjung_id . '" data-uid="' . $item->pengunjung_uid . '" data-nama="' . $item->pengunjung_nama . '">Delete</a>
 
                 </div>
             </div>
             ';
+             //jenis kelamin
+                if ($item->inisial == 'L') {
+                    $jk = '<span class="badge badge-info badge-pill">' . $item->inisial . '</span>';
+                }
+                else {
+                    $jk = '<span class="badge badge-danger badge-pill">' . $item->inisial . '</span>';
+                }
+                //pendidikan
+                if ($item->pengunjung_pendidikan == 1)
+                {
+                    $pendidikan = '<span class="badge badge-danger badge-pill">' . $item->nama_pendidikan . '</span>';
+                }
+                elseif ($item->pengunjung_pendidikan == 2)
+                {
+                    $pendidikan = '<span class="badge badge-info badge-pill">' . $item->nama_pendidikan . '</span>';
+                }
+                elseif ($item->pengunjung_pendidikan == 3)
+                {
+                    $pendidikan = '<span class="badge badge-success badge-pill">' . $item->nama_pendidikan . '</span>';
+                }
+                elseif ($item->pengunjung_pendidikan == 4)
+                {
+                    $pendidikan = '<span class="badge badge-warning badge-pill">' . $item->nama_pendidikan . '</span>';
+                }
+                else
+                {
+                    $pendidikan = '<span class="badge badge-primary badge-pill">' . $item->nama_pendidikan . '</span>';
+                }
                 $data_arr[] = array(
                     "pengunjung_uid" => $item->pengunjung_uid,
-                    "pengunjung_nama" => $item->pengunjung_nama,
+                    "pengunjung_nama" => $item->pengunjung_nama .'<br />'.$jk,
                     "pengunjung_nomor_hp" => $item->pengunjung_nomor_hp,
                     "pengunjung_tahun_lahir" => $item->pengunjung_tahun_lahir .'<br />('.(Carbon::now()->format('Y')-$item->pengunjung_tahun_lahir).' tahun)',
                     "pengunjung_pekerjaan" => $item->pengunjung_pekerjaan,
-                    "pengunjung_pendidikan" => $item->nama_pendidikan,
+                    "pengunjung_pendidikan" => $pendidikan,
                     "pengunjung_email" => $item->pengunjung_email,
-                    "pengunjung_alamat" => $item->pengunjung_alamat,
                     "pengunjung_total_kunjungan" => $item->pengunjung_total_kunjungan,
+                    "created_at"=>$item->created_at,
                     "aksi" => $aksi
                 );
             }
@@ -991,7 +1130,7 @@ class NewBukutamuController extends Controller
             $data = new Pengunjung();
             $data->pengunjung_uid = Generate::Kode(6);
             $data->pengunjung_nama = $request->pengunjung_nama;
-            $data->pengunjung_nomor_hp = $request->pengunjung_nama;
+            $data->pengunjung_nomor_hp = $request->nomor_hp;
             $data->pengunjung_tahun_lahir = $request->pengunjung_tahun_lahir;
             $data->pengunjung_jk = $request->pengunjung_jk;
             $data->pengunjung_pekerjaan = $request->pengunjung_pekerjaan;
@@ -1049,7 +1188,7 @@ class NewBukutamuController extends Controller
             {
                 //kalo di edit
                 $data->pengunjung_nama = $request->pengunjung_nama;
-                $data->pengunjung_nomor_hp = $request->pengunjung_nama;
+                $data->pengunjung_nomor_hp = $request->nomor_hp;
                 $data->pengunjung_tahun_lahir = $request->pengunjung_tahun_lahir;
                 $data->pengunjung_jk = $request->pengunjung_jk;
                 $data->pengunjung_pekerjaan = $request->pengunjung_pekerjaan;
@@ -1136,12 +1275,21 @@ class NewBukutamuController extends Controller
             if (filter_var($newdata->Pengunjung->pengunjung_email, FILTER_VALIDATE_EMAIL))
             {
                 //kirim mail
+                if ($newdata->kunjungan_tujuan == 2)
+                {
+                    $layanan = $newdata->LayananUtama->nama;
+                }
+                else
+                {
+                    $layanan = $newdata->Tujuan->nama;
+                }
                 $body = new \stdClass();
-                $body->nama_lengkap = $newdata->Pengunjung->pengunjung_nama;
-                $body->email = $newdata->Pengunjung->pengunjung_email;
-                $body->telepon = $newdata->Pengunjung->pengunjung_nomor_hp;
-                $body->tanggal = \Carbon\Carbon::parse($newdata->kunjungan_tanggal)->isoFormat('dddd, D MMMM Y');
-                $body->layanan_utama = $newdata->Tujuan->nama;
+                $body->kunjungan_uid = $newdata->Pengunjung->pengunjung_nama;
+                $body->pengunjung_nama = $newdata->Pengunjung->pengunjung_nama;
+                $body->pengunjung_email = $newdata->Pengunjung->pengunjung_email;
+                $body->pengunjung_nomor_hp = $newdata->Pengunjung->pengunjung_nomor_hp;
+                $body->kunjungan_tanggal = \Carbon\Carbon::parse($newdata->created_at)->isoFormat('dddd, D MMMM Y');
+                $body->layanan = $layanan;
                 $body->nomor_antrian = $newdata->kunjungan_teks_antrian;
 
                 if (ENV('APP_KIRIM_MAIL') == true) {
@@ -1176,7 +1324,7 @@ class NewBukutamuController extends Controller
         if ($request->model == "hp")
         {
             //cari nomor hp
-            $data = Pengunjung::with('Pendidikan','JenisKelamin','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_nomor_hp',$request->nomor)->first();
+            $data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_nomor_hp',$request->nomor)->first();
             if ($data)
             {
                 $arr = array(
@@ -1191,7 +1339,7 @@ class NewBukutamuController extends Controller
         if ($request->model == "pengunjung")
         {
             //pengunjung
-            $data = Pengunjung::with('Pendidikan','JenisKelamin','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_uid',$request->uid)->first();
+            $data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_uid',$request->uid)->first();
             if ($data)
             {
                 $arr = array(
@@ -1336,5 +1484,10 @@ class NewBukutamuController extends Controller
             }
         }
         return Response()->json($arr);
+    }
+    public function NewFeedback($uid)
+    {
+        $data = NewKunjungan::where('kunjungan_uid',$uid)->first();
+        return view('newbukutamu.newfeedback',['data'=>$data]);
     }
 }

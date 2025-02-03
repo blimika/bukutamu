@@ -30,7 +30,7 @@ class ResetPasswd extends Mailable implements ShouldQueue
     public function build()
     {
         //return $this->markdown('emails.resetpasswd');
-        return $this->from('noreply@bpsntb.id','BUKUTAMU')
+        return $this->from('noreply@statsntb.id','BUKUTAMU')
                     ->subject('[NOREPLY] Reset Password')
                     ->markdown('emails.resetpasswd')->with('body',$this->body);
     }

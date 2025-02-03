@@ -75,14 +75,28 @@ Route::get('/cth3', function () {
 Route::get('/cth4', function () {
     //contoh mail dikirim
     $body = new \stdClass();
-    $body->nama_lengkap = 'I Putu Dyatmika';
-    $body->email = 'mika@bpsntb.id';
-    $body->telepon = '0871272818213';
-    $body->tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
-    $body->layanan_utama = 'Perpustakaan';
+    $body->kunjungan_uid = 'DADADA';
+    $body->pengunjung_nama = 'I Putu Dyatmika';
+    $body->pengunjung_email = 'mika@bpsntb.id';
+    $body->pengunjung_nomor_hp = '0871272818213';
+    $body->kunjungan_tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+    $body->layanan = 'Perpustakaan';
     $body->nomor_antrian = 'PS-001';
 
    return new App\Mail\KirimAntrian($body);
+});
+Route::get('/cth5', function () {
+    //contoh mail dikirim
+    $body = new \stdClass();
+    $body->kunjungan_uid = 'DWGIB37';
+    $body->pengunjung_nama = 'I Putu Dyatmika';
+    $body->pengunjung_email = 'mika@bpsntb.id';
+    $body->pengunjung_nomor_hp = '0871272818213';
+    $body->kunjungan_tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+    $body->link_feedback = 'https://bukutamu.test/kunjungan/feeedback/DWGIB37';
+    $body->petugas = 'Perpustakaan';
+
+   return new App\Mail\KirimFeedback($body);
 });
 //newbukutamu
 Route::get('/listdata', 'NewBukutamuController@DataKunjungan')->name('listdata');
@@ -94,6 +108,7 @@ Route::post('/feedbacksave', 'NewBukutamuController@FeedbackSave')->name('feedba
 Route::post('/newsimpan', 'NewBukutamuController@NewSimpan')->name('newsimpan');
 Route::get('/newdisplay', 'NewBukutamuController@DisplayAntrian')->name('newdisplay');
 Route::get('/newdepan', 'NewBukutamuController@NewDepan')->name('newdepan');
+Route::get('/kunjungan/feeedback/{uid}', 'NewBukutamuController@NewFeedback')->name('kunjungan.feedback');
 //batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
@@ -195,6 +210,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/master/sinkron/database', 'NewBukutamuController@Sinkron')->name('database.sinkron');
     Route::get('/pengunjung/newlist', 'NewBukutamuController@DataPengunjung')->name('pengunjung.newlist');
     Route::get('/pengunjung/pagelist', 'NewBukutamuController@PengunjungPageList')->name('pengunjung.pagelist');
+    Route::get('/kunjungan/print/antrian/{uid}', 'NewBukutamuController@PrintNomorAntrian')->name('kunjungan.printantrian');
+    Route::post('/kunjungan/kirim/nomorantrian', 'NewBukutamuController@KirimNomorAntrian')->name('kunjungan.kirimnomor');
     //hapus kunjungan
     Route::post('/kunjungan/hapus', 'NewBukutamuController@HapusKunjungan')->name('kunjungan.hapus');
     Route::post('/kunjungan/flagantrian', 'NewBukutamuController@FlagAntrianUpdate')->name('flagantrian.update');

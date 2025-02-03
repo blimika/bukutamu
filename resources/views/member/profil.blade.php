@@ -39,10 +39,10 @@
                             @if (Storage::disk('public')->exists(Auth::user()->user_foto))
                             <img src="{{asset('storage'.Auth::user()->user_foto)}}" width="200" height="200" class="img-circle" />
                             @else
-                                <img src="https://via.placeholder.com/480x480/0022FF/FFFFFF/?text=photo+tidak+ada" class="img-circle" width="150" />
+                                <img src="https://placehold.co/480x480/0022FF/FFFFFF/?text=photo+tidak+ada" class="img-circle" width="150" />
                             @endif
                         @else
-                            <img src="https://via.placeholder.com/480x480/0022FF/FFFFFF/?text=photo+tidak+ada" class="img-circle" width="150" />
+                            <img src="https://placehold.co/480x480/0022FF/FFFFFF/?text=photo+tidak+ada" class="img-circle" width="150" />
                         @endif
 
                         <h4 class="card-title m-t-10">{{Auth::user()->name}}</h4>
@@ -120,36 +120,28 @@
                             <!--jika sudah terkoneksi-->
                             @if (Auth::user()->tamu_id != 0)
                                 <dl class="row">
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Tamu ID</dt>
-                                    <dd class="col-lg-9 col-sm-9">#{{Auth::user()->mtamu->id}}</dd>
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Identitas</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->nomor_identitas}} ({{Auth::user()->mtamu->identitas->nama}}) </dd>
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Nama Lengkap</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->nama_lengkap}}</dd>
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Kode QR</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->kode_qr}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Pengunjung ID</dt>
+                                    <dd class="col-lg-9 col-sm-9">#{{Auth::user()->Pengunjung->pengunjung_id}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Pengunjung UID</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_uid}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Nama</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_nama}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Jenis Kelamin</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->jk->nama}}</dd>
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Tanggal lahir</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->tgl_lahir}}</dd>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->JenisKelamin->nama}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Tahun lahir</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_tahun_lahir}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">E-mail</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->email}}</dd>
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Telepon</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->telepon}}</dd>
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Kewarganegaraan</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->warga->nama}}</dd>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_email}}</dd>
+                                    <dt class="col-lg-3 col-md-3 col-xs-12">Nomor HP</dt>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_nomor_hp}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Pendidikan</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->pendidikan->nama}}</dd>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->Pendidikan->nama}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Pekerjaan</dt>
-                                    <dd class="col-lg-9 col-sm-9">
-                                        {{Auth::user()->mtamu->pekerjaan->nama}} <br />
-                                        {{Auth::user()->mtamu->kerja_detil}} <br />
-                                        {{Auth::user()->mtamu->kategoripekerjaan->nama}}
-                                    </dd>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_pekerjaan}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Alamat</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->alamat}}</dd>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_alamat}}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Total kunjungan</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->mtamu->total_kunjungan}}</dd>
+                                    <dd class="col-lg-9 col-sm-9">{{Auth::user()->Pengunjung->pengunjung_total_kunjungan}}</dd>
                                 </dl>
                             @endif
 

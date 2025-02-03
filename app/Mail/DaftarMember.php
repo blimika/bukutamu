@@ -30,7 +30,7 @@ class DaftarMember extends Mailable implements ShouldQueue
     public function build()
     {
         //return $this->markdown('emails.daftarmember')->with('body',$this->body);
-        return $this->from('noreply@bpsntb.id','BUKUTAMU')
+        return $this->from('noreply@statsntb.id','BUKUTAMU')
                     ->subject('[NOREPLY] Pendaftaran Member Baru')
                     ->markdown('emails.daftarmember')->with('body',$this->body);
     }

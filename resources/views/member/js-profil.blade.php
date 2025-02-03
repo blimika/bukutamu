@@ -172,21 +172,13 @@ $('#KaitkanModal .modal-body #cek_kodeqr').on('click', function(e) {
 });
 //batas
 //jenis_identitas button click
-$('#KaitkanModal .modal-body #cek_identitas').on('click', function(e) {
+$('#KaitkanModal .modal-body #cek_hp').on('click', function(e) {
     e.preventDefault();
-    var jenis = $("#KaitkanModal .modal-body #jenis_identitas").val();
-    var nomor = $('#KaitkanModal .modal-body #nomor_identitas').val();
+    var nomor_hp = $('#KaitkanModal .modal-body #nomor_hp').val();
     var user_id = $('#KaitkanModal .modal-body #user_id').val();
-    if (jenis == "")
+    if (nomor_hp == "")
     {
-        $('#KaitkanModal .modal-body #kaitkan_error').text('Pilih Salah Satu Jenis Identitas');
-        $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
-        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
-        return false;
-    }
-    else if (nomor == "")
-    {
-        $('#KaitkanModal .modal-body #kaitkan_error').text('Nomor identitas tidak boleh kosong');
+        $('#KaitkanModal .modal-body #kaitkan_error').text('isian nomor hp harus terisi');
         $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
         $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
         return false;
@@ -195,34 +187,39 @@ $('#KaitkanModal .modal-body #cek_identitas').on('click', function(e) {
     {
         //load ajax get
         $.ajax({
-    url : '{{route('cekid',['',''])}}/'+jenis+'/'+nomor,
+    url : '{{route("webapi")}}',
+    data : {
+        model: 'hp',
+        nomor: nomor_hp
+    },
     method : 'get',
     cache: false,
     dataType: 'json',
-    success: function(data){
+    success: function(d){
 
-        if (data.status == true) {
+        if (d.status == true) {
             //identitas true
             //cek dulu apakah sudah dikaitkan?
-            if (data.hasil.member.status == true)
+            if (d.data.pengunjung_user_id == 0)
             {
-                $('#KaitkanModal .modal-body #kaitkan_error').text('Identitas sudah dikaitkan dengan member lain, nama '+data.hasil.member.hasil.name);
-                $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
-                $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+                $('#KaitkanModal .modal-body #kaitkan_error').text('Nomor HP berhasil ditemukan, nama '+d.data.pengunjung_nama);
+                $('#KaitkanModal .modal-body #kodeqr').val(d.data.pengunjung_uid)
+                $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-success').removeClass('text-danger');
+                $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', false);
                 return false;
+
             }
             else
             {
-                $('#KaitkanModal .modal-body #kaitkan_error').text('Identitas berhasil ditemukan, nama '+data.hasil.nama_lengkap);
-                $('#KaitkanModal .modal-body #kodeqr').val(data.hasil.kode_qr)
-                $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-success').removeClass('text-danger');
-                $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', false);
+                $('#KaitkanModal .modal-body #kaitkan_error').text('Nomor HP sudah dikaitkan dengan member lain, nama '+d.data.member.name);
+                $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+                $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
                 return false;
             }
 
         }
         else {
-            $('#KaitkanModal .modal-body #kaitkan_error').text('Identitas tidak ditemukan, silakan perbaiki isian');
+            $('#KaitkanModal .modal-body #kaitkan_error').text(d.message);
             $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
             $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
             return false;
@@ -230,7 +227,10 @@ $('#KaitkanModal .modal-body #cek_identitas').on('click', function(e) {
         }
     },
     error: function(){
-        alert("error");
+        $('#KaitkanModal .modal-body #kaitkan_error').text('error koneksi ke server');
+        $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
+        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+        return false;
     }
 
     });

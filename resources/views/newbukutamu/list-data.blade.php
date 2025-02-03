@@ -178,6 +178,78 @@
                         },
 
                     });
+                    $('.tabeldata').on('click','.kirimnomorantrian',function(e) {
+                        e.preventDefault();
+                        var uid = $(this).data('uid');
+                        var id = $(this).data('id');
+                        var nama = $(this).data('nama');
+                        var email = $(this).data('email');
+                        Swal.fire({
+                            title: 'Kirim nomor antrian?',
+                            text: "Nomor Antrian an. " + nama +
+                                " dikirim ke alamat email " + email +
+                                " sekarang?",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Kirim'
+                        }).then((result) => {
+                            if (result.value) {
+                                //response ajax disini
+                                $.ajaxSetup({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $(
+                                            'meta[name="csrf-token"]').attr(
+                                            'content')
+                                    }
+                                });
+                                $.ajax({
+                                    url: '{{ route("kunjungan.kirimnomor") }}',
+                                    method: 'post',
+                                    data: {
+                                        uid: uid,
+                                        id: id,
+                                        nama: nama,
+                                        email: email
+                                    },
+                                    cache: false,
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        if (data.status == true) {
+                                            Swal.fire(
+                                                'Berhasil!',
+                                                '' + data.message + '',
+                                                'success'
+                                            ).then(function() {
+                                                $('#dTabel')
+                                                    .DataTable()
+                                                    .ajax.reload(
+                                                        null, false
+                                                    );
+                                            });
+                                        } else {
+                                            Swal.fire(
+                                                'Error!',
+                                                '' + data.message + '',
+                                                'error'
+                                            );
+                                        }
+
+                                    },
+                                    error: function() {
+                                        Swal.fire(
+                                            'Error',
+                                            'Koneksi Error',
+                                            'error'
+                                        );
+                                    }
+
+                                });
+
+                            }
+                        })
+                    });
                     $('.tabeldata').on('click','.mulailayanan',function(e) {
                         e.preventDefault();
                         var id = $(this).data('id');
