@@ -94,6 +94,7 @@
                                 <li><a href="{{ route('member.list') }}">Member</a></li>
                                 <li><a href="{{ route('layanan.akses') }}">Layanan Akses</a></li>
                                 <li><a href="{{ route('master.tanggal') }}">Tanggal</a></li>
+                                <li><a href="{{ route('kalendar') }}">Jadwal Jaga</a></li>
                                 @if (Auth::User()->level == 20)
                                 <li><a href="{{ route('master.database') }}">Database</a></li>
                                 @endif

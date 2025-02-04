@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="" class="btn btn-info waves-effect" id="kunjungan_timeline">TIMELINE</a>
+                <a href="" class="btn btn-info waves-effect" id="pengunjung_timeline">TIMELINE</a>
                 <button type="submit" class="btn btn-success waves-effect" id="updatePengunjung" data-dismiss="modal">UPDATE DATA</button>
                 <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">CLOSE</button>
             </div>

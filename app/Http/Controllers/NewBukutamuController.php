@@ -1474,6 +1474,42 @@ class NewBukutamuController extends Controller
         //dd($data1, $data2);
         return view('newbukutamu.display',['data1'=>$data1,'data2'=>$data2]);
     }
+    public function PengunjungSave(Request $request)
+    {
+
+        $arr = array(
+            'status'=>false,
+            'message'=>'Data pengunjung tidak tersedia'
+        );
+        if (Auth::user()->level > 5)
+        {
+            $data = Pengunjung::where('pengunjung_uid',$request->pengunjung_uid)->first();
+            if ($data)
+            {
+                $data->pengunjung_nomor_hp = $request->pengunjung_nomor_hp;
+                $data->pengunjung_nama = $request->pengunjung_nama;
+                $data->pengunjung_jk = $request->pengunjung_jk;
+                $data->pengunjung_tahun_lahir = $request->pengunjung_tahun_lahir;
+                $data->pengunjung_pekerjaan = $request->pengunjung_pekerjaan;
+                $data->pengunjung_pendidikan = $request->pengunjung_pendidikan;
+                $data->pengunjung_email = $request->pengunjung_email;
+                $data->pengunjung_alamat = $request->pengunjung_alamat;
+                $data->update();
+                $arr = array(
+                    'status'=>true,
+                    'message'=>'Data pengunjung berhasil di perbarui'
+                );
+            }
+        }
+        else
+        {
+            $arr = array(
+                'status'=>false,
+                'message'=>'anda tidak mempunyai akses untuk update pengunjung'
+            );
+        }
+        return Response()->json($arr);
+    }
     public function HapusPengunjung(Request $request)
     {
         $arr = array(
@@ -1534,5 +1570,52 @@ class NewBukutamuController extends Controller
     {
         $data = NewKunjungan::where('kunjungan_uid',$uid)->first();
         return view('newbukutamu.newfeedback',['data'=>$data]);
+    }
+    public function JadwalJaga()
+    {
+        /*
+        title: 'your meeting with john',
+        start: new Date($.now() - 399000000),
+        end: new Date($.now() - 219000000),
+        className: 'bg-info'
+        */
+        $tahun = date('Y')-1;
+        $data = MTanggal::whereYear('tanggal','>=',$tahun)->whereIn('jtgl',['1','3'])->orderBy('tanggal','asc')->get();
+        //dd($data);
+        foreach ($data as $item) {
+            if ($item->jtgl == 3)
+            {
+                $arr[]=array (
+                    'title' => $item->deskripsi,
+                    'start' => $item->tanggal,
+                    'end' => $item->tanggal,
+                    'className' => 'bg-danger'
+                );
+            }
+            else
+            {
+                if ($item->petugas1_id > 0)
+                {
+                    $arr[]=array (
+                        'title' => $item->Petugas1->name,
+                        'start' => $item->tanggal,
+                        'end' => $item->tanggal,
+                        'className' => 'bg-success'
+                    );
+                }
+                if ($item->petugas2_id > 0)
+                {
+                    $arr[]=array (
+                        'title' => $item->Petugas2->name,
+                        'start' => $item->tanggal,
+                        'end' => $item->tanggal,
+                        'className' => 'bg-info'
+                    );
+                }
+
+            }
+        }
+        $data_jadwal = json_encode($arr);
+        return view('newbukutamu.kalendar',['data_jadwal'=>$data_jadwal]);
     }
 }

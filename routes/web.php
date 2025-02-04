@@ -110,6 +110,7 @@ Route::post('/newsimpan', 'NewBukutamuController@NewSimpan')->name('newsimpan');
 Route::get('/newdisplay', 'NewBukutamuController@DisplayAntrian')->name('newdisplay');
 Route::get('/newdepan', 'NewBukutamuController@NewDepan')->name('newdepan');
 Route::get('/kunjungan/feeedback/{uid}', 'NewBukutamuController@NewFeedback')->name('kunjungan.feedback');
+Route::get('/kalendar', 'NewBukutamuController@JadwalJaga')->name('kalendar');
 //batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
@@ -224,6 +225,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/jeniskunjungansave', 'NewBukutamuController@JenisKunjunganSave')->name('jeniskunjungan.save');
     //hapus pengunjung
     Route::post('/pengunjung/hapus', 'NewBukutamuController@HapusPengunjung')->name('pengunjung.delete');
+    Route::post('/pengunjung/save', 'NewBukutamuController@PengunjungSave')->name('pengunjung.save');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

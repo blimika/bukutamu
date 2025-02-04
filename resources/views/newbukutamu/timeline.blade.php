@@ -36,7 +36,124 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
+                @if ($data)
+                <ul class="timeline">
+                    <li>
+                        <div class="timeline-badge success"><i class="fas fa-chevron-circle-left"></i> </div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">{{$data->pengunjung_nama}}</h4>
+                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> Terdaftar: {{Tanggal::LengkapHariPanjang($data->created_at)}}</small> </p>
+                            </div>
+                            <div class="timeline-body">
+                                <div class="m-t-20 row">
+                                    <div class="col-md-3 col-xs-12">
+                                        @if ($data->pengunjung_foto_profil != null)
+                                            @if (Storage::disk('public')->exists($data->pengunjung_foto_profil))
+                                             <a class="image-popup-vertical-fit" href="{{asset('storage'.$data->pengunjung_foto_profil)}}" title="Nama : {{$data->pengunjung_nama}}"><img src="{{asset('storage/'.$data->pengunjung_foto_profil)}}" alt="user" class="img-responsive radius" /></a>
+                                            @else
+                                            <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/></a>
+                                            @endif
+                                        @else
+                                        <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/></a>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-9 col-xs-12">
+                                        <dl class="row p-0">
+                                            <dt class="col-sm-4">ID</dt>
+                                            <dd class="col-sm-8">#{{$data->pengunjung_id}}</dd>
+                                            <dt class="col-sm-4">UID</dt>
+                                            <dd class="col-sm-8">{{$data->pengunjung_uid}}</dd>
+                                            <dt class="col-sm-4">Jenis Kelamin</dt>
+                                            <dd class="col-sm-8">{{$data->JenisKelamin->nama}}</dd>
+                                            <dt class="col-sm-4">Tahun Lahir</dt>
+                                            <dd class="col-sm-8">{{$data->pengunjung_tahun_lahir}}</dd>
+                                            <dt class="col-sm-4">Pekerjaan</dt>
+                                            <dd class="col-sm-8">{{$data->pengunjung_pekerjaan}}</dd>
+                                            <dt class="col-sm-4">Pendidikan</dt>
+                                            <dd class="col-sm-8">{{$data->Pendidikan->nama}}</dd>
+                                            <dt class="col-sm-4">E-mail</dt>
+                                            <dd class="col-sm-8">{{$data->pengunjung_email}}</dd>
+                                            <dt class="col-sm-4">Nomor HP</dt>
+                                            <dd class="col-sm-8">{{$data->pengunjung_nomor_hp}} <a href="http://wa.me/62{{substr($data->pengunjung_nomor_hp,1)}}" id="pengunjung_wa" target="_blank" class="btn waves-effect btn-success btn-xs waves-light"><i class="fab fa-whatsapp"></i></a></dd>
+                                            <dt class="col-sm-4">Alamat</dt>
+                                            <dd class="col-sm-8">{{$data->pengunjung_alamat}}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    @if ($data->kunjungan)
+                        @foreach ($data->kunjungan as $item)
+                            @if($loop->odd)
+                            <li class="timeline-inverted">
+                                <div class="timeline-badge warning">
+                                    <i class="fas fa-chevron-circle-right"></i>
+                                </div>
+                            @else
+                            <li>
+                                <div class="timeline-badge success">
+                                    <i class="fas fa-chevron-circle-left"></i>
+                                </div>
+                            @endif
 
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Kunjungan hari {{Tanggal::HariPanjang($item->kunjungan_tanggal)}}</h4>
+                                </div>
+                                <div class="timeline-body el-element-overlay">
+                                    <div class="el-card-item">
+                                        <div class="el-card-avatar el-overlay-1">
+                                            @if ($item->kunjungan_foto != NULL)
+                                                @if (Storage::disk('public')->exists($item->kunjungan_foto))
+                                                <a class="image-popup-vertical-fit" href="{{asset('storage'.$item->kunjungan_foto)}}" title="Nama : {{$data->pengunjung_nama}}"> <img src="{{asset('storage'.$item->kunjungan_foto)}}" alt="user" /> </a>
+                                                @else
+                                                <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/>
+                                                @endif
+                                            @else
+                                            <img src="https://placehold.co/480x360/0022FF/FFFFFF/?text=photo+tidak+ada" alt="image" class="img-responsive"/>
+                                            @endif
+                                        </div>
+                                        <dl class="row p-0">
+                                            <dt class="col-sm-3">ID</dt>
+                                            <dd class="col-sm-9">#{{$item->kunjungan_id}}</dd>
+                                            <dt class="col-sm-3">UID</dt>
+                                            <dd class="col-sm-9">{{$item->kunjungan_uid}}</dd>
+                                            <hr>
+                                            <dt class="col-sm-3">Keperluan</dt>
+                                            <dd class="col-sm-9">{{$item->kunjungan_keperluan}}</dd>
+                                            <dt class="col-sm-3">Tindak Lanjut</dt>
+                                            <dd class="col-sm-9">{{$item->kunjungan_tindak_lanjut}}</dd>
+                                            <dt class="col-sm-3">Petugas</dt>
+                                            <dd class="col-sm-9">
+                                                @if($item->kunjungan_petugas_id > 0)
+                                                {{$item->Petugas->name}}
+                                               @endif
+                                                </dd>
+                                            <dt class="col-sm-3">Nilai Feedback</dt>
+                                            <dd class="col-sm-9">
+                                                @for ($i = 1; $i < 7; $i++)
+                                                    @if ($i <= $item->kunjungan_nilai_feedback)
+                                                        <span class="fa fa-star text-warning"></span>
+                                                    @else
+                                                        <span class="fa fa-star"></span>
+                                                    @endif
+                                                @endfor
+                                            </dd>
+                                            <dt class="col-sm-3">Komentar</dt>
+                                            <dd class="col-sm-9"><i>{{$item->kunjungan_komentar_feedback}}</i></dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            </li>
+                        @endforeach
+                    @endif
+                </ul>
+                @else
+                    <h3 class="text-center">Data Pengunjung tidak tersedia</h3>
+                @endif
 
             </div>
         </div>
