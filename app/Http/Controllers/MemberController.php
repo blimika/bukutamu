@@ -35,6 +35,11 @@ use App\MasterLevel;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use App\MasterPendidikan;
+use App\MasterTujuan;
+use App\NewKunjungan;
+use App\Pengunjung;
+use App\MasterLayananPST;
 
 class MemberController extends Controller
 {
@@ -138,7 +143,7 @@ class MemberController extends Controller
                 {
                     //putuskan
                     $link_tamuid = '<div class="dropdown-divider"></div>
-                    <a class="dropdown-item putuskanmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-tamuid="'.$record->tamu_id.'" data-namalengkap="'.$record->mtamu->nama_lengkap.'">Putuskan</a>
+                    <a class="dropdown-item putuskanmember" href="#" data-id="'.$record->id.'" data-nama="'.$record->name.'" data-tamuid="'.$record->tamu_id.'" data-namalengkap="'.$record->Pengunjung->pengunjung_nama.'">Putuskan</a>
                     ';
                 }
                 else
@@ -256,8 +261,8 @@ class MemberController extends Controller
                 //jika sudah terkait diputuskan dulu kaitannya ke Mtamu
                 if ($data->tamu_id != 0)
                 {
-                    $dtamu = Mtamu::where('id',$data->tamu_id)->first();
-                    $dtamu->user_id = 0;
+                    $dtamu = Pengunjung::where('pengunjung_id',$data->tamu_id)->first();
+                    $dtamu->pengunjung_user_id = 0;
                     $dtamu->update();
                 }
                 $nama = $data->name;
@@ -265,7 +270,11 @@ class MemberController extends Controller
                 $data->delete();
                 if ($data->user_foto != NULL)
                 {
-                    Storage::disk('public')->delete($namafile_photo);
+                    if (Storage::disk('public')->exists($namafile_photo))
+                    {
+                        Storage::disk('public')->delete($namafile_photo);
+                    }
+
                 }
                 $arr = array(
                     'status'=>true,
@@ -603,7 +612,12 @@ class MemberController extends Controller
         $MFas = MFas::orderBy('id','asc')->get();
         $MManfaat = MManfaat::orderBy('id','asc')->get();
         $MLay = MLay::orderBy('id','asc')->get();
-        return view('member.profil',['j_identitas'=>$Midentitas,'Midentitas'=>$Midentitas, 'Mpekerjaan'=>$Mpekerjaan, 'Mjk'=>$Mjk, 'Mpendidikan' => $Mpendidikan, 'Mkatpekerjaan'=>$Mkatpekerjaan, 'Mwarga' => $Mwarga, 'Mlayanan' => $MLay, 'Mfasilitas'=>$MFas,'MManfaat'=>$MManfaat]);
+        //baru
+        $MasterPendidikan = MasterPendidikan::orderBy('id', 'asc')->get();
+        $MasterTujuan = MasterTujuan::orderBy('id', 'asc')->get();
+        $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
+        return view('member.profil',['MasterPendidikan' => $MasterPendidikan, 'Mjk'=>$Mjk,
+        'MasterLayananPST'=>$MasterLayananPST,'MasterTujuan'=>$MasterTujuan]);
     }
     public function UpdateProfil(Request $request)
     {
@@ -656,46 +670,42 @@ class MemberController extends Controller
         bio_pekerjaan_detil: bio_pekerjaan_detil
         */
         //cek email dan nomor telepon tidak boleh sama
-        $cekData = Mtamu::where('email',trim($request->bio_email))->orWhere('telepon',trim($request->bio_telepon))->first();
-        $data = Mtamu::where('id',$request->bio_tamu_id)->first();
+        $cekData = Pengunjung::where('pengunjung_email',trim($request->bio_email))->orWhere('pengunjung_nomor_hp',trim($request->bio_nomor_hp))->first();
+        $data = Pengunjung::where('pengunjung_id',$request->bio_tamu_id)->first();
         $arr = array(
             'status'=>false,
-            'hasil'=>'data pengunjung ('.trim($request->bio_nama_lengkap).'), E-Mail ('.trim($request->bio_email).') atau Nomor HP ('.trim($request->bio_telepon).') sudah digunakan/biodata tidak ditemukan'
+            'hasil'=>'data pengunjung ('.trim($request->bio_nama).'), E-Mail ('.trim($request->bio_email).') atau Nomor HP ('.trim($request->bio_nomor_hp).') sudah digunakan/biodata tidak ditemukan'
         );
-        if ($data && (!$cekData or ($cekData && $cekData->id == Auth::user()->tamu_id)))
+        if ($data && (!$cekData or ($cekData && $cekData->pengunjung_id == Auth::user()->tamu_id)))
         {
             //update data member
-            $data->id_midentitas = $request->bio_jenis_identitas;
-            $data->nomor_identitas = $request->bio_nomor_identitas;
-            $data->nama_lengkap = $request->bio_nama_lengkap;
-            $data->tgl_lahir = $request->bio_tgl_lahir;
-            $data->id_jk = $request->bio_id_jk;
-            $data->id_mkerja = $request->bio_id_kerja;
-            $data->kerja_detil = $request->bio_pekerjaan_detil;
-            $data->id_mdidik = $request->bio_id_mdidik;
-            $data->id_mwarga = $request->bio_mwarga;
-            $data->email = $request->bio_email;
-            $data->telepon = $request->bio_telepon;
-            $data->alamat = $request->bio_alamat;
+            $data->pengunjung_nama = $request->bio_nama;
+            $data->pengunjung_tahun_lahir = $request->bio_tahun_lahir;
+            $data->pengunjung_jk = $request->bio_jk;
+            $data->pengunjung_pekerjaan = $request->bio_pekerjaan;
+            $data->pengunjung_pendidikan = $request->bio_pendidikan;
+            $data->pengunjung_email = $request->bio_email;
+            $data->pengunjung_nomor_hp = $request->bio_nomor_hp;
+            $data->pengunjung_alamat = $request->bio_alamat;
             $data->update();
             $arr = array(
                 'status'=>true,
-                'hasil'=>'Biodata pengunjung an. '.$request->bio_nama_lengkap.' berhasil diupdate'
+                'hasil'=>'Biodata pengunjung an. '.$request->bio_nama.' berhasil diupdate'
             );
         }
         return Response()->json($arr);
     }
     public function KaitkanMember(Request $request)
     {
-        $data = Mtamu::where('kode_qr',$request->kodeqr)->first();
+        $data = Pengunjung::where('pengunjung_uid',$request->kodeqr)->first();
         $arr = array(
             'status'=>false,
             'hasil'=>'Data pengunjung tidak tersedia/sudah dikaitkan'
         );
-        if ($data && ($data->user_id == 0))
+        if ($data && ($data->pengunjung_user_id == 0 || $request->paksakaitkan == "1"))
         {
             //update Mtamu
-            $data->user_id = trim($request->user_id);
+            $data->pengunjung_user_id = trim($request->user_id);
             $data->update();
             //update User
             $data_user = User::where('id',$request->user_id)->first();
@@ -709,19 +719,19 @@ class MemberController extends Controller
                 //Storage::disk('public')->put($nama_file, Storage::get('/'.$data->tamu_foto));
                 //$data_foto = Storage::disk('public')->get($data->tamu_foto);
                 //cek dulu foto profil yg mau dicopy ada tidak file nya
-                if (Storage::disk('public')->exists($data->tamu_foto))
+                if (Storage::disk('public')->exists($data->pengunjung_foto_profil))
                 {
                     $nama_file_member = '/img/member/member_foto_'.$request->user_id.'.png';
                     $data_user->user_foto = $nama_file_member;
-                    Storage::disk('public')->put($nama_file_member, Storage::disk('public')->get($data->tamu_foto));
+                    Storage::disk('public')->put($nama_file_member, Storage::disk('public')->get($data->pengunjung_foto_profil));
                 }
             }
-            $data_user->tamu_id = $data->id;
+            $data_user->tamu_id = $data->pengunjung_id;
             $data_user->update();
 
             $arr = array(
                 'status'=>true,
-                'hasil'=>'Data member an. <b>'.Auth::user()->name.'</b> berhasil dikaitkan ke '.$data->nama_lengkap,
+                'hasil'=>'Data member an. <b>'.Auth::user()->name.'</b> berhasil dikaitkan ke '.$data->pengunjung_nama,
             );
         }
         #dd($request->all());
@@ -733,12 +743,12 @@ class MemberController extends Controller
             'status'=>false,
             'hasil'=>'Data pengunjung tidak tersedia/sudah dikaitkan'
         );
-        $data = Mtamu::where('kode_qr',$request->kodeqr)->first();
-        if ($data && ($data->user_id != 0))
+        $data = Pengunjung::where('pengunjung_uid',$request->kodeqr)->first();
+        if ($data && ($data->pengunjung_user_id != 0))
         {
             //akan dieksekusi kalo user_id di data mtamu tidak nol
             //update Mtamu
-            $data->user_id = 0;
+            $data->pengunjung_user_id = 0;
             $data->update();
             //update user
             $data_user = User::where('id',$request->id)->first();
@@ -759,12 +769,12 @@ class MemberController extends Controller
             'status'=>false,
             'hasil'=>'Data pengunjung tidak tersedia'
         );
-        $data = Mtamu::where('id',$request->tamuid)->first();
-        if ($data && ($data->user_id != 0))
+        $data = Pengunjung::where('pengunjung_id',$request->tamuid)->first();
+        if ($data && ($data->pengunjung_user_id != 0))
         {
             //akan dieksekusi kalo user_id di data mtamu tidak nol
             //update Mtamu
-            $data->user_id = 0;
+            $data->pengunjung_user_id = 0;
             $data->update();
             //update user
             $data_user = User::where('id',$request->id)->first();

@@ -4,19 +4,23 @@ $('#ViewMemberModal').on('show.bs.modal', function (event) {
     var userid = button.data('id')
     //load dulu transaksinya
     $.ajax({
-        url : '{{route("member.cari","")}}/'+userid,
+        url : '{{route("webapi")}}',
         method : 'get',
+        data: {
+            model:'member',
+            id: userid
+        },
         cache: false,
         dataType: 'json',
-        success: function(data){
-            if (data.status == true)
+        success: function(d){
+            if (d.status == true)
             {
-                $('#ViewMemberModal .modal-body #member_nama').text(data.hasil.name)
-                $('#ViewMemberModal .modal-body #member_username').text(data.hasil.username)
-                $('#ViewMemberModal .modal-body #member_telepon').text(data.hasil.telepon)
-                if (data.hasil.telepon != null)
+                $('#ViewMemberModal .modal-body #member_nama').text(d.data.name)
+                $('#ViewMemberModal .modal-body #member_username').text(d.data.username)
+                $('#ViewMemberModal .modal-body #member_telepon').text(d.data.telepon)
+                if (d.data.telepon != null)
                 {
-                    var member_telepon = data.hasil.telepon.substr(1);
+                    var member_telepon = d.data.telepon.substr(1);
                     var member_wa = "http://wa.me/62"+member_telepon;
                 }
                 else
@@ -24,12 +28,12 @@ $('#ViewMemberModal').on('show.bs.modal', function (event) {
                     var member_wa = "#";
                 }
                 $('#ViewMemberModal .modal-body #member_wa').attr("href",member_wa)
-                $('#ViewMemberModal .modal-body #member_level').text(data.hasil.level_nama)
+                $('#ViewMemberModal .modal-body #member_level').text(d.data.m_level.nama)
                 //lastlogin di cek dan lastip
-                if (data.hasil.lastlogin != null)
+                if (d.data.lastlogin != null)
                 {
-                    $('#ViewMemberModal .modal-body #member_lastlogin').text(data.hasil.lastlogin_nama)
-                    $('#ViewMemberModal .modal-body #member_lastip').text(data.hasil.lastip)
+                    $('#ViewMemberModal .modal-body #member_lastlogin').text(d.data.lastlogin)
+                    $('#ViewMemberModal .modal-body #member_lastip').text(d.data.lastip)
                     $('#ViewMemberModal .modal-body #member_lastlogin').addClass('normal')
                     $('#ViewMemberModal .modal-body #member_lastip').addClass('normal')
                     $('#ViewMemberModal .modal-body #member_lastlogin').removeClass('miring')
@@ -44,10 +48,18 @@ $('#ViewMemberModal').on('show.bs.modal', function (event) {
                     $('#ViewMemberModal .modal-body #member_lastlogin').removeClass('normal')
                     $('#ViewMemberModal .modal-body #member_lastip').removeClass('normal')
                 }
-                $('#ViewMemberModal .modal-body #member_flag').text(data.hasil.flag_nama)
-                $('#ViewMemberModal .modal-body #member_created').text(data.hasil.created_at_nama)
-                $('#ViewMemberModal .modal-body #member_updated').text(data.hasil.updated_at_nama)
-                if (data.hasil.tamu_id == 0)
+                $('#ViewMemberModal .modal-body #member_flag').text(d.data.flag)
+                $('#ViewMemberModal .modal-body #member_created').text(d.data.created_at)
+                $('#ViewMemberModal .modal-body #member_updated').text(d.data.updated_at)
+                if (d.data.user_foto != null)
+                    {
+                        $('#ViewMemberModal .modal-body #member_foto').attr("src",'{{asset("storage")}}'+d.data.user_foto)
+                    }
+                    else
+                    {
+                        $('#ViewMemberModal .modal-body #member_foto').attr("src","https://placehold.co/480x360/0000FF/FFFFFF/?text=belum+ada+photo")
+                    }
+                if (d.data.tamu_id == 0)
                 {
                     $('#ViewMemberModal .modal-body #tamu').toggle(false);
                     $('#ViewMemberModal .modal-body #tamu_id').text("belum terkoneksi")
@@ -57,63 +69,63 @@ $('#ViewMemberModal').on('show.bs.modal', function (event) {
                 else
                 {
                     $('#ViewMemberModal .modal-body #tamu').toggle(true);
-                    $('#ViewMemberModal .modal-body #tamu_id').text(data.hasil.tamu_id)
+                    $('#ViewMemberModal .modal-body #tamu_id').text('#'+d.data.tamu_id)
+                    $('#ViewMemberModal .modal-body #pengunjung_id').text('#'+d.data.tamu_id)
                     $('#ViewMemberModal .modal-body #tamu_id').addClass('normal')
                     $('#ViewMemberModal .modal-body #tamu_id').removeClass('miring')
                     //sudah terkoneksi pengunjung
-                    $('#ViewMemberModal .modal-body #tamu_nama').text(data.hasil.pengunjung.hasil.nama_lengkap)
-                    @if (Auth::user())
-                    $('#ViewMemberModal .modal-body #tamu_kode').text(data.hasil.pengunjung.hasil.kode_qr)
-                    $('#ViewMemberModal .modal-body #tamu_identitas').text(data.hasil.pengunjung.hasil.nomor_identitas+' ('+ data.hasil.pengunjung.hasil.id_identitas_nama +')')
-                    @endif
-                    $('#ViewMemberModal .modal-body #tamu_jk').text(data.hasil.pengunjung.hasil.nama_jk)
-                    $('#ViewMemberModal .modal-body #tamu_lahir').text(data.hasil.pengunjung.hasil.tgl_lahir_nama+' ('+ data.hasil.pengunjung.hasil.umur + ' tahun)')
-                    $('#ViewMemberModal .modal-body #tamu_kerja').text(data.hasil.pengunjung.hasil.nama_kerja)
-                    $('#ViewMemberModal .modal-body #kerja_detil').text(data.hasil.pengunjung.hasil.kerja_detil)
-                    $('#ViewMemberModal .modal-body #kat_kerja_nama').text(data.hasil.pengunjung.hasil.kat_kerja_nama)
-                    $('#ViewMemberModal .modal-body #tamu_pendidikan').text(data.hasil.pengunjung.hasil.nama_mdidik)
-                    //$('#ViewMemberModal .modal-body #tamu_warga').text(data.hasil.nama_mwarga)
-                    $('#ViewMemberModal .modal-body #tamu_email').text(data.hasil.pengunjung.hasil.email)
-                    $('#ViewMemberModal .modal-body #tamu_telepon').text(data.hasil.pengunjung.hasil.telepon)
-                    if (data.hasil.pengunjung.hasil.telepon != null)
+                    $('#ViewMemberModal .modal-body #pengunjung_nama').text(d.data.pengunjung.pengunjung_nama)
+                    $('#ViewMemberModal .modal-body #pengunjung_uid').text(d.data.pengunjung.pengunjung_uid)
+                    $('#ViewMemberModal .modal-body #pengunjung_jk').text(d.data.pengunjung.jenis_kelamin.nama)
+                    $('#ViewMemberModal .modal-body #pengunjung_tahun_lahir').text(d.data.pengunjung.pengunjung_tahun_lahir)
+                    $('#ViewMemberModal .modal-body #pengunjung_pekerjaan').text(d.data.pengunjung.pengunjung_pekerjaan)
+                    $('#ViewMemberModal .modal-body #pengunjung_pendidikan').text(d.data.pengunjung.pendidikan.nama)
+                    $('#ViewMemberModal .modal-body #pengunjung_email').text(d.data.pengunjung.pengunjung_email)
+                    $('#ViewMemberModal .modal-body #pengunjung_nomor_hp').text(d.data.pengunjung.pengunjung_nomor_hp)
+                    if (d.data.pengunjung.pengunjung_nomor_hp != null)
                     {
-                        var tamu_telpon = data.hasil.pengunjung.hasil.telepon.substr(1);
+                        var tamu_telpon = d.data.pengunjung.pengunjung_nomor_hp.substr(1);
                         var tamu_wa = "http://wa.me/62"+tamu_telpon;
                     }
                     else
                     {
                         var tamu_wa = "#";
                     }
-                    $('#ViewMemberModal .modal-body #tamu_wa').attr("href",tamu_wa)
-                    $('#ViewMemberModal .modal-body #tamu_alamat').text(data.hasil.pengunjung.hasil.alamat)
-                    if (data.hasil.pengunjung.hasil.url_foto != null)
+                    $('#ViewMemberModal .modal-body #pengunjung_wa').attr("href",tamu_wa)
+                    $('#ViewMemberModal .modal-body #pengunjung_alamat').text(d.data.pengunjung.pengunjung_alamat)
+                    if (d.data.pengunjung.pengunjung_foto_profil != null)
                     {
-                        $('#ViewMemberModal .modal-body #tamu_foto').attr("src",'{{asset("storage")}}'+data.hasil.pengunjung.hasil.url_foto)
+                        $('#ViewMemberModal .modal-body #pengunjung_foto').attr("src",'{{asset("storage")}}'+d.data.pengunjung.pengunjung_foto_profil)
                     }
                     else
                     {
-                        $('#ViewMemberModal .modal-body #tamu_foto').attr("src","https://via.placeholder.com/480x360/0000FF/FFFFFF/?text=belum+ada+photo")
+                        $('#ViewMemberModal .modal-body #pengunjung_foto').attr("src","https://placehold.co/480x360/0000FF/FFFFFF/?text=belum+ada+photo")
                     }
-                    if (data.hasil.pengunjung.hasil.kunjungan.status == true)
+                    if (d.data.pengunjung.kunjungan.length > 0)
                     {
                         var teks = "";
-                        var tmax = data.hasil.pengunjung.hasil.kunjungan.jumlah;
-                        if (tmax > 10)
+                        //var tmax = d.data.kunjungan.length;
+                        if (d.data.pengunjung.kunjungan.length > 10)
                         {
+                            //mulai dari 0 , max list 10 record jadi tmax 9
                             var tmax = 10;
                         }
+                        else
+                        {
+                            var tmax = d.data.pengunjung.kunjungan.length;
+                        }
                         var i;
-                        var kunjungan = data.hasil.pengunjung.hasil.kunjungan.hasil;
+                        var kunjungan = d.data.pengunjung.kunjungan;
                         for (i = 0; i < tmax; i++) {
-                            teks +=  "🟢 <strong>" + kunjungan[i].tanggal_nama + "</strong> ("+ kunjungan[i].keperluan +")<br />";
+                            teks +=  "🟢 <strong>" + kunjungan[i].kunjungan_tanggal + "</strong> ("+ kunjungan[i].kunjungan_keperluan +")<br />";
                         }
                         $('#ViewMemberModal .modal-body #kunjungan_terakhir').html(teks)
                     }
                     else
                     {
-                        $('#ViewMemberModal .modal-body #kunjungan_terakhir').text(data.hasil.pengunjung.hasil.kunjungan.hasil);
+                        $('#ViewMemberModal .modal-body #kunjungan_terakhir').text('tidak ada kunjungan');
                     }
-                    $('#ViewMemberModal .modal-body #tamu_timeline').attr("href","{{route('tamu.detil','')}}/"+data.hasil.pengunjung.hasil.kode_qr)
+                    $('#ViewMemberModal .modal-body #pengunjung_timeline').attr("href","{{route('timeline','')}}/"+d.data.pengunjung.pengunjung_uid)
                     //batasan sudah terkoneksi
                 }
             }

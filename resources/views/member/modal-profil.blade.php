@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-success">
-                <h4 class="modal-title text-white" id="KaitkanModal">Kaitkan Akun Pengunjung</h4>
+                <h4 class="modal-title text-white" id="title">Kaitkan Akun Pengunjung</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
@@ -36,7 +36,14 @@
                                 <label class="custom-control-label" for="gantiphoto">Photo profil diganti</label>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" name="PaksaKaitkan" class="custom-control-input" id="PaksaKaitkan" value="1" disabled>
+                                <label class="custom-control-label" for="PaksaKaitkan">Paksa Kaitkan</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <span id="kaitkan_error" class="text-danger"></span>

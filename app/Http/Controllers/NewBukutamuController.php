@@ -87,7 +87,7 @@ class NewBukutamuController extends Controller
                     //login sebagai pengunjung
                     //load mtamu
                     if (Auth::user()->level == 1 and Auth::user()->tamu_id != 0) {
-                        $dataTamu = Mtamu::where('id', Auth::user()->tamu_id)->first();
+                        $dataTamu = Pengunjung::where('pengunjung_id', Auth::user()->tamu_id)->first();
                     } else {
                         $dataTamu = '';
                     }
@@ -1364,7 +1364,8 @@ class NewBukutamuController extends Controller
         */
         $arr = array(
             'status'=>false,
-            'message'=>'Data tidak tersedia'
+            'message'=>'Data tidak tersedia',
+            'data'=>'Webapi Bukutamu v3.0'
         );
         if ($request->model == "hp")
         {
@@ -1403,7 +1404,29 @@ class NewBukutamuController extends Controller
             }
 
         }
+        if ($request->model == "member")
+        {
+            //member/users
+            $data = User::with('mLevel','Pengunjung','Pengunjung.Pendidikan','Pengunjung.JenisKelamin','Pengunjung.Kunjungan','Pengunjung.Kunjungan.Tujuan','Pengunjung.Kunjungan.JenisKunjungan','Pengunjung.Kunjungan.LayananUtama','Pengunjung.Kunjungan.FlagAntrian')->where('id',$request->id)->first();
+            //$data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_uid',$request->uid)->first();
+            if ($data)
+            {
+                $arr = array(
+                    'status'=>true,
+                    'message'=>'Data tersedia',
+                    'data'=>$data
+                );
+            }
+            else
+            {
+                $arr = array(
+                    'status'=>false,
+                    'message'=>'Data tidak tersedia',
+                    'data'=>null
+                );
+            }
 
+        }
         if ($request->model == "kunjungan")
         {
             //kunjungan

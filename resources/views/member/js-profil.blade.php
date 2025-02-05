@@ -115,11 +115,21 @@ $('#UpdateProfil').on('click', function(e) {
         }
     }
 });
+$('#KaitkanModal .modal-body #PaksaKaitkan').on('change', function() {
+    if ($(this).prop('checked'))
+    {
+        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', false);
+    }
+    else
+    {
+        $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+    }
+});
 //kodeqr button click
 $('#KaitkanModal .modal-body #cek_kodeqr').on('click', function(e) {
     e.preventDefault();
     var kodeqr = $('#KaitkanModal .modal-body #kodeqr').val();
-    var user_id = $('#KaitkanModal .modal-body #user_id').val();
+    var pengunjung_id = $('#KaitkanModal .modal-body #user_id').val();
     if (kodeqr == "")
     {
         $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR harus terisi');
@@ -130,26 +140,33 @@ $('#KaitkanModal .modal-body #cek_kodeqr').on('click', function(e) {
     {
         //load ajax get
         $.ajax({
-        url : '{{route("pengunjung.cari","")}}/'+kodeqr,
+        url : '{{route("webapi")}}',
         method : 'get',
+        data: {
+            model: 'pengunjung',
+            uid: kodeqr
+        },
         cache: false,
         dataType: 'json',
-        success: function(data){
-            if (data.status == true)
+        success: function(d){
+            if (d.status == true)
             {
                 //cek dulu apakah sudah dikaitkan?
-                if (data.hasil.member.status == true)
+                $('#KaitkanModal .modal-body #nomor_hp').val(d.data.pengunjung_nomor_hp)
+                if (d.data.pengunjung_user_id > 0)
                 {
-                    $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR sudah dikaitkan dengan member lain, nama '+data.hasil.member.hasil.name);
+                    $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR sudah dikaitkan dengan member lain, nama '+d.data.member.name);
                     $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
                     $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+                    $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', false);
                     return false;
                 }
                 else
                 {
-                    $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR ditemukan, nama '+data.hasil.nama_lengkap);
+                    $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR ditemukan, nama '+d.data.pengunjung_nama);
                     $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-success').removeClass('text-danger');
                     $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', false);
+                    $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', false);
                     return false;
                 }
 
@@ -159,11 +176,16 @@ $('#KaitkanModal .modal-body #cek_kodeqr').on('click', function(e) {
                 $('#KaitkanModal .modal-body #kaitkan_error').text('Kode QR ('+kodeqr+') tidak ditemukan');
                 $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
                 $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+                $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', true);
                 return false;
             }
         },
         error: function(){
-            alert("error load modal");
+            Swal.fire(
+                    'Error',
+                    'Koneksi Error',
+                    'error'
+                );
         }
 
         });
@@ -181,6 +203,7 @@ $('#KaitkanModal .modal-body #cek_hp').on('click', function(e) {
         $('#KaitkanModal .modal-body #kaitkan_error').text('isian nomor hp harus terisi');
         $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
         $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+        $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', true);
         return false;
     }
     else
@@ -206,14 +229,17 @@ $('#KaitkanModal .modal-body #cek_hp').on('click', function(e) {
                 $('#KaitkanModal .modal-body #kodeqr').val(d.data.pengunjung_uid)
                 $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-success').removeClass('text-danger');
                 $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', false);
+                $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', false);
                 return false;
 
             }
             else
             {
-                $('#KaitkanModal .modal-body #kaitkan_error').text('Nomor HP sudah dikaitkan dengan member lain, nama '+d.data.member.name);
+                $('#KaitkanModal .modal-body #kaitkan_error').text('Nomor HP ditemukan dan sudah dikaitkan dengan member lain, nama '+d.data.member.name);
+                $('#KaitkanModal .modal-body #kodeqr').val(d.data.pengunjung_uid)
                 $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
                 $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+                $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', false);
                 return false;
             }
 
@@ -222,6 +248,7 @@ $('#KaitkanModal .modal-body #cek_hp').on('click', function(e) {
             $('#KaitkanModal .modal-body #kaitkan_error').text(d.message);
             $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
             $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+            $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', true);
             return false;
 
         }
@@ -230,6 +257,7 @@ $('#KaitkanModal .modal-body #cek_hp').on('click', function(e) {
         $('#KaitkanModal .modal-body #kaitkan_error').text('error koneksi ke server');
         $('#KaitkanModal .modal-body #kaitkan_error').addClass('text-danger').removeClass('text-success');
         $('#KaitkanModal .modal-footer #KaitkanPengunjung').prop('disabled', true);
+        $('#KaitkanModal .modal-body #PaksaKaitkan').prop('disabled', true);
         return false;
     }
 
@@ -244,6 +272,7 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
     var kodeqr = $('#KaitkanModal .modal-body #kodeqr').val();
     var user_id = $('#KaitkanModal .modal-body #user_id').val();
     var check_gantiphoto = $('#KaitkanModal .modal-body #gantiphoto').is(':checked');
+    var check_paksakaitkan = $('#KaitkanModal .modal-body #PaksaKaitkan').is(':checked');
     if (check_gantiphoto == true)
     {
         var gantiphoto = 1;
@@ -251,6 +280,14 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
     else
     {
         var gantiphoto = 0;
+    }
+    if (check_paksakaitkan == true)
+    {
+        var paksakaitkan = 1;
+    }
+    else
+    {
+        var paksakaitkan = 0;
     }
     if (kodeqr == "")
     {
@@ -272,7 +309,8 @@ $('#KaitkanModal .modal-footer #KaitkanPengunjung').on('click', function(e) {
             data: {
                 user_id: user_id,
                 kodeqr: kodeqr,
-                gantiphoto: gantiphoto
+                gantiphoto: gantiphoto,
+                paksakaitkan: paksakaitkan
             },
             cache: false,
             dataType: 'json',
@@ -525,65 +563,51 @@ $('#UpdatePasswd').on('click', function(e) {
 //update biodata clik
 $('#UpdateBiodata').on('click', function(e) {
     e.preventDefault();
-    var bio_id = $('#bio_id').val();
+    /*
+    $data->pengunjung_nama = $request->bio_nama;
+            $data->pengunjung_tahun_lahir = $request->bio_tahun_lahir;
+            $data->pengunjung_jk = $request->bio_jk;
+            $data->pengunjung_pekerjaan = $request->bio_pekerjaan;
+            $data->pengunjung_pendidikan = $request->bio_pendidikan;
+            $data->pengunjung_email = $request->bio_email;
+            $data->pengunjung_nomor_hp = $request->bio_nomor_hp;
+            $data->pengunjung_alamat = $request->bio_alamat;
+    */
+    var bio_user_id = $('#bio_user_id').val();
     var bio_tamu_id = $('#bio_tamu_id').val();
-    var bio_jenis_identitas = $('#bio_jenis_identitas').val();
-    var bio_nomor_identitas = $('#bio_nomor_identitas').val();
-    var bio_nama_lengkap = $('#bio_nama_lengkap').val();
-    var bio_id_jk = $('#bio_id_jk').val();
-    var bio_tgl_lahir = $('#bio_tgl_lahir').val();
+    var bio_nama = $('#bio_nama').val();
+    var bio_jk = $('#bio_jk').val();
+    var bio_tahun_lahir = $('#bio_tahun_lahir').val();
     var bio_email = $('#bio_email').val();
-    var bio_telepon = $('#bio_telepon').val();
-    var bio_mwarga = $('#bio_mwarga').val();
+    var bio_nomor_hp = $('#bio_nomor_hp').val();
     var bio_alamat = $('#bio_alamat').val();
-    var bio_id_mdidik = $('#bio_id_mdidik').val();
-    var bio_id_kerja = $('#bio_id_kerja').val();
-    var bio_kat_kerja = $('#bio_kat_kerja').val();
-    var bio_pekerjaan_detil = $('#bio_pekerjaan_detil').val();
+    var bio_pendidikan = $('#bio_pendidikan').val();
+    var bio_pekerjaan = $('#bio_pekerjaan').val();
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (bio_jenis_identitas == "")
-    {
-        $('#formEditBiodata #bio_update_error').text('Pilih salah satu Jenis Identitas');
-        return false;
-    }
-    else if (bio_nomor_identitas == "")
-    {
-        $('#formEditBiodata #bio_update_error').text('Nomor identitas harus terisi');
-        return false;
-    }
-    else if (bio_nama_lengkap == "")
+
+    if (bio_nama == "")
     {
         $('#formEditBiodata #bio_update_error').text('Nama lengkap harus terisi');
         return false;
     }
-    else if (bio_id_jk == "")
+    else if (bio_jk == "")
     {
         $('#formEditBiodata #bio_update_error').text('Pilih salah satu Jenis Kelamin');
         return false;
     }
-    else if (bio_tgl_lahir == "")
+    else if (bio_tahun_lahir == "")
     {
-        $('#formEditBiodata #bio_update_error').text('Tanggal lahir harus terisi');
+        $('#formEditBiodata #bio_update_error').text('Tahun lahir harus terisi');
         return false;
     }
-    else if (bio_email == "")
-    {
-        $('#formEditBiodata #bio_update_error').text('Email harus terisi');
-        return false;
-    }
-    else if (!bio_email.match(mailformat))
+    else if (bio_email != "" && !bio_email.match(mailformat))
     {
         $('#formEditBiodata #bio_update_error').text('Format email tidak sesuai');
         return false;
     }
-    else if (bio_telepon == "")
+    else if (bio_nomor_hp == "")
     {
-        $('#formEditBiodata #bio_update_error').text('Telepon harus terisi');
-        return false;
-    }
-    else if (bio_mwarga == "")
-    {
-        $('#formEditBiodata #bio_update_error').text('Pilih salah satu kewarganegaraan');
+        $('#formEditBiodata #bio_update_error').text('Nomor HP harus terisi');
         return false;
     }
     else if (bio_alamat == "")
@@ -591,24 +615,14 @@ $('#UpdateBiodata').on('click', function(e) {
         $('#formEditBiodata #bio_update_error').text('Alamat harus terisi');
         return false;
     }
-    else if (bio_id_mdidik == "")
+    else if (bio_pendidikan == "")
     {
         $('#formEditBiodata #bio_update_error').text('Pilih salah satu pendidikan');
         return false;
     }
-    else if (bio_id_kerja == "")
+    else if (bio_pekerjaan == "")
     {
-        $('#formEditBiodata #bio_update_error').text('Pilih salah satu pekerjaan');
-        return false;
-    }
-    else if (bio_kat_kerja == "")
-    {
-        $('#formEditBiodata #bio_update_error').text('Pilih salah satu jenis pekerjaan');
-        return false;
-    }
-    else if (bio_pekerjaan_detil == "")
-    {
-        $('#formEditBiodata #bio_update_error').text('Detil perkerjaan harus terisi');
+        $('#formEditBiodata #bio_update_error').text('Isian pekerjaan harus terisi');
         return false;
     }
     else
@@ -623,21 +637,16 @@ $('#UpdateBiodata').on('click', function(e) {
                 url : '{{route('member.updatebiodata')}}',
                 method : 'post',
                 data: {
-                    bio_id: bio_id,
+                    bio_user_id: bio_user_id,
                     bio_tamu_id: bio_tamu_id,
-                    bio_jenis_identitas: bio_jenis_identitas,
-                    bio_nomor_identitas: bio_nomor_identitas,
-                    bio_nama_lengkap: bio_nama_lengkap,
-                    bio_id_jk: bio_id_jk,
-                    bio_tgl_lahir: bio_tgl_lahir,
+                    bio_nama: bio_nama,
+                    bio_jk: bio_jk,
+                    bio_tahun_lahir: bio_tahun_lahir,
                     bio_email: bio_email,
-                    bio_telepon: bio_telepon,
-                    bio_mwarga: bio_mwarga,
+                    bio_nomor_hp: bio_nomor_hp,
                     bio_alamat: bio_alamat,
-                    bio_id_mdidik: bio_id_mdidik,
-                    bio_id_kerja: bio_id_kerja,
-                    bio_kat_kerja: bio_kat_kerja,
-                    bio_pekerjaan_detil: bio_pekerjaan_detil
+                    bio_pendidikan: bio_pendidikan,
+                    bio_pekerjaan: bio_pekerjaan,
                 },
                 cache: false,
                 dataType: 'json',
