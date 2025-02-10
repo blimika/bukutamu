@@ -111,6 +111,7 @@ Route::get('/newdisplay', 'NewBukutamuController@DisplayAntrian')->name('newdisp
 Route::get('/newdepan', 'NewBukutamuController@NewDepan')->name('newdepan');
 Route::get('/kunjungan/feeedback/{uid}', 'NewBukutamuController@NewFeedback')->name('kunjungan.feedback');
 Route::get('/kalendar', 'NewBukutamuController@JadwalJaga')->name('kalendar');
+Route::get('/newlaporan', 'NewBukutamuController@NewLaporan')->name('newlaporan');
 //batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');

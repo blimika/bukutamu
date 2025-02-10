@@ -1641,4 +1641,17 @@ class NewBukutamuController extends Controller
         $data_jadwal = json_encode($arr);
         return view('newbukutamu.kalendar',['data_jadwal'=>$data_jadwal]);
     }
+    public function NewLaporan(Request $request)
+    {
+        if (request('tahun') == NULL) {
+            $tahun_filter = Carbon::today()->format('Y');
+        } else {
+            $tahun_filter = request('tahun');
+        }
+        $data = \DB::table('bulan')
+        ->leftJoin(\DB::Raw("(select month(kunjungan_tanggal) as bln_total, count(*) as jumlah_kunjungan, sum(kunjungan_jumlah_orang) as jumlah_total, sum(kunjungan_jumlah_pria) as jumlah_laki, sum(kunjungan_jumlah_wanita) as jumlah_wanita from m_new_kunjungan where year(kunjungan_tanggal)='".$tahun_filter."' GROUP by bln_total) as total"),'bulan.id','=','total.bln_total')
+        ->select(\DB::Raw('nama_bulan,nama_bulan_pendek,COALESCE(jumlah_kunjungan,0) as jumlah_kunjungan, COALESCE(jumlah_total,0) as jumlah_total, COALESCE(jumlah_laki,0) as jumlah_laki, COALESCE(jumlah_wanita,0) as jumlah_wanita'))->get();
+        //dd($data);
+        return view('newbukutamu.laporan',['data'=>$data,'tahun'=>$tahun_filter]);
+    }
 }

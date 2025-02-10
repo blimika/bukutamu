@@ -59,6 +59,7 @@
                         class="ti-align-left"></i><span class="hide-menu">Kunjungan</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ route('laporan.newpengunjung') }}">Laporan</a></li>
+                        <li><a href="{{ route('newlaporan') }}">New Laporan</a></li>
                         @if (Generate::CekAkses(\Request::getClientIp(true)))
                             @if (Auth::user())
                                 @if (Auth::user()->level > 5)
