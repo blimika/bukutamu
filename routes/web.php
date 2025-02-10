@@ -227,6 +227,9 @@ Route::group(['middleware' => ['auth']], function () {
     //hapus pengunjung
     Route::post('/pengunjung/hapus', 'NewBukutamuController@HapusPengunjung')->name('pengunjung.delete');
     Route::post('/pengunjung/save', 'NewBukutamuController@PengunjungSave')->name('pengunjung.save');
+    //import whatsapp
+    Route::get('/wa/format', 'NewBukutamuController@WhatsappFormat')->name('wa.format');
+    Route::post('/wa/format', 'NewBukutamuController@WhatsappFormat')->name('wa.format');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

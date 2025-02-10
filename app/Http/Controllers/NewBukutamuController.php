@@ -34,6 +34,9 @@ use App\Kunjungan;
 use App\FlagAntrian;
 use App\Mail\KirimFeedback;
 use App\Mjkunjungan;
+use App\Exports\FormatJadwal;
+use App\Imports\ImportJadwalPetugas;
+use Excel;
 
 class NewBukutamuController extends Controller
 {
@@ -1653,5 +1656,29 @@ class NewBukutamuController extends Controller
         ->select(\DB::Raw('nama_bulan,nama_bulan_pendek,COALESCE(jumlah_kunjungan,0) as jumlah_kunjungan, COALESCE(jumlah_total,0) as jumlah_total, COALESCE(jumlah_laki,0) as jumlah_laki, COALESCE(jumlah_wanita,0) as jumlah_wanita'))->get();
         //dd($data);
         return view('newbukutamu.laporan',['data'=>$data,'tahun'=>$tahun_filter]);
+    }
+    public function WhatsappFormat()
+    {
+        $fileName = 'format-whatsapp-';
+        $data = [
+            [
+                //'tahun_matrik' => null,
+                'tanggal_kunjungan' => 'Format : YYYY-MM-DD',
+                'nama' => 'nama lengkap',
+                'nomor_hp' => 'format 08xxxx',
+                'tahun_lahir' => 'hanya angka tahun',
+                'pekerjaan' => 'teks',
+                'pendidikan' => '1=sma, 2=diploma, 3=sarjana, 4=magister, 5=doctor',
+                'alamat' => 'teks',
+                'permintaan' => 'teks',
+                'tindak_lanjut' => 'teks'
+            ]
+        ];
+        $namafile = $fileName . date('Y-m-d_H-i-s') . '.xlsx';
+        return Excel::download(new FormatJadwal($data), $namafile);
+    }
+    public function WhatsappImport(Request $request)
+    {
+
     }
 }
