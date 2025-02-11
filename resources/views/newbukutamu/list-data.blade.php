@@ -43,7 +43,7 @@
                                 <a href="{{ route('wa.format') }}" class="btn btn-info">
                                     <i class="ti-export"></i> &nbsp;Format Import</a>
                                 <a href="javascript:void(0)" class="btn btn-success m-l-15" data-toggle="modal"
-                                    data-target="#ImportJadwalModal"><i class="ti-import"></i> Data WhatsApp</a>
+                                    data-target="#ImportDataWhatsapp"><i class="ti-import"></i> Import Data</a>
                             @endif
                         </div>
                     </div>
@@ -106,6 +106,7 @@
     @include('newbukutamu.modal-tindaklanjut')
     @include('newbukutamu.modal-tujuan')
     @include('newbukutamu.modal-jenis')
+    @include('newbukutamu.modal-whatsapp')
 @endsection
 
 @section('css')
@@ -487,4 +488,5 @@
     </script>
     @include('newbukutamu.js-kunjungan')
     @include('newbukutamu.js-feedback')
+    @include('newbukutamu.js-importdatawa')
 @stop

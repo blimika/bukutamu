@@ -66,7 +66,7 @@
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">SC Photo</label>
                                 <div class="col-md-9" id="photo_error">
-                                    <input type="file" class="dropify" data-height="400" id="kunjungan_foto" name="kunjungan_foto" accept="image/*" required>
+                                    <input type="file" class="dropify" data-height="400" id="kunjungan_foto" name="kunjungan_foto" data-max-file-size="2M" accept="image/*" required>
                                 </div>
                             </div>
                             <h3 class="card-title">Kanal Permintaan</h3>

@@ -35,7 +35,7 @@ use App\FlagAntrian;
 use App\Mail\KirimFeedback;
 use App\Mjkunjungan;
 use App\Exports\FormatJadwal;
-use App\Imports\ImportJadwalPetugas;
+use App\Imports\ImportDataWhatsapp;
 use Excel;
 
 class NewBukutamuController extends Controller
@@ -1665,11 +1665,14 @@ class NewBukutamuController extends Controller
                 //'tahun_matrik' => null,
                 'tanggal_kunjungan' => 'Format : YYYY-MM-DD',
                 'nama' => 'nama lengkap',
+                'jk' => 'Jenis Kelamin, 1 = pria, 2=wanita',
                 'nomor_hp' => 'format 08xxxx',
                 'tahun_lahir' => 'hanya angka tahun',
                 'pekerjaan' => 'teks',
                 'pendidikan' => '1=sma, 2=diploma, 3=sarjana, 4=magister, 5=doctor',
+                'email' => 'isikan email sesuai format xxx@gmail.com',
                 'alamat' => 'teks',
+                'saluran' => 'angka, kode 3=pojok statistik, 4=email, 5=whatsapp, 6=telepon/lainnya',
                 'permintaan' => 'teks',
                 'tindak_lanjut' => 'teks'
             ]
@@ -1679,7 +1682,22 @@ class NewBukutamuController extends Controller
     }
     public function WhatsappImport(Request $request)
     {
+        $arr = array(
+            'status'=>false,
+            'message'=>'Import data tidak berhasil',
+            'data'=>false,
+        );
 
+        if ($request->hasFile('file_import')) {
+            $file = $request->file('file_import'); //GET FILE
+            Excel::import(new ImportDataWhatsapp, $file); //IMPORT FILE
+            $arr = array(
+                'status'=>true,
+                'message'=>'Import data berhasil',
+                'data'=>true,
+            );
+        }
+        return Response()->json($arr);
     }
     public function PermintaanData()
     {
