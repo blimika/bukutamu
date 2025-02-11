@@ -39,6 +39,7 @@
                             @if (Generate::CekAkses(\Request::getClientIp(true)))
                                 <!--<li><a href="{{ route('kunjungan.baru') }}">Kunjungan Baru</a></li>-->
                                 <li><a href="{{ route('newkunjungan') }}">New Kunjungan</a></li>
+                                <li><a href="{{ route('newpermintaan') }}">Permintaan Data</a></li>
                             @endif
 
                         </ul>

@@ -112,6 +112,7 @@ Route::get('/newdepan', 'NewBukutamuController@NewDepan')->name('newdepan');
 Route::get('/kunjungan/feeedback/{uid}', 'NewBukutamuController@NewFeedback')->name('kunjungan.feedback');
 Route::get('/kalendar', 'NewBukutamuController@JadwalJaga')->name('kalendar');
 Route::get('/newlaporan', 'NewBukutamuController@NewLaporan')->name('newlaporan');
+Route::get('/newpermintaan', 'NewBukutamuController@PermintaanData')->name('newpermintaan');
 //batas
 Route::post('/simpan', 'BukutamuController@simpan')->name('simpan');
 Route::get('/tambahkunjungannew', 'BukutamuController@NewKunjungan')->name('kunjungan.new');
@@ -229,7 +230,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/pengunjung/save', 'NewBukutamuController@PengunjungSave')->name('pengunjung.save');
     //import whatsapp
     Route::get('/wa/format', 'NewBukutamuController@WhatsappFormat')->name('wa.format');
-    Route::post('/wa/format', 'NewBukutamuController@WhatsappFormat')->name('wa.format');
+    Route::post('/wa/import', 'NewBukutamuController@WhatsappImport')->name('wa.import');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

@@ -1681,4 +1681,17 @@ class NewBukutamuController extends Controller
     {
 
     }
+    public function PermintaanData()
+    {
+        $Mjk = Mjk::orderBy('id', 'asc')->get();
+        $MasterPendidikan = MasterPendidikan::orderBy('id', 'asc')->get();
+        $MasterTujuan = MasterTujuan::where('kode','>',2)->orderBy('id', 'asc')->get();
+        $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
+        return view('newbukutamu.permintaan',[
+            'Mjk' => $Mjk,
+            'MasterPendidikan' => $MasterPendidikan,
+            'MasterLayananPST'=>$MasterLayananPST,
+            'MasterTujuan'=>$MasterTujuan
+        ]);
+    }
 }
