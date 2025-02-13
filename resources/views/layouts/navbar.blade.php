@@ -27,72 +27,45 @@
                     </ul>
                 </li>
                 <li class="nav-small-cap">--- PERSONAL</li>
-                <li> <a class="waves-effect waves-dark" href="{{url('')}}" aria-expanded="false"><i
-                            class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
-
+                <li><a class="waves-effect waves-dark" href="{{url('')}}" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Depan </span></a>
                 </li>
-                @if (Auth::user() or Generate::CekAkses(\Request::getClientIp(true)))
-                    <li>
-                        <a class="waves-effect waves-dark ml-auto" href="#" aria-expanded="false"><i
-                                class="ti-plus"></i><span class="hide-menu">Tambah Data</span></a>
-                        <ul aria-expanded="false" class="collapse">
-                            @if (Generate::CekAkses(\Request::getClientIp(true)))
-                                <!--<li><a href="{{ route('kunjungan.baru') }}">Kunjungan Baru</a></li>-->
+                @if (Auth::user() || Generate::CekAkses(\Request::getClientIp(true)))
+                    @if (Generate::CekAkses(\Request::getClientIp(true)) || Auth::user()->level > 1)
+                    <li><a class="waves-effect waves-dark ml-auto" href="#" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Data</span></a>
+                            <ul aria-expanded="false" class="collapse">
                                 <li><a href="{{ route('newkunjungan') }}">New Kunjungan</a></li>
                                 <li><a href="{{ route('newpermintaan') }}">Permintaan Data</a></li>
-                            @endif
-
-                        </ul>
-                    </li>
-                @endif
-                <!--<li>
-                                <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#TambahModal" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Bukutamu</span></a>
-                            </li>
-                            <li>
-                                <a class="waves-effect waves-dark ml-auto" href="#" data-toggle="modal" data-target="#InputDataLamaModal" aria-expanded="false"><i class="ti-layers"></i><span class="hide-menu">Input Data Lama</span></a>
-                            </li>--->
-                <!--<li>
-                    <a class="waves-effect waves-dark ml-auto" href="{{ route('feedback.list') }}"><i
-                            class="ti-medall"></i><span class="hide-menu">Feedback</span></a>
-                </li>-->
-                <li>
-                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i
-                        class="ti-align-left"></i><span class="hide-menu">Kunjungan</span></a>
+                            </ul>
+                        </li>
+                    @endif
+                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Kunjungan</span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <!--<li><a href="{{ route('laporan.newpengunjung') }}">Laporan</a></li>-->
                         <li><a href="{{ route('newlaporan') }}">New Laporan</a></li>
-                        @if (Generate::CekAkses(\Request::getClientIp(true)))
                             @if (Auth::user())
                                 @if (Auth::user()->level > 5)
                                 <li><a href="{{ route('listdata') }}">New List</a></li>
                                 @endif
                             @endif
-                            <li><a href="{{ route('newdisplay') }}" target="_blank">Display Antrian</a></li>
+                        <li><a href="{{ route('newdisplay') }}" target="_blank">Display Antrian</a></li>
+                    </ul>
+                </li>
+                    @if (Auth::user())
+                        @if (Auth::user()->level > 5)
+                        <li>
+                            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Pengunjung</span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                    <li><a href="{{ route('pengunjung.newlist') }}">New List</a></li>
+                                    <li><a href="{{ route('listfeedback') }}">New Feedback</a></li>
+                            </ul>
+                        </li>
                         @endif
-                    </ul>
-                </li>
-                @if (Generate::CekAkses(\Request::getClientIp(true)))
-                @if (Auth::user())
-                <li>
-                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i
-                            class="ti-align-left"></i><span class="hide-menu">Pengunjung</span></a>
-                    <ul aria-expanded="false" class="collapse">
-                            <!---<li><a href="{{ route('lama') }}">List Data</a></li>--->
-                            <li><a href="{{ route('tamu.list') }}">List Lama</a></li>
-                            <li><a href="{{ route('pengunjung.newlist') }}">New List</a></li>
-                    </ul>
-                </li>
-                @endif
+                    @endif
                 @endif
                 @if (Auth::User())
                     @if (Auth::User()->level > 5)
-                        <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"
-                                aria-expanded="false"><i class="ti-settings"></i><span
-                                    class="hide-menu">Master</span></a>
+                        <li>
+                            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Master</span></a>
                             <ul aria-expanded="false" class="collapse">
-                                @if (Auth::User()->level > 10)
-                                <li><a href="{{ route('pengunjung.list') }}">Pengunjung</a></li>
-                                @endif
                                 <li><a href="{{ route('member.list') }}">Member</a></li>
                                 <li><a href="{{ route('layanan.akses') }}">Layanan Akses</a></li>
                                 <li><a href="{{ route('master.tanggal') }}">Tanggal</a></li>
@@ -103,7 +76,6 @@
                             </ul>
                         </li>
                     @endif
-
                 @endif
             </ul>
         </nav>

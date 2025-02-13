@@ -99,12 +99,10 @@ Route::get('/cth5', function () {
    return new App\Mail\KirimFeedback($body);
 });
 //newbukutamu
-Route::get('/listdata', 'NewBukutamuController@DataKunjungan')->name('listdata');
+
 Route::get('/webapi', 'NewBukutamuController@NewWebApi')->name('webapi');
 Route::get('/cekhp/{nomor_hp}', 'NewBukutamuController@CekHP')->name('cekhp');
 Route::get('/newkunjungan', 'NewBukutamuController@Kunjungan')->name('newkunjungan');
-Route::get('/kunjungan/pagelist', 'NewBukutamuController@PageListKunjungan')->name('kunjungan.pagelist');
-Route::get('/timeline/{uid}', 'NewBukutamuController@Timeline')->name('timeline');
 Route::post('/feedbacksave', 'NewBukutamuController@FeedbackSave')->name('feedbacksave');
 Route::post('/newsimpan', 'NewBukutamuController@NewSimpan')->name('newsimpan');
 Route::get('/newdisplay', 'NewBukutamuController@DisplayAntrian')->name('newdisplay');
@@ -233,6 +231,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/wa/format', 'NewBukutamuController@WhatsappFormat')->name('wa.format');
     Route::post('/wa/import', 'NewBukutamuController@WhatsappImport')->name('wa.import');
     Route::post('/petugas/save', 'NewBukutamuController@PetugasSave')->name('petugas.save');
+    Route::get('/listdata', 'NewBukutamuController@DataKunjungan')->name('listdata');
+    Route::get('/kunjungan/pagelist', 'NewBukutamuController@PageListKunjungan')->name('kunjungan.pagelist');
+    Route::get('/timeline/{uid}', 'NewBukutamuController@Timeline')->name('timeline');
+    Route::get('/listfeedback', 'NewBukutamuController@ListFeedback')->name('listfeedback');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

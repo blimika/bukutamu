@@ -46,7 +46,7 @@
 @include('newdepan.baris3')
 <!---baris4--->
 @include('newdepan.baris4')
-@if (Generate::CekAkses(\Request::getClientIp(true)))
+@if (Auth::user() || Generate::CekAkses(\Request::getClientIp(true)))
     <!--tabel jumlah 10 kunjungan terakhir--->
     @include('newdepan.10kunjungan')
     @include('newbukutamu.modal-feedback')
@@ -109,7 +109,7 @@
     <script src="{{asset('assets/node_modules/morrisjs/morris.js')}}"></script>
     @if(!$NewKunjungan->isEmpty())
         @include('newdepan.grafik')
-        @if (Generate::CekAkses(\Request::getClientIp(true)))
+        @if (Auth::user() || Generate::CekAkses(\Request::getClientIp(true)))
             @include('newbukutamu.jsfeedback-page')
         @endif
     @endif

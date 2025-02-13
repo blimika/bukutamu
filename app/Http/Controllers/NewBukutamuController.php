@@ -1820,6 +1820,30 @@ class NewBukutamuController extends Controller
         $data = NewKunjungan::where('kunjungan_uid',$uid)->first();
         return view('newbukutamu.newfeedback',['data'=>$data]);
     }
+    public function ListFeedback()
+    {
+        if (request('tahun') == NULL) {
+            $tahun_filter = 0;
+        } else {
+            $tahun_filter = request('tahun');
+        }
+        $data_tahun = DB::table('m_new_kunjungan')
+            ->selectRaw('year(kunjungan_tanggal) as tahun')
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'asc')
+            ->get();
+        $data = NewKunjungan::when($tahun_filter > 0, function ($query) use ($tahun_filter) {
+                    return $query->whereYear('kunjungan_tanggal', $tahun_filter);
+                })
+                ->where('kunjungan_flag_feedback',2)
+                ->orderBy('kunjungan_tanggal', 'desc')
+                ->get();
+        return view('newbukutamu.list-feedback',[
+            'data'=>$data,
+            'data_tahun'=>$data_tahun,
+            'tahun'=>$tahun_filter
+        ]);
+    }
     public function JadwalJaga()
     {
         /*
