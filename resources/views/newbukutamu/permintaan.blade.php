@@ -41,7 +41,7 @@
                 <div class="row">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-8 col-sm-12">
-                        <form id="formNewKunjungan" class="form-horizontal m-t-20" action="{{route('newsimpan')}}" method="post" enctype="multipart/form-data">
+                        <form id="formNewPermintaan" class="form-horizontal m-t-20" action="{{route('newsimpanpermintaan')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="pengunjung_id" id="pengunjung_id" value="" />
                             <input type="hidden" name="pengunjung_uid" id="pengunjung_uid" value="" />
@@ -78,7 +78,7 @@
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-offset-3 col-md-9">
-                                                <button type="submit" id="newKunjunganSave" class="btn btn-success waves-effect waves-light" disabled>Simpan</button>
+                                                <button type="submit" id="newPermintaanSave" class="btn btn-success waves-effect waves-light">Simpan</button>
                             <button type="reset" class="btn btn-danger waves-effect waves-light">Reset</button>
                                             </div>
                                         </div>
@@ -181,7 +181,7 @@ $('#perorangan').change(function(){
 });
 
 </script>
-@include('newbukutamu.js-tambah')
+@include('newbukutamu.js-permintaan')
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -197,8 +197,15 @@ $('#perorangan').change(function(){
     <script>
      $(document).ready(function() {
         // Basic
+        $('.dropify').dropify({
+            messages: {
+                'default': 'drag dan drop atau klik untuk tambah photo',
+                'replace': 'drag dan drop atau klik untuk ganti photo',
+                'remove':  'Hapus',
+                'error':   'Ooops, ada kesalahan.'
+            }
+        });
         $('.dropify').dropify();
-
         // Used events
         var drEvent = $('#input-file-events').dropify();
 
@@ -225,6 +232,28 @@ $('#perorangan').change(function(){
             }
         })
     });
+    let img = document.querySelector('#kunjungan_foto');
+    window.addEventListener('paste', e => {
+
+    if(e.clipboardData.files.length) {
+        console.log('handle a file');
+        /*
+        Files can be 2 or more, but we'll focus on 1 for img preview
+        */
+        let file = e.clipboardData.files[0];
+        if(file.type.startsWith('image/')) {
+        previewImage(file);
+        }
+    }
+
+    }, false);
+    function previewImage(file) {
+        let reader = new FileReader();
+        reader.onload = e => {
+            img.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();

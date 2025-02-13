@@ -59,7 +59,7 @@
                     <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i
                         class="ti-align-left"></i><span class="hide-menu">Kunjungan</span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <li><a href="{{ route('laporan.newpengunjung') }}">Laporan</a></li>
+                        <!--<li><a href="{{ route('laporan.newpengunjung') }}">Laporan</a></li>-->
                         <li><a href="{{ route('newlaporan') }}">New Laporan</a></li>
                         @if (Generate::CekAkses(\Request::getClientIp(true)))
                             @if (Auth::user())

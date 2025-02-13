@@ -107,6 +107,7 @@
     @include('newbukutamu.modal-tujuan')
     @include('newbukutamu.modal-jenis')
     @include('newbukutamu.modal-whatsapp')
+    @include('newbukutamu.modal-petugas')
 @endsection
 
 @section('css')
@@ -121,6 +122,7 @@
         href="{{ asset('assets/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css"
         href="{{ asset('assets/node_modules/datatables.net-bs4/css/responsive.dataTables.min.css') }}">
+    <link href="{{asset('assets/node_modules/select2/dist/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
         #preloading,
         #pesanerror {
@@ -146,10 +148,11 @@
     <!-- end - This is for export functionality only -->
 
     <!-- Sweet-Alert  -->
-    <script src="{{ asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+    <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <!-- Magnific popup JavaScript -->
-    <script src="{{ asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js') }}"></script>
-    <script src="{{ asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js') }}"></script>
+    <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js') }}"></script>
+    <script src="{{asset('assets/node_modules/select2/dist/js/select2.full.min.js')}}" type="text/javascript"></script>
     <script>
         $(document).ready(function() {
             // DataTable
@@ -489,4 +492,5 @@
     @include('newbukutamu.js-kunjungan')
     @include('newbukutamu.js-feedback')
     @include('newbukutamu.js-importdatawa')
+    @include('newbukutamu.js-petugas')
 @stop

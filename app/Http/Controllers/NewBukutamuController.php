@@ -37,6 +37,7 @@ use App\Mjkunjungan;
 use App\Exports\FormatJadwal;
 use App\Imports\ImportDataWhatsapp;
 use Excel;
+use Svg\Tag\Rect;
 
 class NewBukutamuController extends Controller
 {
@@ -220,7 +221,46 @@ class NewBukutamuController extends Controller
         $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
         $MasterJenisKunjungan = Mjkunjungan::orderBy('id', 'asc')->get();
         $flag_antrian = FlagAntrian::get();
-        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian,'MasterTujuan'=>$MasterTujuan,'MasterLayananPST'=>$MasterLayananPST,'MasterJenisKunjungan'=>$MasterJenisKunjungan]);
+        $DataPetugas = User::where([['level','>',5],['flag',1]])->get();
+        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian,'MasterTujuan'=>$MasterTujuan,'MasterLayananPST'=>$MasterLayananPST,'MasterJenisKunjungan'=>$MasterJenisKunjungan,'DataPetugas'=>$DataPetugas]);
+    }
+    public function PetugasSave(Request $request)
+    {
+        $arr = array(
+            'status'=>false,
+            'message'=>'Data tidak tersedia'
+        );
+        if (Auth::user()->level > 5)
+        {
+            $data = NewKunjungan::where('kunjungan_uid',$request->kunjungan_uid)->first();
+            if ($data)
+            {
+                $ptg = User::where('id',$request->petugas_id)->first();
+                $data->kunjungan_petugas_id = $ptg->id;
+                $data->kunjungan_petugas_username = $ptg->username;
+                $data->update();
+
+                $arr = array(
+                    'status'=>true,
+                    'message'=>'Data Petugas Layanan kunjungan an. '.$data->Pengunjung->pengunjung_nama.' tanggal '.$data->kunjungan_tanggal.' telah berhasil di update'
+                );
+            }
+            else
+            {
+                $arr = array(
+                    'status'=>false,
+                    'message'=>'Data kunjungan tidak tersedia'
+                );
+            }
+        }
+        else
+        {
+            $arr = array(
+                'status'=>false,
+                'message'=>'Anda tidak mempunyai hak akses'
+            );
+        }
+        return Response()->json($arr);
     }
     public function MulaiLayanan(Request $request)
     {
@@ -658,7 +698,7 @@ class NewBukutamuController extends Controller
                     <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-email="' . $item->pengunjung_email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Antrian</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditTindakLanjutModal"><span data-toggle="tooltip" title="Edit tindak lanjut kunjungan an. '.$item->pengunjung_nama.'">Edit Tindak Lanjut</span></a>
-                <a class="dropdown-item" href="#" data-uid="' . $item->pengunjung_uid . '" data-toggle="modal" data-target="#EditModal"><span data-toggle="tooltip" title="Edit Kunjungan an. '.$item->pengunjung_nama.'">Edit Kunjungan</span></a>
+                <a class="dropdown-item" href="#" data-uid="' . $item->kunjungan_uid . '" data-toggle="modal" data-target="#EditPetugasModal"><span data-toggle="tooltip" title="Edit Petugas kunjungan an. '.$item->pengunjung_nama.'">Edit Petugas</span></a>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#EditTujuanModal" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '">Ubah Tujuan</a>
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-jenis="'.$item->kunjungan_jenis.'" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditJenisKunjunganModal">Ubah Jenis</a>
                 <div class="dropdown-divider"></div>
@@ -1134,6 +1174,189 @@ class NewBukutamuController extends Controller
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $pesan_warna);
         return redirect()->route('master.database');
+    }
+    public function NewSimpanPermintaan(Request $request)
+    {
+        /*
+        array:18 [▼
+        "_token" => "DsnAhchcd8f2PEiialS3inLp0oJeHEjE99KR2SoK"
+        "pengunjung_id" => null
+        "pengunjung_uid" => null
+        "edit_pengunjung" => "0"
+        "pengunjung_baru" => "1"
+        "kunjungan_tanggal" => "2025-01-31"
+        "nomor_hp" => "081395787976"
+        "pengunjung_nama" => "Nailu"
+        "pengunjung_jk" => "2"
+        "pengunjung_tahun_lahir" => "2003"
+        "pengunjung_pekerjaan" => "Mahasiswa Politeknik Statistika STIS"
+        "pengunjung_pendidikan" => "1"
+        "pengunjung_email" => null
+        "pengunjung_alamat" => "DKI Jakarta"
+        "kunjungan_tujuan" => "5"
+        "layananpst_kode" => null
+        "kunjungan_keperluan" => "jumlah penduduk Nusa Tenggara Barat berumur 15 tahun ke atas menurut pendidikan tertinggi yang ditamatkan dan kegiatan selama seminggu terakhir untuk jenis kela ▶"
+        "kunjungan_foto" => Illuminate\Http\UploadedFile {#450 ▶}
+        ]
+        */
+        //dd($request->all());
+        $waktu_hari_ini = date('Ymd_His');
+        if ($request->pengunjung_baru == 1)
+        {
+            //pengunjung baru
+            $data = new Pengunjung();
+            $data->pengunjung_uid = Generate::Kode(6);
+            $data->pengunjung_nama = $request->pengunjung_nama;
+            $data->pengunjung_nomor_hp = $request->nomor_hp;
+            $data->pengunjung_tahun_lahir = $request->pengunjung_tahun_lahir;
+            $data->pengunjung_jk = $request->pengunjung_jk;
+            $data->pengunjung_pekerjaan = $request->pengunjung_pekerjaan;
+            $data->pengunjung_pendidikan = $request->pengunjung_pendidikan;
+            $data->pengunjung_email = $request->pengunjung_email;
+            $data->pengunjung_alamat = $request->pengunjung_alamat;
+            $data->pengunjung_total_kunjungan = 0;
+            $data->pengunjung_user_id = 0;
+            $data->save();
+            ///simpan foto
+            $pengunjung_id = $data->pengunjung_id;
+            if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
+                $namafile_kunjungan = '/img/kunjungan/tamu_' . $pengunjung_id . '_' . $waktu_hari_ini . '.png';
+                //$namafile_profil = '/img/profil/tamu_profil_' . $pengunjung_id . '.png';
+                $namafile_profil = NULL;
+                //upload foto permintaan saja
+                $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
+                $data_foto = base64_decode($data_foto);
+                Storage::disk('public')->put($namafile_kunjungan, $data_foto);
+
+            }
+            else {
+                $namafile_kunjungan = NULL;
+                $namafile_profil = NULL;
+            }
+            //buat qrcode img nya langsung
+            $qrcode_foto = QrCode::format('png')
+                ->size(500)->margin(1)->errorCorrection('H')
+                ->generate($data->pengunjung_uid);
+            $output_file = '/img/qrcode/' . $data->pengunjung_uid . '-' . $data->pengunjung_id . '.png';
+            //$data_foto = base64_decode($qrcode_foto);
+            Storage::disk('public')->put($output_file, $qrcode_foto);
+        }
+        else
+        {
+            //data pengunjung sudah ada
+            //apakah di update apa tidak
+            //define foto kunjungan dulu
+            if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
+                $namafile_kunjungan = '/img/kunjungan/tamu_' . $request->pengunjung_id  . '_' . $waktu_hari_ini . '.png';
+                //$namafile_profil = '/img/profil/tamu_profil_' . $request->pengunjung_id  . '.png';
+                $namafile_profil = NULL;
+                $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
+                $data_foto = base64_decode($data_foto);
+                Storage::disk('public')->put($namafile_kunjungan, $data_foto);
+            }
+            else {
+                $namafile_kunjungan = NULL;
+                $namafile_profil = NULL;
+            }
+            //apakah edit pengunjung
+            $data = Pengunjung::where('pengunjung_uid',$request->pengunjung_uid)->first();
+            if ($request->edit_pengunjung == 1)
+            {
+                //kalo di edit
+                $data->pengunjung_nama = $request->pengunjung_nama;
+                $data->pengunjung_nomor_hp = $request->nomor_hp;
+                $data->pengunjung_tahun_lahir = $request->pengunjung_tahun_lahir;
+                $data->pengunjung_jk = $request->pengunjung_jk;
+                $data->pengunjung_pekerjaan = $request->pengunjung_pekerjaan;
+                $data->pengunjung_pendidikan = $request->pengunjung_pendidikan;
+                $data->pengunjung_email = $request->pengunjung_email;
+                $data->pengunjung_alamat = $request->pengunjung_alamat;
+            }
+
+            if ($namafile_profil != NULL) {
+                $data->pengunjung_foto_profil = $namafile_profil;
+            }
+            $data->update();
+
+            //update permintaan
+        }
+
+        //cek kunjungan dulu apakah sudah pernah
+        $cek_kunjungan = NewKunjungan::where([['pengunjung_uid', $data->pengunjung_uid], ['kunjungan_tanggal', Carbon::parse($request->kunjungan_tanggal)->format('Y-m-d')], ['kunjungan_tujuan', $request->kunjungan_tujuan]])->count();
+        if ($cek_kunjungan > 0) {
+            //sudah ada kasih info kalo sudah mengisi
+            $pesan_error = 'Data pengunjung ' . $data->pengunjung_nama . ' sudah pernah mengisi bukutamu hari tanggal ' . Carbon::parse($request->kunjungan_tanggal)->isoFormat('dddd, D MMMM Y');
+            $warna_error = 'danger';
+        }
+        else
+        {
+            //masukkan ke tabel kunjungan
+            //cek dulu antrian ada sesuai layanan
+            //kalo pst cek layanan pst juga
+            $data_antrian = NewKunjungan::where([['kunjungan_tanggal', Carbon::parse($request->kunjungan_tanggal)->format('Y-m-d')], ['kunjungan_tujuan',$request->kunjungan_tujuan]])->orderBy('kunjungan_nomor_antrian', 'desc')->first();
+                $layanan_pst = 0;
+                $data_layanan_utama = MasterTujuan::where('kode',$request->kunjungan_tujuan)->first();
+                $nomor_antrian_inisial = $data_layanan_utama->inisial;
+            if ($data_antrian) {
+                //kalo sudah ada antrian
+                $nomor_selanjutnya = $data_antrian->kunjungan_nomor_antrian + 1;
+            }
+            else {
+                //belum ada sama sekali
+                $nomor_selanjutnya = 1;
+            }
+            $jumlah_tamu = 1;
+            //cek jenis kelamin ambil dari query data diatas
+            if ($data->pengunjung_jk == 1) {
+                $laki = 1;
+                $wanita = 0;
+            } else {
+                $laki = 0;
+                $wanita = 1;
+            }
+            //flag antrian langsung aja diubah
+            $jam_datang = Carbon::parse($request->kunjungan_tanggal . ' 08:00:00')->format('Y-m-d H:i:s');
+            $jam_pulang = Carbon::parse($request->kunjungan_tanggal . ' 10:00:00')->format('Y-m-d H:i:s');
+            $petugas_id = Auth::user()->id;
+            $petugas_username = Auth::user()->username;
+            $loket_petugas = 1;
+
+            $newdata = new NewKunjungan();
+            $newdata->pengunjung_uid = $data->pengunjung_uid;
+            $newdata->kunjungan_uid = Generate::Kode(7);
+            $newdata->kunjungan_tanggal = Carbon::parse($request->kunjungan_tanggal)->format('Y-m-d');
+            $newdata->kunjungan_keperluan = $request->kunjungan_keperluan;
+            $newdata->kunjungan_jenis = 1; //perorangan
+            $newdata->kunjungan_tujuan = $request->kunjungan_tujuan;
+            $newdata->kunjungan_pst = $layanan_pst;
+            if ($namafile_kunjungan != NULL) {
+                $newdata->kunjungan_foto = $namafile_kunjungan;
+            }
+            $newdata->kunjungan_jumlah_orang = $jumlah_tamu;
+            $newdata->kunjungan_jumlah_pria = $laki;
+            $newdata->kunjungan_jumlah_wanita = $wanita;
+            $newdata->kunjungan_nomor_antrian = $nomor_selanjutnya;
+            $newdata->kunjungan_teks_antrian = $nomor_antrian_inisial . '-' . sprintf("%03d", $nomor_selanjutnya);
+            $newdata->kunjungan_petugas_id = $petugas_id;
+            $newdata->kunjungan_petugas_username = $petugas_username;
+            $newdata->kunjungan_jam_datang = $jam_datang;
+            $newdata->kunjungan_jam_pulang = $jam_pulang;
+            $newdata->kunjungan_loket_petugas = $loket_petugas;
+            $newdata->kunjungan_flag_antrian = 3;
+            $newdata->save();
+            //tambah total kunjungan di tabel pengunjung
+
+            $total_kunjungan = $data->pengunjung_total_kunjungan;
+            $data->pengunjung_total_kunjungan = $total_kunjungan + 1;
+            $data->update();
+
+            Session::flash('message_header', "<strong>Terimakasih</strong>");
+            $pesan_error = "Data kunjungan an. <strong><i>" . trim($request->pengunjung_nama) . "</i></strong> berhasil ditambahkan";
+            $warna_error = "success";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $warna_error);
+        return redirect()->route('newdepan');
     }
     public function NewSimpan(Request $request)
     {
