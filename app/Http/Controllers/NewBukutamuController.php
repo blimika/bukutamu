@@ -892,7 +892,6 @@ class NewBukutamuController extends Controller
 
         echo json_encode($response);
         exit;
-
     }
     public function DataPengunjung()
     {
@@ -1843,6 +1842,207 @@ class NewBukutamuController extends Controller
             'data_tahun'=>$data_tahun,
             'tahun'=>$tahun_filter
         ]);
+    }
+    public function PageListFeedback(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = NewKunjungan::count();
+        //total record searching
+        $totalRecordswithFilter =  DB::table('m_new_kunjungan')
+        ->leftJoin('m_pengunjung', 'm_new_kunjungan.pengunjung_uid', '=', 'm_pengunjung.pengunjung_uid')
+        ->leftJoin('mjk', 'm_pengunjung.pengunjung_jk', '=', 'mjk.id')
+        ->leftJoin('m_tujuan', 'm_new_kunjungan.kunjungan_tujuan', '=', 'm_tujuan.kode')
+        ->leftJoin('users', 'm_new_kunjungan.kunjungan_petugas_id', '=', 'users.id')
+        ->leftJoin('m_layanan_pst', 'm_new_kunjungan.kunjungan_pst', '=', 'm_layanan_pst.kode')
+        ->when($searchValue, function ($q) use ($searchValue) {
+            return $q->where('pengunjung_nama', 'like', '%' . $searchValue . '%')
+                     ->orWhere('kunjungan_uid', 'like', '%' . $searchValue . '%')
+                     ->orWhere('kunjungan_tanggal', 'like', '%' . $searchValue . '%')
+                     ->orWhere('users.name', 'like', '%' . $searchValue . '%')
+                     ->orWhere('kunjungan_komentar_feedback', 'like', '%' . $searchValue . '%');
+        })->where('kunjungan_flag_feedback','2')->count();
+
+        // Fetch records
+        $records = DB::table('m_new_kunjungan')
+            ->leftJoin('m_pengunjung', 'm_new_kunjungan.pengunjung_uid', '=', 'm_pengunjung.pengunjung_uid')
+            ->leftJoin('mjk', 'm_pengunjung.pengunjung_jk', '=', 'mjk.id')
+            ->leftJoin('m_tujuan', 'm_new_kunjungan.kunjungan_tujuan', '=', 'm_tujuan.kode')
+            ->leftJoin('users', 'm_new_kunjungan.kunjungan_petugas_id', '=', 'users.id')
+            ->leftJoin('m_layanan_pst', 'm_new_kunjungan.kunjungan_pst', '=', 'm_layanan_pst.kode')
+            ->when($searchValue, function ($q) use ($searchValue) {
+                return $q->where('pengunjung_nama', 'like', '%' . $searchValue . '%')
+                         ->orWhere('kunjungan_uid', 'like', '%' . $searchValue . '%')
+                         ->orWhere('kunjungan_tanggal', 'like', '%' . $searchValue . '%')
+                         ->orWhere('users.name', 'like', '%' . $searchValue . '%')
+                         ->orWhere('kunjungan_komentar_feedback', 'like', '%' . $searchValue . '%');
+            })
+            ->where('kunjungan_flag_feedback','2')
+            ->select('m_new_kunjungan.*', 'm_pengunjung.pengunjung_nama','m_pengunjung.pengunjung_email', 'm_pengunjung.pengunjung_jk', 'mjk.inisial as jk_inisial', 'mjk.nama as jk_nama', 'm_tujuan.inisial as tujuan_inisial', 'm_tujuan.nama as tujuan_nama', 'users.name', 'users.username', 'm_layanan_pst.nama as kunjungan_pst_teks')
+            ->skip($start)
+            ->take($rowperpage)
+            ->orderBy($columnName, $columnSortOrder)
+            ->get();
+
+        //inisiasi aawal
+        $data_arr = array();
+
+        //list data
+        foreach ($records as $item) {
+
+            $aksi = '<a href="'. route('timeline',$item->pengunjung_uid).'" class="btn btn-sm btn-info waves-effect" target="_blank">TIMELINE</a>';
+            if ($item->kunjungan_tujuan == 2)
+            {
+                //ke pst ambil layanan pst
+                $tujuan = $item->kunjungan_pst_teks;
+
+                if ($item->kunjungan_pst == 1)
+                {
+                    $warna_layanan_utama = 'badge-success';
+                }
+                else if ($item->kunjungan_pst == 2)
+                {
+                    $warna_layanan_utama = 'badge-warning';
+                }
+                else if ($item->kunjungan_pst == 3)
+                {
+                    $warna_layanan_utama = 'badge-info';
+                }
+                else if ($item->kunjungan_pst == 4)
+                {
+                    $warna_layanan_utama = 'badge-primary';
+                }
+                else
+                {
+                    $warna_layanan_utama = 'badge-primary';
+                }
+            }
+            else
+            {
+                //nama layanan aja
+                $tujuan = $item->tujuan_nama;
+                if ($item->kunjungan_tujuan == 1)
+                {
+                    $warna_layanan_utama = 'badge-danger';
+                }
+                else if ($item->kunjungan_tujuan == 2)
+                {
+                    $warna_layanan_utama = 'badge-success';
+                }
+                else if ($item->kunjungan_tujuan == 3)
+                {
+                    $warna_layanan_utama = 'badge-warning';
+                }
+                else if ($item->kunjungan_tujuan == 4)
+                {
+                    $warna_layanan_utama = 'badge-info';
+                }
+                else
+                {
+                    $warna_layanan_utama = 'badge-primary';
+                }
+            }
+            //edit tampilang warna2
+            //warna layanan utama
+            $layanan_utama = '<span class="badge '.$warna_layanan_utama.' badge-pill">'.$tujuan.'</span>';
+            //petugas
+            if ($item->kunjungan_petugas_id != 0) {
+                if ($item->kunjungan_loket_petugas == 1)
+                {
+                    $loket_petugas = '<span class="badge badge-success badge-pill">Petugas '.$item->kunjungan_loket_petugas.'</span>';
+                }
+                else
+                {
+                    $loket_petugas = '<span class="badge badge-info badge-pill">Petugas '.$item->kunjungan_loket_petugas.'</span>';
+                }
+                $petugas = $item->name .'<br />'. $loket_petugas;
+            }
+            else {
+                $petugas = '<span class="badge badge-danger badge-pill">belum ada</span';
+            }
+            //jenis kelamin
+            if ($item->jk_inisial == 'L') {
+                $jk = '<span class="badge badge-info badge-pill">' . $item->jk_inisial . '</span>';
+            }
+            else {
+                $jk = '<span class="badge badge-danger badge-pill">' . $item->jk_inisial . '</span>';
+            }
+            //tujuan
+            if ($item->kunjungan_tujuan == 1) {
+                $warna_tujuan = 'badge-danger';
+            }
+            elseif ($item->kunjungan_tujuan == 2)
+            {
+                $warna_tujuan = 'badge-success';
+            }
+            elseif ($item->kunjungan_tujuan == 3)
+            {
+                $warna_tujuan = 'badge-warning';
+            }
+            elseif ($item->kunjungan_tujuan == 4)
+            {
+                $warna_tujuan = 'badge-info';
+            }
+            elseif ($item->kunjungan_tujuan == 5)
+            {
+                $warna_tujuan = 'badge-dark';
+            }
+            else {
+                $warna_tujuan = 'badge-primary';
+            }
+            $tujuan = '<span class="badge '.$warna_tujuan.' badge-pill">' . $item->tujuan_inisial . '</span>';
+            $bintang='';
+            for ($i = 1; $i < 7; $i++)
+            {
+                if ($i <= $item->kunjungan_nilai_feedback)
+                {
+                    $bintang .= '<span class="fa fa-star text-warning"></span>';
+                }
+                else
+                {
+                    $bintang .= ' <span class="fa fa-star"></span>';
+                }
+            }
+            if ($item->kunjungan_tujuan == 2)
+            {
+                $layanan_utama = $tujuan .' '.$layanan_utama;
+            }
+            $komentar_feedback = '<p><i>'.$item->kunjungan_komentar_feedback .'</i></p> <p class="p-t-10">'.$bintang.'</p>';
+            //batas
+            $data_arr[] = array(
+                "kunjungan_uid" => $item->kunjungan_uid,
+                "kunjungan_tanggal" => $item->kunjungan_tanggal,
+                "pengunjung_nama" => $item->pengunjung_nama .'<br />'.$jk,
+                "kunjungan_tujuan" => $layanan_utama,
+                "kunjungan_komentar_feedback"=>$komentar_feedback,
+                "kunjungan_petugas_id" => $petugas,
+                "aksi" => $aksi
+            );
+        }
+        //batas list
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
+        );
+
+        echo json_encode($response);
+        exit;
     }
     public function JadwalJaga()
     {

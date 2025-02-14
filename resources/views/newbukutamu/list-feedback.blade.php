@@ -149,34 +149,14 @@
                                 <th>#</th>
                                 <th>Tanggal</th>
                                 <th>Nama</th>
-                                <th>Nilai</th>
+                                <th>Layanan</th>
                                 <th>Komentar</th>
                                 <th>Petugas</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($data->count() > 0)
-                                @foreach ($data as $item)
-                                    <tr>
-                                        <td>{{$item->kunjungan_uid}}</td>
-                                        <td>{{$item->kunjungan_tanggal}}</td>
-                                        <td>{{$item->Pengunjung->pengunjung_nama}}</td>
-                                        <td>
-                                            @for ($i = 1; $i < 7; $i++)
-                                                @if ($i <= $item->kunjungan_nilai_feedback)
-                                                    <span class="fa fa-star text-warning"></span>
-                                                @else
-                                                    <span class="fa fa-star"></span>
-                                                @endif
-                                            @endfor
-                                        </td>
-                                        <td><i>{{$item->kunjungan_komentar_feedback}}</i></td>
-                                        <td>{{$item->Petugas->name}}</td>
-                                        <td><a href="{{route('timeline',$item->pengunjung_uid)}}" class="btn btn-sm btn-info waves-effect" target="_blank">TIMELINE</a></td>
-                                    </tr>
-                                @endforeach
-                            @endif
+
                         </tbody>
                     </table>
                 </div>
@@ -219,20 +199,30 @@
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
     <script>
-        $(function () {
+    $(document).ready(function() {
             $('#dTabel').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('pagelistfeedback') }}",
+                columns: [
+                    {data: 'kunjungan_uid',orderable: false},
+                    {data: 'kunjungan_tanggal'},
+                    {data: 'pengunjung_nama'},
+                    {data: 'kunjungan_tujuan'},
+                    {data: 'kunjungan_komentar_feedback'},
+                    {data: 'kunjungan_petugas_id'},
+                    {data: 'aksi',orderable: false},
+                ],
+                order: [2,'desc'],
                 dom: 'Bfrtip',
-                order: [1,'desc'],
+                iDisplayLength: 30,
                 buttons: [
-                    'copy','excel','print'
+                    'copy', 'excel', 'print'
                 ],
                 responsive: true,
-                "displayLength": 30,
-
             });
-            $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
-        });
-
+        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
+    });
     </script>
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
