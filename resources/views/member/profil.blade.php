@@ -47,7 +47,7 @@
 
                         <h4 class="card-title m-t-10">{{Auth::user()->name}}</h4>
                         <h6 class="card-subtitle">{{Auth::user()->mLevel->nama}}</h6>
-
+                        {!! Generate::RatingPetugas(Auth::user()->id) !!}
                     </center>
                             <hr>
                             <dl class="row">

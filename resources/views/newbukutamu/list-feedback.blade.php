@@ -213,7 +213,7 @@
                     {data: 'kunjungan_petugas_id'},
                     {data: 'aksi',orderable: false},
                 ],
-                order: [2,'desc'],
+                order: [1,'desc'],
                 dom: 'Bfrtip',
                 iDisplayLength: 30,
                 buttons: [

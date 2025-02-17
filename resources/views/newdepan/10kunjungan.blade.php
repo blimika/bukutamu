@@ -125,8 +125,7 @@
                                     </td>
                                     <td>
                                         @if ($item->kunjungan_petugas_username)
-                                        <span class="label label-info">               {{$item->kunjungan_petugas_username}}
-                                        </span>
+                                            {{$item->Petugas->name}} <br />{!! Generate::RatingPetugas($item->kunjungan_petugas_id) !!}
                                         @endif
                                     </td>
                                 </tr>
