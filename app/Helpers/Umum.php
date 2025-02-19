@@ -521,6 +521,82 @@ class Generate {
         //dd($arr);
         return $arr;
     }
+    public static function Grafik2Minggu()
+    {
+        $hari_14_sblmnya = \Carbon\Carbon::today()->subDays(10)->format('Y-m-d');
+        $besoknya = \Carbon\Carbon::today()->format('Y-m-d');
+        //$jumlah_hari = \Carbon\Carbon::parse($tgl_cek)->daysInMonth;
+        $period = \Carbon\CarbonPeriod::create($hari_14_sblmnya, $besoknya);
+        $period->toArray();
+        $kunjungan = array();
+        $tamu_laki= array();
+        $tamu_wanita = array();
+        $jumlah_tamu = array();
+        $cat_tgl = array();
+        foreach ($period as $i)
+        {
+            $item = \App\NewKunjungan::where('kunjungan_tanggal',\Carbon\Carbon::parse($i)->format('Y-m-d'))
+            ->select(\DB::Raw('kunjungan_tanggal, COALESCE(count(*),0) as jumlah_kunjungan, COALESCE(sum(kunjungan_jumlah_orang),0) as jumlah_total, COALESCE(sum(kunjungan_jumlah_pria),0) as jumlah_laki, COALESCE(sum(kunjungan_jumlah_wanita),0) as jumlah_wanita'))->groupBy('kunjungan_tanggal')->first();
+            if ($item)
+            {
+                $jumlah_kunjungan[] = (int) $item->jumlah_kunjungan;
+                $jumlah_total[]= (int) $item->jumlah_total;
+                $jumlah_laki[] = (int) $item->jumlah_laki;
+                $jumlah_wanita[] = (int) $item->jumlah_wanita;
+            }
+            else
+            {
+                $jumlah_kunjungan[] = 0;
+                $jumlah_laki[] = 0;
+                $jumlah_wanita[] = 0;
+                $jumlah_total[]= 0;
+            }
+            //ambil info tanggal
+            $info_tanggal = \App\MTanggal::where('tanggal',\Carbon\Carbon::parse($i)->format('Y-m-d'))->first();
+            if ($info_tanggal)
+            {
+                if ($info_tanggal->jtgl > 2)
+                {
+                    $cat_tgl[]=\Carbon\Carbon::parse($i)->isoFormat('dddd, D MMM Y').' ('.$info_tanggal->deskripsi.')';
+                }
+                else
+                {
+                    $cat_tgl[]=\Carbon\Carbon::parse($i)->isoFormat('dddd, D MMM Y');
+                }
+            }
+            else
+            {
+                $cat_tgl[]=\Carbon\Carbon::parse($i)->isoFormat('dddd, D MMM Y');
+            }
+        }
+        $data[] = array(
+            'name'=>'Kunjungan',
+            'data'=>$jumlah_kunjungan,
+        );
+        $data[] = array(
+            'name'=>'Jumlah Pengunjung',
+            'data'=>$jumlah_total,
+        );
+        $data[] = array(
+            'name'=>'Pengunjung Laki-laki',
+            'data'=>$jumlah_laki,
+        );
+        $data[] = array(
+            'name'=>'Pengunjung Perempuan',
+            'data'=>$jumlah_wanita,
+        );
+        $subtitle = 'Periode '.\Carbon\Carbon::parse($hari_14_sblmnya)->isoFormat('D MMMM Y') .' s/d '.\Carbon\Carbon::parse($besoknya)->isoFormat('D MMMM Y');
+        $data = json_encode($data);
+        //dd($data);
+        $cat_tgl = json_encode($cat_tgl);
+        $arr = array(
+            'data_final'=>$data,
+            'cat_final'=>$cat_tgl,
+            'subtitle'=>$subtitle
+        );
+        //dd($arr);
+        return $arr;
+    }
     public static function NewGrafikBulanan($bulan,$tahun)
     {
         $tgl_cek = $tahun.'-'.$bulan.'-01';

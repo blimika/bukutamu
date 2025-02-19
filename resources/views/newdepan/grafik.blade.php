@@ -4,19 +4,19 @@ Highcharts.chart('chart-kunjungan-hc', {
             type: 'column'
         },
         title: {
-            text: ''
+            text: 'Grafik Jumlah Kunjungan dan Pengunjung Menurut Jenis Kelamin'
         },
         subtitle: {
-            text: ''
+            text: '{{ Generate::Grafik2Minggu()["subtitle"]}}'
         },
         xAxis: {
-            categories: {!! Generate::NewGrafikBulanan($bulan,$tahun)['cat_final']!!},
+            categories: {!! Generate::Grafik2Minggu()['cat_final']!!},
             crosshair: true
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Kunjungan'
+                text: ''
             }
         },
         tooltip: {
@@ -33,7 +33,10 @@ Highcharts.chart('chart-kunjungan-hc', {
                 borderWidth: 0
             }
         },
-        series: {!! Generate::NewGrafikBulanan($bulan,$tahun)['data_final']!!}
+        credits: {
+            enabled: false
+        },
+        series: {!! Generate::Grafik2Minggu()['data_final']!!}
 });
 
 Highcharts.chart('chart-tahunan-hc', {
@@ -41,10 +44,10 @@ Highcharts.chart('chart-tahunan-hc', {
             type: 'column'
         },
         title: {
-            text: ''
+            text: 'Grafik Jumlah Kunjungan dan Pengunjung Menurut Menurut Jenis Kelamin'
         },
         subtitle: {
-            text: ''
+            text: 'Tahun {{$tahun}}'
         },
         xAxis: {
             categories: {!! Generate::NewGrafikTahunan($tahun)['cat_final']!!},
@@ -69,6 +72,9 @@ Highcharts.chart('chart-tahunan-hc', {
                 pointPadding: 0.2,
                 borderWidth: 0
             }
+        },
+        credits: {
+            enabled: false
         },
         series: {!! Generate::NewGrafikTahunan($tahun)['data_final']!!}
 });
@@ -126,6 +132,9 @@ Highcharts.chart('donat-pendidikan', {
         pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
     },
     legend: {
+        enabled: false
+    },
+    credits: {
         enabled: false
     },
     plotOptions: {
@@ -211,6 +220,9 @@ Highcharts.chart('donat-jk', {
     legend: {
         enabled: false
     },
+    credits: {
+        enabled: false
+    },
     plotOptions: {
         series: {
             allowPointSelect: true,
@@ -292,6 +304,9 @@ Highcharts.chart('donat-layanan', {
         pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
     },
     legend: {
+        enabled: false
+    },
+    credits: {
         enabled: false
     },
     plotOptions: {
