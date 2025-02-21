@@ -38,6 +38,7 @@ use App\Exports\FormatJadwal;
 use App\Imports\ImportDataWhatsapp;
 use Excel;
 use Svg\Tag\Rect;
+use File;
 
 class NewBukutamuController extends Controller
 {
@@ -1198,7 +1199,8 @@ class NewBukutamuController extends Controller
         "kunjungan_foto" => Illuminate\Http\UploadedFile {#450 ▶}
         ]
         */
-        //dd($request->all());
+        $data = $request->file('kunjungan_foto')->isValid();
+        dd($request->all(),$data);
         $waktu_hari_ini = date('Ymd_His');
         if ($request->pengunjung_baru == 1)
         {
@@ -1218,14 +1220,20 @@ class NewBukutamuController extends Controller
             $data->save();
             ///simpan foto
             $pengunjung_id = $data->pengunjung_id;
-            if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
-                $namafile_kunjungan = '/img/kunjungan/tamu_' . $pengunjung_id . '_' . $waktu_hari_ini . '.png';
+            if ($request->hasFile('kunjungan_foto')) {
+                $file = $request->file('kunjungan_foto');
+                $nama_file_asli = $request->file('kunjungan_foto')->getClientOriginalName();
+
+                $namafile_kunjungan = '/img/kunjungan/tamu_' . $pengunjung_id . '_' . $waktu_hari_ini . '.'.$file->getClientOriginalExtension();
                 //$namafile_profil = '/img/profil/tamu_profil_' . $pengunjung_id . '.png';
                 $namafile_profil = NULL;
                 //upload foto permintaan saja
-                $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
-                $data_foto = base64_decode($data_foto);
-                Storage::disk('public')->put($namafile_kunjungan, $data_foto);
+                //$data_foto = substr($request->kunjungan_foto, strpos($request->kunjungan_foto, ',') + 1);
+                //$data_foto = base64_decode($data_foto);
+                //Storage::disk('public')->StoreAs($namafile_kunjungan, $file);
+                Storage::disk('public')->move($_FILES['picture']['tmp_name'], 'uploads/' . $file->getFilename() . '.' . $extension);
+
+
 
             }
             else {
@@ -1245,13 +1253,16 @@ class NewBukutamuController extends Controller
             //data pengunjung sudah ada
             //apakah di update apa tidak
             //define foto kunjungan dulu
-            if (preg_match('/^data:image\/(\w+);base64,/', $request->foto)) {
-                $namafile_kunjungan = '/img/kunjungan/tamu_' . $request->pengunjung_id  . '_' . $waktu_hari_ini . '.png';
-                //$namafile_profil = '/img/profil/tamu_profil_' . $request->pengunjung_id  . '.png';
+            if ($request->file('kunjungan_foto')->isValid()) {
+                $file = $request->file('kunjungan_foto');
+                $namafile_kunjungan = '/img/kunjungan/tamu_' . $request->pengunjung_id . '_' . $waktu_hari_ini . '.'.$file->getClientOriginalExtension();
+                //$namafile_profil = '/img/profil/tamu_profil_' . $pengunjung_id . '.png';
                 $namafile_profil = NULL;
-                $data_foto = substr($request->foto, strpos($request->foto, ',') + 1);
-                $data_foto = base64_decode($data_foto);
-                Storage::disk('public')->put($namafile_kunjungan, $data_foto);
+                //upload foto permintaan saja
+                //$data_foto = substr($request->kunjungan_foto, strpos($request->kunjungan_foto, ',') + 1);
+                //$data_foto = base64_decode($data_foto);
+                //Storage::disk('public')->put($namafile_kunjungan, File::get($file));
+                Storage::disk('public')->put($namafile_kunjungan, $file);
             }
             else {
                 $namafile_kunjungan = NULL;
@@ -1316,8 +1327,16 @@ class NewBukutamuController extends Controller
             //flag antrian langsung aja diubah
             $jam_datang = Carbon::parse($request->kunjungan_tanggal . ' 08:00:00')->format('Y-m-d H:i:s');
             $jam_pulang = Carbon::parse($request->kunjungan_tanggal . ' 10:00:00')->format('Y-m-d H:i:s');
-            $petugas_id = Auth::user()->id;
-            $petugas_username = Auth::user()->username;
+            if (Auth::user())
+            {
+                $petugas_id = Auth::user()->id;
+                $petugas_username = Auth::user()->username;
+            }
+            else
+            {
+                $petugas_id = 1;
+                $petugas_username = 'admin';
+            }
             $loket_petugas = 1;
 
             $newdata = new NewKunjungan();
