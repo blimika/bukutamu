@@ -93,7 +93,7 @@ Route::get('/cth5', function () {
     $body->pengunjung_email = 'mika@bpsntb.id';
     $body->pengunjung_nomor_hp = '0871272818213';
     $body->kunjungan_tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
-    $body->link_feedback = 'https://bukutamu.test/kunjungan/feeedback/DWGIB37';
+    $body->link_feedback = 'https://bukutamu.test/kunjungan/feedback/DWGIB37';
     $body->petugas = 'Perpustakaan';
 
    return new App\Mail\KirimFeedback($body);
@@ -107,7 +107,7 @@ Route::post('/feedbacksave', 'NewBukutamuController@FeedbackSave')->name('feedba
 Route::post('/newsimpan', 'NewBukutamuController@NewSimpan')->name('newsimpan');
 Route::get('/newdisplay', 'NewBukutamuController@DisplayAntrian')->name('newdisplay');
 Route::get('/newdepan', 'NewBukutamuController@NewDepan')->name('newdepan');
-Route::get('/kunjungan/feeedback/{uid}', 'NewBukutamuController@NewFeedback')->name('kunjungan.feedback');
+Route::get('/kunjungan/feedback/{uid}', 'NewBukutamuController@NewFeedback')->name('kunjungan.feedback');
 Route::get('/kalendar', 'NewBukutamuController@JadwalJaga')->name('kalendar');
 Route::get('/newlaporan', 'NewBukutamuController@NewLaporan')->name('newlaporan');
 Route::get('/newpermintaan', 'NewBukutamuController@PermintaanData')->name('newpermintaan');

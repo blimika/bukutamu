@@ -704,12 +704,14 @@ class NewBukutamuController extends Controller
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-jenis="'.$item->kunjungan_jenis.'" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditJenisKunjunganModal">Ubah Jenis</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditFlagAntrianModal">Flag Antrian</a>
+                <a class="dropdown-item copyurlfeedback" target="_blank" href="'.route('kunjungan.feedback',$item->kunjungan_uid).'" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '">Copy Link Feedback</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item hapuskunjungan" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-tanggal="'.$item->kunjungan_tanggal.'">Delete</a>
 
             </div>
         </div>
         ';
+        //
             if ($item->kunjungan_tujuan == 2)
             {
                 //ke pst ambil layanan pst
@@ -867,15 +869,44 @@ class NewBukutamuController extends Controller
             }
             $tujuan = '<span class="badge '.$warna_tujuan.' badge-pill">' . $item->tujuan_inisial . '</span>';
             //batas
+            //tindak lanjut more
+            if (strlen($item->kunjungan_tindak_lanjut) > 80)
+            {
+                $tindak_lanjut = '<span id="dots">'.Str::limit($item->kunjungan_tindak_lanjut,80).'
+                </span>
+                <span id="moreTeks">'.$item->kunjungan_tindak_lanjut.'</span>
+                <br />
+                <button class="m-t-5 m-b-5 btn btn-xs btn-info btnMore" id="btnMore">more</button>
+                ';
+            }
+            else
+            {
+                $tindak_lanjut = $item->kunjungan_tindak_lanjut;
+            }
+            //keperluan more
+            if (strlen($item->kunjungan_keperluan) > 80)
+            {
+                $keperluan = '<span id="dots">'.Str::limit($item->kunjungan_keperluan,80).'
+                </span>
+                <span id="moreTeks">'.$item->kunjungan_keperluan.'</span>
+                <br />
+                <button class="m-t-5 m-b-5 btn btn-xs btn-info btnMore" id="btnMore">more</button>
+                ';
+            }
+            else
+            {
+                $keperluan = $item->kunjungan_keperluan;
+            }
+            $nama ='<a class="text-black" href="#" data-uid="' . $item->kunjungan_uid . '" data-toggle="modal" data-target="#ViewKunjunganModal">'.$item->pengunjung_nama.'</a>';
+            //batas
             $data_arr[] = array(
                 "kunjungan_uid" => $item->kunjungan_uid,
-                "pengunjung_nama" => $item->pengunjung_nama .'<br />'.$jk,
+                "pengunjung_nama" =>  $nama.'<br />'.$jk,
                 "kunjungan_tanggal" => $item->kunjungan_tanggal,
-                "kunjungan_keperluan" => $item->kunjungan_keperluan .'<br />'.$tujuan .' '.$kunjungan_jenis,
-                "kunjungan_tindak_lanjut" => $item->kunjungan_tindak_lanjut,
+                "kunjungan_keperluan" => $keperluan .'<br />'.$tujuan .' '.$kunjungan_jenis,
+                "kunjungan_tindak_lanjut" => $tindak_lanjut,
                 "kunjungan_tujuan" => $layanan_utama .'<p>'.$tombol_feedback.'</p>',
-                "kunjungan_teks_antrian" => $item->kunjungan_teks_antrian,
-                "kunjungan_flag_antrian" => $flag_antrian_teks,
+                "kunjungan_teks_antrian" => $item->kunjungan_teks_antrian .'<br />'.$flag_antrian_teks,
                 "kunjungan_jam_datang" => $mulai,
                 "kunjungan_jam_pulang" => $akhir,
                 "kunjungan_petugas_id" => $petugas,

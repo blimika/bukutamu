@@ -8,7 +8,7 @@
             <div class="d-flex justify-content-end align-items-center">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0)">Depan</a></li>
-                    <li class="breadcrumb-item active">Tamu List</li>
+                    <li class="breadcrumb-item active">Kunjungan List</li>
                 </ol>
             </div>
         </div>
@@ -69,8 +69,7 @@
                                     <th>Keperluan</th>
                                     <th>Tindak Lanjut</th>
                                     <th>Layanan Utama</th>
-                                    <th>Nomor Antrian</th>
-                                    <th>Flag Antrian</th>
+                                    <th>Antrian</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -85,8 +84,7 @@
                                     <th>Keperluan</th>
                                     <th>Tindak Lanjut</th>
                                     <th>Layanan Utama</th>
-                                    <th>Nomor Antrian</th>
-                                    <th>Flag Antrian</th>
+                                    <th>Antrian</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
                                     <th>Petugas</th>
@@ -128,6 +126,7 @@
         #pesanerror {
             display: none;
         }
+        #moreTeks {display:  none;}
     </style>
 @stop
 @section('js')
@@ -168,7 +167,6 @@
                     {data: 'kunjungan_tindak_lanjut'},
                     {data: 'kunjungan_tujuan'},
                     {data: 'kunjungan_teks_antrian'},
-                    {data: 'kunjungan_flag_antrian'},
                     {data: 'kunjungan_jam_datang'},
                     {data: 'kunjungan_jam_pulang'},
                     {data: 'kunjungan_petugas_id'},
@@ -414,7 +412,46 @@
                         })
                     });
                     //batas mulai
+                    //klik more
+                    $('.tabeldata').on('click','.btnMore',function(e) {
+                        e.preventDefault();
+                        var display =  $(this).closest('td').children('#dots').css("display");
+                        if (display == 'none') {
+                            $(this).closest('td').children("#dots").show();
+                            $(this).closest('td').children('.btnMore').text('more');
+                            $(this).closest('td').children('.btnMore').removeClass("btn-danger");
+                            $(this).closest('td').children('.btnMore').addClass("btn-info");
+                            $(this).closest('td').children("#moreTeks").hide();
+                        }
+                        else {
+                            $(this).closest('td').children("#dots").hide();
+                            $(this).closest('td').children('.btnMore').text('less');
+                            $(this).closest('td').children('.btnMore').removeClass("btn-info");
+                            $(this).closest('td').children('.btnMore').addClass("btn-danger");
+                            $(this).closest('td').children("#moreTeks").show();
+                        }
+                    });
                     //hapus kunjungan
+                    //copy link feedback
+                    $('.tabeldata').on('click','.copyurlfeedback',function(e) {
+                        e.preventDefault();
+
+                        var copyText = $(this).attr('href');
+                        document.addEventListener('copy', function(e) {
+                            e.clipboardData.setData('text/plain', copyText);
+                            e.preventDefault();
+                        }, true);
+
+                        document.execCommand('copy');
+
+                        Swal.fire(
+                            'Berhasil',
+                            'Link url feedback sudah tercopy',
+                            'success'
+                        );
+
+                    });
+                    //batas
                     $('.tabeldata').on('click','.hapuskunjungan',function(e) {
                         e.preventDefault();
                         var id = $(this).data('id');
