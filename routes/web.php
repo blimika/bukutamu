@@ -80,7 +80,7 @@ Route::get('/cth4', function () {
     $body->pengunjung_email = 'mika@bpsntb.id';
     $body->pengunjung_nomor_hp = '0871272818213';
     $body->kunjungan_tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
-    $body->layanan = 'Perpustakaan';
+    $body->layanan = 'Kantor - Konsultasi';
     $body->nomor_antrian = 'PS-001';
 
    return new App\Mail\KirimAntrian($body);
@@ -94,7 +94,8 @@ Route::get('/cth5', function () {
     $body->pengunjung_nomor_hp = '0871272818213';
     $body->kunjungan_tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
     $body->link_feedback = 'https://bukutamu.test/kunjungan/feedback/DWGIB37';
-    $body->petugas = 'Perpustakaan';
+    $body->layanan = 'Pengaduan';
+    $body->petugas = 'Mika';
 
    return new App\Mail\KirimFeedback($body);
 });

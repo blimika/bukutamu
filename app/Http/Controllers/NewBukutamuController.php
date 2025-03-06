@@ -39,6 +39,7 @@ use App\Imports\ImportDataWhatsapp;
 use Excel;
 use Svg\Tag\Rect;
 use Illuminate\Http\File;
+use App\LayananKantor;
 
 class NewBukutamuController extends Controller
 {
@@ -100,14 +101,21 @@ class NewBukutamuController extends Controller
                     $dataTamu = '';
                 }
                 $Mjk = Mjk::orderBy('id', 'asc')->get();
-                $MasterPendidikan = MasterPendidikan::orderBy('id', 'asc')->get();
-                $MasterTujuan = MasterTujuan::orderBy('id', 'asc')->get();
-                $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
+                $MasterPendidikan = MasterPendidikan::orderBy('kode', 'asc')->get();
+                $MasterTujuan = MasterTujuan::orderBy('kode', 'asc')->get();
+                $MasterLayananPST = MasterLayananPST::orderBy('kode', 'asc')->get();
+                $MasterLayananKantor = LayananKantor::orderBy('kode', 'asc')->get();
             } else {
                 return redirect()->route('newdepan');
             }
-            return view('newbukutamu.kunjungan', ['Mjk' => $Mjk, 'MasterPendidikan' => $MasterPendidikan, 'dataTamu' => $dataTamu,
-        'MasterLayananPST'=>$MasterLayananPST,'MasterTujuan'=>$MasterTujuan]);
+            return view('newbukutamu.kunjungan',[
+                        'Mjk' => $Mjk,
+                        'MasterPendidikan' => $MasterPendidikan,
+                        'dataTamu' => $dataTamu,
+                        'MasterLayananPST'=>$MasterLayananPST,
+                        'MasterLayananKantor'=>$MasterLayananKantor,
+                        'MasterTujuan'=>$MasterTujuan
+                        ]);
         }
         else {
             return view('kunjungan.libur', ['tanggal' => $cek_hari]);
@@ -639,6 +647,7 @@ class NewBukutamuController extends Controller
         ->leftJoin('m_tujuan', 'm_new_kunjungan.kunjungan_tujuan', '=', 'm_tujuan.kode')
         ->leftJoin('users', 'm_new_kunjungan.kunjungan_petugas_id', '=', 'users.id')
         ->leftJoin('mjkunjungan', 'm_new_kunjungan.kunjungan_jenis', '=', 'mjkunjungan.id')
+        ->leftJoin('m_layanan_kantor', 'm_new_kunjungan.kunjungan_kantor', '=', 'm_layanan_kantor.kode')
         ->leftJoin('m_layanan_pst', 'm_new_kunjungan.kunjungan_pst', '=', 'm_layanan_pst.kode')
         ->leftJoin('mf_antrian', 'm_new_kunjungan.kunjungan_flag_antrian', '=', 'mf_antrian.kode')
         ->leftJoin('m_pendidikan', 'm_pengunjung.pengunjung_pendidikan', '=', 'm_pendidikan.kode')
@@ -650,6 +659,7 @@ class NewBukutamuController extends Controller
                      ->orWhere('users.name', 'like', '%' . $searchValue . '%')
                      ->orWhere('mf_antrian.nama', 'like', '%' . $searchValue . '%')
                      ->orWhere('m_layanan_pst.nama', 'like', '%' . $searchValue . '%')
+                     ->orWhere('m_layanan_kantor.nama', 'like', '%' . $searchValue . '%')
                      ->orWhere('mjkunjungan.nama', 'like', '%' . $searchValue . '%')
                      ->orWhere('kunjungan_teks_antrian', 'like', '%' . $searchValue . '%');
         })->count();
@@ -661,6 +671,7 @@ class NewBukutamuController extends Controller
             ->leftJoin('m_tujuan', 'm_new_kunjungan.kunjungan_tujuan', '=', 'm_tujuan.kode')
             ->leftJoin('users', 'm_new_kunjungan.kunjungan_petugas_id', '=', 'users.id')
             ->leftJoin('mjkunjungan', 'm_new_kunjungan.kunjungan_jenis', '=', 'mjkunjungan.id')
+            ->leftJoin('m_layanan_kantor', 'm_new_kunjungan.kunjungan_kantor', '=', 'm_layanan_kantor.kode')
             ->leftJoin('m_layanan_pst', 'm_new_kunjungan.kunjungan_pst', '=', 'm_layanan_pst.kode')
             ->leftJoin('mf_antrian', 'm_new_kunjungan.kunjungan_flag_antrian', '=', 'mf_antrian.kode')
             ->leftJoin('m_pendidikan', 'm_pengunjung.pengunjung_pendidikan', '=', 'm_pendidikan.kode')
@@ -671,11 +682,12 @@ class NewBukutamuController extends Controller
                          ->orWhere('kunjungan_tanggal', 'like', '%' . $searchValue . '%')
                          ->orWhere('users.name', 'like', '%' . $searchValue . '%')
                          ->orWhere('mf_antrian.nama', 'like', '%' . $searchValue . '%')
+                         ->orWhere('m_layanan_kantor.nama', 'like', '%' . $searchValue . '%')
                          ->orWhere('m_layanan_pst.nama', 'like', '%' . $searchValue . '%')
                          ->orWhere('mjkunjungan.nama', 'like', '%' . $searchValue . '%')
                          ->orWhere('kunjungan_teks_antrian', 'like', '%' . $searchValue . '%');
             })
-            ->select('m_new_kunjungan.*', 'm_pengunjung.pengunjung_nama','m_pengunjung.pengunjung_email', 'm_pengunjung.pengunjung_jk', 'mjk.inisial as jk_inisial', 'mjk.nama as jk_nama', 'm_tujuan.inisial as tujuan_inisial', 'm_tujuan.nama as tujuan_nama', 'users.name', 'users.username', 'mjkunjungan.nama as jenis_nama', 'm_layanan_pst.nama as kunjungan_pst_teks', 'm_pendidikan.nama as pendidikan_nama','mf_antrian.nama as flag_antrian_teks')
+            ->select('m_new_kunjungan.*', 'm_pengunjung.pengunjung_nama','m_pengunjung.pengunjung_email', 'm_pengunjung.pengunjung_jk', 'mjk.inisial as jk_inisial', 'mjk.nama as jk_nama', 'm_tujuan.inisial as tujuan_inisial', 'm_tujuan.nama as tujuan_nama', 'users.name', 'users.username', 'mjkunjungan.nama as jenis_nama', 'm_layanan_kantor.nama as kunjungan_kantor_teks','m_layanan_pst.nama as kunjungan_pst_teks', 'm_pendidikan.nama as pendidikan_nama','mf_antrian.nama as flag_antrian_teks')
             ->skip($start)
             ->take($rowperpage)
             ->orderBy($columnName, $columnSortOrder)
@@ -712,7 +724,29 @@ class NewBukutamuController extends Controller
         </div>
         ';
         //
-            if ($item->kunjungan_tujuan == 2)
+            if ($item->kunjungan_tujuan == 1)
+            {
+                //ke kantor
+                $tujuan = $item->kunjungan_kantor_teks;
+                if ($item->kunjungan_kantor == 1)
+                {
+                    $warna_layanan_utama = 'badge-warning';
+                }
+                else if ($item->kunjungan_kantor == 2)
+                {
+                    $warna_layanan_utama = 'badge-info';
+                }
+                else if ($item->kunjungan_kantor == 3)
+                {
+                    $warna_layanan_utama = 'badge-success';
+                }
+                else
+                {
+                    $warna_layanan_utama = 'badge-primary';
+                }
+
+            }
+            elseif ($item->kunjungan_tujuan == 2)
             {
                 //ke pst ambil layanan pst
                 $tujuan = $item->kunjungan_pst_teks;
@@ -1495,18 +1529,29 @@ class NewBukutamuController extends Controller
             //masukkan ke tabel kunjungan
             //cek dulu antrian ada sesuai layanan
             //kalo pst cek layanan pst juga
-            if ($request->kunjungan_tujuan == 2)
+            if ($request->kunjungan_tujuan == 1)
+            {
+                //kantor
+                $data_antrian = NewKunjungan::where([['kunjungan_tanggal', Carbon::today()->format('Y-m-d')],['kunjungan_tujuan',$request->kunjungan_tujuan], ['kunjungan_kantor', $request->layanan_kantor_kode]])->orderBy('kunjungan_nomor_antrian', 'desc')->first();
+                $data_layanan_utama = LayananKantor::where('kode',$request->layanan_kantor_kode)->first();
+                $nomor_antrian_inisial = $data_layanan_utama->inisial;
+                $layanan_pst = 99;
+                $layanan_kantor = $request->layanan_kantor_kode;
+            }
+            elseif ($request->kunjungan_tujuan == 2)
             {
                 //pst
                 $data_antrian = NewKunjungan::where([['kunjungan_tanggal', Carbon::today()->format('Y-m-d')],['kunjungan_tujuan',$request->kunjungan_tujuan], ['kunjungan_pst', $request->layananpst_kode]])->orderBy('kunjungan_nomor_antrian', 'desc')->first();
                 $data_layanan_utama = MasterLayananPST::where('kode',$request->layananpst_kode)->first();
                 $nomor_antrian_inisial = $data_layanan_utama->inisial;
                 $layanan_pst = $request->layananpst_kode;
+                $layanan_kantor = 99;
             }
             else
             {
                 $data_antrian = NewKunjungan::where([['kunjungan_tanggal', Carbon::today()->format('Y-m-d')], ['kunjungan_tujuan',$request->kunjungan_tujuan]])->orderBy('kunjungan_nomor_antrian', 'desc')->first();
-                $layanan_pst = 0;
+                $layanan_pst = 99;
+                $layanan_kantor = 99;
                 $data_layanan_utama = MasterTujuan::where('kode',$request->kunjungan_tujuan)->first();
                 $nomor_antrian_inisial = $data_layanan_utama->inisial;
             }
@@ -1522,7 +1567,9 @@ class NewBukutamuController extends Controller
                 $jumlah_tamu = $request->jumlah_tamu;
                 $laki = $request->tamu_laki;
                 $wanita = $request->tamu_wanita;
-            } else {
+            }
+            else
+            {
                 $jumlah_tamu = 1;
                 //cek jenis kelamin ambil dari query data diatas
                 if ($data->pengunjung_jk == 1) {
@@ -1541,6 +1588,7 @@ class NewBukutamuController extends Controller
             $newdata->kunjungan_jenis = $request->jenis_kunjungan;
             $newdata->kunjungan_tujuan = $request->kunjungan_tujuan;
             $newdata->kunjungan_pst = $layanan_pst;
+            $newdata->kunjungan_kantor = $layanan_kantor;
             if ($namafile_kunjungan != NULL) {
                 $newdata->kunjungan_foto = $namafile_kunjungan;
             }
@@ -1559,9 +1607,13 @@ class NewBukutamuController extends Controller
             if (filter_var($newdata->Pengunjung->pengunjung_email, FILTER_VALIDATE_EMAIL))
             {
                 //kirim mail
-                if ($newdata->kunjungan_tujuan == 2)
+                if ($newdata->kunjungan_tujuan == 1)
                 {
-                    $layanan = $newdata->LayananUtama->nama;
+                    $layanan = $newdata->Tujuan->nama .' - '. $newdata->LayananKantor->nama;
+                }
+                elseif ($newdata->kunjungan_tujuan == 2)
+                {
+                    $layanan = $newdata->Tujuan->nama .' - '. $newdata->LayananUtama->nama;
                 }
                 else
                 {
@@ -1614,7 +1666,7 @@ class NewBukutamuController extends Controller
         if ($request->model == "hp")
         {
             //cari nomor hp
-            $data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_nomor_hp',$request->nomor)->first();
+            $data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.LayananKantor','Kunjungan.FlagAntrian')->where('pengunjung_nomor_hp',$request->nomor)->first();
             if ($data)
             {
                 $arr = array(
@@ -1629,7 +1681,7 @@ class NewBukutamuController extends Controller
         if ($request->model == "pengunjung")
         {
             //pengunjung
-            $data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_uid',$request->uid)->first();
+            $data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.LayananKantor','Kunjungan.FlagAntrian')->where('pengunjung_uid',$request->uid)->first();
             if ($data)
             {
                 $arr = array(
@@ -1651,7 +1703,7 @@ class NewBukutamuController extends Controller
         if ($request->model == "member")
         {
             //member/users
-            $data = User::with('mLevel','Pengunjung','Pengunjung.Pendidikan','Pengunjung.JenisKelamin','Pengunjung.Kunjungan','Pengunjung.Kunjungan.Tujuan','Pengunjung.Kunjungan.JenisKunjungan','Pengunjung.Kunjungan.LayananUtama','Pengunjung.Kunjungan.FlagAntrian')->where('id',$request->id)->first();
+            $data = User::with('mLevel','Pengunjung','Pengunjung.Pendidikan','Pengunjung.JenisKelamin','Pengunjung.Kunjungan','Pengunjung.Kunjungan.Tujuan','Pengunjung.Kunjungan.JenisKunjungan','Pengunjung.Kunjungan.LayananUtama','Pengunjung.Kunjungan.LayananKantor','Pengunjung.Kunjungan.FlagAntrian')->where('id',$request->id)->first();
             //$data = Pengunjung::with('Pendidikan','JenisKelamin','Member','Kunjungan','Kunjungan.Tujuan','Kunjungan.JenisKunjungan','Kunjungan.LayananUtama','Kunjungan.FlagAntrian')->where('pengunjung_uid',$request->uid)->first();
             if ($data)
             {
@@ -1674,7 +1726,7 @@ class NewBukutamuController extends Controller
         if ($request->model == "kunjungan")
         {
             //kunjungan
-            $data = NewKunjungan::with('Pengunjung','Tujuan','JenisKunjungan','LayananUtama','FlagAntrian','Petugas','Pengunjung.JenisKelamin','Pengunjung.Pendidikan','Tujuan.Tipe')->where('kunjungan_uid',$request->uid)->first();
+            $data = NewKunjungan::with('Pengunjung','Tujuan','JenisKunjungan','LayananUtama','LayananKantor','FlagAntrian','Petugas','Pengunjung.JenisKelamin','Pengunjung.Pendidikan','Tujuan.Tipe')->where('kunjungan_uid',$request->uid)->first();
             if ($data)
             {
                 $arr = array(

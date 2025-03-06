@@ -36,11 +36,11 @@ class NewBukutamu extends Seeder
             ['id'=>5,'kode' => 5, 'nama' => 'Doktor'],
         ]);
         DB::table('m_layanan_pst')->insert([
-            ['id'=>1,'kode' => 0, 'inisial'=>'LA', 'nama' => 'Lainnya'],
-            ['id'=>2,'kode' => 1, 'inisial'=>'PS', 'nama' => 'Perpustakaan'],
-            ['id'=>3,'kode' => 2, 'inisial'=>'PJ', 'nama' => 'Penjualan Produk Statistik'],
-            ['id'=>4,'kode' => 3,  'inisial'=>'KS', 'nama' => 'Konsultasi Statistik'],
-            ['id'=>5,'kode' => 4,  'inisial'=>'RS', 'nama' => 'Rekomendasi Kegiatan Statistik'],
+            ['id'=>1,'kode' => 1, 'inisial'=>'PS', 'nama' => 'Perpustakaan'],
+            ['id'=>2,'kode' => 2, 'inisial'=>'PJ', 'nama' => 'Penjualan Produk Statistik'],
+            ['id'=>3,'kode' => 3,  'inisial'=>'KS', 'nama' => 'Konsultasi Statistik'],
+            ['id'=>4,'kode' => 4,  'inisial'=>'RS', 'nama' => 'Rekomendasi Kegiatan Statistik'],
+            ['id'=>5,'kode' => 99, 'inisial'=>'LA', 'nama' => 'Lainnya'],
         ]);
     }
 }

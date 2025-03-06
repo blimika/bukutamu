@@ -22,7 +22,7 @@ class MasterNewkunjungan extends Migration
             $table->text('kunjungan_tindak_lanjut')->nullable();
             $table->tinyInteger('kunjungan_jenis')->default(1); //1 Perorangan, 2 Kelompok
             $table->tinyInteger('kunjungan_tujuan')->default(1); //1 Kantor, 2 pst , 3 pojok statistik, 4
-            $table->tinyInteger('kunjungan_pst')->default(0); //isian layanan pst ini bernilai kalo tujuan 2 selain 2 nilai 0
+            $table->tinyInteger('kunjungan_pst')->default(99); //isian layanan pst ini bernilai kalo tujuan 2 selain 2 nilai 99
             $table->string('kunjungan_foto',250)->nullable();
             $table->tinyInteger('kunjungan_jumlah_orang')->default(1);
             $table->tinyInteger('kunjungan_jumlah_pria')->default(0); //tamu laki

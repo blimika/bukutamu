@@ -22,6 +22,9 @@ class NewKunjungan extends Model
     public function LayananUtama(){
     	return $this->belongsTo('App\MasterLayananPST', 'kunjungan_pst', 'kode');
     }
+    public function LayananKantor(){
+    	return $this->belongsTo('App\LayananKantor', 'kunjungan_kantor', 'kode');
+    }
     public function FlagAntrian(){
     	return $this->belongsTo('App\FlagAntrian', 'kunjungan_flag_antrian', 'kode');
     }

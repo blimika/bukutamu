@@ -293,7 +293,7 @@ $('#edit_hp').click(function(){
         else if (kunjungan_tujuan == 2)
         {
             var layanan_pst = $('#layananpst_kode').val();
-            if (layanan_pst < 1)
+            if (layanan_pst == 99)
             {
                 Swal.fire({
                     type: 'error',
