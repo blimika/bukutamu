@@ -51,7 +51,11 @@ $('#EditPetugasModal').on('show.bs.modal', function (event) {
                 $('#EditPetugasModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
 
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#EditPetugasModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#EditPetugasModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }

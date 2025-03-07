@@ -104,6 +104,8 @@
     <script src="{{asset('dist/grafik/export-data.js')}}"></script>
     <script src="{{asset('dist/grafik/series-label.js')}}"></script>
     <script src="{{asset('dist/grafik/accessibility.js')}}"></script>
+    <!---moment.js url--->
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <!--Morris JavaScript -->
     <script src="{{asset('assets/node_modules/raphael/raphael-min.js')}}"></script>
     <script src="{{asset('assets/node_modules/morrisjs/morris.js')}}"></script>

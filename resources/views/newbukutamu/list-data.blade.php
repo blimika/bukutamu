@@ -145,7 +145,8 @@
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
-
+    <!---moment.js url--->
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <!-- Sweet-Alert  -->
     <script src="{{asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <!-- Magnific popup JavaScript -->

@@ -226,12 +226,13 @@ class NewBukutamuController extends Controller
     public function DataKunjungan()
     {
         //$data = NewKunjungan::orderBy('kunjungan_id','desc')->get();
-        $MasterTujuan = MasterTujuan::orderBy('id', 'asc')->get();
-        $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
+        $MasterTujuan = MasterTujuan::orderBy('kode', 'asc')->get();
+        $MasterLayananPST = MasterLayananPST::orderBy('kode', 'asc')->get();
         $MasterJenisKunjungan = Mjkunjungan::orderBy('id', 'asc')->get();
+        $MasterLayananKantor = LayananKantor::orderBy('kode', 'asc')->get();
         $flag_antrian = FlagAntrian::get();
         $DataPetugas = User::where([['level','>',5],['flag',1]])->get();
-        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian,'MasterTujuan'=>$MasterTujuan,'MasterLayananPST'=>$MasterLayananPST,'MasterJenisKunjungan'=>$MasterJenisKunjungan,'DataPetugas'=>$DataPetugas]);
+        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian,'MasterTujuan'=>$MasterTujuan,'MasterLayananPST'=>$MasterLayananPST,'MasterLayananKantor'=>$MasterLayananKantor,'MasterJenisKunjungan'=>$MasterJenisKunjungan,'DataPetugas'=>$DataPetugas]);
     }
     public function PetugasSave(Request $request)
     {
@@ -429,6 +430,8 @@ class NewBukutamuController extends Controller
                 $data->kunjungan_flag_feedback = 2;
                 $data->kunjungan_nilai_feedback = $request->feedback_nilai;
                 $data->kunjungan_komentar_feedback = $request->feedback_komentar;
+                $data->kunjungan_ip_feedback = $request->getClientIp();
+                $data->kunjungan_tanggal_feedback = now();
                 $data->update();
 
                 $arr = array(
@@ -474,15 +477,23 @@ class NewBukutamuController extends Controller
             $data = NewKunjungan::where('kunjungan_uid',$request->kunjungan_uid)->first();
             if ($data)
             {
-                if ($request->kunjungan_tujuan_baru == 2)
+                if ($request->kunjungan_tujuan_baru == 1)
+                {
+                    $layanan_kantor_baru = $request->kunjungan_layanan_kantor_baru;
+                    $layanan_pst_baru = 99;
+                }
+                elseif ($request->kunjungan_tujuan_baru == 2)
                 {
                     $layanan_pst_baru = $request->kunjungan_layanan_pst_baru;
+                    $layanan_kantor_baru = 99;
                 }
                 else
                 {
-                    $layanan_pst_baru = 0;
+                    $layanan_pst_baru = 99;
+                    $layanan_kantor_baru = 99;
                 }
                 $data->kunjungan_tujuan = $request->kunjungan_tujuan_baru;
+                $data->kunjungan_kantor = $layanan_kantor_baru;
                 $data->kunjungan_pst = $layanan_pst_baru;
                 $data->update();
 
@@ -1089,12 +1100,18 @@ class NewBukutamuController extends Controller
         $pengunjung_baru = Pengunjung::count();
         $kunjungan_baru = NewKunjungan::count();
         $kunjungan_antrian = NewKunjungan::where('kunjungan_flag_antrian','<','3')->count();
+        $kunjungan_feedback = NewKunjungan::where([['kunjungan_tanggal_feedback',null],['kunjungan_flag_feedback','2']])->count();
+        $kunjungan_pst = NewKunjungan::where([['kunjungan_tujuan','2'],['kunjungan_pst','0']])->count();
+        $kunjungan_kantor = NewKunjungan::where([['kunjungan_tujuan','1'],['kunjungan_kantor','99'],['kunjungan_keperluan','like','%Penawaran%']])->count();
         return view('master.database',[
             'pengunjung_lama'=>$pengunjung_lama,
             'kunjungan_lama'=>$kunjungan_lama,
             'pengunjung_baru'=>$pengunjung_baru,
             'kunjungan_baru'=>$kunjungan_baru,
-            'kunjungan_antrian'=>$kunjungan_antrian
+            'kunjungan_antrian'=>$kunjungan_antrian,
+            'kunjungan_feedback'=>$kunjungan_feedback,
+            'kunjungan_pst'=>$kunjungan_pst,
+            'kunjungan_kantor'=>$kunjungan_kantor
         ]);
     }
     public function Sinkron()
@@ -1200,6 +1217,90 @@ class NewBukutamuController extends Controller
         else
         {
             $pesan_error="tidak mempunyai hak untuk sinkoronisasi";
+            $pesan_warna="danger";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $pesan_warna);
+        return redirect()->route('master.database');
+    }
+    public function SinkronKantor()
+    {
+        if (Auth::user()->level == 20)
+        {
+            $data = NewKunjungan::where([['kunjungan_tujuan','1'],['kunjungan_kantor','99'],['kunjungan_keperluan','like','%Penawaran%']])->get();
+            if ($data)
+            {
+                $i=0;
+                foreach ($data as $item) {
+                    $data_kunjungan = NewKunjungan::where('kunjungan_uid', $item->kunjungan_uid)->first();
+                    $data_kunjungan->kunjungan_kantor = 3;
+                    $data_kunjungan->update();
+                    $i++;
+                }
+
+                $pesan_error="data kunjungan sebanyak ".$i." sudah di sinkronisasi";
+                $pesan_warna="success";
+            }
+        }
+        else
+        {
+            $pesan_error="tidak mempunyai hak untuk sinkronisasi feedback";
+            $pesan_warna="danger";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $pesan_warna);
+        return redirect()->route('master.database');
+    }
+    public function SinkronPST()
+    {
+        if (Auth::user()->level == 20)
+        {
+            $data = NewKunjungan::where([['kunjungan_tujuan','2'],['kunjungan_pst','0']])->get();
+            if ($data)
+            {
+                $i=0;
+                foreach ($data as $item) {
+                    $data_kunjungan = NewKunjungan::where('kunjungan_uid', $item->kunjungan_uid)->first();
+                    $data_kunjungan->kunjungan_pst = 99;
+                    $data_kunjungan->update();
+                    $i++;
+                }
+
+                $pesan_error="data kunjungan sebanyak ".$i." sudah di sinkronisasi";
+                $pesan_warna="success";
+            }
+        }
+        else
+        {
+            $pesan_error="tidak mempunyai hak untuk sinkronisasi feedback";
+            $pesan_warna="danger";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $pesan_warna);
+        return redirect()->route('master.database');
+    }
+    public function SinkronFeedback()
+    {
+        if (Auth::user()->level == 20)
+        {
+            $data = NewKunjungan::where([['kunjungan_tanggal_feedback',null],['kunjungan_flag_feedback','2']])->get();
+            if ($data)
+            {
+                $i=0;
+                foreach ($data as $item) {
+                    $data_kunjungan = NewKunjungan::where('kunjungan_uid', $item->kunjungan_uid)->first();
+                    $data_kunjungan->kunjungan_tanggal_feedback = $item->updated_at;
+                    $data_kunjungan->update();
+                    $i++;
+                }
+
+                $pesan_error="data kunjungan sebanyak ".$i." sudah di sinkronisasi";
+                $pesan_warna="success";
+            }
+        }
+        else
+        {
+            $pesan_error="tidak mempunyai hak untuk sinkronisasi feedback";
             $pesan_warna="danger";
         }
         Session::flash('message', $pesan_error);

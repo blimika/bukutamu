@@ -60,9 +60,27 @@
                                     <td>{{$kunjungan_antrian}}</td>
                                 </tr>
                                 <tr>
+                                    <td>Feedback</td>
+                                    <td></td>
+                                    <td>{{$kunjungan_feedback}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Layanan PST (0)</td>
+                                    <td></td>
+                                    <td>{{$kunjungan_pst}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kantor Lainnya (Penawaran)</td>
+                                    <td></td>
+                                    <td>{{$kunjungan_kantor}}</td>
+                                </tr>
+                                <tr>
                                     <td colspan="3" class="text-right">
-                                        <a href="{{route('database.antrian')}}" class="btn btn-danger">SINKRON ANTRIAN</a>
-                                        <a href="{{route('database.sinkron')}}" class="btn btn-info">SINKRON</a>
+                                        <a href="{{route('database.antrian')}}" class="btn btn-danger">ANTRIAN</a>
+                                        <a href="{{route('database.sinkron')}}" class="btn btn-info">KUNJUNGAN</a>
+                                        <a href="{{route('database.feedback')}}" class="btn btn-success">FEEDBACK</a>
+                                        <a href="{{route('database.pst')}}" class="btn btn-warning">PST</a>
+                                        <a href="{{route('database.kantor')}}" class="btn btn-dark">KANTOR</a>
                                     </td>
                                 </tr>
                             </tbody>

@@ -83,7 +83,11 @@ $('#ViewKunjunganModal').on('show.bs.modal', function (event) {
                 $('#ViewKunjunganModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
 
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#ViewKunjunganModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#ViewKunjunganModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }
@@ -134,7 +138,6 @@ $('#EditFlagAntrianModal').on('show.bs.modal', function (event) {
             $('#EditFlagAntrianModal .modal-body #pengunjung_jk').text(d.data.pengunjung.jenis_kelamin.nama)
             $('#EditFlagAntrianModal .modal-footer #pengunjung_timeline').attr("href","{{route('timeline','')}}/"+d.data.pengunjung.pengunjung_uid)
             $('#EditFlagAntrianModal .modal-body #kunjungan_tanggal').text(d.data.kunjungan_tanggal)
-
             $('#EditFlagAntrianModal .modal-body #kunjungan_nomor_antrian').text(d.data.kunjungan_teks_antrian)
             if (d.data.kunjungan_flag_antrian == 1)
             {
@@ -159,7 +162,11 @@ $('#EditFlagAntrianModal').on('show.bs.modal', function (event) {
                 $('#EditFlagAntrianModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
 
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#EditFlagAntrianModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#EditFlagAntrianModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }
@@ -295,8 +302,11 @@ $('#EditTindakLanjutModal').on('show.bs.modal', function (event) {
             {
                 $('#EditTindakLanjutModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
-
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#EditTindakLanjutModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#EditTindakLanjutModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }
@@ -443,7 +453,11 @@ $('#EditTujuanModal').on('show.bs.modal', function (event) {
                 $('#EditTujuanModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
 
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#EditTujuanModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#EditTujuanModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }
@@ -456,14 +470,22 @@ $('#EditTujuanModal').on('show.bs.modal', function (event) {
             $('#EditTujuanModal .modal-body #kunjungan_petugas_nama').text(d.data.petugas.name)
             $('#EditTujuanModal .modal-body #kunjungan_keperluan').text(d.data.kunjungan_keperluan)
             $('#EditTujuanModal .modal-body #kunjungan_tujuan_baru').val(d.data.kunjungan_tujuan)
-            $('#EditTujuanModal .modal-body #layananpst_kode_baru').val(d.data.layanan_utama.kode)
-                if (d.data.kunjungan_tujuan == 2)
+                if (d.data.kunjungan_tujuan == 1)
+                {
+                    $('#EditTujuanModal .modal-body #row_layananpst').hide();
+                    $('#EditTujuanModal .modal-body #row_layanankantor').show();
+                    $('#EditTujuanModal .modal-body #layanankantor_kode_baru').val(d.data.layanan_kantor.kode)
+                }
+                else if (d.data.kunjungan_tujuan == 2)
                 {
                     $('#EditTujuanModal .modal-body #row_layananpst').show();
+                    $('#EditTujuanModal .modal-body #row_layanankantor').hide();
+                    $('#EditTujuanModal .modal-body #layananpst_kode_baru').val(d.data.layanan_utama.kode)
                 }
                 else
                 {
                     $('#EditTujuanModal .modal-body #row_layananpst').hide();
+                    $('#EditTujuanModal .modal-body #row_layanankantor').hide();
                 }
             }
             else
@@ -478,13 +500,20 @@ $('#EditTujuanModal').on('show.bs.modal', function (event) {
     });
     $('#EditTujuanModal .modal-body #kunjungan_tujuan_baru').change(function(){
     var kunjungan_tujuan = $('#EditTujuanModal .modal-body #kunjungan_tujuan_baru').val();
-    if (kunjungan_tujuan == 2)
+    if (kunjungan_tujuan == 1)
+    {
+        $('#EditTujuanModal .modal-body #row_layananpst').hide();
+        $('#EditTujuanModal .modal-body #row_layanankantor').show();
+    }
+    else if (kunjungan_tujuan == 2)
     {
         $('#EditTujuanModal .modal-body #row_layananpst').show();
+        $('#EditTujuanModal .modal-body #row_layanankantor').hide();
     }
     else
     {
         $('#EditTujuanModal .modal-body #row_layananpst').hide();
+        $('#EditTujuanModal .modal-body #row_layanankantor').hide();
     }
 
 });
@@ -496,12 +525,13 @@ $('#EditTujuanModal .modal-footer #simpanTujuanBaru').on('click', function(e) {
     var kunjungan_uid = $('#EditTujuanModal .modal-body #edit_uid').val();
     var tujuan_baru = $('#EditTujuanModal .modal-body #kunjungan_tujuan_baru').val();
     var layanan_pst_baru = $('#EditTujuanModal .modal-body #layananpst_kode_baru').val();
+    var layanan_kantor_baru = $('#EditTujuanModal .modal-body #layanankantor_kode_baru').val();
     if (tujuan_baru == "")
     {
         $('#EditTujuanModal .modal-body #tujuan_baru_error').text('Pilih salah satu tujuan');
         return false;
     }
-    else if (tujuan_baru == 2 && layanan_pst_baru < 1 )
+    else if (tujuan_baru == 2 && layanan_pst_baru == 99 )
     {
         $('#EditTujuanModal .modal-body #tujuan_baru_error').text('Tujuan PST, layanan pst harus terpilih selain lainnya');
         return false;
@@ -521,7 +551,8 @@ $('#EditTujuanModal .modal-footer #simpanTujuanBaru').on('click', function(e) {
                 kunjungan_id: kunjungan_id,
                 kunjungan_uid: kunjungan_uid,
                 kunjungan_tujuan_baru: tujuan_baru,
-                kunjungan_layanan_pst_baru: layanan_pst_baru
+                kunjungan_layanan_pst_baru: layanan_pst_baru,
+                kunjungan_layanan_kantor_baru: layanan_kantor_baru
             },
             cache: false,
             dataType: 'json',
@@ -610,7 +641,11 @@ $('#EditJenisKunjunganModal').on('show.bs.modal', function (event) {
                 $('#EditJenisKunjunganModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
 
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#EditJenisKunjunganModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#EditJenisKunjunganModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }

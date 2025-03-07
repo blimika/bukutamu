@@ -213,6 +213,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/master/database', 'NewBukutamuController@Database')->name('master.database');
     Route::get('/master/sinkron/database', 'NewBukutamuController@Sinkron')->name('database.sinkron');
     Route::get('/master/sinkron/antrian', 'NewBukutamuController@SinkronAntrian')->name('database.antrian');
+    Route::get('/master/sinkron/feedback', 'NewBukutamuController@SinkronFeedback')->name('database.feedback');
+    Route::get('/master/sinkron/pst', 'NewBukutamuController@SinkronPST')->name('database.pst');
+    Route::get('/master/sinkron/kantor', 'NewBukutamuController@SinkronKantor')->name('database.kantor');
     Route::get('/pengunjung/newlist', 'NewBukutamuController@DataPengunjung')->name('pengunjung.newlist');
     Route::get('/pengunjung/pagelist', 'NewBukutamuController@PengunjungPageList')->name('pengunjung.pagelist');
     Route::get('/kunjungan/print/antrian/{uid}', 'NewBukutamuController@PrintNomorAntrian')->name('kunjungan.printantrian');

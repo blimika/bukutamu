@@ -107,12 +107,18 @@
                     <dt class="col-sm-4">Petugas Layanan</dt>
                     <dd class="col-sm-8"><span id="kunjungan_petugas_nama"></span></dd>
                     <hr style="width: 100%; color: black; height: 1px;" />
-                    <dt class="col-sm-4">Flag Feedback</dt>
+                    <dt class="col-sm-12">Feedback</dt>
+                    <hr style="width: 100%; color: black; height: 1px;" />
+                    <dt class="col-sm-4">Flag</dt>
                     <dd class="col-sm-8"><span id="kunjungan_flag_feedback"></span></dd>
-                    <dt class="col-sm-4">Nilai Feedback</dt>
+                    <dt class="col-sm-4">Nilai</dt>
                     <dd class="col-sm-8"><span id="kunjungan_nilai_feedback"></span></dd>
-                    <dt class="col-sm-4">Komentar Feedback</dt>
+                    <dt class="col-sm-4">Komentar</dt>
                     <dd class="col-sm-8"><span id="kunjungan_komentar_feedback"></span></dd>
+                    <dt class="col-sm-4">Tanggal isi</dt>
+                    <dd class="col-sm-8"><span id="kunjungan_tanggal_feedback"></span></dd>
+                    <dt class="col-sm-4">IP</dt>
+                    <dd class="col-sm-8"><span id="kunjungan_ip_feedback"></span></dd>
                 </dl>
             </div>
             <div class="modal-footer">

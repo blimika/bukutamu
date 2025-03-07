@@ -111,8 +111,8 @@ class MemberController extends Controller
             {
                 if (Storage::disk('public')->exists($record->user_foto))
                 {
-                    $user_foto = '<a class="image-popup" href="'.asset('storage/'.$record->user_foto).'" title="Nama : '.$record->name.'">
-                <img src="'.asset('storage/'.$record->user_foto).'" class="img-circle" width="60" height="60" class="img-responsive" />
+                    $user_foto = '<a class="image-popup" href="'.asset('storage'.$record->user_foto).'" title="Nama : '.$record->name.'">
+                <img src="'.asset('storage'.$record->user_foto).'" class="img-circle" width="60" height="60" class="img-responsive" />
             </a>';
                 }
                 else

@@ -62,6 +62,19 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group row" id="row_layanankantor">
+                    <div class="col-sm-4">
+                        <label class="control-label">Layanan Kantor</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <select class="form-control" id="layanankantor_kode_baru" name="layanankantor_kode_baru">
+                            <option value="">Pilih salah satu</option>
+                            @foreach ($MasterLayananKantor as $item)
+                                <option value="{{$item->kode}}">{{$item->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-sm-12">
                         <span id="tujuan_baru_error" class="text-danger"></span>

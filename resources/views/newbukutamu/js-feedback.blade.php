@@ -62,7 +62,11 @@ $('#BeriFeebackModal').on('show.bs.modal', function (event) {
                 $('#BeriFeebackModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
 
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#BeriFeebackModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#BeriFeebackModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }
@@ -202,7 +206,11 @@ $('#ViewFeedbackModal').on('show.bs.modal', function (event) {
                 $('#ViewFeedbackModal .modal-body #kunjungan_jenis').html('<span class="badge badge-primary badge-pill">'+d.data.jenis_kunjungan.nama+' ('+d.data.kunjungan_jumlah_orang+' org)</span> <span class="badge badge-info badge-pill">L'+d.data.kunjungan_jumlah_pria+'</span> <span class="badge badge-danger badge-pill">P'+d.data.kunjungan_jumlah_wanita+'</span>')
             }
 
-            if (d.data.kunjungan_tujuan == 2)
+            if (d.data.kunjungan_tujuan == 1)
+            {
+                $('#ViewFeedbackModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.nama+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_kantor.nama+'</span>')
+            }
+            else if (d.data.kunjungan_tujuan == 2)
             {
                 $('#ViewFeedbackModal .modal-body #kunjungan_tujuan').html('<span class="badge badge-info badge-pill">'+d.data.tujuan.inisial+'</span> <span class="badge badge-success badge-pill">'+d.data.layanan_utama.nama+'</span>')
             }
@@ -237,8 +245,27 @@ $('#ViewFeedbackModal').on('show.bs.modal', function (event) {
                     teks +='<span class="fa fa-star"></span>';
                 }
             }
+            if (d.data.kunjungan_tanggal_feedback == null)
+            {
+                var tanggal_feedback = "<i>---tidak tersedia----</i>";
+            }
+            else
+            {
+                //var tanggal_feedback = moment(d.data.kunjungan_tanggal_feedback);
+                var tanggal_feedback = moment(d.data.kunjungan_tanggal_feedback).locale('id').format('LLLL');
+            }
+            if (d.data.kunjungan_ip_feedback == null)
+            {
+                var ip_feedback = "<i>---tidak tersedia----</i>";
+            }
+            else
+            {
+                var ip_feedback = d.data.kunjungan_ip_feedback;
+            }
             $('#ViewFeedbackModal .modal-body #kunjungan_nilai_feedback').html(teks)
             $('#ViewFeedbackModal .modal-body #kunjungan_komentar_feedback').html(d.data.kunjungan_komentar_feedback)
+            $('#ViewFeedbackModal .modal-body #kunjungan_tanggal_feedback').html(tanggal_feedback)
+            $('#ViewFeedbackModal .modal-body #kunjungan_ip_feedback').html(ip_feedback)
             }
             else
             {
