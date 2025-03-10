@@ -47,7 +47,7 @@
                     <dt class="col-sm-12">Keperluan/Data dicari</dt>
                     <dd class="col-sm-12"><span id="kunjungan_keperluan"></span></dd>
                     <dt class="col-sm-12">Tindak Lanjut</dt>
-                    <dd class="col-sm-12"><span id="kunjungan_tindak_lanjut"></span></dd>
+                    <dd class="col-sm-12"><i><span id="kunjungan_tindak_lanjut"></span></i></dd>
                 </dl>
 
             </div>

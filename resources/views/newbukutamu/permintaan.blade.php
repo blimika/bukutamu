@@ -118,6 +118,7 @@
 <script>
 $( document ).ready(function() {
     $('#PSTLayanan').hide();
+    $('#LayananKantor').hide();
     $('#jumlah_tamu').hide();
     $('#jumlah_tamu_teks').hide();
     $('#tamu_laki').hide();

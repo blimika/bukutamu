@@ -2323,12 +2323,14 @@ class NewBukutamuController extends Controller
         $Mjk = Mjk::orderBy('id', 'asc')->get();
         $MasterPendidikan = MasterPendidikan::orderBy('id', 'asc')->get();
         $MasterTujuan = MasterTujuan::where('kode','>',2)->orderBy('id', 'asc')->get();
-        $MasterLayananPST = MasterLayananPST::orderBy('id', 'asc')->get();
+        $MasterLayananPST = MasterLayananPST::orderBy('kode', 'asc')->get();
+        $MasterLayananKantor = LayananKantor::orderBy('kode', 'asc')->get();
         return view('newbukutamu.permintaan',[
             'Mjk' => $Mjk,
             'MasterPendidikan' => $MasterPendidikan,
             'MasterLayananPST'=>$MasterLayananPST,
-            'MasterTujuan'=>$MasterTujuan
+            'MasterTujuan'=>$MasterTujuan,
+            'MasterLayananKantor'=>$MasterLayananKantor
         ]);
     }
 }

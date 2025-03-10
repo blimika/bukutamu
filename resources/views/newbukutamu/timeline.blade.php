@@ -124,25 +124,47 @@
                                             <dt class="col-sm-3">Keperluan</dt>
                                             <dd class="col-sm-9">{{$item->kunjungan_keperluan}}</dd>
                                             <dt class="col-sm-3">Tindak Lanjut</dt>
-                                            <dd class="col-sm-9">{{$item->kunjungan_tindak_lanjut}}</dd>
+                                            <dd class="col-sm-9"><i>{{$item->kunjungan_tindak_lanjut}}</i></dd>
                                             <dt class="col-sm-3">Petugas</dt>
                                             <dd class="col-sm-9">
                                                 @if($item->kunjungan_petugas_id > 0)
                                                 {{$item->Petugas->name}}
                                                @endif
                                                 </dd>
+                                            <hr style="width: 100%; color: black; height: 1px;" />
                                             <dt class="col-sm-3">Nilai Feedback</dt>
                                             <dd class="col-sm-9">
-                                                @for ($i = 1; $i < 7; $i++)
-                                                    @if ($i <= $item->kunjungan_nilai_feedback)
-                                                        <span class="fa fa-star text-warning"></span>
-                                                    @else
-                                                        <span class="fa fa-star"></span>
-                                                    @endif
-                                                @endfor
+                                                @if ($item->kunjungan_flag_feedback == 2)
+                                                    @for ($i = 1; $i < 7; $i++)
+                                                        @if ($i <= $item->kunjungan_nilai_feedback)
+                                                            <span class="fa fa-star text-warning"></span>
+                                                        @else
+                                                            <span class="fa fa-star"></span>
+                                                        @endif
+                                                    @endfor
+                                                @else
+                                                    <i>--- belum tersedia ----</i>
+                                                @endif
+
                                             </dd>
                                             <dt class="col-sm-3">Komentar</dt>
                                             <dd class="col-sm-9"><i>{{$item->kunjungan_komentar_feedback}}</i></dd>
+                                            <dt class="col-sm-3">Tanggal</dt>
+                                            <dd class="col-sm-9">
+                                                @if ($item->kunjungan_tanggal_feedback)
+                                                    {{Tanggal::LengkapHariPanjang($item->kunjungan_tanggal_feedback)}}
+                                                @else
+                                                    <i>--- belum tersedia ----</i>
+                                                @endif
+                                            </dd>
+                                            <dt class="col-sm-3">IP</dt>
+                                            <dd class="col-sm-9">
+                                                @if ($item->kunjungan_ip_feedback)
+                                                    {{$item->kunjungan_ip_feedback}}
+                                                @else
+                                                    <i>--- tidak tersedia ----</i>
+                                                @endif
+                                            </dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -154,7 +176,6 @@
                 @else
                     <h3 class="text-center">Data Pengunjung tidak tersedia</h3>
                 @endif
-
             </div>
         </div>
     </div>
