@@ -232,7 +232,8 @@ class NewBukutamuController extends Controller
         $MasterLayananKantor = LayananKantor::orderBy('kode', 'asc')->get();
         $flag_antrian = FlagAntrian::get();
         $DataPetugas = User::where([['level','>',5],['flag',1]])->get();
-        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian,'MasterTujuan'=>$MasterTujuan,'MasterLayananPST'=>$MasterLayananPST,'MasterLayananKantor'=>$MasterLayananKantor,'MasterJenisKunjungan'=>$MasterJenisKunjungan,'DataPetugas'=>$DataPetugas]);
+        $PetugasJaga = MTanggal::where('tanggal', Carbon::today()->format('Y-m-d'))->first();
+        return view('newbukutamu.list-data',['master_flag_antrian'=>$flag_antrian,'MasterTujuan'=>$MasterTujuan,'MasterLayananPST'=>$MasterLayananPST,'MasterLayananKantor'=>$MasterLayananKantor,'MasterJenisKunjungan'=>$MasterJenisKunjungan,'DataPetugas'=>$DataPetugas,'PetugasJaga'=>$PetugasJaga]);
     }
     public function PetugasSave(Request $request)
     {

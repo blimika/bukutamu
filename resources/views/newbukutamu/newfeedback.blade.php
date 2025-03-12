@@ -60,10 +60,14 @@
                                     <dd class="col-lg-9 col-sm-9">{{ $data->Pengunjung->pengunjung_nomor_hp }}</dd>
                                     <dt class="col-lg-3 col-md-3 col-xs-12">Tanggal Kunjungan</dt>
                                     <dd class="col-lg-9 col-sm-9">{{ \Carbon\Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y H:mm:ss') }}</dd>
-                                    <dt class="col-lg-3 col-md-3 col-xs-12">Petugas yang melayani</dt>
-                                    <dd class="col-lg-9 col-sm-9">{{ $data->Petugas->name}}</dd>
+                                    @if ($data->kunjungan_flag_antrian == 3)
+                                        <dt class="col-lg-3 col-md-3 col-xs-12">Petugas yang melayani</dt>
+                                        <dd class="col-lg-9 col-sm-9">{{ $data->Petugas->name}}</dd>
+                                    @endif
                                 </dl>
                             </p>
+                            <!--- sudah selesai dilayani--->
+                            @if ($data->kunjungan_flag_antrian == 3 )
                             <p>
                                 Untuk meningkatkan layanan kami, kami sangat menghargai jika Anda dapat meluangkan beberapa menit untuk mengisi feedback singkat berikut ini. Tanggapan Anda sangat berharga bagi kami untuk terus memberikan pelayanan terbaik.
                             </p>
@@ -74,6 +78,8 @@
                                     <button type="button" class="btn btn-rounded btn-success tombolfeedback m-t-5" data-uid="{{$data->kunjungan_uid}}" data-nama="{{$data->Pengunjung->pengunjung_nama}}" data-tanggal="{{$data->kunjungan_tanggal}}" data-toggle="modal" data-target="#BeriFeebackModal"><span data-toggle="tooltip" data-placement="top" title="Belum memberikan feedback"><i class="fas fa-question"></i> feedback</span></button>
                                 @endif
                             </p>
+                            @endif
+                            <!---batasnya sudah dilayani--->
                             <p>
                                 Sekali lagi, terima kasih atas kunjungan Anda dan kami berharap dapat menyambut Anda kembali di masa depan.
                             </p>
@@ -130,7 +136,7 @@
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
-
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <!-- Sweet-Alert  -->
     <script src="{{ asset('assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <!-- Magnific popup JavaScript -->

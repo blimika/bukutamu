@@ -6,7 +6,8 @@ function GetUmur(birthDateString) {
 }
 //cek nomor hp
 $('#cek_hp').click(function(){
-
+//set validasi_nomorhp = 1
+$('#validasi_nomorhp').val(1);
 var nomor = $("#nomor_hp").val();
 if (nomor == "")
 {
@@ -151,6 +152,18 @@ $('#edit_hp').click(function(){
     $('#newKunjunganSave').on('click', function(e) {
         e.preventDefault();
         var pengunjung_baru = $('#pengunjung_baru').val();
+        var nomor_hp = $('#nomor_hp').val();
+        var nomor_hp_validasi = $('#validasi_nomorhp').val();
+        //cek validasi nomor hp dulu
+        if (nomor_hp_validasi == 0)
+            {
+                Swal.fire({
+                    type: 'error',
+                    title: 'error',
+                    text: 'Silakan cek dulu nomor handphone anda'
+                    });
+                return false;
+            }
         //cek isian bila ada tamu baru / tamu di edit
         if (pengunjung_baru == 1)
         {
@@ -160,7 +173,6 @@ $('#edit_hp').click(function(){
             var pengunjung_pekerjaan = $('#pengunjung_pekerjaan').val();
             var pengunjung_pendidikan = $('#pengunjung_pendidikan').val();
             var penunjung_alamat = $('#penunjung_alamat').val();
-            var nomor_hp = $('#nomor_hp').val();
             if (pengunjung_nama == "")
             {
                 Swal.fire({
@@ -227,6 +239,16 @@ $('#edit_hp').click(function(){
             }
         }
         //batasnya
+        //cek nomor hp harus terisi
+        if (nomor_hp == "")
+            {
+                Swal.fire({
+                    type: 'error',
+                    title: 'error',
+                    text: 'Isian nomor handphone tidak boleh kosong'
+                    });
+                return false;
+            }
         var jenis_kunjungan = $('input[name="jenis_kunjungan"]:checked').val();
         if (jenis_kunjungan == 2)
         {
@@ -290,10 +312,32 @@ $('#edit_hp').click(function(){
                     });
                 return false;
         }
+        else if (kunjungan_tujuan == 1)
+        {
+            var layanan_kantor_kode = $('#layanan_kantor_kode').val();
+            if (layanan_kantor_kode == "")
+            {
+                Swal.fire({
+                    type: 'error',
+                    title: 'error',
+                    text: 'Karena tujuan Kantor maka Pilih salah satu layanan yang digunakan'
+                    });
+                return false;
+            }
+        }
         else if (kunjungan_tujuan == 2)
         {
             var layanan_pst = $('#layananpst_kode').val();
-            if (layanan_pst == 99)
+            if (layanan_pst == "")
+            {
+                Swal.fire({
+                    type: 'error',
+                    title: 'error',
+                    text: 'Karena tujuan PST maka Pilih salah satu layanan yang digunakan'
+                    });
+                return false;
+            }
+            else if (layanan_pst == 99)
             {
                 Swal.fire({
                     type: 'error',
@@ -303,6 +347,7 @@ $('#edit_hp').click(function(){
                 return false;
             }
         }
+
         //cek keperluan sebelum submit
         var kunjungan_keperluan = $('#kunjungan_keperluan').val();
         if (kunjungan_keperluan == "")

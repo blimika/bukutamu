@@ -6,8 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Display Antrian BPS Provinsi Nusa Tenggara Barat">
+    <meta name="author" content="I Putu Dyatmika">
+    <meta http-equiv="refresh" content="60">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
     <title>Display Antrian Pelayanan Statistik Terpadu</title>
@@ -124,16 +125,6 @@
     <script type="text/javascript">
         $(function() {
             $(".preloader").fadeOut();
-        });
-        $(function() {
-            $('[data-toggle="tooltip"]').tooltip()
-        });
-        // ==============================================================
-        // Login and Recover Password
-        // ==============================================================
-        $('#to-recover').on("click", function() {
-            $("#loginform").slideUp();
-            $("#recoverform").fadeIn();
         });
     </script>
 

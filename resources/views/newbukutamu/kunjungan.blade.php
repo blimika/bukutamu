@@ -47,6 +47,7 @@
                             <input type="hidden" name="pengunjung_uid" id="pengunjung_uid" value="" />
                             <input type="hidden" name="edit_pengunjung" id="edit_pengunjung" value="0" />
                             <input type="hidden" name="pengunjung_baru" id="pengunjung_baru" value="0" />
+                            <input type="hidden" name="validasi_nomorhp" id="validasi_nomorhp" value="0" />
                             <h3 class="card-title">Jenis Kunjungan</h3>
                             <h6 class="card-subtitle">silakan isikan sesuai jenis kunjungan </h6>
                             <hr class="m-t-0 m-b-20">
@@ -55,13 +56,13 @@
                             <h6 class="card-subtitle">silakan input data sesuai identitas yang dimiliki </h6>
                             <hr class="m-t-0 m-b-20">
                             @include('newbukutamu.form-biodata')
+                            <h3 class="card-title">Tujuan Kedatangan</h3>
+                            <hr class="m-t-0 m-b-20">
+                            @include('newbukutamu.form-tujuan')
                             <h3 class="card-title">Photo Pengunjung</h3>
                             <h6 class="card-subtitle">ambil posisi terlihat semua wajah</h6>
                             <hr class="m-t-0 m-b-20">
                             @include('newbukutamu.form-photo')
-                            <h3 class="card-title">Tujuan Kedatangan</h3>
-                            <hr class="m-t-0 m-b-20">
-                            @include('newbukutamu.form-tujuan')
                             <hr>
                             <div class="form-actions">
                                 <div class="row">
@@ -174,7 +175,7 @@ $('#perorangan').change(function(){
 });
 
 </script>
-@include('newbukutamu.js-tambah')
+
     <script src="{{asset('dist/js/pages/jasny-bootstrap.js')}}"></script>
     <!-- Date Picker Plugin JavaScript -->
     <script src="{{asset('assets/node_modules/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
@@ -186,6 +187,5 @@ $('#perorangan').change(function(){
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
-    <script>
-    </script>
+    @include('newbukutamu.js-tambah')s
 @stop

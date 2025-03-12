@@ -37,6 +37,22 @@
                     <!--form upload jadwal petugas-->
                     <div class="row">
                         <div class="col-lg-8">
+                            Petugas PST Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}} : 
+                            <br />
+                            <span class="badge badge-success">
+                                @if ($PetugasJaga->petugas1_id > 0)
+                                    {{$PetugasJaga->Petugas1->name}}
+                                @else
+                                    -
+                                @endif
+                            </span> 
+                            <span class="badge badge-info">
+                                @if ($PetugasJaga->petugas2_id > 0)
+                                    {{$PetugasJaga->Petugas2->name}}
+                                @else
+                                    -
+                                @endif
+                            </span>
                         </div>
                         <div class="col-lg-4 text-right">
                             @if (Auth::User()->level > 10)
