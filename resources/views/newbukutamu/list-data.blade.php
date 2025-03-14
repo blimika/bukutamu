@@ -37,7 +37,7 @@
                     <!--form upload jadwal petugas-->
                     <div class="row">
                         <div class="col-lg-8">
-                            Petugas PST Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}} : 
+                            Petugas PST Hari {{Tanggal::HariPanjang(\Carbon\Carbon::now())}} :
                             <br />
                             <span class="badge badge-success">
                                 @if ($PetugasJaga->petugas1_id > 0)
@@ -45,7 +45,7 @@
                                 @else
                                     -
                                 @endif
-                            </span> 
+                            </span>
                             <span class="badge badge-info">
                                 @if ($PetugasJaga->petugas2_id > 0)
                                     {{$PetugasJaga->Petugas2->name}}
@@ -139,10 +139,10 @@
     <link href="{{asset('assets/node_modules/select2/dist/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
     <style type="text/css">
         #preloading,
-        #pesanerror {
+        #pesanerror,
+        #moreTeks {
             display: none;
         }
-        #moreTeks {display:  none;}
     </style>
 @stop
 @section('js')
@@ -153,13 +153,13 @@
     <script src="{{ asset('assets/node_modules/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/node_modules/datatables.net-bs4/js/dataTables.responsive.min.js') }}"></script>
     <!-- start - This is for export functionality only -->
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
     <!---moment.js url--->
     <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
@@ -431,22 +431,21 @@
                     //batas mulai
                     //klik more
                     $('.tabeldata').on('click','.btnMore',function(e) {
-                        e.preventDefault();
-                        var display =  $(this).closest('td').children('#dots').css("display");
-                        if (display == 'none') {
-                            $(this).closest('td').children("#dots").show();
-                            $(this).closest('td').children('.btnMore').text('more');
-                            $(this).closest('td').children('.btnMore').removeClass("btn-danger");
-                            $(this).closest('td').children('.btnMore').addClass("btn-info");
-                            $(this).closest('td').children("#moreTeks").hide();
+                        let td = $(this).closest('td');
+                        let display =  td.children('#dots').css("display");
+                        if (display == "none") {
+                            td.children("#dots").show();
+                            td.children('.btnMore').text('more');
+                            td.children('.btnMore').removeClass("btn-danger").addClass("btn-info");
+                            td.children("#moreTeks").hide();
                         }
                         else {
-                            $(this).closest('td').children("#dots").hide();
-                            $(this).closest('td').children('.btnMore').text('less');
-                            $(this).closest('td').children('.btnMore').removeClass("btn-info");
-                            $(this).closest('td').children('.btnMore').addClass("btn-danger");
-                            $(this).closest('td').children("#moreTeks").show();
+                            td.children("#dots").hide();
+                            td.children('.btnMore').text('less');
+                            td.children('.btnMore').removeClass("btn-info").addClass("btn-danger");
+                            td.children("#moreTeks").show();
                         }
+                        e.preventDefault();
                     });
                     //hapus kunjungan
                     //copy link feedback

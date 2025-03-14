@@ -918,10 +918,9 @@ class NewBukutamuController extends Controller
             //tindak lanjut more
             if (strlen($item->kunjungan_tindak_lanjut) > 80)
             {
-                $tindak_lanjut = '<span id="dots">'.Str::limit($item->kunjungan_tindak_lanjut,80).'
-                </span>
-                <span id="moreTeks">'.$item->kunjungan_tindak_lanjut.'</span>
-                <br />
+                $tindak_lanjut = '<div id="dots">'.Str::limit($item->kunjungan_tindak_lanjut,80).'
+                </div>
+                <div id="moreTeks">'.$item->kunjungan_tindak_lanjut.'</div>
                 <button class="m-t-5 m-b-5 btn btn-xs btn-info btnMore" id="btnMore">more</button>
                 ';
             }
@@ -932,10 +931,9 @@ class NewBukutamuController extends Controller
             //keperluan more
             if (strlen($item->kunjungan_keperluan) > 80)
             {
-                $keperluan = '<span id="dots">'.Str::limit($item->kunjungan_keperluan,80).'
-                </span>
-                <span id="moreTeks">'.$item->kunjungan_keperluan.'</span>
-                <br />
+                $keperluan = '<div id="dots">'.Str::limit($item->kunjungan_keperluan,80).'
+                </div>
+                <div id="moreTeks">'.$item->kunjungan_keperluan.'</div>
                 <button class="m-t-5 m-b-5 btn btn-xs btn-info btnMore" id="btnMore">more</button>
                 ';
             }
@@ -2332,6 +2330,37 @@ class NewBukutamuController extends Controller
             'MasterLayananPST'=>$MasterLayananPST,
             'MasterTujuan'=>$MasterTujuan,
             'MasterLayananKantor'=>$MasterLayananKantor
+        ]);
+    }
+    public function Penilaian()
+    {
+        $data_bulan = array(
+            1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        );
+        $data_bulan_pendek = array(
+            1 => 'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGU', 'SEP', 'OKT', 'NOV', 'DES'
+        );
+        $data_tahun = DB::table('m_new_kunjungan')
+            ->selectRaw('year(kunjungan_tanggal) as tahun')
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'asc')
+            ->get();
+        if (request('tahun') == NULL) {
+            $tahun_filter = date('Y');
+        }
+        elseif (request('tahun') == 0) {
+            $tahun_filter = date('Y');
+        }
+        else {
+            $tahun_filter = request('tahun');
+        }
+        $data = User::where([['level','>',5],['flag',1]])->get();
+
+        return view('newbukutamu.penilaian',[
+            'data'=>$data,
+            'tahun'=>$tahun_filter,
+            'data_tahun'=>$data_tahun,
+            'data_bulan'=>$data_bulan_pendek,
         ]);
     }
 }

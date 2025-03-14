@@ -240,6 +240,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/timeline/{uid}', 'NewBukutamuController@Timeline')->name('timeline');
     Route::get('/listfeedback', 'NewBukutamuController@ListFeedback')->name('listfeedback');
     Route::get('/pagelistfeedback', 'NewBukutamuController@PageListFeedback')->name('pagelistfeedback');
+    Route::get('/penilaian', 'NewBukutamuController@Penilaian')->name('penilaian');
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
