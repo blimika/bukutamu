@@ -25,9 +25,24 @@ class TanggalController extends Controller
     //
     public function MasterTanggal()
     {
+        $data_tahun = DB::table('mtanggal')
+            ->selectRaw('year(tanggal) as tahun')
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'asc')
+            ->get();
+        if (request('tahun') == NULL) {
+            $tahun_filter = 0;
+        } else {
+            $tahun_filter = request('tahun');
+        }
         $data_jtanggal = JTanggal::get();
         $data_operator = User::where('level',10)->get();
-        return view('tanggal.index',['jtanggal'=>$data_jtanggal,'operator'=>$data_operator]);
+        return view('tanggal.index',[
+            'jtanggal'=>$data_jtanggal,
+            'operator'=>$data_operator,
+            'data_tahun'=>$data_tahun,
+            'tahun'=>$tahun_filter
+        ]);
     }
     public function CariTanggal($id)
     {
@@ -168,6 +183,12 @@ class TanggalController extends Controller
     }
     public function PageListTanggal(Request $request)
     {
+        if (request('tahun') == NULL) {
+            $tahun_filter = 0;
+        }
+        else {
+            $tahun_filter = request('tahun');
+        }
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // Rows display per page
@@ -183,15 +204,42 @@ class TanggalController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
         // Total records
-        $totalRecords = MTanggal::select('count(*) as allcount')->count();
-        $totalRecordswithFilter = MTanggal::select('count(*) as allcount')->where('tanggal', 'like', '%' .$searchValue . '%')->count();
+        $totalRecords = MTanggal::count();
+        $totalRecordswithFilter = DB::table('mtanggal')
+        ->leftJoin('jtanggal','mtanggal.jtgl','=','jtanggal.kode')
+        ->leftJoin(DB::Raw("(select id as id_petugas1, name as nama_petugas1, username as username_petugas1 from users) as petugas1"),'mtanggal.petugas1_id','=','petugas1.id_petugas1')
+        ->leftJoin(DB::Raw("(select id as id_petugas2, name as nama_petugas2, username as username_petugas2 from users) as petugas2"),'mtanggal.petugas2_id','=','petugas2.id_petugas2')
+        ->when($searchValue, function ($q) use ($searchValue) {
+            return $q->where('mtanggal.tanggal', 'like', '%' .$searchValue . '%')
+                         ->orWhere('nama_petugas1', 'like', '%' . $searchValue . '%')
+                         ->orWhere('nama_petugas2', 'like', '%' . $searchValue . '%')
+                         ->orWhere('username_petugas1', 'like', '%' . $searchValue . '%')
+                         ->orWhere('username_petugas2', 'like', '%' . $searchValue . '%')
+                         ->orWhere('mtanggal.deskripsi', 'like', '%' . $searchValue . '%')
+                         ->orWhere('mtanggal.hari', 'like', '%' . $searchValue . '%');
+        })
+        ->when($tahun_filter > 0, function ($query) use ($tahun_filter) {
+            return $query->whereYear('mtanggal.tanggal', $tahun_filter);
+        })
+        ->count();
 
         // Fetch records
         $records = DB::table('mtanggal')
             ->leftJoin('jtanggal','mtanggal.jtgl','=','jtanggal.kode')
             ->leftJoin(DB::Raw("(select id as id_petugas1, name as nama_petugas1, username as username_petugas1 from users) as petugas1"),'mtanggal.petugas1_id','=','petugas1.id_petugas1')
             ->leftJoin(DB::Raw("(select id as id_petugas2, name as nama_petugas2, username as username_petugas2 from users) as petugas2"),'mtanggal.petugas2_id','=','petugas2.id_petugas2')
-            ->where('mtanggal.tanggal', 'like', '%' .$searchValue . '%')
+            ->when($searchValue, function ($q) use ($searchValue) {
+                return $q->where('mtanggal.tanggal', 'like', '%' .$searchValue . '%')
+                         ->orWhere('nama_petugas1', 'like', '%' . $searchValue . '%')
+                         ->orWhere('nama_petugas2', 'like', '%' . $searchValue . '%')
+                         ->orWhere('username_petugas1', 'like', '%' . $searchValue . '%')
+                         ->orWhere('username_petugas2', 'like', '%' . $searchValue . '%')
+                         ->orWhere('mtanggal.deskripsi', 'like', '%' . $searchValue . '%')
+                         ->orWhere('mtanggal.hari', 'like', '%' . $searchValue . '%');
+            })
+            ->when($tahun_filter > 0, function ($query) use ($tahun_filter) {
+                return $query->whereYear('mtanggal.tanggal', $tahun_filter);
+            })
             ->select('mtanggal.*','petugas1.*','petugas2.*','jtanggal.nama as jtgl_nama')
             ->skip($start)
             ->take($rowperpage)

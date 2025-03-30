@@ -84,7 +84,6 @@
                                     <th>Tanggal</th>
                                     <th>Keperluan</th>
                                     <th>Tindak Lanjut</th>
-                                    <th>Layanan Utama</th>
                                     <th>Antrian</th>
                                     <th>Mulai</th>
                                     <th>Akhir</th>
@@ -92,21 +91,6 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>UID</th>
-                                    <th>Nama</th>
-                                    <th>Tanggal</th>
-                                    <th>Keperluan</th>
-                                    <th>Tindak Lanjut</th>
-                                    <th>Layanan Utama</th>
-                                    <th>Antrian</th>
-                                    <th>Mulai</th>
-                                    <th>Akhir</th>
-                                    <th>Petugas</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </tfoot>
                             <tbody>
                             </tbody>
                         </table>
@@ -182,7 +166,6 @@
                     {data: 'kunjungan_tanggal'},
                     {data: 'kunjungan_keperluan'},
                     {data: 'kunjungan_tindak_lanjut'},
-                    {data: 'kunjungan_tujuan'},
                     {data: 'kunjungan_teks_antrian'},
                     {data: 'kunjungan_jam_datang'},
                     {data: 'kunjungan_jam_pulang'},
@@ -195,7 +178,7 @@
                 buttons: [
                     'copy', 'excel', 'print'
                 ],
-                responsive: true,
+                responsive: false,
                 "fnDrawCallback": function() {
                     $('.image-popup').magnificPopup({
                         type: 'image',

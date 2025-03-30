@@ -947,13 +947,13 @@ class NewBukutamuController extends Controller
                 "kunjungan_uid" => $item->kunjungan_uid,
                 "pengunjung_nama" =>  $nama.'<br />'.$jk,
                 "kunjungan_tanggal" => $item->kunjungan_tanggal,
-                "kunjungan_keperluan" => $keperluan .'<br />'.$tujuan .' '.$kunjungan_jenis,
-                "kunjungan_tindak_lanjut" => $tindak_lanjut,
-                "kunjungan_tujuan" => $layanan_utama .'<p>'.$tombol_feedback.'</p>',
+                "kunjungan_keperluan" => $item->kunjungan_keperluan .'<br />'.$tujuan .'<br />'. $layanan_utama .'<br />'.$kunjungan_jenis,
+                "kunjungan_tindak_lanjut" => $item->kunjungan_tindak_lanjut,
+                "kunjungan_tujuan" => $layanan_utama,
                 "kunjungan_teks_antrian" => $item->kunjungan_teks_antrian .'<br />'.$flag_antrian_teks,
                 "kunjungan_jam_datang" => $mulai,
                 "kunjungan_jam_pulang" => $akhir,
-                "kunjungan_petugas_id" => $petugas,
+                "kunjungan_petugas_id" => $petugas .'<br />'.$tombol_feedback,
                 "aksi" => $aksi
             );
         }

@@ -39,6 +39,27 @@
                     <!--form upload jadwal petugas-->
                     <div class="row">
                         <div class="col-lg-8">
+                            <!--form--filter-->
+                        <form class="form-horizontal">
+                            <div class="form-group row">
+                                <label for="tahun" class="col-sm-1 control-label">Filter : </label>
+                                <div class="col-md-4">
+                                    <select name="tahun" id="tahun" class="form-control">
+                                        <option value="0">Semua Tahun</option>
+                                     @foreach ($data_tahun as $iTahun)
+                                     <option value="{{$iTahun->tahun}}" @if (request('tahun')==$iTahun->tahun or $tahun==$iTahun->tahun)
+                                     selected
+                                    @endif>{{$iTahun->tahun}}</option>
+                                     @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-success">Filter</button>
+                                </div>
+                            </div>
+                        </form>
+                        <!--batas form filter-->
                         </div>
                         <div class="col-lg-4 text-right">
                             @if (Auth::User()->level > 10)
@@ -141,10 +162,18 @@
     <!-- end - This is for export functionality only -->
     <script>
         $(document).ready(function() {
+            var tahun = $('#tahun').val();
             $('#dTabel').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.listtanggal') }}",
+                ajax: {
+                    url: "{{ route('master.listtanggal') }}",
+                    type: 'GET',
+                    data: {
+                        tahun: tahun
+                    },
+                    cache: false,
+                },
                 columns: [{
                         data: 'id'
                     },
