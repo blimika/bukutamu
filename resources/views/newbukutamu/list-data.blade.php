@@ -74,8 +74,8 @@
                     <center id="pesanerror">
                         <div class="alert alert-success m-5"><span id="tekserror"></span></div>
                     </center>
-                    <div class="table-responsive m-t-40">
-                        <table id="dTabel" class="tabeldata display table table-hover table-striped table-bordered" cellspacing="0"
+                    <div class="m-t-40">
+                        <table id="dTabel" class="tabeldata display table table-hover table-striped table-bordered table-responsive" cellspacing="0"
                             width="100%">
                             <thead>
                                 <tr>
@@ -360,9 +360,7 @@
                                 //response ajax disini
                                 $.ajaxSetup({
                                     headers: {
-                                        'X-CSRF-TOKEN': $(
-                                            'meta[name="csrf-token"]').attr(
-                                            'content')
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     }
                                 });
                                 $.ajax({
@@ -428,7 +426,7 @@
                             td.children('.btnMore').removeClass("btn-info").addClass("btn-danger");
                             td.children("#moreTeks").show();
                         }
-                        e.preventDefault();
+                        e.stopImmediatePropagation();
                     });
                     //hapus kunjungan
                     //copy link feedback
