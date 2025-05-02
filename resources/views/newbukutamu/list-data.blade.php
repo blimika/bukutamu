@@ -31,9 +31,6 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">
-                        Data Kunjungan BPS Provinsi Nusa Tenggara Barat
-                    </h4>
                     <!--form upload jadwal petugas-->
                     <div class="row">
                         <div class="col-lg-8">
@@ -75,6 +72,9 @@
                         <div class="alert alert-success m-5"><span id="tekserror"></span></div>
                     </center>
                     <div class="m-t-40">
+                        <h4 class="card-title text-center">
+                            Data Kunjungan
+                        </h4>
                         <table id="dTabel" class="tabeldata display table table-hover table-striped table-bordered table-responsive" cellspacing="0"
                             width="100%">
                             <thead>

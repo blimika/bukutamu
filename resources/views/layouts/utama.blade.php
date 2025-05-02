@@ -43,7 +43,7 @@
     </style>
 </head>
 
-<body class="horizontal-nav boxed skin-megna fixed-layout">
+<body class="horizontal-nav skin-megna fixed-layout">
     <!-- ============================================================== -->
     <!-- Preloader - style you can find in spinners.css -->
     <!-- ============================================================== -->
