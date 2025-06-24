@@ -187,5 +187,5 @@ $('#perorangan').change(function(){
     <!-- Magnific popup JavaScript -->
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('assets/node_modules/Magnific-Popup-master/dist/jquery.magnific-popup-init.js')}}"></script>
-    @include('newbukutamu.js-tambah')s
+    @include('newbukutamu.js-tambah')
 @stop
