@@ -33,17 +33,17 @@
                     @if (Generate::CekAkses(\Request::getClientIp(true)) || Auth::user()->level > 1)
                     <li><a class="waves-effect waves-dark ml-auto" href="#" aria-expanded="false"><i class="ti-plus"></i><span class="hide-menu">Tambah Data</span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li><a href="{{ route('newkunjungan') }}">New Kunjungan</a></li>
+                                <li><a href="{{ route('newkunjungan') }}">Kunjungan Baru</a></li>
                                 <li><a href="{{ route('newpermintaan') }}">Permintaan Data</a></li>
                             </ul>
                         </li>
                     @endif
                     <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Kunjungan</span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <li><a href="{{ route('newlaporan') }}">New Laporan</a></li>
+                        <li><a href="{{ route('newlaporan') }}">Laporan</a></li>
                             @if (Auth::user())
                                 @if (Auth::user()->level > 5)
-                                <li><a href="{{ route('listdata') }}">New List</a></li>
+                                <li><a href="{{ route('listdata') }}">List</a></li>
                                 @endif
                             @endif
                         <li><a href="{{ route('newdisplay') }}" target="_blank">Display Antrian</a></li>
@@ -54,8 +54,8 @@
                         <li>
                             <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-align-left"></i><span class="hide-menu">Pengunjung</span></a>
                             <ul aria-expanded="false" class="collapse">
-                                    <li><a href="{{ route('pengunjung.newlist') }}">New List</a></li>
-                                    <li><a href="{{ route('listfeedback') }}">New Feedback</a></li>
+                                    <li><a href="{{ route('pengunjung.newlist') }}">List</a></li>
+                                    <li><a href="{{ route('listfeedback') }}">Feedback</a></li>
                             </ul>
                         </li>
                         @endif

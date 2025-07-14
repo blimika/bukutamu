@@ -872,7 +872,7 @@ class NewBukutamuController extends Controller
                 {
                     $loket_petugas = '<span class="badge badge-info badge-pill">Petugas '.$item->kunjungan_loket_petugas.'</span>';
                 }
-                $petugas = $item->name .' '.Generate::RatingPetugas($item->kunjungan_petugas_id).'<br />'. $loket_petugas;
+                $petugas = $item->name .'<br />'.Generate::RatingPetugas($item->kunjungan_petugas_id).'<br />'. $loket_petugas;
             }
             else {
                 $petugas = '<span class="badge badge-danger badge-pill">belum ada</span';

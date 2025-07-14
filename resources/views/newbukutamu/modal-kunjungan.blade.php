@@ -44,6 +44,10 @@
                     <dd class="col-sm-8"><span id="kunjungan_jam_datang"></span></dd>
                     <dt class="col-sm-4">Akhir Layanan</dt>
                     <dd class="col-sm-8"><span id="kunjungan_jam_pulang"></span></dd>
+                    <dt class="col-sm-4">Rating Layanan</dt>
+                    <dd class="col-sm-8"><span id="rating_layanan"></span></dd>
+                    <dt class="col-sm-4">Petugas Layanan</dt>
+                    <dd class="col-sm-8"><span id="petugas_layanan"></span></dd>
                     <dt class="col-sm-12">Keperluan/Data dicari</dt>
                     <dd class="col-sm-12"><span id="kunjungan_keperluan"></span></dd>
                     <dt class="col-sm-12">Tindak Lanjut</dt>

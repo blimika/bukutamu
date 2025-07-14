@@ -97,6 +97,35 @@ $('#ViewKunjunganModal').on('show.bs.modal', function (event) {
             }
             $('#ViewKunjunganModal .modal-body #kunjungan_jam_datang').text(GetJamMenit(d.data.kunjungan_jam_datang))
             $('#ViewKunjunganModal .modal-body #kunjungan_jam_pulang').text(GetJamMenit(d.data.kunjungan_jam_pulang))
+            if (d.data.petugas != null)
+            {
+                var petugas_pelayanan = "<b>"+ d.data.petugas.name +"</b>";
+            }
+            else
+            {
+                var petugas_pelayanan = "<i>--belum tersedia--</i>";
+            }
+            if (d.data.kunjungan_flag_feedback == 2)
+            {
+                var nilai_feedback = d.data.kunjungan_nilai_feedback;
+                var rating_layanan = "";
+                for (i = 1; i < 7; i++) {
+                    if (i <= nilai_feedback)
+                    {
+                        rating_layanan += '<span class="fa fa-star text-warning"></span>';
+                    }
+                    else
+                    {
+                        rating_layanan +='<span class="fa fa-star"></span>';
+                    }
+                }
+            }
+            else
+            {
+                var rating_layanan = "<i>--belum tersedia--</i>";
+            }
+            $('#ViewKunjunganModal .modal-body #rating_layanan').html(rating_layanan)
+            $('#ViewKunjunganModal .modal-body #petugas_layanan').html(petugas_pelayanan)
             $('#ViewKunjunganModal .modal-body #kunjungan_keperluan').html(d.data.kunjungan_keperluan)
             $('#ViewKunjunganModal .modal-body #kunjungan_tindak_lanjut').html(d.data.kunjungan_tindak_lanjut)
             }
