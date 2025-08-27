@@ -210,6 +210,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/pst/sinkron/layanan', 'BukutamuController@SinkronPstLayanan')->name('pst.sinkronlayanan');
     //master Database baru
     //code baru
+    Route::get('/sinkron/pengunjung/kunjungan', 'NewBukutamuController@PengunjungKunjungan')->name('sinkron.pengunjungkunjungan');
     Route::get('/master/database', 'NewBukutamuController@Database')->name('master.database');
     Route::get('/master/sinkron/database', 'NewBukutamuController@Sinkron')->name('database.sinkron');
     Route::get('/master/sinkron/antrian', 'NewBukutamuController@SinkronAntrian')->name('database.antrian');
@@ -220,6 +221,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pengunjung/pagelist', 'NewBukutamuController@PengunjungPageList')->name('pengunjung.pagelist');
     Route::get('/kunjungan/print/antrian/{uid}', 'NewBukutamuController@PrintNomorAntrian')->name('kunjungan.printantrian');
     Route::post('/kunjungan/kirim/nomorantrian', 'NewBukutamuController@KirimNomorAntrian')->name('kunjungan.kirimnomor');
+    Route::post('/kunjungan/kirim/linkfeedback', 'NewBukutamuController@KirimLinkFeedback')->name('kunjungan.kirimlinkfeedback');
     //hapus kunjungan
     Route::post('/kunjungan/hapus', 'NewBukutamuController@HapusKunjungan')->name('kunjungan.hapus');
     Route::post('/kunjungan/flagantrian', 'NewBukutamuController@FlagAntrianUpdate')->name('flagantrian.update');

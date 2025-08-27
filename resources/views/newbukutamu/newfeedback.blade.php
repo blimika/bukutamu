@@ -75,7 +75,7 @@
                                 @if ($data->kunjungan_flag_feedback == 2)
                                     <button type="button" class="btn btn-rounded btn-info m-t-5" data-uid="{{$data->kunjungan_uid}}" data-nama="{{$data->Pengunjung->pengunjung_nama}}" data-tanggal="{{$data->kunjungan_tanggal}}" data-toggle="modal" data-target="#ViewFeedbackModal"><span data-toggle="tooltip" data-placement="top" title="Sudah memberikan feedback"><i class="fas fa-check-circle"></i> feedback</span></button>
                                 @else
-                                    <button type="button" class="btn btn-rounded btn-success tombolfeedback m-t-5" data-uid="{{$data->kunjungan_uid}}" data-nama="{{$data->Pengunjung->pengunjung_nama}}" data-tanggal="{{$data->kunjungan_tanggal}}" data-toggle="modal" data-target="#BeriFeebackModal"><span data-toggle="tooltip" data-placement="top" title="Belum memberikan feedback"><i class="fas fa-question"></i> feedback</span></button>
+                                    <button type="button" class="btn btn-rounded btn-danger tombolfeedback m-t-5" data-uid="{{$data->kunjungan_uid}}" data-nama="{{$data->Pengunjung->pengunjung_nama}}" data-tanggal="{{$data->kunjungan_tanggal}}" data-toggle="modal" data-target="#BeriFeebackModal"><span data-toggle="tooltip" data-placement="top" title="Belum memberikan feedback"><i class="fas fa-question"></i> feedback</span></button>
                                 @endif
                             </p>
                             @endif

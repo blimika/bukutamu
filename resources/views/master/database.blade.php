@@ -76,6 +76,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="3" class="text-right">
+                                        <a href="{{route('sinkron.pengunjungkunjungan')}}" class="btn btn-warning">PENGUNJUNG</a>
                                         <a href="{{route('database.antrian')}}" class="btn btn-danger">ANTRIAN</a>
                                         <a href="{{route('database.sinkron')}}" class="btn btn-info">KUNJUNGAN</a>
                                         <a href="{{route('database.feedback')}}" class="btn btn-success">FEEDBACK</a>

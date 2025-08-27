@@ -138,7 +138,6 @@
     <script src="{{ asset('assets/node_modules/datatables.net-bs4/js/dataTables.responsive.min.js') }}"></script>
     <!-- start - This is for export functionality only -->
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
@@ -170,7 +169,7 @@
                     {data: 'kunjungan_jam_datang'},
                     {data: 'kunjungan_jam_pulang'},
                     {data: 'kunjungan_petugas_id'},
-                    {data: 'aksi',orderable: false},
+                    {data: 'aksi', orderable: false},
                 ],
                 order: [2,'desc'],
                 dom: 'Bfrtip',
@@ -223,6 +222,78 @@
                                 });
                                 $.ajax({
                                     url: '{{ route("kunjungan.kirimnomor") }}',
+                                    method: 'post',
+                                    data: {
+                                        uid: uid,
+                                        id: id,
+                                        nama: nama,
+                                        email: email
+                                    },
+                                    cache: false,
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        if (data.status == true) {
+                                            Swal.fire(
+                                                'Berhasil!',
+                                                '' + data.message + '',
+                                                'success'
+                                            ).then(function() {
+                                                $('#dTabel')
+                                                    .DataTable()
+                                                    .ajax.reload(
+                                                        null, false
+                                                    );
+                                            });
+                                        } else {
+                                            Swal.fire(
+                                                'Error!',
+                                                '' + data.message + '',
+                                                'error'
+                                            );
+                                        }
+
+                                    },
+                                    error: function() {
+                                        Swal.fire(
+                                            'Error',
+                                            'Koneksi Error',
+                                            'error'
+                                        );
+                                    }
+
+                                });
+
+                            }
+                        })
+                    });
+                    $('.tabeldata').on('click','.kirimlinkfeedback',function(e) {
+                        e.preventDefault();
+                        var uid = $(this).data('uid');
+                        var id = $(this).data('id');
+                        var nama = $(this).data('nama');
+                        var email = $(this).data('email');
+                        Swal.fire({
+                            title: 'Kirim Link Feedback?',
+                            text: "Link feedback kunjungan an. " + nama +
+                                " dikirim ke alamat email " + email +
+                                " sekarang?",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Kirim'
+                        }).then((result) => {
+                            if (result.value) {
+                                //response ajax disini
+                                $.ajaxSetup({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $(
+                                            'meta[name="csrf-token"]').attr(
+                                            'content')
+                                    }
+                                });
+                                $.ajax({
+                                    url: '{{ route("kunjungan.kirimlinkfeedback") }}',
                                     method: 'post',
                                     data: {
                                         uid: uid,

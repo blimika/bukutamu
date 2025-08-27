@@ -566,6 +566,64 @@ class NewBukutamuController extends Controller
             return $pdf->stream('Antrian'.$nama.'_Nomor_Antrian_'.$data->kunjungan_teks_antrian.'.pdf');
         }
     }
+    public function KirimLinkFeedback(Request $request)
+    {
+        $data = NewKunjungan::where('kunjungan_uid', $request->uid)->first();
+        $arr = array(
+            'status' => false,
+            'message' => 'Kunjungan tidak ditemukan'
+        );
+        if ($data) {
+            if (filter_var($data->Pengunjung->pengunjung_email, FILTER_VALIDATE_EMAIL))
+            {
+                //kirim mail
+                if ($data->kunjungan_tujuan == 2)
+                {
+                    $layanan = $data->LayananUtama->nama;
+                }
+                else
+                {
+                    $layanan = $data->Tujuan->nama;
+                }
+                $body = new \stdClass();
+                $body->kunjungan_uid = $data->kunjungan_uid;
+                $body->pengunjung_nama = $data->Pengunjung->pengunjung_nama;
+                $body->pengunjung_email = $data->Pengunjung->pengunjung_email;
+                $body->pengunjung_nomor_hp = $data->Pengunjung->pengunjung_nomor_hp;
+                $body->kunjungan_tanggal = \Carbon\Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y');
+                $body->layanan = $layanan;
+                $body->link_feedback = route('kunjungan.feedback',$data->kunjungan_uid);
+                $body->petugas = $data->Petugas->name;
+                if (ENV('APP_KIRIM_MAIL') == true) {
+                    Mail::to($data->Pengunjung->pengunjung_email)->send(new KirimFeedback($body));
+
+                    $arr = array(
+                        'status' => true,
+                        'message' => 'Link feedback kunjungan an. '.$data->Pengunjung->pengunjung_nama.' sudah dikirim ke alamat email '.$data->Pengunjung->pengunjung_email
+                    );
+                }
+                else
+                {
+                    $arr = array(
+                        'status' => false,
+                        'message' => 'APP_KIRIM_MAIL bernilai False di .env'
+                    );
+                }
+                //batas
+
+            }
+            else
+            {
+                $arr = array(
+                    'status' => false,
+                    'hasil' => 'Alamat email Kunjungan an. '.$data->Pengunjung->pengunjung_nama.' tidak sesuai format'
+                );
+            }
+        }
+
+        #dd($request->all());
+        return Response()->json($arr);
+    }
     public function KirimNomorAntrian(Request $request)
     {
         /*
@@ -626,7 +684,7 @@ class NewBukutamuController extends Controller
             {
                 $arr = array(
                     'status' => false,
-                    'hasil' => 'Alamat email Kunjungan an. '.$data->tamu->nama_lengkap.' tidak sesuai format'
+                    'hasil' => 'Alamat email Kunjungan an. '.$data->Pengunjung->pengunjung_nama.' tidak sesuai format'
                 );
             }
         }
@@ -711,6 +769,24 @@ class NewBukutamuController extends Controller
         //list data
         foreach ($records as $item) {
 
+        //cek email ada atau sudah kirim feedback, kalo belum bisa kirim link dan copy link, kalo sudah kirim link tidak bisa
+        if ($item->kunjungan_flag_feedback > 1)
+        {
+            //sudah isi feedback
+            $kirim_link_feedback = '';
+        }
+        else
+        {
+            //belum
+            if (filter_var($item->pengunjung_email, FILTER_VALIDATE_EMAIL))
+            {
+                $kirim_link_feedback = '<a class="dropdown-item kirimlinkfeedback" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-email="' . $item->pengunjung_email.'" data-toggle="tooltip" title="Kirim Link Feedback">Kirim Link Feedback</a>';
+            }
+            else
+            {
+                $kirim_link_feedback = '';
+            }
+        }
             $aksi = '
             <div class="btn-group">
             <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -720,7 +796,7 @@ class NewBukutamuController extends Controller
                 <a class="dropdown-item" href="#" data-uid="' . $item->kunjungan_uid . '" data-toggle="modal" data-target="#ViewKunjunganModal">View</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="'.route("kunjungan.printantrian",$item->kunjungan_uid).'" target="_blank" data-toggle="tooltip" title="Print Nomor Antrian">Print Antrian</a>
-                    <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-email="' . $item->pengunjung_email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Antrian</a>
+                <a class="dropdown-item kirimnomorantrian" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-email="' . $item->pengunjung_email.'" data-toggle="tooltip" title="Kirim Nomor Antrian">Kirim Antrian</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditTindakLanjutModal"><span data-toggle="tooltip" title="Edit tindak lanjut kunjungan an. '.$item->pengunjung_nama.'">Edit Tindak Lanjut</span></a>
                 <a class="dropdown-item" href="#" data-uid="' . $item->kunjungan_uid . '" data-toggle="modal" data-target="#EditPetugasModal"><span data-toggle="tooltip" title="Edit Petugas kunjungan an. '.$item->pengunjung_nama.'">Edit Petugas</span></a>
@@ -728,6 +804,8 @@ class NewBukutamuController extends Controller
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-jenis="'.$item->kunjungan_jenis.'" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditJenisKunjunganModal">Ubah Jenis</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-toggle="modal" data-target="#EditFlagAntrianModal">Flag Antrian</a>
+                <div class="dropdown-divider"></div>
+                '.$kirim_link_feedback.'
                 <a class="dropdown-item copyurlfeedback" target="_blank" href="'.route('kunjungan.feedback',$item->kunjungan_uid).'" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '">Copy Link Feedback</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item hapuskunjungan" href="#" data-id="' . $item->kunjungan_id . '" data-uid="' . $item->kunjungan_uid . '" data-nama="' . $item->pengunjung_nama . '" data-tanggal="'.$item->kunjungan_tanggal.'">Delete</a>
@@ -954,6 +1032,7 @@ class NewBukutamuController extends Controller
                 "kunjungan_jam_datang" => $mulai,
                 "kunjungan_jam_pulang" => $akhir,
                 "kunjungan_petugas_id" => $petugas .'<br />'.$tombol_feedback,
+                "kunjungan_created_at"=>$item->created_at,
                 "aksi" => $aksi
             );
         }
@@ -1221,6 +1300,34 @@ class NewBukutamuController extends Controller
         Session::flash('message', $pesan_error);
         Session::flash('message_type', $pesan_warna);
         return redirect()->route('master.database');
+    }
+    public function PengunjungKunjungan()
+    {
+        if (Auth::user()->level == 20)
+        {
+            $data = Pengunjung::get();
+            if ($data)
+            {
+                $i=0;
+                foreach ($data as $item) {
+                    $data_kunjungan = NewKunjungan::where('pengunjung_uid', $item->pengunjung_uid)->count();
+                    $item->pengunjung_total_kunjungan = $data_kunjungan;
+                    $item->update();
+                    $i++;
+                }
+
+                $pesan_error="data pengunjung sebanyak ".$i." sudah di sinkronisasi";
+                $pesan_warna="success";
+            }
+        }
+        else
+        {
+            $pesan_error="tidak mempunyai hak untuk sinkronisasi pengunjung";
+            $pesan_warna="danger";
+        }
+        Session::flash('message', $pesan_error);
+        Session::flash('message_type', $pesan_warna);
+        return redirect()->route('pengunjung.newlist');
     }
     public function SinkronKantor()
     {

@@ -100,7 +100,7 @@
 
                             <div class="timeline-panel">
                                 <div class="timeline-heading">
-                                    <h4 class="timeline-title">Kunjungan hari {{Tanggal::HariPanjang($item->kunjungan_tanggal)}}</h4>
+                                    <h4 class="timeline-title">Kunjungan hari {{Tanggal::HariPanjang($item->kunjungan_tanggal)}} Jam {{\Carbon\Carbon::parse($item->created_at)->format('H:i')}} </h4>
                                 </div>
                                 <div class="timeline-body el-element-overlay">
                                     <div class="el-card-item">
