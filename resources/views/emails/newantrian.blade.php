@@ -1,7 +1,7 @@
 @component('mail::message')
 
 # Hai {{ $body->pengunjung_nama }}
-Terimakasih, telah berkunjung BPS Provinsi Nusa Tenggara Barat.
+Terimakasih, telah berkunjung ke BPS Provinsi Nusa Tenggara Barat.
 Berikut nomor antrian Anda!
 
 
