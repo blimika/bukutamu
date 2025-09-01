@@ -12,6 +12,7 @@ use App\Feedback;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Generate;
 use App\Services\FonnteService;
+use App\Services\WhatsAppService;
 use QrCode;
 use App\User;
 use App\MasterLevel;
@@ -47,10 +48,33 @@ use Illuminate\Support\Facades\Log;
 class NewBukutamuController extends Controller
 {
     protected $fonnteService;
+    protected $WAservice;
+    protected $cek_nomor_hp;
 
-    public function __construct(FonnteService $fonnteService)
+    public function __construct(FonnteService $fonnteService, WhatsAppService $WAservice)
     {
         $this->fonnteService = $fonnteService;
+        $this->WAservice = $WAservice;
+    }
+    private function cek_nomor_hp($nomor)
+    {
+        // Mengecek apakah nomor diawali dengan '0'
+        if (substr($nomor, 0, 1) === '0') {
+            // Jika ya, kembalikan nomor tanpa awalan '0'
+            $nomorhp = "62".substr($nomor, 1);
+
+        }
+        // Mengecek apakah nomor diawali dengan '+'
+        elseif (substr($nomor, 0, 1) === '+') {
+            // Jika ya, abaikan nomor ini dengan mengembalikan null
+            // Anda bisa mengubahnya untuk menampilkan pesan error atau lainnya
+            $nomorhp = substr($nomor, 1);
+        }
+        // Jika tidak diawali '0' atau '+'
+        else {
+            $nomorhp = $nomor;
+        }
+        return $nomorhp;
     }
     public function newdepan(Request $request)
     {
@@ -732,17 +756,28 @@ class NewBukutamuController extends Controller
                     'hasil' => 'Alamat email Kunjungan an. '.$data->Pengunjung->pengunjung_nama.' tidak sesuai format'
                 );
             }
-
+            //persiapan untuk WA
+            $recipients = $data->Pengunjung->pengunjung_nomor_hp;
+            $recipients = $this->cek_nomor_hp($recipients);
+            $message = '# Hai *'.$body->pengunjung_nama.'*'.chr(10).'Terimakasih, telah berkunjung ke BPS Provinsi Nusa Tenggara Barat.'.chr(10).'Berikut nomor antrian Anda!'.chr(10).chr(10).'# Detil Kunjungan'.chr(10).'UID : *'.$body->kunjungan_uid.'*'.chr(10).'Nama : *'.$body->pengunjung_nama.'*'.chr(10).'Email : *'.$body->pengunjung_email.'*'.chr(10).'Nomor HP : *'.$body->pengunjung_nomor_hp.'*'.chr(10).'Tanggal Kunjungan : *'.$body->kunjungan_tanggal.'* '.chr(10).chr(10).'Layanan :  *'.$body->layanan.'*'.chr(10).'# Nomor Antrian : *'.$body->nomor_antrian.'*'.chr(10).chr(10).'Terimakasih,'.chr(10).'Aplikasi Bukutamu '.chr(10).'BPS Provinsi Nusa Tenggara Barat'.chr(10).'Jl. Dr. Soedjono No. 74 Mataram NTB 83116';
             //cek dulu wa nya bisa apa ngga
             if (ENV('APP_WA_MODE') == true) {
-                $recipients = $data->Pengunjung->pengunjung_nomor_hp; // e.g., '08123456789' or ['08123456789', '081122334455']
-                $message = '# Hai *'.$body->pengunjung_nama.'*'.chr(10).'Terimakasih, telah berkunjung ke BPS Provinsi Nusa Tenggara Barat. Berikut nomor antrian Anda!'.chr(10).chr(10).'# Detil Kunjungan'.chr(10).'UID : *'.$body->kunjungan_uid.'*'.chr(10).'Nama : *'.$body->pengunjung_nama.'*'.chr(10).'Email : *'.$body->pengunjung_email.'*'.chr(10).'Nomor HP : *'.$body->pengunjung_nomor_hp.'*'.chr(10).'Tanggal Kunjungan : *'.$body->kunjungan_tanggal.'* '.chr(10).chr(10).'Layanan :  *'.$body->layanan.'*'.chr(10).'# Nomor Antrian : *'.$body->nomor_antrian.'*'.chr(10).chr(10).'Terimakasih,'.chr(10).'Aplikasi Bukutamu '.chr(10).'BPS Provinsi Nusa Tenggara Barat'.chr(10).'Jl. Dr. Soedjono No. 74 Mataram NTB 83116';
                 try {
                     $result = $this->fonnteService->sendMessage($recipients, $message);
                     return response()->json($result);
                 } catch (\Throwable $e) {
                     Log::error('Exception during WA API: ' . $e->getMessage());
                     return response()->json(['error' => 'Internal Server Error'],500);
+                }
+            }
+            if (ENV('APP_WA_LOKAL_MODE') == true) {
+                try {
+                    $result = $this->WAservice->sendMessage($recipients, $message);
+                    //return response()->json($result);
+                    //$arr = $result;
+                } catch (\Throwable $e) {
+                    Log::error('WA LOKAL: ' . $e->getMessage());
+                    //return response()->json(['error' => 'Internal Server Error'],500);
                 }
             }
             //batas
