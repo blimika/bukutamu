@@ -12,7 +12,7 @@ Nomor HP : {{ $body->pengunjung_nomor_hp }} <br>
 Tanggal Kunjungan : {{ $body->kunjungan_tanggal }} <br>
 Petugas yang melayani : {{ $body->petugas }} <br>
 
-Untuk meningkatkan layanan kami, kami sangat menghargai jika Anda dapat meluangkan beberapa menit untuk mengisi feedback singkat berikut ini. Tanggapan Anda sangat berharga bagi kami untuk terus memberikan pelayanan terbaik.
+Untuk meningkatkan layanan, kami sangat menghargai jika Anda dapat meluangkan beberapa menit untuk mengisi feedback singkat berikut ini. Tanggapan Anda sangat berharga bagi kami untuk terus memberikan pelayanan terbaik.
 
 @component('mail::button', ['url' => $body->link_feedback])
 Link Feedback

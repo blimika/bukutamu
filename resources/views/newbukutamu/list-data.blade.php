@@ -231,8 +231,20 @@
                                     },
                                     cache: false,
                                     dataType: 'json',
+                                    beforeSend: function() {
+                                        Swal.fire({
+                                            title: "Processing...",
+                                            html: "Silakan tunggu sampai proses selesai.",
+                                            allowEscapeKey: false,
+                                            allowOutsideClick: false,
+                                            onOpen: () => {
+                                            swal.showLoading();
+                                            }
+                                        });
+                                    },
                                     success: function(data) {
                                         if (data.status == true) {
+                                            Swal.hideLoading(); // Hide the loading spinner
                                             Swal.fire(
                                                 'Berhasil!',
                                                 '' + data.message + '',
@@ -245,6 +257,7 @@
                                                     );
                                             });
                                         } else {
+                                            Swal.hideLoading(); // Hide the loading spinner
                                             Swal.fire(
                                                 'Error!',
                                                 '' + data.message + '',
@@ -254,6 +267,7 @@
 
                                     },
                                     error: function() {
+                                        Swal.hideLoading(); // Hide the loading spinner
                                         Swal.fire(
                                             'Error',
                                             'Koneksi Error',
@@ -303,8 +317,20 @@
                                     },
                                     cache: false,
                                     dataType: 'json',
+                                    beforeSend: function() {
+                                        Swal.fire({
+                                            title: "Processing...",
+                                            html: "Silakan tunggu sampai proses selesai.",
+                                            allowEscapeKey: false,
+                                            allowOutsideClick: false,
+                                            onOpen: () => {
+                                            swal.showLoading();
+                                            }
+                                        });
+                                    },
                                     success: function(data) {
                                         if (data.status == true) {
+                                            Swal.hideLoading();
                                             Swal.fire(
                                                 'Berhasil!',
                                                 '' + data.message + '',
@@ -317,6 +343,7 @@
                                                     );
                                             });
                                         } else {
+                                            Swal.hideLoading();
                                             Swal.fire(
                                                 'Error!',
                                                 '' + data.message + '',
@@ -326,6 +353,7 @@
 
                                     },
                                     error: function() {
+                                        Swal.hideLoading();
                                         Swal.fire(
                                             'Error',
                                             'Koneksi Error',

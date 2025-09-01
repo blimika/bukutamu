@@ -69,7 +69,7 @@
                             <!--- sudah selesai dilayani--->
                             @if ($data->kunjungan_flag_antrian == 3 )
                             <p>
-                                Untuk meningkatkan layanan kami, kami sangat menghargai jika Anda dapat meluangkan beberapa menit untuk mengisi feedback singkat berikut ini. Tanggapan Anda sangat berharga bagi kami untuk terus memberikan pelayanan terbaik.
+                                Untuk meningkatkan layanan, kami sangat menghargai jika Anda dapat meluangkan beberapa menit untuk mengisi feedback singkat berikut ini. Tanggapan Anda sangat berharga bagi kami untuk terus memberikan pelayanan terbaik.
                             </p>
                             <p>
                                 @if ($data->kunjungan_flag_feedback == 2)
