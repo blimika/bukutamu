@@ -37,7 +37,7 @@ class VerifikasiMailJob implements ShouldQueue
     public function handle()
     {
         //
-        $email = new EmailVerifikasi($body);
+        $email = new EmailVerifikasi($this->body);
         Mail::to($this->MailTujuan)->send($email);
     }
 }

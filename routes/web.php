@@ -99,6 +99,18 @@ Route::get('/cth5', function () {
 
    return new App\Mail\KirimFeedback($body);
 });
+Route::get('/cth6', function () {
+    //contoh mail dikirim
+    $body = new \stdClass();
+    $body->kunjungan_uid = 'DWGIB37';
+    $body->pengunjung_nama = 'I Putu Dyatmika';
+    $body->pengunjung_email = 'mika@bpsntb.id';
+    $body->pengunjung_nomor_hp = '0871272818213';
+    $body->kunjungan_tanggal = \Carbon\Carbon::parse(NOW())->isoFormat('dddd, D MMMM Y H:mm:ss');
+    $body->link_skd = env('APP_LINK_SKD');
+
+   return new App\Mail\KirimLinkSKD($body);
+});
 //newbukutamu
 
 Route::get('/webapi', 'NewBukutamuController@NewWebApi')->name('webapi');
@@ -222,6 +234,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/kunjungan/print/antrian/{uid}', 'NewBukutamuController@PrintNomorAntrian')->name('kunjungan.printantrian');
     Route::post('/kunjungan/kirim/nomorantrian', 'NewBukutamuController@KirimNomorAntrian')->name('kunjungan.kirimnomor');
     Route::post('/kunjungan/kirim/linkfeedback', 'NewBukutamuController@KirimLinkFeedback')->name('kunjungan.kirimlinkfeedback');
+    Route::post('/pengunjung/kirim/linkskd', 'NewBukutamuController@KirimLinkSKD')->name('pengunjung.kirimlinkskd');
+    Route::get('/whatsapp', 'NewBukutamuController@WhatsappList')->name('whatsapp');
+    Route::get('/cron/notif', 'NewBukutamuController@NotifJaga')->name('cron.notif');
     //hapus kunjungan
     Route::post('/kunjungan/hapus', 'NewBukutamuController@HapusKunjungan')->name('kunjungan.hapus');
     Route::post('/kunjungan/flagantrian', 'NewBukutamuController@FlagAntrianUpdate')->name('flagantrian.update');

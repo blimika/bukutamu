@@ -1,7 +1,7 @@
 @component('mail::message')
 
 # Hai {{ $body->pengunjung_nama }}
-Kami ingin mengucapkan terima kasih atas kunjungan Anda ke BPS Provinsi Nusa Tenggara Barat
+Kami mengucapkan terima kasih atas kunjungan Anda ke BPS Provinsi Nusa Tenggara Barat
 pada {{ $body->kunjungan_tanggal }}. Kami berharap Anda memiliki pengalaman yang menyenangkan bersama kami.
 
 # Detil Kunjungan <br>

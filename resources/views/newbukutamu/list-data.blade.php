@@ -366,6 +366,90 @@
                             }
                         })
                     });
+                    $('.tabeldata').on('click','.kirimlinkskd',function(e) {
+                        e.preventDefault();
+                        var pengunjung_uid = $(this).data('puid');
+                        var kunjungan_uid = $(this).data('uid');
+                        var nama = $(this).data('nama');
+                        var email = $(this).data('email');
+                        Swal.fire({
+                            title: 'Kirim Link SKD?',
+                            text: "Link SKD akan dikirim kan ke alamat email "+email+" ("+nama+") sekarang?",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Kirim'
+                        }).then((result) => {
+                            if (result.value) {
+                                //response ajax disini
+                                $.ajaxSetup({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $(
+                                            'meta[name="csrf-token"]').attr(
+                                            'content')
+                                    }
+                                });
+                                $.ajax({
+                                    url: '{{ route("pengunjung.kirimlinkskd") }}',
+                                    method: 'post',
+                                    data: {
+                                        pengunjung_uid: pengunjung_uid,
+                                        kunjungan_uid: kunjungan_uid,
+                                        nama: nama,
+                                        email: email
+                                    },
+                                    cache: false,
+                                    dataType: 'json',
+                                    beforeSend: function() {
+                                        Swal.fire({
+                                            title: "Processing...",
+                                            html: "Silakan tunggu sampai proses selesai.",
+                                            allowEscapeKey: false,
+                                            allowOutsideClick: false,
+                                            onOpen: () => {
+                                            swal.showLoading();
+                                            }
+                                        });
+                                    },
+                                    success: function(data) {
+                                        if (data.status == true) {
+                                            Swal.hideLoading();
+                                            Swal.fire(
+                                                'Berhasil!',
+                                                '' + data.message + '',
+                                                'success'
+                                            ).then(function() {
+                                                $('#dTabel')
+                                                    .DataTable()
+                                                    .ajax.reload(
+                                                        null, false
+                                                    );
+                                            });
+                                        } else {
+                                            Swal.hideLoading();
+                                            Swal.fire(
+                                                'Error!',
+                                                '' + data.message + '',
+                                                'error'
+                                            );
+                                        }
+
+                                    },
+                                    error: function() {
+                                        Swal.hideLoading();
+                                        Swal.fire(
+                                            'Error',
+                                            'Koneksi Error',
+                                            'error'
+                                        );
+                                    }
+
+                                });
+
+                            }
+                        })
+                    });
                     $('.tabeldata').on('click','.mulailayanan',function(e) {
                         e.preventDefault();
                         var id = $(this).data('id');

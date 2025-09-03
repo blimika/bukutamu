@@ -14,7 +14,19 @@
             $this->BasicUser = env('APP_WA_LOKAL_AUTH_USER');
             $this->BasicPasswd = env('APP_WA_LOKAL_AUTH_PASSWD');
         }
-
+        public function GetDevice()
+        {
+            try {
+                $url_base = $this->baseUrl.'app/devices';
+                $response = Http::withBasicAuth($this->BasicUser, $this->BasicPasswd)->withHeaders([
+                'accept' => 'accept: application/json',
+                    ])->get($url_base);
+            } catch (\Throwable $e) {
+                $response = Log::error('Check Nomor HP WA : ' . $e->getMessage());
+                //return response()->json(['error' => 'Internal Server Error'],500);
+            }
+            return $response;
+        }
         public function sendMessage($recipients, $message)
         {
             //$nomorhp = $this->cek_nomor_hp($recipients);
@@ -66,7 +78,7 @@
                 ]);
                 $arr = array(
                     'status' => true,
-                    'hasil'=> $response['results']['status']
+                    'hasil'=> $response
                 );
             }
             else
@@ -76,6 +88,6 @@
                     'hasil' => "Error, nomor tidak ada WhatsApp",
                 );
             }
-           return $arr;
+           return $response;
         }
     }

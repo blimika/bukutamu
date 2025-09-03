@@ -22,7 +22,7 @@ class DaftarMailJob implements ShouldQueue
     public $body;
     private $MailTujuan;
 
-    public function __construct($MailTujuan,$body)
+    public function __construct($MailTujuan, $body)
     {
         //
         $this->MailTujuan = $MailTujuan;
@@ -37,7 +37,7 @@ class DaftarMailJob implements ShouldQueue
     public function handle()
     {
         //
-        $email = new DaftarMember($body);
+        $email = new DaftarMember($this->body);
         Mail::to($this->MailTujuan)->send($email);
     }
 }

@@ -71,6 +71,7 @@
                                 <li><a href="{{ route('master.tanggal') }}">Tanggal</a></li>
                                 <li><a href="{{ route('kalendar') }}">Jadwal Jaga</a></li>
                                 <li><a href="{{ route('penilaian') }}">Penilaian</a></li>
+                                <li><a href="{{ route('whatsapp') }}">Whatsapp</a></li>
                                 @if (Auth::User()->level == 20)
                                     <li><a href="{{ route('master.database') }}">Database</a></li>
                                 @endif
