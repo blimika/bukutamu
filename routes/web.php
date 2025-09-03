@@ -236,7 +236,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/kunjungan/kirim/linkfeedback', 'NewBukutamuController@KirimLinkFeedback')->name('kunjungan.kirimlinkfeedback');
     Route::post('/pengunjung/kirim/linkskd', 'NewBukutamuController@KirimLinkSKD')->name('pengunjung.kirimlinkskd');
     Route::get('/whatsapp', 'NewBukutamuController@WhatsappList')->name('whatsapp');
-    Route::get('/cron/notif', 'NewBukutamuController@NotifJaga')->name('cron.notif');
+    Route::post('/cron/notif', 'NewBukutamuController@NotifJaga')->name('cron.notif');
     //hapus kunjungan
     Route::post('/kunjungan/hapus', 'NewBukutamuController@HapusKunjungan')->name('kunjungan.hapus');
     Route::post('/kunjungan/flagantrian', 'NewBukutamuController@FlagAntrianUpdate')->name('flagantrian.update');

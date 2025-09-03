@@ -2754,9 +2754,7 @@ class NewBukutamuController extends Controller
             $recipients = $data->pengunjung_nomor_hp;
             $recipients = $this->cek_nomor_hp($recipients);
             $message = '#Hai *'.$data->pengunjung_nama.'*'.chr(10).chr(10).
-            'Kami mengucapkan terima kasih atas kunjungan Anda ke BPS Provinsi Nusa Tenggara Barat.'.chr(10)
-            .'Dalam rangka meningkatkan kualitas data dan pelayanan,'.chr(10)
-            .'BPS Provinsi NTB menyelenggarakan Survei Kebutuhan Data (SKD).'.chr(10)
+            'Kami mengucapkan terima kasih atas kunjungan Anda ke BPS Provinsi Nusa Tenggara Barat. Dalam rangka meningkatkan kualitas data dan pelayanan, BPS Provinsi NTB menyelenggarakan Survei Kebutuhan Data (SKD).'.chr(10).chr(10)
             .'Bapak/Ibu terpilih menjadi responden kami.'.chr(10)
             .'Mohon kesediaannya untuk mengisi dengan lengkap pertanyaan-pertanyaan pada link dibawah ini. Survei ini hanya membutuhkan waktu beberapa menit untuk diisi.'.chr(10)
             .'Jika mengalami kendala dalam klik link, silakan copy paste link dibawah ini'.chr(10)
@@ -2825,7 +2823,10 @@ class NewBukutamuController extends Controller
     }
     public function NotifJaga()
     {
-        //ambil jadwal dulu
+        $arr = array(
+            'status' => false,
+            'message' => 'WhatsApp Api Gateway Error'
+        );
         $data = MTanggal::where('tanggal',Carbon::today()->format('Y-m-d'))->first();
         if ($data)
         {
@@ -2833,37 +2834,109 @@ class NewBukutamuController extends Controller
             {
                 if ($data->petugas1_id > 0)
                 {
-                    $hp_petugas1 = $data->Petugas1->pengunjung_nomor_hp;
-                    $hp_petugas2 = $data->Petugas2->pengunjung_nomor_hp;
+                    //$data1 = User::where('id',$data->petugas1_id)->first();
+                    $hp_petugas1 = $data->Petugas1->telepon;
+                    $hp_petugas2 = $data->Petugas2->telepon;
+                    //dd($hp_petugas1);
+                    $recipients1 = $this->cek_nomor_hp($hp_petugas1);
+                    $recipients2 = $this->cek_nomor_hp($hp_petugas2);
+                    $message1 = '#Hai *'.$data->Petugas1->name.'*'.chr(10).chr(10)
+                    .'Selamat pagi,'.chr(10)
+                    .'Pengingat tugas jaga PST hari ini,'.chr(10)
+                    .'*'.\Carbon\Carbon::parse($data->tanggal)->isoFormat('dddd, D MMMM Y').'*'.chr(10).chr(10)
+                    .'Terimakasih dan selamat bertugas'.chr(10).chr(10)
+                    .'Aplikasi Bukutamu '.chr(10).'BPS Provinsi Nusa Tenggara Barat'.chr(10).'Jl. Dr. Soedjono No. 74 Mataram NTB 83116';
+                    $message2 = '#Hai *'.$data->Petugas2->name.'*'.chr(10).chr(10)
+                    .'Selamat pagi,'.chr(10)
+                    .'Pengingat tugas jaga PST hari ini,'.chr(10)
+                    .'*'.\Carbon\Carbon::parse($data->tanggal)->isoFormat('dddd, D MMMM Y').'*'.chr(10).chr(10)
+                    .'Terimakasih dan selamat bertugas'.chr(10).chr(10)
+                    .'Aplikasi Bukutamu '.chr(10).'BPS Provinsi Nusa Tenggara Barat'.chr(10).'Jl. Dr. Soedjono No. 74 Mataram NTB 83116';
+                    //simpan log dulu
+                     //input ke log pesan
+                    $new_wa1 = new LogWhatsapp();
+                    $new_wa1->wa_tanggal = Carbon::today()->format('Y-m-d');
+                    $new_wa1->wa_uid = Generate::Kode(8);
+                    $new_wa1->wa_target = $recipients1;
+                    $new_wa1->wa_message = $message1;
+                    $new_wa1->save();
+
+                    $new_wa2 = new LogWhatsapp();
+                    $new_wa2->wa_tanggal = Carbon::today()->format('Y-m-d');
+                    $new_wa2->wa_uid = Generate::Kode(8);
+                    $new_wa2->wa_pengunjung_uid = $data->Petugas2->pengunjung_uid;
+                    $new_wa2->wa_target = $recipients2;
+                    $new_wa2->wa_message = $message2;
+                    $new_wa2->save();
+
+                    if (ENV('APP_WA_LOKAL_MODE') == true) {
+                        try {
+                            $result1 = $this->WAservice->sendMessage($recipients1, $message1);
+                            if ($result1)
+                            {
+                                $new_wa1->wa_message_id = $result1['results']['message_id'];
+                                $new_wa1->wa_status = $result1['results']['status'];
+                                $new_wa1->wa_flag = 2;
+                                $new_wa1->update();
+                            }
+
+                        } catch (\Throwable $e) {
+                            $error1 = Log::error('WA LOKAL 1: ' . $e->getMessage());
+                            //return response()->json(['error' => 'Internal Server Error'],500);
+                            $new_wa1->wa_status = $error1 ;
+                            $new_wa1->wa_flag = 3;
+                            $new_wa1->update();
+                        }
+                    }
+                    sleep(1);
+                    if (ENV('APP_WA_LOKAL_MODE') == true) {
+                        try {
+                            $result2 = $this->WAservice->sendMessage($recipients2, $message2);
+                            if ($result2)
+                            {
+                                $new_wa2->wa_message_id = $result2['results']['message_id'];
+                                $new_wa2->wa_status = $result2['results']['status'];
+                                $new_wa2->wa_flag = 2;
+                                $new_wa2->update();
+                            }
+
+                        } catch (\Throwable $e) {
+                            $error2 = Log::error('WA LOKAL 2: ' . $e->getMessage());
+                            //return response()->json(['error' => 'Internal Server Error'],500);
+                            $new_wa2->wa_status = $error2 ;
+                            $new_wa2->wa_flag = 3;
+                            $new_wa2->update();
+                        }
+                    }
                     $arr = array(
-                                'status'=>true,
-                                'message'=>'Notifikasi sudah dikirimkan ke petugas jaga'
-                            );
+                        'status' => true,
+                        'message' => "Notifikasi sudah dikirimkan ke petugas jaga"
+                    );
                 }
                 else
                 {
-                     $arr = array(
-                                'status'=>false,
-                                'message'=>'Data petugas jaga masih kosong, belum ada jadwal'
-                            );
+                    $arr = array(
+                        'status' => false,
+                        'message' => "Data petugas jaga masih kosong, belum ada jadwal"
+                    );
                 }
             }
             else
             {
                 $arr = array(
-                    'status'=>false,
-                    'message'=>"Hari libur : ".$data->deskripsi
-                );
+                        'status' => false,
+                        'message' => "Hari libur : ".$data->deskripsi
+                    );
             }
 
         }
         else
         {
             $arr = array(
-                'status'=>false,
-                'message'=>"Error data petugas"
+                'status' => false,
+                'message' => "Data petugas belum tersedia"
             );
         }
-        //return Response()->json($arr);
+        return Response()->json($arr);
     }
 }

@@ -53,7 +53,8 @@
                         </div>
                         <div class="col-lg-4 text-right">
                             @if (Auth::User()->level > 10)
-                                <a href="{{ route('wa.format') }}" class="btn btn-info">
+                                <a href="#" class="btn btn-warning kirimnotifjaga">Kirim Notif</a>
+                                <a href="{{ route('wa.format') }}" class="btn btn-info m-l-15">
                                     <i class="ti-export"></i> &nbsp;Format Import</a>
                                 <a href="javascript:void(0)" class="btn btn-success m-l-15" data-toggle="modal"
                                     data-target="#ImportDataWhatsapp"><i class="ti-import"></i> Import Data</a>
@@ -719,6 +720,77 @@
             });
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
         });
+        //klik notif
+        $('.kirimnotifjaga').click(function(e){
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Kirim Notif WA?',
+                    text: "akan mengirim notifikasi ke WhatsApp Petugas Jaga PST Hari ini",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Kirim'
+                }).then((result) => {
+                    if (result.value) {
+                        //response ajax disini
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $(
+                                    'meta[name="csrf-token"]').attr(
+                                    'content')
+                            }
+                        });
+                        $.ajax({
+                            url: '{{ route("cron.notif") }}',
+                            method: 'post',
+                            data: {
+                            },
+                            cache: false,
+                            dataType: 'json',
+                            beforeSend: function() {
+                                Swal.fire({
+                                    title: "Processing...",
+                                    html: "Silakan tunggu sampai proses selesai.",
+                                    allowEscapeKey: false,
+                                    allowOutsideClick: false,
+                                    onOpen: () => {
+                                    swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(data) {
+                                if (data.status == true) {
+                                    Swal.hideLoading();
+                                    Swal.fire(
+                                        'Berhasil!',
+                                        '' + data.message + '',
+                                        'success'
+                                    );
+                                } else {
+                                    Swal.hideLoading();
+                                    Swal.fire(
+                                        'Error!',
+                                        '' + data.message + '',
+                                        'error'
+                                    );
+                                }
+
+                            },
+                            error: function() {
+                                Swal.hideLoading();
+                                Swal.fire(
+                                    'Error',
+                                    'Koneksi Error',
+                                    'error'
+                                );
+                            }
+
+                        });
+
+                    }
+                })
+            });
     </script>
     @include('newbukutamu.js-kunjungan')
     @include('newbukutamu.js-feedback')

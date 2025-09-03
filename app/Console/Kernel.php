@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('info:petugas')->dailyAt('07:30');
+        $schedule->command('info:petugas')->dailyAt('07:45')->timezone('Asia/Makassar');
     }
 
     /**
