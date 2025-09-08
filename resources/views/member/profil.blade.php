@@ -62,7 +62,7 @@
                                     @else
                                         {{Auth::user()->email_ganti}} <button class="btn btn-xs btn-danger btn-rounded mailverifikasi" data-id="{{Auth::user()->id}}" data-nama="{{Auth::user()->name}}">belum verifikasi</button>
                                     @endif
-                                    </dd>
+                                </dd>
                                 <dt class="col-lg-3 col-md-3 col-xs-12">Nomor Telepon</dt>
                                 <dd class="col-lg-9 col-sm-9">
                                     @if (Auth::user()->telepon)

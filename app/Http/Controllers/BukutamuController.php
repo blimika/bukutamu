@@ -1453,7 +1453,7 @@ class BukutamuController extends Controller
     }
     public function Daftar()
     {
-        return view('users.daftar');
+        return view('users.daftar-nonaktif');
     }
     public function MemberDaftar(Request $request)
     {

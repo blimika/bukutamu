@@ -377,12 +377,15 @@ $('#edit_hp').click(function(){
                 cancelBUttonText: 'BATAL'
             }).then((result) => {
                 if (result.value) {
-                    Swal.fire(
-                        'Berhasil!',
-                        'Data pengunjung sudah disimpan',
-                        'success'
-                    ).then(function(submit) {
-                        $('#formNewKunjungan').submit();
+                   $('#formNewKunjungan').submit();
+                   Swal.fire({
+                        title: "Processing....",
+                        html: "Data pengunjung sedang disimpan. <br />Silakan tunggu sampai proses selesai.",
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        onOpen: () => {
+                            swal.showLoading();
+                        }
                     });
                 }
             })

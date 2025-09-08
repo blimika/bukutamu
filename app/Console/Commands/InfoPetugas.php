@@ -114,7 +114,6 @@ class InfoPetugas extends Command
                     $new_wa2 = new LogWhatsapp();
                     $new_wa2->wa_tanggal = Carbon::today()->format('Y-m-d');
                     $new_wa2->wa_uid = Generate::Kode(8);
-                    $new_wa2->wa_pengunjung_uid = $data->Petugas2->pengunjung_uid;
                     $new_wa2->wa_target = $recipients2;
                     $new_wa2->wa_message = $message2;
                     $new_wa2->save();

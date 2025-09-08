@@ -13,6 +13,8 @@
                     <dd class="col-sm-8"><span id="member_username"></span></dd>
                     <dt class="col-sm-4">Level</dt>
                     <dd class="col-sm-8"><span id="member_level"></span></dd>
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8"><span id="member_email"></span></dd>
                     <dt class="col-sm-4">Telepon</dt>
                     <dd class="col-sm-8"><span id="member_telepon"></span> <a href="" id="member_wa" target="_blank" class="btn waves-effect btn-success btn-xs waves-light"><i class="fab fa-whatsapp"></i></a></dd>
                     <dt class="col-sm-4">Tamu ID</dt>

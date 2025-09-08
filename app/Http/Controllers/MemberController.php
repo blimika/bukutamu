@@ -100,6 +100,7 @@ class MemberController extends Controller
             $level = $record->level;
             $level_nama = $record->mLevel->nama;
             $email = $record->email;
+            $email_ganti = $record->email_ganti;
             $telepon = $record->telepon;
             $flag = $record->flag;
             $email_kodever = $record->email_kodever;
@@ -107,6 +108,7 @@ class MemberController extends Controller
             $lastlogin = $record->lastlogin;
             $lastip = $record->lastip;
             $tamuid = $record->tamu_id;
+
             if ($record->user_foto != NULL)
             {
                 if (Storage::disk('public')->exists($record->user_foto))
@@ -556,11 +558,16 @@ class MemberController extends Controller
             $data->name = trim($request->name);
             $data->username = trim($request->username);
             $data->level = trim($request->level);
+            $data->email = trim($request->email);
+            $data->email_ganti = trim($request->email);
+            $data->email_kodever = 0;
+            /*
             if ($data->email != $request->email)
             {
                 $data->email_ganti = trim($request->email); //karena belum aktivasi
                 $data->email_kodever = Str::random(10);
             }
+                */
             $data->telepon = trim($request->telepon);
             $data->update();
             $arr = array(

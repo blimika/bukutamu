@@ -29,6 +29,14 @@ $('#ViewMemberModal').on('show.bs.modal', function (event) {
                 }
                 $('#ViewMemberModal .modal-body #member_wa').attr("href",member_wa)
                 $('#ViewMemberModal .modal-body #member_level').text(d.data.m_level.nama)
+                if (d.data.email_kodever == 0)
+                {
+                    $('#ViewMemberModal .modal-body #member_email').text(d.data.email)
+                }
+                else
+                {
+                    $('#ViewMemberModal .modal-body #member_email').text(d.data.email_ganti)
+                }
                 //lastlogin di cek dan lastip
                 if (d.data.lastlogin != null)
                 {
